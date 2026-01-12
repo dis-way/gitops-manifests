@@ -30,7 +30,7 @@ for i in "${!ISSUERS[@]}"; do
 done
 read -rp "Choice [1-${#ISSUERS[@]}]: " choice
 
-if ! [[ "$choice" =~ ^[1-${#ISSUERS[@]}]$ ]]; then
+if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt ${#ISSUERS[@]} ]; then
   echo "Invalid choice"
   exit 1
 fi
@@ -106,11 +106,20 @@ EOF
 
 echo "Created ${PUSH_FILE}"
 
+# Cross-platform sed in-place edit
+sedi() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
+}
+
 # Add to kustomization.yaml
 if grep -q "^  - ${DOMAIN}.yaml$" "$KUSTOMIZATION_FILE"; then
   echo "Already in kustomization.yaml: ${DOMAIN}.yaml"
 else
-  sed -i'' -e "/^resources:$/a\\
+  sedi "/^resources:$/a\\
   - ${DOMAIN}.yaml" "$KUSTOMIZATION_FILE"
   echo "Added ${DOMAIN}.yaml to kustomization.yaml"
 fi
@@ -118,7 +127,7 @@ fi
 if grep -q "^  - ${DOMAIN}-push.yaml$" "$KUSTOMIZATION_FILE"; then
   echo "Already in kustomization.yaml: ${DOMAIN}-push.yaml"
 else
-  sed -i'' -e "/^  - ${DOMAIN}.yaml$/a\\
+  sedi "/^  - ${DOMAIN}.yaml$/a\\
   - ${DOMAIN}-push.yaml" "$KUSTOMIZATION_FILE"
   echo "Added ${DOMAIN}-push.yaml to kustomization.yaml"
 fi
