@@ -48,7 +48,7 @@ jobs:
             exit 0
           fi
 
-          # Extract unique folder names directly under ./manifests/infra/
+          # Extract unique folder names directly under ./oci/
           ARTIFACTS=$(echo "${FLUX_FILES}" | awk -F'/' '{print $2}' | sort -u)
           for artifact in $ARTIFACTS;do
             echo "Processing artifact: ${artifact}"
