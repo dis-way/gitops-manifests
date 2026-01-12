@@ -15,7 +15,7 @@ on:
         required: true
         type: string
 env:
-  RELEASE_TAG_PREFIX: "flux-oci-"
+  RELEASE_TAG_PREFIX: "oci-"
 
 permissions:
   id-token: write
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
-      - name: Prepare Job for Pushing Flux OCI Artifacts to Azure Container Registry
+      - name: Prepare Job for Pushing OCI Artifacts to Azure Container Registry
         id: setup_flux_acr
         uses: dis-way/actions/flux/setup-flux-acr@5745e4c748f364d894476d8d52e903cf4fdf260c # main
         with:
@@ -65,7 +65,7 @@ jobs:
   tag-release:
     runs-on: ubuntu-latest
     environment: flux-release
-    if: (github.event_name == 'release' && github.event.action == 'created' && startsWith(github.event.release.tag_name, 'flux-oci-')) || (github.event_name == 'workflow_dispatch' && startsWith(github.event.inputs.tag_name, 'flux-oci-'))
+    if: (github.event_name == 'release' && github.event.action == 'created' && startsWith(github.event.release.tag_name, 'oci-')) || (github.event_name == 'workflow_dispatch' && startsWith(github.event.inputs.tag_name, 'oci-'))
     steps:
       - name: Checkout Code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1

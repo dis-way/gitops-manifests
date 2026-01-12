@@ -2,7 +2,7 @@
   "packages": {
     "oci/dis-tls-cert": {
       "release-type": "simple",
-      "component": "flux-oci-dis-tls-cert"
+      "component": "oci-dis-tls-cert"
     }
   },
   "separate-pull-requests": true,
