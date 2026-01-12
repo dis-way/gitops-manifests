@@ -1,4 +1,4 @@
-name: Release and promote Flux oci releases
+name: Release and promote OCI releases
 
 on:
   issues:
@@ -226,7 +226,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - name: Prepare Job for Pushing Flux OCI Artifacts to Azure Container Registry
+      - name: Prepare Job for Pushing OCI Artifacts to Azure Container Registry
         id: setup_flux_acr
         uses: dis-way/actions/flux/setup-flux-acr@bc13f74f90d9bea796b05abd29534c686496b4ba # main
         with:
