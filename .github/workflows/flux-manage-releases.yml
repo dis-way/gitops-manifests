@@ -228,7 +228,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Prepare Job for Pushing Flux OCI Artifacts to Azure Container Registry
         id: setup_flux_acr
-        uses: dis-way/actions/flux/setup-flux-acr
+        uses: dis-way/actions/flux/setup-flux-acr@025ca31144c203ef3ae3e3c46a622891cc628242
         with:
           azure_app_id: ${{ secrets.AZURE_ALTINNACR_APP_ID }}
           azure_subscription_id: ${{ secrets.AZURE_ALTINNACR_SUBSCRIPTION_ID }}
