@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: af-tt02-altinn-no
+  namespace: dis-tls-cert
+spec:
+  secretName: af-tt02-altinn-no
+  issuerRef:
+    name: zerossl-dis-tls-cert
+    kind: ClusterIssuer
+  dnsNames:
+    - af.tt02.altinn.no

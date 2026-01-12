@@ -1,0 +1,13 @@
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: dis-tls-cert-store
+  namespace: dis-tls-cert
+spec:
+  provider:
+    azurekv:
+      authType: WorkloadIdentity
+      vaultUrl: "https://dis-tls-cert.vault.azure.net"
+      serviceAccountRef:
+        name: dis-tls-cert-kv-uami
+        namespace: dis-tls-cert

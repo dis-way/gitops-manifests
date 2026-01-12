@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - dis-tls-cert-kv-uami-sa.yaml
+  - dis-tls-cert-store.yaml
+  - digicert-ssl-eabsecret.yaml
+  - zero-ssl-eabsecret.yaml
+  - clusterissuer.yaml
