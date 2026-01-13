@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.1.0...oci-dis-tls-cert-v2.2.0) (2026-01-13)
+
+
+### Features
+
+* Add TLS cert inspection commands to README ([#25](https://github.com/dis-way/gitops-manifests/issues/25)) ([0b9b3fb](https://github.com/dis-way/gitops-manifests/commit/0b9b3fb426a149c3383f0ab23e576024f5e9464e))
+
 ## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.0.0...oci-dis-tls-cert-v2.1.0) (2026-01-13)
 
 
