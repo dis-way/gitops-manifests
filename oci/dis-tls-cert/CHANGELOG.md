@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.0.0...oci-dis-tls-cert-v2.1.0) (2026-01-13)
+
+
+### Features
+
+* Use DigiCert ClusterIssuer for af.tt02.altinn.no ([#21](https://github.com/dis-way/gitops-manifests/issues/21)) ([a705a7d](https://github.com/dis-way/gitops-manifests/commit/a705a7d5d580df5e9d821c88f022314d7805e1b5))
+
 ## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v1.2.0...oci-dis-tls-cert-v2.0.0) (2026-01-12)
 
 
