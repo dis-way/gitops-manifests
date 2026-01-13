@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: af-tt02-altinn-no
   issuerRef:
-    name: zerossl-dis-tls-cert
+    name: digicert-dis-tls-cert
     kind: ClusterIssuer
   dnsNames:
     - af.tt02.altinn.no
