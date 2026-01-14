@@ -1,3 +1,4 @@
 {
-  "oci/dis-tls-cert": "2.2.0"
+  "oci/dis-tls-cert": "2.2.0",
+  "flux/whoami": "0.1.0"
 }
