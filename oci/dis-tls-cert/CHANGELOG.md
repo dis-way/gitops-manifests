@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.2.0...oci-dis-tls-cert-v2.3.0) (2026-01-14)
+
+
+### Features
+
+* Follow CNAMEs and remove namespaces from issuers ([#33](https://github.com/dis-way/gitops-manifests/issues/33)) ([904dad3](https://github.com/dis-way/gitops-manifests/commit/904dad3f1284b85bd96cd372ff4688a4673e3641))
+
 ## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.1.0...oci-dis-tls-cert-v2.2.0) (2026-01-13)
 
 
