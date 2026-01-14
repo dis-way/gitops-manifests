@@ -4,9 +4,9 @@
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
     },
-    "flux/whoami": {
+    "oci/whoami": {
       "release-type": "simple",
-      "component": "flux-oci-whoami"
+      "component": "oci-whoami"
     }
   },
   "separate-pull-requests": true,
