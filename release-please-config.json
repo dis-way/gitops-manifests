@@ -2,7 +2,7 @@
   "packages": {
     "oci/altinn-uptime": {
       "release-type": "simple",
-      "component": "flux-oci-altinn-uptime"
+      "component": "oci-altinn-uptime"
     },
     "oci/dis-tls-cert": {
       "release-type": "simple",
@@ -14,7 +14,7 @@
     },
     "oci/blackbox-exporter": {
       "release-type": "simple",
-      "component": "flux-oci-blackbox-exporter"
+      "component": "oci-blackbox-exporter"
     }
   },
   "separate-pull-requests": true,
