@@ -11,6 +11,10 @@
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"
+    },
+    "oci/blackbox-exporter": {
+      "release-type": "simple",
+      "component": "flux-oci-blackbox-exporter"
     }
   },
   "separate-pull-requests": true,
