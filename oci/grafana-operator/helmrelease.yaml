@@ -13,7 +13,7 @@ spec:
         name: grafana
         namespace: grafana
       # renovate: datasource=helm registryUrl=https://grafana.github.io/helm-charts packageName=grafana-operator
-      version: v5.20.0
+      version: 5.21.4
   interval: 1h
   timeout: 5m
   install:
@@ -44,7 +44,8 @@ spec:
                 value: 1023
   values:
     image:
-      repository: altinncr.azurecr.io/ghcr.io/grafana/grafana-operator
+      registry: altinncr.azurecr.io
+      repository: ghcr.io/grafana/grafana-operator
     serviceMonitor:
       enabled: true
     dashboard:
