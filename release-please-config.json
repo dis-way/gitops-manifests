@@ -1,5 +1,9 @@
 {
   "packages": {
+    "oci/altinn-uptime": {
+      "release-type": "simple",
+      "component": "flux-oci-altinn-uptime"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"

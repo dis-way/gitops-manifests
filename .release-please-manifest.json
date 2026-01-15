@@ -1,4 +1,5 @@
 {
+  "oci/altinn-uptime": "1.4.0",
   "oci/dis-tls-cert": "2.3.0",
   "oci/whoami": "0.2.0"
 }
