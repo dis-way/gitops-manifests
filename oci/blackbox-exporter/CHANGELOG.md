@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/dis-way/gitops-manifests/compare/flux-oci-blackbox-exporter-v0.5.1...flux-oci-blackbox-exporter-v0.6.0) (2026-01-15)
+
+
+### Features
+
+* Add blackbox-exporter Flux OCI deployment ([#38](https://github.com/dis-way/gitops-manifests/issues/38)) ([bb7d8e4](https://github.com/dis-way/gitops-manifests/commit/bb7d8e41b05ffdd6067011a4ab27aa9fc2625b0b))
+
 ## [0.5.1](https://github.com/Altinn/altinn-platform/compare/flux-oci-blackbox-exporter-v0.5.0...flux-oci-blackbox-exporter-v0.5.1) (2025-12-08)
 
 
