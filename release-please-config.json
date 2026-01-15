@@ -4,17 +4,21 @@
       "release-type": "simple",
       "component": "oci-altinn-uptime"
     },
+    "oci/blackbox-exporter": {
+      "release-type": "simple",
+      "component": "oci-blackbox-exporter"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
     },
+    "oci/grafana-operator": {
+      "release-type": "simple",
+      "component": "oci-grafana-operator"
+    },
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"
-    },
-    "oci/blackbox-exporter": {
-      "release-type": "simple",
-      "component": "oci-blackbox-exporter"
     }
   },
   "separate-pull-requests": true,
