@@ -16,7 +16,7 @@ spec:
       securityContext:
         runAsNonRoot: true
       containers:
-        - image: altinncr.azurecr.io/traefik/whoami
+        - image: altinncr.azurecr.io/docker.io/traefik/whoami
           imagePullPolicy: IfNotPresent
           name: whoami
           ports:
