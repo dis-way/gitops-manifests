@@ -123,6 +123,11 @@ jobs:
 
           echo "Project ID: $PROJECT_ID"
 
+          if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "null" ]; then
+            echo "Error: Failed to retrieve project ID for Altinn project 117"
+            exit 1
+          fi
+
           # Add the issue to the project
           gh api graphql -f query='
             mutation($projectId: ID!, $contentId: ID!) {
