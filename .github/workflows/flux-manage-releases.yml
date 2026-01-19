@@ -96,6 +96,7 @@ jobs:
             console.log(`Issue created: ${response.data.html_url}`);
             core.setOutput('issue-created', 'true');
             core.setOutput('issue-number', response.data.number);
+            core.setOutput('issue-node-id', response.data.node_id);
       - name: Generate GitHub App token
         if: steps.create-issue.outputs.issue-created == 'true'
         id: app-token
@@ -110,6 +111,7 @@ jobs:
         with:
           project-url: https://github.com/orgs/Altinn/projects/117
           github-token: ${{ steps.app-token.outputs.token }}
+          content-id: ${{ steps.create-issue.outputs.issue-node-id }}
   create-release-pr:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'edited' && startsWith(github.event.issue.title, 'Gitops OCI image promotion:') && github.event.issue.draft == false && github.event.issue.state == 'open'
