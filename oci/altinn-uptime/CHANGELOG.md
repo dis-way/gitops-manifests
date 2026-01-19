@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.4.0...oci-altinn-uptime-v1.5.0) (2026-01-19)
+
+
+### Features
+
+* Add prod.admin.altinn.cloud uptime targets ([#53](https://github.com/dis-way/gitops-manifests/issues/53)) ([1ca740b](https://github.com/dis-way/gitops-manifests/commit/1ca740bb6a0ce41421a80aeda30b9ed3ef46d7e7))
+
 ## [1.4.0](https://github.com/Altinn/altinn-platform/compare/flux-oci-altinn-uptime-v1.3.0...flux-oci-altinn-uptime-v1.4.0) (2025-12-08)
 
 
