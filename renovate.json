@@ -2,5 +2,41 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>dis-way/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "helm"
+      ],
+      "matchPackageNames": [
+        "linkerd-crds",
+        "linkerd-control-plane"
+      ],
+      "groupName": "linkerd core charts",
+      "groupSlug": "linkerd-core",
+      "dependencyDashboardApproval": true,
+      "prCreation": "not-pending",
+      "minimumReleaseAge": "3 days",
+      "prBodyNotes": [
+        "⚠️ **Please verify the release status before merging:**",
+        "1. Check https://github.com/linkerd/linkerd2/releases/ release notes",
+        "2. Only deploy releases marked as **RECOMMENDED**",
+        "3. Review the changelog for breaking changes or known issues"
+      ]
+    },
+    {
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "helm"
+      ],
+      "matchPackageNames": [
+        "traefik",
+        "traefik-crds"
+      ],
+      "groupName": "traefik helm charts",
+      "groupSlug": "traefik-helm"
+    }
   ]
 }
