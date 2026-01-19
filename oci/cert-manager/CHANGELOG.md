@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v1.4.1...oci-cert-manager-v1.5.0) (2026-01-19)
+
+
+### Features
+
+* Add cert-manager OCI manifests and release config ([#78](https://github.com/dis-way/gitops-manifests/issues/78)) ([2357946](https://github.com/dis-way/gitops-manifests/commit/235794673ed173ef81eb903c7cd58b25f503ee2a))
+
 ## [1.4.1](https://github.com/Altinn/altinn-platform/compare/flux-oci-cert-manager-v1.4.0...flux-oci-cert-manager-v1.4.1) (2026-01-07)
 
 
