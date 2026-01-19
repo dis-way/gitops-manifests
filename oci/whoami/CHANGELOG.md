@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.3.0...oci-whoami-v0.4.0) (2026-01-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Inject Linkerd and add Traefik header middleware ([#69](https://github.com/dis-way/gitops-manifests/issues/69))
+
+### Features
+
+* Inject Linkerd and add Traefik header middleware ([#69](https://github.com/dis-way/gitops-manifests/issues/69)) ([3b7ae2c](https://github.com/dis-way/gitops-manifests/commit/3b7ae2c8e9f54e4f6919874b71b96db8143cc592))
+
 ## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.2.0...oci-whoami-v0.3.0) (2026-01-19)
 
 

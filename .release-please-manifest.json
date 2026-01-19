@@ -4,5 +4,5 @@
   "oci/dis-tls-cert": "2.3.0",
   "oci/grafana-operator": "2.0.0",
   "oci/linkerd": "1.8.0",
-  "oci/whoami": "0.3.0"
+  "oci/whoami": "0.4.0"
 }
