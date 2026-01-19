@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.2.0...oci-whoami-v0.3.0) (2026-01-19)
+
+
+### Features
+
+* Add docker.io prefix to whoami image ([#62](https://github.com/dis-way/gitops-manifests/issues/62)) ([9550816](https://github.com/dis-way/gitops-manifests/commit/9550816da9aeb4b8e356d36f5e2a2ea8bdab3113))
+
 ## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.1.0...oci-whoami-v0.2.0) (2026-01-14)
 
 
