@@ -46,6 +46,7 @@ jobs:
     if: (github.event_name == 'release' && github.event.action == 'created' && startsWith(github.event.release.tag_name, 'oci-')) || (github.event_name == 'workflow_dispatch' && startsWith(github.event.inputs.tag_name, 'oci-'))
     steps:
       - name: Create issue
+        id: create-issue
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
@@ -80,6 +81,7 @@ jobs:
             const issueExists = issues.some(issue => issue.title === issueTitle);
             if (issueExists) {
               console.log(`Issue already exists: ${issueTitle}`);
+              core.setOutput('issue-created', 'false');
               return;
             }
             // Create a new issue
@@ -91,6 +93,22 @@ jobs:
               assignees: releaseCreator ? [releaseCreator] : [],
             });
             console.log(`Issue created: ${response.data.html_url}`);
+            core.setOutput('issue-created', 'true');
+            core.setOutput('issue-number', response.data.number);
+      - name: Generate GitHub App token
+        if: steps.create-issue.outputs.issue-created == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.ALTINN_ORG_APP_ID }}
+          private-key: ${{ secrets.ALTINN_ORG_APP_PRIVATE_KEY }}
+          owner: Altinn
+      - name: Add issue to project
+        if: steps.create-issue.outputs.issue-created == 'true'
+        uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
+        with:
+          project-url: https://github.com/orgs/Altinn/projects/117
+          github-token: ${{ steps.app-token.outputs.token }}
   create-release-pr:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'edited' && startsWith(github.event.issue.title, 'Gitops OCI image promotion:') && github.event.issue.draft == false && github.event.issue.state == 'open'
