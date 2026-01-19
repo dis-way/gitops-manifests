@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v1.8.0...oci-linkerd-v1.9.0) (2026-01-19)
+
+
+### Features
+
+* update linkerd core charts to v2026 (major) ([#84](https://github.com/dis-way/gitops-manifests/issues/84)) ([cc485ff](https://github.com/dis-way/gitops-manifests/commit/cc485ff9a1f0caa094de1304ff42b7f279249219))
+
 ## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v1.7.0...oci-linkerd-v1.8.0) (2026-01-19)
 
 
