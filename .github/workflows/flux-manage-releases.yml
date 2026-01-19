@@ -78,10 +78,11 @@ jobs:
               state: 'open',
               labels: '${{ env.LABEL }}',
             });
-            const issueExists = issues.some(issue => issue.title === issueTitle);
-            if (issueExists) {
-              console.log(`Issue already exists: ${issueTitle}`);
+            const existingIssue = issues.find(issue => issue.title === issueTitle);
+            if (existingIssue) {
+              console.log(`Issue already exists: ${existingIssue.html_url}`);
               core.setOutput('issue-created', 'false');
+              core.setOutput('issue-number', existingIssue.number);
               return;
             }
             // Create a new issue
