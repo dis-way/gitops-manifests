@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.4.0...oci-whoami-v0.5.0) (2026-01-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Enable safe eviction and set non-root UID/GID ([#73](https://github.com/dis-way/gitops-manifests/issues/73))
+
+### Features
+
+* Enable safe eviction and set non-root UID/GID ([#73](https://github.com/dis-way/gitops-manifests/issues/73)) ([e1f5ff3](https://github.com/dis-way/gitops-manifests/commit/e1f5ff33eec5d103686a3e7302478b05c344fca8))
+
 ## [0.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.3.0...oci-whoami-v0.4.0) (2026-01-19)
 
 
