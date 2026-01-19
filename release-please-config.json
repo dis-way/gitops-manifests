@@ -8,6 +8,10 @@
       "release-type": "simple",
       "component": "oci-blackbox-exporter"
     },
+    "oci/cert-manager": {
+      "release-type": "simple",
+      "component": "oci-cert-manager"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
