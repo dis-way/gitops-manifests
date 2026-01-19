@@ -107,11 +107,52 @@ jobs:
           owner: Altinn
       - name: Add issue to project
         if: steps.create-issue.outputs.issue-created == 'true'
-        uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
-        with:
-          project-url: https://github.com/orgs/Altinn/projects/117
-          github-token: ${{ steps.app-token.outputs.token }}
-          content-id: ${{ steps.create-issue.outputs.issue-node-id }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          ISSUE_NODE_ID: ${{ steps.create-issue.outputs.issue-node-id }}
+        run: |
+          # Get the project ID
+          PROJECT_ID=$(gh api graphql -f query='
+            query {
+              organization(login: "Altinn") {
+                projectV2(number: 117) {
+                  id
+                }
+              }
+            }' --jq '.data.organization.projectV2.id')
+
+          echo "Project ID: $PROJECT_ID"
+
+          if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "null" ]; then
+            echo "Error: Failed to retrieve project ID for Altinn project 117"
+            exit 1
+          fi
+
+          # Add the issue to the project
+          RESULT=$(gh api graphql -f query='
+            mutation($projectId: ID!, $contentId: ID!) {
+              addProjectV2ItemById(input: {
+                projectId: $projectId
+                contentId: $contentId
+              }) {
+                item {
+                  id
+                }
+              }
+            }' -f projectId="$PROJECT_ID" -f contentId="$ISSUE_NODE_ID" 2>&1) || {
+            echo "Error: Failed to add issue to project"
+            echo "$RESULT"
+            exit 1
+          }
+
+          ITEM_ID=$(echo "$RESULT" | jq -r '.data.addProjectV2ItemById.item.id')
+          if [ -z "$ITEM_ID" ] || [ "$ITEM_ID" = "null" ]; then
+            echo "Error: Failed to add issue to project"
+            echo "$RESULT"
+            exit 1
+          fi
+
+          echo "Issue added to project with item ID: $ITEM_ID"
   create-release-pr:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'edited' && startsWith(github.event.issue.title, 'Gitops OCI image promotion:') && github.event.issue.draft == false && github.event.issue.state == 'open'
