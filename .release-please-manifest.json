@@ -1,6 +1,7 @@
 {
   "oci/altinn-uptime": "1.5.0",
   "oci/blackbox-exporter": "0.7.0",
+  "oci/cert-manager": "1.4.1",
   "oci/dis-tls-cert": "2.3.0",
   "oci/grafana-operator": "2.0.0",
   "oci/linkerd": "1.8.0",
