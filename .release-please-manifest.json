@@ -3,6 +3,6 @@
   "oci/blackbox-exporter": "0.7.0",
   "oci/dis-tls-cert": "2.3.0",
   "oci/grafana-operator": "2.0.0",
-  "oci/linkerd": "1.7.0",
+  "oci/linkerd": "1.8.0",
   "oci/whoami": "0.2.0"
 }

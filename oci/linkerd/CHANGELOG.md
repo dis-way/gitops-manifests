@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v1.7.0...oci-linkerd-v1.8.0) (2026-01-19)
+
+
+### Features
+
+* Add Linkerd HelmRelease and related configs ([#57](https://github.com/dis-way/gitops-manifests/issues/57)) ([5a3d1cc](https://github.com/dis-way/gitops-manifests/commit/5a3d1cc968fd3aa37f31d579ff000f7864f31ae2))
+
 ## [1.7.0](https://github.com/Altinn/altinn-platform/compare/flux-oci-linkerd-v1.6.0...flux-oci-linkerd-v1.7.0) (2025-12-05)
 
 
