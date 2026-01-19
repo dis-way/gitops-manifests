@@ -54,6 +54,16 @@ spec:
     app: whoami
 ---
 apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: l5d-header-middleware
+  namespace: whoami
+spec:
+  headers:
+    customRequestHeaders:
+      l5d-dst-override: whoami.whoami.svc.cluster.local:80
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -65,6 +75,9 @@ spec:
   routes:
     - kind: Rule
       match: HostRegexp(`^.*\.?altinn\.(no|cloud)$`) && (PathPrefix(`/whoami/`) || Path(`/whoami`))
+      middlewares:
+        - name: l5d-header-middleware
+          namespace: whoami
       services:
         - name: whoami
           namespace: whoami
