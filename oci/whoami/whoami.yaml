@@ -10,11 +10,15 @@ spec:
       app: whoami
   template:
     metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: whoami
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
       containers:
         - image: altinncr.azurecr.io/docker.io/traefik/whoami
           imagePullPolicy: IfNotPresent
