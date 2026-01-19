@@ -43,8 +43,8 @@
     "at_ring1": "0.5.0",
     "at_ring2": "0.5.0",
     "tt_ring1": "0.5.0",
-    "tt_ring2": "0.3.0",
+    "tt_ring2": "0.5.0",
     "prod_ring1": "0.5.0",
-    "prod_ring2": "0.3.0"
+    "prod_ring2": "0.5.0"
   }
 }
