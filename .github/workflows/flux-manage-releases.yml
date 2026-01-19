@@ -129,7 +129,7 @@ jobs:
           fi
 
           # Add the issue to the project
-          gh api graphql -f query='
+          RESULT=$(gh api graphql -f query='
             mutation($projectId: ID!, $contentId: ID!) {
               addProjectV2ItemById(input: {
                 projectId: $projectId
@@ -139,9 +139,20 @@ jobs:
                   id
                 }
               }
-            }' -f projectId="$PROJECT_ID" -f contentId="$ISSUE_NODE_ID"
+            }' -f projectId="$PROJECT_ID" -f contentId="$ISSUE_NODE_ID" 2>&1) || {
+            echo "Error: Failed to add issue to project"
+            echo "$RESULT"
+            exit 1
+          }
 
-          echo "Issue added to project"
+          ITEM_ID=$(echo "$RESULT" | jq -r '.data.addProjectV2ItemById.item.id')
+          if [ -z "$ITEM_ID" ] || [ "$ITEM_ID" = "null" ]; then
+            echo "Error: Failed to add issue to project"
+            echo "$RESULT"
+            exit 1
+          fi
+
+          echo "Issue added to project with item ID: $ITEM_ID"
   create-release-pr:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'edited' && startsWith(github.event.issue.title, 'Gitops OCI image promotion:') && github.event.issue.draft == false && github.event.issue.state == 'open'
