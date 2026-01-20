@@ -2,6 +2,21 @@
 
 ## Add a certificate
 
+### Prerequisites
+
+Before creating a new certificate, add a CNAME record for ACME DNS-01 challenge validation:
+
+```
+_acme-challenge.<domain>. 300 IN CNAME _acme-challenge.<domain>.acme.altinn.cloud.
+```
+
+Example for `af.tt02.altinn.no`:
+```
+_acme-challenge.af.tt02.altinn.no. 300 IN CNAME _acme-challenge.af.tt02.altinn.no.acme.altinn.cloud.
+```
+
+### Create the certificate
+
 ```bash
 ./add-cert.sh <domain>
 ```
