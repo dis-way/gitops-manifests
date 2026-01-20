@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.6.0...oci-dis-tls-cert-v2.7.0) (2026-01-20)
+
+
+### Features
+
+* Remove AT cert resources from kustomization ([#104](https://github.com/dis-way/gitops-manifests/issues/104)) ([4a2e412](https://github.com/dis-way/gitops-manifests/commit/4a2e4124c2c3c6f052973227761a85081d8521d6))
+
 ## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.5.0...oci-dis-tls-cert-v2.6.0) (2026-01-20)
 
 
