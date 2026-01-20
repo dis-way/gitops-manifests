@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.4.0...oci-dis-tls-cert-v2.5.0) (2026-01-20)
+
+
+### Features
+
+* Add af.at.altinn.cloud Certificate and PushSecret ([#96](https://github.com/dis-way/gitops-manifests/issues/96)) ([07f010a](https://github.com/dis-way/gitops-manifests/commit/07f010ac854cb7b1d7b0e123291fd6208541dbad))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.3.0...oci-dis-tls-cert-v2.4.0) (2026-01-20)
 
 
