@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.3.0...oci-dis-tls-cert-v2.4.0) (2026-01-20)
+
+
+### Features
+
+* Document DNS-01 CNAME prerequisite for ACME ([#92](https://github.com/dis-way/gitops-manifests/issues/92)) ([9921a54](https://github.com/dis-way/gitops-manifests/commit/9921a54d6e6c68be3cf29b46393f74e3c7ba40b1))
+
 ## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.2.0...oci-dis-tls-cert-v2.3.0) (2026-01-14)
 
 
