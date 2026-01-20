@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.5.0...oci-dis-tls-cert-v2.6.0) (2026-01-20)
+
+
+### Features
+
+* Remove af.at.altinn.cloud TLS cert resources ([#100](https://github.com/dis-way/gitops-manifests/issues/100)) ([30748c1](https://github.com/dis-way/gitops-manifests/commit/30748c1c58811da214a8d00620c209061af3ea19))
+
 ## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.4.0...oci-dis-tls-cert-v2.5.0) (2026-01-20)
 
 
