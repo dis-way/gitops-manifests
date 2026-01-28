@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v1.5.0...oci-cert-manager-v2.0.0) (2026-01-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Split cert-manager kustomize into base/overlays ([#116](https://github.com/dis-way/gitops-manifests/issues/116))
+
+### Features
+
+* Split cert-manager kustomize into base/overlays ([#116](https://github.com/dis-way/gitops-manifests/issues/116)) ([9c6b40c](https://github.com/dis-way/gitops-manifests/commit/9c6b40c491b31d8d484ee5440b16af63ddef2a18))
+
 ## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v1.4.1...oci-cert-manager-v1.5.0) (2026-01-19)
 
 
