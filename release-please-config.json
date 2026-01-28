@@ -16,10 +16,6 @@
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
     },
-    "oci/external-secrets-operator": {
-      "release-type": "simple",
-      "component": "oci-external-secrets-operator"
-    },
     "oci/grafana-operator": {
       "release-type": "simple",
       "component": "oci-grafana-operator"
