@@ -15,6 +15,7 @@ This repository contains GitOps manifests for deploying DIS resources with Flux.
   - `kustomize build oci/<name>`
 - Apply or test in a cluster (package-specific; see per-package docs such as `oci/altinn-uptime/DEPLOY.md`):
   - `kubectl apply -k <kustomize-path>`
+- Do not run `kubectl` commands without explicit confirmation.
 
 ## Coding Style & Naming Conventions
 
