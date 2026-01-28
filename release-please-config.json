@@ -24,6 +24,10 @@
       "release-type": "simple",
       "component": "oci-linkerd"
     },
+    "oci/platform-system": {
+      "release-type": "simple",
+      "component": "oci-platform-system"
+    },
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"
