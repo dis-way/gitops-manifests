@@ -1,0 +1,11 @@
+# Generic agents configuration.
+.agents
+
+# Codex configuration
+.codex
+
+# Claude configuration
+.claude
+
+# Cursor configuration
+.cursor
