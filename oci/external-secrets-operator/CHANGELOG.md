@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.1.1...oci-external-secrets-operator-v1.2.0) (2026-01-29)
+
+
+### Features
+
+* add external secrets operator ([#121](https://github.com/dis-way/gitops-manifests/issues/121)) ([1a983b3](https://github.com/dis-way/gitops-manifests/commit/1a983b380f5a71e65e245e1b6d9c8949efbcc6e1))
+
 ## [1.1.1](https://github.com/Altinn/altinn-platform/compare/flux-oci-external-secrets-operator-v1.1.0...flux-oci-external-secrets-operator-v1.1.1) (2026-01-22)
 
 
