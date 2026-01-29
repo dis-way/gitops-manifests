@@ -3,6 +3,7 @@
   "oci/blackbox-exporter": "0.7.0",
   "oci/cert-manager": "2.0.0",
   "oci/dis-tls-cert": "2.7.0",
+  "oci/external-secrets-operator": "1.1.1",
   "oci/grafana-operator": "2.0.0",
   "oci/linkerd": "2.0.0",
   "oci/platform-system": "1.1.0",
