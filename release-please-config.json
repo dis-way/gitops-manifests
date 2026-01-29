@@ -28,6 +28,14 @@
       "release-type": "simple",
       "component": "oci-linkerd"
     },
+    "oci/otel-collector": {
+      "release-type": "simple",
+      "component": "oci-otel-collector"
+    },
+    "oci/otel-operator": {
+      "release-type": "simple",
+      "component": "oci-otel-operator"
+    },
     "oci/platform-system": {
       "release-type": "simple",
       "component": "oci-platform-system"
