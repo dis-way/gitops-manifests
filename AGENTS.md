@@ -38,3 +38,33 @@ This repository contains GitOps manifests for deploying DIS resources with Flux.
 - Add `oci/<name>/kustomization.yaml` and ensure `kustomize build oci/<name>` renders valid Kubernetes YAML.
 - Register the package in `release-please-config.json` and `.release-please-manifest.json`.
 - Add or update the package entry in `oci/releaseconfig.json` to control ring/environment versions.
+
+## OCI Package README Format
+
+When creating or updating a README for an `oci/<name>/` package, use this format:
+
+```markdown
+# <Package Name>
+
+<One-line description of what the package deploys.>
+
+## Variables
+
+| Variable | Default | Required | Description |
+|----------|---------|----------|-------------|
+| `VAR_NAME` | `default-value` | Yes/No | Brief description |
+
+## Usage
+
+\```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+spec:
+  path: ./base
+  postBuild:
+    substitute:
+      VAR_NAME: "value"
+\```
+```
+
+To find variables, search for `${VAR_NAME:=default}` or `${VAR_NAME}` patterns in the package YAML files. Variables with `:=` have defaults and are optional; variables without are required.
