@@ -77,6 +77,9 @@ spec:
             - tag_name: app.label.name
               key: app.kubernetes.io/name
               from: pod
+            - tag_name: dis.otel.sampling
+              key: dis.otel/sampling
+              from: deployment
         pod_association:
           - sources:
               # This rule associates all resources containing the 'k8s.pod.ip' attribute with the matching pods. If this attribute is not present in the resource, this rule will not be able to find the matching pod.
@@ -104,6 +107,15 @@ spec:
             statements:
               - delete_key(attributes, "process.command_args")
               - delete_key(resource.attributes, "process.command_args")
+      # DIS platform specific transformations
+      transform/dis:
+        error_mode: ignore
+        trace_statements:
+          - context: span
+            statements:
+            # Ensure otel sampling suggestion is set
+            - set(attributes["dis.otel.sampling"], resource.attributes["dis.otel.sampling"]) where resource.attributes["dis.otel.sampling"] != nil
+            - set(attributes["dis.otel.sampling"], "minimum") where attributes["dis.otel.sampling"] == nil
       # Hack to make azure application insights display traces somewhat correctly
       transform/azuremonitor:
         error_mode: ignore
@@ -153,11 +165,11 @@ spec:
         decision_wait: 10s
         num_traces: 1000
         policies:
-          - name: default-sample-all
+          - name: default
             type: and
             and:
               and_sub_policy:
-                - name: route-live-ready-policy
+                - name: not-route-live-ready-policy
                   type: string_attribute
                   string_attribute:
                     key: http.route
@@ -167,6 +179,35 @@ spec:
                       - "^/kuberneteswrapper/.*"
                     invert_match: true
                     enabled_regex_matching: true
+                - name: not-all-sampling-attr
+                  type: string_attribute
+                  string_attribute:
+                    key: dis.otel.sampling
+                    values: [all]
+                    invert_match: true
+                - name: probabilistic-policy
+                  type: probabilistic
+                  probabilistic:
+                    sampling_percentage: 10
+          - name: sample-all
+            type: and
+            and:
+              and_sub_policy:
+                - name: not-route-live-ready-policy
+                  type: string_attribute
+                  string_attribute:
+                    key: http.route
+                    values: 
+                      - "^/metrics"
+                      - "^/health"
+                      - "^/kuberneteswrapper/.*"
+                    invert_match: true
+                    enabled_regex_matching: true
+                - name: all-sampling-attr
+                  type: string_attribute
+                  string_attribute:
+                    key: dis.otel.sampling
+                    values: [all]
                 - name: probabilistic-policy
                   type: probabilistic
                   probabilistic:
@@ -198,6 +239,10 @@ spec:
                   status_code:
                     status_codes:
                       - ERROR
+          - name: always-sample-slow-requests
+            type: latency
+            latency:
+              threshold_ms: 1000
       filter/logs-sev:
         error_mode: ignore
         logs:
@@ -233,7 +278,7 @@ spec:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/azuremonitor, transform/drop, tail_sampling, batch]
+          processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
           exporters: [azuremonitor]
         logs:
           receivers: [otlp]
