@@ -6,7 +6,7 @@
   "oci/external-secrets-operator": "1.2.0",
   "oci/grafana-operator": "2.0.0",
   "oci/linkerd": "2.1.0",
-  "oci/otel-collector": "1.1.3",
+  "oci/otel-collector": "1.2.0",
   "oci/otel-operator": "1.3.0",
   "oci/platform-system": "1.1.0",
   "oci/whoami": "0.5.0"

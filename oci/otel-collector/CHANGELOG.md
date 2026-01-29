@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.1.3...oci-otel-collector-v1.2.0) (2026-01-29)
+
+
+### Features
+
+* default sampling rate is set to 10 percent ([#135](https://github.com/dis-way/gitops-manifests/issues/135)) ([e8e8fa1](https://github.com/dis-way/gitops-manifests/commit/e8e8fa1173500b5a511fcdf05d34ffcae2dbe23c))
+* restructure otel manifests with base and overlays ([#132](https://github.com/dis-way/gitops-manifests/issues/132)) ([2946a6e](https://github.com/dis-way/gitops-manifests/commit/2946a6ebcfabd340ecf419a24ecd243bdcb52234))
+
 ## [1.1.3](https://github.com/Altinn/altinn-platform/compare/flux-oci-otel-collector-v1.1.2...flux-oci-otel-collector-v1.1.3) (2026-01-15)
 
 
