@@ -24,7 +24,10 @@ Each folder under `oci/<name>/` is treated as a **Flux OCI artifact** (built fro
       - key: `oci/<name>`
       - value: `"1.0.0"` (or whatever initial version you want to start from)
 
-- **3) Register where it should deploy**
+- **3) Add the package changelog**
+  - **Create** `oci/<name>/CHANGELOG.md` (Release Please updates it on release)
+
+- **4) Register where it should deploy**
   - **Update** `oci/releaseconfig.json`
     - Add an entry keyed by the **release name** (folder name, **without** the `oci/` prefix), e.g.:
       - key: `<name>`
