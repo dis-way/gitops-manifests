@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v1.9.0...oci-linkerd-v2.0.0) (2026-01-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* Split linkerd into base and overlays ([#123](https://github.com/dis-way/gitops-manifests/issues/123))
+
+### Features
+
+* Split linkerd into base and overlays ([#123](https://github.com/dis-way/gitops-manifests/issues/123)) ([6e9f0e3](https://github.com/dis-way/gitops-manifests/commit/6e9f0e340465da799a141181a9f8a877db42c122))
+
 ## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v1.8.0...oci-linkerd-v1.9.0) (2026-01-19)
 
 
