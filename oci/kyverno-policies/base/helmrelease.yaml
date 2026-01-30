@@ -9,7 +9,7 @@ spec:
       chart: kyverno-policies
       sourceRef:
         kind: HelmRepository
-        name: jetstack
+        name: kyverno
         namespace: kyverno
       # renovate: datasource=helm registryUrl=https://kyverno.github.io/kyverno/ packageName=kyverno-policies
       version: 3.6.3

@@ -9,7 +9,7 @@ spec:
       chart: kyverno
       sourceRef:
         kind: HelmRepository
-        name: jetstack
+        name: kyverno
         namespace: kyverno
       # renovate: datasource=helm registryUrl=https://kyverno.github.io/kyverno/ packageName=kyverno
       version: 3.6.2
