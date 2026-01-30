@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.1.0...oci-linkerd-v2.2.0) (2026-01-30)
+
+
+### Features
+
+* Add Linkerd HelmRepo and simplify kustomize multitenancy ([#149](https://github.com/dis-way/gitops-manifests/issues/149)) ([46fa62c](https://github.com/dis-way/gitops-manifests/commit/46fa62c651dbbb05df4ae5cb4d6f59435bae594c))
+
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.0.0...oci-linkerd-v2.1.0) (2026-01-29)
+
+
+### Features
+
+* Patch namespaces for HelmReleases ([#139](https://github.com/dis-way/gitops-manifests/issues/139)) ([3f97611](https://github.com/dis-way/gitops-manifests/commit/3f97611cfd88508312ac5cf9150fdcfcdc9aa9e5))
+
 ## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v1.9.0...oci-linkerd-v2.0.0) (2026-01-29)
 
 

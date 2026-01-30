@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.2.0...oci-otel-operator-v1.3.0) (2026-01-29)
+
+
+### Features
+
+* restructure otel manifests with base and overlays ([#132](https://github.com/dis-way/gitops-manifests/issues/132)) ([2946a6e](https://github.com/dis-way/gitops-manifests/commit/2946a6ebcfabd340ecf419a24ecd243bdcb52234))
+
 ## [1.2.0](https://github.com/Altinn/altinn-platform/compare/flux-oci-otel-operator-v1.1.1...flux-oci-otel-operator-v1.2.0) (2026-01-09)
 
 
