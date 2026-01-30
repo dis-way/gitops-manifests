@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.2.0...oci-linkerd-v2.3.0) (2026-01-30)
+
+
+### Features
+
+* **linkerd:** grant cluster-admin to flux-applier ([#154](https://github.com/dis-way/gitops-manifests/issues/154)) ([54c9f1e](https://github.com/dis-way/gitops-manifests/commit/54c9f1e38ed5a95c8210642c9a68033d0e37210c))
+
 ## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.1.0...oci-linkerd-v2.2.0) (2026-01-30)
 
 
