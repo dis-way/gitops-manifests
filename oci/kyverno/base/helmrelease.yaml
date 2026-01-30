@@ -1,0 +1,29 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  chart:
+    spec:
+      chart: kyverno
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: kyverno
+      # renovate: datasource=helm registryUrl=https://kyverno.github.io/kyverno/ packageName=kyverno
+      version: 3.6.2
+  interval: 1h
+  timeout: 5m
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  values:
+    global:
+      image:
+        registry: altinncr.azurecr.io/ghcr.io
