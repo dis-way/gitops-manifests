@@ -4,6 +4,10 @@
       "release-type": "simple",
       "component": "oci-altinn-uptime"
     },
+    "oci/azure-service-operator": {
+      "release-type": "simple",
+      "component": "oci-azure-service-operator"
+    },
     "oci/blackbox-exporter": {
       "release-type": "simple",
       "component": "oci-blackbox-exporter"
