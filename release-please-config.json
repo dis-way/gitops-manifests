@@ -24,6 +24,14 @@
       "release-type": "simple",
       "component": "oci-grafana-operator"
     },
+    "oci/kyverno": {
+      "release-type": "simple",
+      "component": "oci-kyverno"
+    },
+    "oci/kyverno-policies": {
+      "release-type": "simple",
+      "component": "oci-kyverno-policies"
+    },
     "oci/linkerd": {
       "release-type": "simple",
       "component": "oci-linkerd"
