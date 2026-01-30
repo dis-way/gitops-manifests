@@ -1,0 +1,94 @@
+---
+# Allow traffic to proxy-injector webhook
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: proxy-injector-webhook
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: proxy-injector
+  port: 8443
+  proxyProtocol: TLS
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: sp-validator-webhook
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: sp-validator
+  port: 8443
+  proxyProtocol: TLS
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: policy-validator-webhook
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: policy-validator
+  port: 8443
+  proxyProtocol: TLS
+---
+# AuthZ for all webhooks (v1alpha1)
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: proxy-injector-webhook
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: proxy-injector-webhook
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kube-api-server
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: sp-validator-webhook
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: sp-validator-webhook
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kube-api-server
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: policy-validator-webhook
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: policy-validator-webhook
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kube-api-server
+---
+# Network auth for API server
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kube-api-server
+  namespace: linkerd
+spec:
+  networks:
+    - cidr: 10.240.0.0/16
+    - cidr: fd10:59f0:8c79:240::/64
