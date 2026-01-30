@@ -16,6 +16,10 @@
       "release-type": "simple",
       "component": "oci-cert-manager"
     },
+    "oci/certm-lets-encrypt-dns-issuer": {
+      "release-type": "simple",
+      "component": "oci-certm-lets-encrypt-dns-issuer"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
