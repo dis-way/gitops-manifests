@@ -3,7 +3,7 @@
   "oci/azure-service-operator": "1.2.0",
   "oci/blackbox-exporter": "0.7.0",
   "oci/cert-manager": "2.0.0",
-  "oci/certm-lets-encrypt-dns-issuer": "0.3.0",
+  "oci/certm-lets-encrypt-dns-issuer": "0.4.0",
   "oci/dis-tls-cert": "2.7.0",
   "oci/external-secrets-operator": "1.2.0",
   "oci/grafana-operator": "2.0.0",
