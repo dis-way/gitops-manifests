@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.1.0...oci-kyverno-policies-v1.1.1) (2026-01-30)
+
+
+### Bug Fixes
+
+* Point HelmReleases to kyverno repo ([#181](https://github.com/dis-way/gitops-manifests/issues/181)) ([f77fe26](https://github.com/dis-way/gitops-manifests/commit/f77fe26648b1f6b882623d4c5914d8557ce3547a))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.0.0...oci-kyverno-policies-v1.1.0) (2026-01-30)
 
 

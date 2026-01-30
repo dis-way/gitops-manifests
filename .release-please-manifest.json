@@ -8,7 +8,7 @@
   "oci/external-secrets-operator": "1.2.0",
   "oci/grafana-operator": "2.0.0",
   "oci/kyverno": "1.1.1",
-  "oci/kyverno-policies": "1.1.0",
+  "oci/kyverno-policies": "1.1.1",
   "oci/linkerd": "2.3.0",
   "oci/otel-collector": "1.2.1",
   "oci/otel-operator": "1.3.0",
