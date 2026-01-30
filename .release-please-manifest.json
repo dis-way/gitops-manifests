@@ -6,6 +6,8 @@
   "oci/dis-tls-cert": "2.7.0",
   "oci/external-secrets-operator": "1.2.0",
   "oci/grafana-operator": "2.0.0",
+  "oci/kyverno": "1.0.0",
+  "oci/kyverno-policies": "1.1.0",
   "oci/kyverno": "1.1.0",
   "oci/kyverno-policies": "1.0.0",
   "oci/linkerd": "2.3.0",
