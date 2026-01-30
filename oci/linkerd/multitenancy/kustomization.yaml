@@ -4,6 +4,7 @@ resources:
   - flux-applier-rolebindings.yaml
   - helmrepository.yaml
   - ../base
+  - ../policies
 patches:
   - target:
       kind: HelmRelease
