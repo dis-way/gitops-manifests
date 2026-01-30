@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.2.0...oci-otel-collector-v1.2.1) (2026-01-30)
+
+
+### Bug Fixes
+
+* filter noisy traefik ssl-cert error logs ([#161](https://github.com/dis-way/gitops-manifests/issues/161)) ([3c5e797](https://github.com/dis-way/gitops-manifests/commit/3c5e797501118f6153963d9c0d74fac7a92c0273))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.1.3...oci-otel-collector-v1.2.0) (2026-01-29)
 
 

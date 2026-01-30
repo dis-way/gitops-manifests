@@ -243,11 +243,12 @@ spec:
             type: latency
             latency:
               threshold_ms: 1000
-      filter/logs-sev:
+      filter/logs:
         error_mode: ignore
         logs:
           log_record:
           - 'severity_number < SEVERITY_NUMBER_WARN' #Drop all Info, debug, trace and unspecified logs
+          - 'attributes["error"] == "secret default/ssl-cert does not exist"' # Remove noisy logs from traefik that is there due to some legacy configuration that does not affect the service
       # Memory limiter to mitigate out of memory situations
       memory_limiter:
         check_interval: 1s
@@ -282,7 +283,7 @@ spec:
           exporters: [azuremonitor]
         logs:
           receivers: [otlp]
-          processors: [filter/logs-sev, memory_limiter, resourcedetection/aks, k8sattributes,batch]
+          processors: [filter/logs, memory_limiter, resourcedetection/aks, k8sattributes,batch]
           exporters: [azuremonitor]
         metrics:
           receivers: [otlp]
