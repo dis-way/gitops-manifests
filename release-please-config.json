@@ -20,6 +20,10 @@
       "release-type": "simple",
       "component": "oci-certm-lets-encrypt-dns-issuer"
     },
+    "oci/dis-apim": {
+      "release-type": "simple",
+      "component": "oci-dis-apim"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
