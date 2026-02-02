@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.2.1...oci-otel-collector-v1.3.0) (2026-02-02)
+
+
+### Features
+
+* **otel-collector:** allow ingress from all meshed pods ([#212](https://github.com/dis-way/gitops-manifests/issues/212)) ([ec356c5](https://github.com/dis-way/gitops-manifests/commit/ec356c5c26dfce553080e7df24b93fb2d4a61661))
+
 ## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.2.0...oci-otel-collector-v1.2.1) (2026-01-30)
 
 
