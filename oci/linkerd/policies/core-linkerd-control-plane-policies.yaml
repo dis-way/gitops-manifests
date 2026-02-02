@@ -20,8 +20,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      linkerd.io/control-plane-component: sp-validator
-  port: 8443
+      linkerd.io/control-plane-component: destination
+  port: sp-validator
   proxyProtocol: TLS
 ---
 apiVersion: policy.linkerd.io/v1beta3
@@ -32,8 +32,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      linkerd.io/control-plane-component: policy-validator
-  port: 8443
+      linkerd.io/control-plane-component: destination
+  port: policy-https
   proxyProtocol: TLS
 ---
 # AuthZ for all webhooks (v1alpha1)
@@ -82,7 +82,7 @@ spec:
       kind: NetworkAuthentication
       name: kube-api-server
 ---
-# Network auth for API server
+# Network auth for API server (includes node CIDR for AKS API Server VNET Integration)
 apiVersion: policy.linkerd.io/v1alpha1
 kind: NetworkAuthentication
 metadata:
@@ -92,3 +92,249 @@ spec:
   networks:
     - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
     - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
+    - cidr: ${AKS_NODE_IPV4_CIDR}
+    - cidr: ${AKS_NODE_IPV6_CIDR}
+---
+# Network auth for kubelet health checks
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kubelet
+  namespace: linkerd
+spec:
+  networks:
+    - cidr: ${AKS_NODE_IPV4_CIDR}
+    - cidr: ${AKS_NODE_IPV6_CIDR}
+---
+# Health check servers for destination pods
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: destination-admin
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: destination
+  port: dest-admin
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: destination-policy-admin
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: destination
+  port: policy-admin
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: destination-spval-admin
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: destination
+  port: spval-admin
+  proxyProtocol: HTTP/1
+---
+# Health check server for proxy-injector pods
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: proxy-injector-admin
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: proxy-injector
+  port: injector-admin
+  proxyProtocol: HTTP/1
+---
+# Health check server for identity pods
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: identity-admin
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: identity
+  port: ident-admin
+  proxyProtocol: HTTP/1
+---
+# AuthorizationPolicies for health checks
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: destination-admin
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: destination-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: destination-policy-admin
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: destination-policy-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: destination-spval-admin
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: destination-spval-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: proxy-injector-admin
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: proxy-injector-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: identity-admin
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: identity-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+# Mesh internal traffic - allows meshed pods to communicate with control plane
+apiVersion: policy.linkerd.io/v1alpha1
+kind: MeshTLSAuthentication
+metadata:
+  name: any-meshed-pod
+  namespace: linkerd
+spec:
+  identities:
+    - "*"
+---
+# Identity gRPC - proxies need this to get TLS certificates
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: identity-grpc
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: identity
+  port: ident-grpc
+  proxyProtocol: grpc
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: identity-grpc
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: identity-grpc
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: any-meshed-pod
+---
+# Destination gRPC - proxies need this for service discovery and policy
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: destination-grpc
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: destination
+  port: dest-grpc
+  proxyProtocol: grpc
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: destination-grpc
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: destination-grpc
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: any-meshed-pod
+---
+# Policy gRPC - proxies need this for policy updates
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: policy-grpc
+  namespace: linkerd
+spec:
+  podSelector:
+    matchLabels:
+      linkerd.io/control-plane-component: destination
+  port: policy-grpc
+  proxyProtocol: grpc
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: policy-grpc
+  namespace: linkerd
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: policy-grpc
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: any-meshed-pod
