@@ -21,3 +21,27 @@ patches:
       - op: add
         path: /spec/targetNamespace
         value: kyverno
+      - op: add
+        path: /spec/values
+        value:
+          podSecurityStandard: baseline
+          podSecuritySeverity: medium
+          validationFailureAction: Audit
+          background: true
+          policyExclude:
+            all:
+              any:
+                - resources:
+                    namespaces:
+                      - cert-manager
+                      - external-secrets
+                      - flux-system
+                      - grafana
+                      - kube-node-lease
+                      - kube-public
+                      - kube-system
+                      - kyverno
+                      - linkerd
+                      - monitoring
+                      - platform-system
+                      - traefik
