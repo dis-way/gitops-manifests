@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.1.1...oci-kyverno-policies-v1.2.0) (2026-02-02)
+
+
+### Features
+
+* **kyverno-policies:** add HelmRelease values ([#205](https://github.com/dis-way/gitops-manifests/issues/205)) ([e0cceb0](https://github.com/dis-way/gitops-manifests/commit/e0cceb0aba2f88202856e54c28a22411139031d6))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.1.0...oci-kyverno-policies-v1.1.1) (2026-01-30)
 
 
