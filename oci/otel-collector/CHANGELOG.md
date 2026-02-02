@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.0...oci-otel-collector-v1.3.1) (2026-02-02)
+
+
+### Bug Fixes
+
+* **otel-collector:** set proxyProtocol to unknown for OTLP HTTP port ([#220](https://github.com/dis-way/gitops-manifests/issues/220)) ([eb97f9e](https://github.com/dis-way/gitops-manifests/commit/eb97f9e7523f835033e437ab66d06195834ffd37))
+
 ## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.2.1...oci-otel-collector-v1.3.0) (2026-02-02)
 
 
