@@ -21,7 +21,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: otel-collector
   port: 4318
-  proxyProtocol: HTTP
+  proxyProtocol: unknown
 ---
 apiVersion: policy.linkerd.io/v1alpha1
 kind: MeshTLSAuthentication
