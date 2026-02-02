@@ -82,7 +82,7 @@ spec:
       kind: NetworkAuthentication
       name: kube-api-server
 ---
-# Network auth for API server (includes node CIDR for AKS API Server VNET Integration)
+# Network auth for API server (includes VNET CIDR for AKS API Server VNET Integration)
 apiVersion: policy.linkerd.io/v1alpha1
 kind: NetworkAuthentication
 metadata:
@@ -92,8 +92,8 @@ spec:
   networks:
     - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
     - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
-    - cidr: ${AKS_NODE_IPV4_CIDR}
-    - cidr: ${AKS_NODE_IPV6_CIDR}
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
 ---
 # Network auth for kubelet health checks
 apiVersion: policy.linkerd.io/v1alpha1
@@ -103,8 +103,8 @@ metadata:
   namespace: linkerd
 spec:
   networks:
-    - cidr: ${AKS_NODE_IPV4_CIDR}
-    - cidr: ${AKS_NODE_IPV6_CIDR}
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
 ---
 # Health check servers for destination pods
 apiVersion: policy.linkerd.io/v1beta3

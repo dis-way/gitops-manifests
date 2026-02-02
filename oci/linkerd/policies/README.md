@@ -90,8 +90,8 @@ Without these policies, the following will fail when using restrictive inbound p
 |----------|---------|----------|-------------|
 | `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | Pod network IPv4 CIDR |
 | `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | Pod network IPv6 CIDR |
-| `AKS_NODE_IPV4_CIDR` | - | Yes | Node network IPv4 CIDR |
-| `AKS_NODE_IPV6_CIDR` | - | Yes | Node network IPv6 CIDR |
+| `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for API server and kubelet) |
+| `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR (for API server and kubelet) |
 
 ## Usage
 
@@ -102,8 +102,6 @@ spec:
   path: ./policies
   postBuild:
     substitute:
-      AKS_POD_IPV4_CIDR: "10.240.0.0/16"
-      AKS_POD_IPV6_CIDR: "fd10:59f0:8c79:240::/64"
-      AKS_NODE_IPV4_CIDR: "10.205.0.0/16"
-      AKS_NODE_IPV6_CIDR: "fd12:2291:d70a::/56"
+      AKS_VNET_IPV4_CIDR: "10.205.0.0/16"
+      AKS_VNET_IPV6_CIDR: "fd12:2291:d70a::/56"
 ```
