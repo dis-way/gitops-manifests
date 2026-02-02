@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.2.1...oci-external-secrets-operator-v1.3.0) (2026-02-02)
+
+
+### Features
+
+* **external-secrets:** add linkerd policy for webhook ([#208](https://github.com/dis-way/gitops-manifests/issues/208)) ([e1a62a8](https://github.com/dis-way/gitops-manifests/commit/e1a62a86ff116c37ad04a73173a4350a0fb5dafe))
+
 ## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.2.0...oci-external-secrets-operator-v1.2.1) (2026-02-02)
 
 
