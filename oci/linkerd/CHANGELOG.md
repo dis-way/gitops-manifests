@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.3.0...oci-linkerd-v2.4.0) (2026-02-02)
+
+
+### Features
+
+* **linkerd:** Add control-plane policies ([#180](https://github.com/dis-way/gitops-manifests/issues/180)) ([2d14517](https://github.com/dis-way/gitops-manifests/commit/2d14517e24b28211f20c6c2607d86f0cac0bec6e))
+
 ## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.2.0...oci-linkerd-v2.3.0) (2026-01-30)
 
 
