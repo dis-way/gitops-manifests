@@ -1,0 +1,63 @@
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: otel-collector-grpc
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: otel-collector
+  port: 4317
+  proxyProtocol: gRPC
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: otel-collector-http
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: otel-collector
+  port: 4318
+  proxyProtocol: HTTP
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: MeshTLSAuthentication
+metadata:
+  name: allow-all-meshed
+  namespace: monitoring
+spec:
+  identities:
+    - "*"
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: otel-collector-ingress
+  namespace: monitoring
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: otel-collector-grpc
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: allow-all-meshed
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: otel-collector-ingress-http
+  namespace: monitoring
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: otel-collector-http
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: allow-all-meshed
