@@ -90,5 +90,5 @@ metadata:
   namespace: linkerd
 spec:
   networks:
-    - cidr: 10.240.0.0/16
-    - cidr: fd10:59f0:8c79:240::/64
+    - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
+    - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
