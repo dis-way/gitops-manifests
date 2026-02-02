@@ -22,7 +22,7 @@
     },
     "oci/dis-apim": {
       "release-type": "simple",
-      "component": "flux-oci-dis-apim"
+      "component": "oci-dis-apim"
     },
     "oci/dis-tls-cert": {
       "release-type": "simple",
