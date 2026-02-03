@@ -296,7 +296,8 @@ spec:
       kind: NetworkAuthentication
       name: cluster-pods
 ---
-# Destination gRPC - proxies need this for service discovery and policy
+# Destination gRPC - proxies need this for service discovery
+# NOTE: Uses NetworkAuthentication because bootstrapping proxies need this before having mTLS
 apiVersion: policy.linkerd.io/v1beta3
 kind: Server
 metadata:
@@ -321,10 +322,11 @@ spec:
     name: destination-grpc
   requiredAuthenticationRefs:
     - group: policy.linkerd.io
-      kind: MeshTLSAuthentication
-      name: any-meshed-pod
+      kind: NetworkAuthentication
+      name: cluster-pods
 ---
 # Policy gRPC - proxies need this for policy updates
+# NOTE: Uses NetworkAuthentication because bootstrapping proxies need this before having mTLS
 apiVersion: policy.linkerd.io/v1beta3
 kind: Server
 metadata:
@@ -349,5 +351,5 @@ spec:
     name: policy-grpc
   requiredAuthenticationRefs:
     - group: policy.linkerd.io
-      kind: MeshTLSAuthentication
-      name: any-meshed-pod
+      kind: NetworkAuthentication
+      name: cluster-pods
