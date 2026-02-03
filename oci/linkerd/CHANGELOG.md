@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.6.0...oci-linkerd-v2.6.1) (2026-02-03)
+
+
+### Bug Fixes
+
+* Use NetworkAuthentication for control plane ([#256](https://github.com/dis-way/gitops-manifests/issues/256)) ([300cd32](https://github.com/dis-way/gitops-manifests/commit/300cd32499c337c5e98931a0f34c3fd3e5fbc6da))
+
 ## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.5.1...oci-linkerd-v2.6.0) (2026-02-03)
 
 
