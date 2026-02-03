@@ -1,0 +1,82 @@
+---
+# Server for health probes (kubelet)
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: aso-health
+  namespace: azureserviceoperator-system
+spec:
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  port: health-port
+  proxyProtocol: HTTP/1
+---
+# Server for webhook (kube-apiserver)
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: aso-webhook
+  namespace: azureserviceoperator-system
+spec:
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  port: webhook-server
+  proxyProtocol: TLS
+---
+# Network auth for kubelet
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kubelet
+  namespace: azureserviceoperator-system
+spec:
+  networks:
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
+---
+# Network auth for kube-apiserver
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kube-api-server
+  namespace: azureserviceoperator-system
+spec:
+  networks:
+    - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
+    - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
+---
+# AuthorizationPolicy for health probes
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: aso-health
+  namespace: azureserviceoperator-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: aso-health
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+# AuthorizationPolicy for webhook
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: aso-webhook
+  namespace: azureserviceoperator-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: aso-webhook
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kube-api-server
