@@ -27,3 +27,23 @@ spec:
     global:
       image:
         registry: altinncr.azurecr.io/ghcr.io
+    reportsController:
+      metering:
+        config: grpc
+        port: ${OTEL_PORT:=4317}
+        collector: "${OTEL_URL:=otel-collector.monitoring.svc.cluster.local}"
+    cleanupController:
+      metering:
+        config: grpc
+        port: ${OTEL_PORT:=4317}
+        collector: "${OTEL_URL:=otel-collector.monitoring.svc.cluster.local}"
+    backgroundController:
+      metering:
+        config: grpc
+        port: ${OTEL_PORT:=4317}
+        collector: "${OTEL_URL:=otel-collector.monitoring.svc.cluster.local}"
+    admissionController:
+      metering:
+        config: grpc
+        port: ${OTEL_PORT:=4317}
+        collector: "${OTEL_URL:=otel-collector.monitoring.svc.cluster.local}"
