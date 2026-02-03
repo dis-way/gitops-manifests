@@ -15,26 +15,30 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 ```
 ┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
 │   kube-apiserver    │     │       kubelet       │     │    mesh proxies     │
-│ (pod + node CIDRs)  │     │    (node CIDRs)     │     │   (mTLS identity)   │
+│  (pod + VNET CIDRs) │     │    (VNET CIDRs)     │     │   (pod CIDRs/mTLS)  │
 └──────────┬──────────┘     └──────────┬──────────┘     └──────────┬──────────┘
            │                           │                           │
            ▼                           ▼                           ▼
 ┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
-│ NetworkAuthentication│    │ NetworkAuthentication│    │ MeshTLSAuthentication│
-│  "kube-api-server"  │     │      "kubelet"      │     │   "any-meshed-pod"  │
-└──────────┬──────────┘     └──────────┬──────────┘     └──────────┬──────────┘
-           │                           │                           │
-           ▼                           ▼                           ▼
-┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
-│ AuthorizationPolicy │     │ AuthorizationPolicy │     │ AuthorizationPolicy │
-│   (webhook access)  │     │  (health checks)    │     │   (gRPC services)   │
-└──────────┬──────────┘     └──────────┬──────────┘     └──────────┬──────────┘
-           │                           │                           │
-           ▼                           ▼                           ▼
-┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
-│       Server        │     │       Server        │     │       Server        │
-│  (TLS :8443/9443)   │     │  (HTTP/1 admin)     │     │    (gRPC ports)     │
-└─────────────────────┘     └─────────────────────┘     └─────────────────────┘
+│ NetworkAuthentication│    │ NetworkAuthentication│    │ NetworkAuthentication│
+│  "kube-api-server"  │     │      "kubelet"      │     │   "cluster-pods"    │
+└──────────┬──────────┘     └──────────┬──────────┘     │ MeshTLSAuthentication│
+           │                           │                │   "any-meshed-pod"  │
+           │                           │                └──────────┬──────────┘
+           ▼                           ▼                           │
+┌─────────────────────┐     ┌─────────────────────┐                │
+│ AuthorizationPolicy │     │ AuthorizationPolicy │                │
+│   (webhook access)  │     │  (health checks)    │                ▼
+└──────────┬──────────┘     └──────────┬──────────┘     ┌─────────────────────┐
+           │                           │                │ AuthorizationPolicy │
+           ▼                           ▼                │   (gRPC services)   │
+┌─────────────────────┐     ┌─────────────────────┐     └──────────┬──────────┘
+│       Server        │     │       Server        │                │
+│  (TLS :8443/9443)   │     │  (HTTP/1 admin)     │                ▼
+└─────────────────────┘     └─────────────────────┘     ┌─────────────────────┐
+                                                        │       Server        │
+                                                        │    (gRPC ports)     │
+                                                        └─────────────────────┘
 ```
 
 ## Resources
@@ -43,8 +47,9 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 | Resource | Type | Purpose |
 |----------|------|---------|
-| `kube-api-server` | NetworkAuthentication | Allows traffic from pod and node CIDRs (for webhooks) |
-| `kubelet` | NetworkAuthentication | Allows traffic from node CIDRs (for health probes) |
+| `kube-api-server` | NetworkAuthentication | Allows traffic from pod and VNET CIDRs (for webhooks) |
+| `kubelet` | NetworkAuthentication | Allows traffic from VNET CIDRs (for health probes) |
+| `cluster-pods` | NetworkAuthentication | Allows traffic from pod CIDRs (for identity bootstrap) |
 | `any-meshed-pod` | MeshTLSAuthentication | Allows any pod with valid mesh identity |
 
 ### Webhook Servers
@@ -67,11 +72,13 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 ### Mesh Internal Servers
 
-| Server | Component | Port | Purpose |
-|--------|-----------|------|---------|
-| `identity-grpc` | identity | ident-grpc | Proxies obtain TLS certificates |
-| `destination-grpc` | destination | dest-grpc | Proxies get service discovery info |
-| `policy-grpc` | destination | policy-grpc | Proxies get policy updates |
+| Server | Component | Port | Auth | Purpose |
+|--------|-----------|------|------|---------|
+| `identity-grpc` | identity | ident-grpc | NetworkAuth | Proxies obtain TLS certificates (bootstrap) |
+| `destination-grpc` | destination | dest-grpc | MeshTLS | Proxies get service discovery info |
+| `policy-grpc` | destination | policy-grpc | MeshTLS | Proxies get policy updates |
+
+Note: `identity-grpc` uses `NetworkAuthentication` instead of `MeshTLSAuthentication` because bootstrapping proxies don't have mTLS identity yet (chicken-and-egg problem).
 
 ## Why This Matters
 

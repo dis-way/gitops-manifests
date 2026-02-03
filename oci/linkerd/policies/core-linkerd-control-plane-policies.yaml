@@ -245,6 +245,17 @@ spec:
       kind: NetworkAuthentication
       name: kubelet
 ---
+# Network auth for cluster pods (used by identity service for bootstrapping)
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: cluster-pods
+  namespace: linkerd
+spec:
+  networks:
+    - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
+    - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
+---
 # Mesh internal traffic - allows meshed pods to communicate with control plane
 apiVersion: policy.linkerd.io/v1alpha1
 kind: MeshTLSAuthentication
@@ -256,6 +267,8 @@ spec:
     - "*"
 ---
 # Identity gRPC - proxies need this to get TLS certificates
+# NOTE: Uses NetworkAuthentication instead of MeshTLSAuthentication because
+# bootstrapping proxies don't have mTLS identity yet (chicken-and-egg problem)
 apiVersion: policy.linkerd.io/v1beta3
 kind: Server
 metadata:
@@ -280,8 +293,8 @@ spec:
     name: identity-grpc
   requiredAuthenticationRefs:
     - group: policy.linkerd.io
-      kind: MeshTLSAuthentication
-      name: any-meshed-pod
+      kind: NetworkAuthentication
+      name: cluster-pods
 ---
 # Destination gRPC - proxies need this for service discovery and policy
 apiVersion: policy.linkerd.io/v1beta3
