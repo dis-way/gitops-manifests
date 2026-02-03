@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.2.0...oci-azure-service-operator-v1.3.0) (2026-02-03)
+
+
+### Features
+
+* Fix dependsOn namespace in multitenancy ([#230](https://github.com/dis-way/gitops-manifests/issues/230)) ([41b89ad](https://github.com/dis-way/gitops-manifests/commit/41b89ad8b67635331549136fb4370739e05b2f1f))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.1.1...oci-azure-service-operator-v1.2.0) (2026-01-30)
 
 
