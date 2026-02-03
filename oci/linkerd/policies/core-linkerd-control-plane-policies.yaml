@@ -266,7 +266,7 @@ spec:
     matchLabels:
       linkerd.io/control-plane-component: identity
   port: ident-grpc
-  proxyProtocol: grpc
+  proxyProtocol: gRPC
 ---
 apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
@@ -294,7 +294,7 @@ spec:
     matchLabels:
       linkerd.io/control-plane-component: destination
   port: dest-grpc
-  proxyProtocol: grpc
+  proxyProtocol: gRPC
 ---
 apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
@@ -322,7 +322,7 @@ spec:
     matchLabels:
       linkerd.io/control-plane-component: destination
   port: policy-grpc
-  proxyProtocol: grpc
+  proxyProtocol: gRPC
 ---
 apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
