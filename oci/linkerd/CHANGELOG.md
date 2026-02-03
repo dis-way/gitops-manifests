@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.5.0...oci-linkerd-v2.5.1) (2026-02-03)
+
+
+### Bug Fixes
+
+* **linkerd:** use gRPC for proxyProtocol ([#248](https://github.com/dis-way/gitops-manifests/issues/248)) ([bceb94c](https://github.com/dis-way/gitops-manifests/commit/bceb94c5471ebea33d0e962e64dfd4f52de19514))
+
 ## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.4.0...oci-linkerd-v2.5.0) (2026-02-03)
 
 
