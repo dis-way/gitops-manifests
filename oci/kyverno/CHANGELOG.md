@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.1.1...oci-kyverno-v1.2.0) (2026-02-03)
+
+
+### Features
+
+* **kyverno:** enable metering with otel ([#239](https://github.com/dis-way/gitops-manifests/issues/239)) ([3f8b08f](https://github.com/dis-way/gitops-manifests/commit/3f8b08fbc859f4c711c7ef2c41327dbd4eb23454))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.1.0...oci-kyverno-v1.1.1) (2026-01-30)
 
 
