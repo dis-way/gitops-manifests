@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.4.0...oci-linkerd-v2.5.0) (2026-02-03)
+
+
+### Features
+
+* **linkerd:** Add node CIDR auth and admin svcs ([#215](https://github.com/dis-way/gitops-manifests/issues/215)) ([11a01c0](https://github.com/dis-way/gitops-manifests/commit/11a01c0874338969524ce94bf39d016eb63d1e41))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.3.0...oci-linkerd-v2.4.0) (2026-02-02)
 
 
