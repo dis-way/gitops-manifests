@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.3.0...oci-azure-service-operator-v1.3.1) (2026-02-03)
+
+
+### Features
+
+* linkerd policy allow health check aso ([#236](https://github.com/dis-way/gitops-manifests/issues/236)) ([0c6ff52](https://github.com/dis-way/gitops-manifests/commit/0c6ff52a04f79aa0eed6397a8d491fa88129a11c))
+
 ## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.2.0...oci-azure-service-operator-v1.3.0) (2026-02-03)
 
 
