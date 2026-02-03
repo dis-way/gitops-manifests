@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.3.0...oci-external-secrets-operator-v1.4.0) (2026-02-03)
+
+
+### Features
+
+* add Linkerd policies for external-secrets ([#237](https://github.com/dis-way/gitops-manifests/issues/237)) ([a5af53a](https://github.com/dis-way/gitops-manifests/commit/a5af53a6d6c1dbe90871db6ae340b8e8d2a91c9e))
+
 ## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.2.1...oci-external-secrets-operator-v1.3.0) (2026-02-02)
 
 
