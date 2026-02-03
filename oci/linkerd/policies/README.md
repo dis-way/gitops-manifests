@@ -74,11 +74,11 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 | Server | Component | Port | Auth | Purpose |
 |--------|-----------|------|------|---------|
-| `identity-grpc` | identity | ident-grpc | NetworkAuth | Proxies obtain TLS certificates (bootstrap) |
-| `destination-grpc` | destination | dest-grpc | MeshTLS | Proxies get service discovery info |
-| `policy-grpc` | destination | policy-grpc | MeshTLS | Proxies get policy updates |
+| `identity-grpc` | identity | ident-grpc | NetworkAuth | Proxies obtain TLS certificates |
+| `destination-grpc` | destination | dest-grpc | NetworkAuth | Proxies get service discovery info |
+| `policy-grpc` | destination | policy-grpc | NetworkAuth | Proxies get policy updates |
 
-Note: `identity-grpc` uses `NetworkAuthentication` instead of `MeshTLSAuthentication` because bootstrapping proxies don't have mTLS identity yet (chicken-and-egg problem).
+Note: All control plane gRPC services use `NetworkAuthentication` (pod CIDRs) instead of `MeshTLSAuthentication` because bootstrapping proxies need to access these services before they have mTLS identity (chicken-and-egg problem).
 
 ## Why This Matters
 
