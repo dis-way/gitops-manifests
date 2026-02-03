@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.5.1...oci-linkerd-v2.6.0) (2026-02-03)
+
+
+### Features
+
+* **linkerd:** add cluster-pods network auth ([#252](https://github.com/dis-way/gitops-manifests/issues/252)) ([0063ebf](https://github.com/dis-way/gitops-manifests/commit/0063ebfca26a9140198c61fd99e399b6cd093a82))
+
 ## [2.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.5.0...oci-linkerd-v2.5.1) (2026-02-03)
 
 
