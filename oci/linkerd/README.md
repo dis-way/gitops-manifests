@@ -17,8 +17,12 @@ Deploys Linkerd service mesh with High Availability configuration.
 
 | Path | Description |
 |------|-------------|
-| `base` | HelmRelease with HA values, HelmRepository, and namespace |
-| `apps` | Additional application resources |
-| `post-deploy` | Resources applied after initial deployment |
-| `multitenancy` | Multi-tenant configuration |
-| `policies` | Linkerd authorization policies for default-deny inbound |
+| `base` | HelmRelease with HA values, HelmRepository, cert-manager resources, and namespace |
+| `apps` | Standalone overlay that includes only base |
+| `post-deploy` | Rollout restart job for re-injecting proxies after upgrades |
+| `multitenancy` | Multi-tenant overlay with platform-system namespace patches |
+| `policies` | Linkerd authorization policies for control plane (webhooks, health checks, gRPC) |
+
+## Deployment Notes
+
+The `policies` layer contains AuthorizationPolicy CRDs that require the Linkerd CRDs to be installed first. Deploy policies via a separate Flux Kustomization that depends on the linkerd-crds HelmRelease.
