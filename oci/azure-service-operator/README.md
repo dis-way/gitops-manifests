@@ -1,13 +1,15 @@
-# Linkerd
+# Azure Service Operator
 
-Deploys Linkerd service mesh with High Availability configuration.
+Deploys Azure Service Operator v2 for managing Azure resources via Kubernetes CRDs.
 
 ## Variables
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `DEFAULT_INBOUND_POLICY` | `all-unauthenticated` | No | Default inbound policy for proxied workloads |
-| `DISABLE_IPV6` | `false` | No | Disable IPv6 support in the proxy |
+| `CRD_PATTERN` | - | Yes | Pattern for which Azure CRDs to install |
+| `AZURE_TENANT_ID` | - | Yes | Azure AD tenant ID |
+| `AZURE_CLIENT_ID` | - | Yes | Azure AD client ID for workload identity |
+| `AZURE_SUBSCRIPTION_ID` | - | Yes | Azure subscription ID |
 | `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | Pod network IPv4 CIDR (for policies) |
 | `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | Pod network IPv6 CIDR (for policies) |
 | `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for policies) |
@@ -17,8 +19,11 @@ Deploys Linkerd service mesh with High Availability configuration.
 
 | Path | Description |
 |------|-------------|
-| `base` | HelmRelease with HA values, HelmRepository, and namespace |
+| `base` | HelmRelease, HelmRepository, and namespace |
 | `apps` | Additional application resources |
-| `post-deploy` | Resources applied after initial deployment |
 | `multitenancy` | Multi-tenant configuration |
 | `policies` | Linkerd authorization policies for default-deny inbound |
+
+## Dependencies
+
+- `cert-manager` must be installed (HelmRelease depends on it)

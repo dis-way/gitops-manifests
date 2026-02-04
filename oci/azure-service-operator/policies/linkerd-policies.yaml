@@ -49,6 +49,17 @@ spec:
     - cidr: ${AKS_VNET_IPV4_CIDR}
     - cidr: ${AKS_VNET_IPV6_CIDR}
 ---
+# Proxy admin port for kubelet health checks on meshed pods
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: proxy-admin
+  namespace: azureserviceoperator-system
+spec:
+  podSelector: {}
+  port: 4191
+  proxyProtocol: HTTP/1
+---
 # AuthorizationPolicy for health probes
 apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
@@ -80,3 +91,19 @@ spec:
     - group: policy.linkerd.io
       kind: NetworkAuthentication
       name: kube-api-server
+---
+# AuthorizationPolicy for proxy admin
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: proxy-admin
+  namespace: azureserviceoperator-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: proxy-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
