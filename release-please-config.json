@@ -64,6 +64,10 @@
       "release-type": "simple",
       "component": "oci-platform-system"
     },
+    "oci/traefik": {
+      "release-type": "simple",
+      "component": "oci-traefik"
+    },
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"

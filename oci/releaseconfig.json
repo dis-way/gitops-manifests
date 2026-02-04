@@ -127,6 +127,14 @@
     "prod_ring1": "1.1.0",
     "prod_ring2": "1.1.0"
   },
+  "traefik": {
+    "at_ring1": "2.1.0",
+    "at_ring2": "2.1.0",
+    "tt_ring1": "2.1.0",
+    "tt_ring2": "2.1.0",
+    "prod_ring1": "2.1.0",
+    "prod_ring2": "2.1.0"
+  },
   "whoami": {
     "at_ring1": "0.5.1",
     "at_ring2": "0.5.1",
