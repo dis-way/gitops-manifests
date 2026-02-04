@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.5.0...oci-whoami-v0.5.1) (2026-02-04)
+
+
+### Features
+
+* **whoami:** add package with Linkerd policies ([#266](https://github.com/dis-way/gitops-manifests/issues/266)) ([b715f24](https://github.com/dis-way/gitops-manifests/commit/b715f24d64704cc3414cd6eac88173d10c24849f))
+
 ## [0.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.4.0...oci-whoami-v0.5.0) (2026-01-19)
 
 
