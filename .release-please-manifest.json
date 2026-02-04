@@ -6,7 +6,7 @@
   "oci/certm-lets-encrypt-dns-issuer": "0.4.0",
   "oci/dis-apim": "0.1.0",
   "oci/dis-tls-cert": "2.7.0",
-  "oci/external-secrets-operator": "1.4.0",
+  "oci/external-secrets-operator": "1.5.0",
   "oci/grafana-operator": "2.0.0",
   "oci/kyverno": "1.2.0",
   "oci/kyverno-policies": "1.2.0",
