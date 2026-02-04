@@ -68,3 +68,13 @@ spec:
 ```
 
 To find variables, search for `${VAR_NAME:=default}` or `${VAR_NAME}` patterns in the package YAML files. Variables with `:=` have defaults and are optional; variables without are required.
+
+## Linkerd Policy README Format
+
+When creating or updating a README for a `policies/` subfolder containing Linkerd authorization policies, follow the format in `oci/linkerd/policies/README.md`. Key sections to include:
+
+- **Overview**: What the policies allow (webhooks, health checks, proxy admin)
+- **Architecture**: ASCII diagram of traffic flow
+- **Resources**: Tables for Authentication, Servers, and AuthorizationPolicies
+- **Why This Matters**: Failure modes without these policies
+- **Variables**: Required CIDR variables for NetworkAuthentication
