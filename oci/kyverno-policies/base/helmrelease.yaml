@@ -21,4 +21,8 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  # values:
+  values:
+    podSecurityStandard: baseline
+    podSecuritySeverity: medium
+    validationFailureAction: Audit
+    background: true
