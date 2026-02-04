@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.3.1...oci-azure-service-operator-v1.4.0) (2026-02-04)
+
+
+### Features
+
+* **policies:** Add Linkerd policies and READMEs ([#262](https://github.com/dis-way/gitops-manifests/issues/262)) ([a088422](https://github.com/dis-way/gitops-manifests/commit/a0884220f04e3bc94dc88705b05b102d5366c201))
+
 ## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.3.0...oci-azure-service-operator-v1.3.1) (2026-02-03)
 
 
