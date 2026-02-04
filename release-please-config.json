@@ -20,6 +20,10 @@
       "release-type": "simple",
       "component": "oci-certm-lets-encrypt-dns-issuer"
     },
+    "flux/dis-identity": {
+      "release-type": "simple",
+      "component": "flux-oci-dis-identity"
+    },
     "oci/dis-apim": {
       "release-type": "simple",
       "component": "oci-dis-apim"
