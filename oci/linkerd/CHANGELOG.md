@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.7.0...oci-linkerd-v2.8.0) (2026-02-04)
+
+
+### Features
+
+* **linkerd:** Update README and add deployment notes ([#284](https://github.com/dis-way/gitops-manifests/issues/284)) ([1bd5566](https://github.com/dis-way/gitops-manifests/commit/1bd5566d4101d8a9c4f24684fa61823d2ecc7a0d))
+
 ## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.6.1...oci-linkerd-v2.7.0) (2026-02-04)
 
 
