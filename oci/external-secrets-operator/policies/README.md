@@ -85,15 +85,4 @@ Without these policies, the following will fail when using restrictive inbound p
 | `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for API server and kubelet) |
 | `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR (for API server and kubelet) |
 
-## Usage
 
-```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-spec:
-  path: ./policies
-  postBuild:
-    substitute:
-      AKS_VNET_IPV4_CIDR: "10.205.0.0/16"
-      AKS_VNET_IPV6_CIDR: "fd12:2291:d70a::/56"
-```
