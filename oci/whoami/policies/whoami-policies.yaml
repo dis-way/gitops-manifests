@@ -1,0 +1,111 @@
+---
+# Network authentication for kubelet health checks
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kubelet
+  namespace: whoami
+spec:
+  networks:
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
+---
+# Mesh authentication for any meshed pod
+apiVersion: policy.linkerd.io/v1alpha1
+kind: MeshTLSAuthentication
+metadata:
+  name: any-meshed-pod
+  namespace: whoami
+spec:
+  identities:
+    - "*"
+---
+# Server for whoami HTTP port
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: whoami-http
+  namespace: whoami
+spec:
+  podSelector:
+    matchLabels:
+      app: whoami
+  port: 80
+  proxyProtocol: HTTP/1
+---
+# Server for proxy admin port (health checks)
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: whoami-proxy-admin
+  namespace: whoami
+spec:
+  podSelector:
+    matchLabels:
+      app: whoami
+  port: linkerd-admin
+  proxyProtocol: HTTP/1
+---
+# HTTPRoute for health check path
+apiVersion: policy.linkerd.io/v1beta3
+kind: HTTPRoute
+metadata:
+  name: whoami-health
+  namespace: whoami
+spec:
+  parentRefs:
+    - group: policy.linkerd.io
+      kind: Server
+      name: whoami-http
+  rules:
+    - matches:
+        - path:
+            value: /health
+---
+# Allow meshed traffic to whoami HTTP (all paths)
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: whoami-http-mesh
+  namespace: whoami
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: whoami-http
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: any-meshed-pod
+---
+# Allow kubelet health probes to /health only
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: whoami-health-kubelet
+  namespace: whoami
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: HTTPRoute
+    name: whoami-health
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+# Allow kubelet health checks to proxy admin
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: whoami-proxy-admin
+  namespace: whoami
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: whoami-proxy-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
