@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.1...oci-otel-collector-v1.3.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* **otel-collector:** reduce sampling rate and remove unused attributes ([#293](https://github.com/dis-way/gitops-manifests/issues/293)) ([e83e2de](https://github.com/dis-way/gitops-manifests/commit/e83e2de086820bad73598b574b7ba7ee84445de6))
+
 ## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.0...oci-otel-collector-v1.3.1) (2026-02-02)
 
 
