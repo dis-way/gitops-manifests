@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ../gateway-api
   - ../base
 patches:
   - target:
@@ -21,3 +22,32 @@ patches:
       - op: add
         path: /spec/targetNamespace
         value: traefik
+  - target:
+      kind: HelmRelease
+      name: altinn-traefik
+    patch: |
+      - op: replace
+        path: /spec/values/providers/kubernetesCRD/enabled
+        value: false
+      - op: replace
+        path: /spec/values/providers/kubernetesGateway/enabled
+        value: true
+      - op: add
+        path: /spec/values/gateway
+        value:
+          enabled: true
+          listeners:
+            http:
+              port: 8000
+              protocol: HTTP
+              hostname: "${DEFAULT_GATEWAY_HOSTNAME}"
+              namespacePolicy:
+                from: All
+            https:
+              port: 8443
+              protocol: HTTPS
+              hostname: "${DEFAULT_GATEWAY_HOSTNAME}"
+              namespacePolicy:
+                from: All
+              certificateRefs:
+                - name: ssl-cert

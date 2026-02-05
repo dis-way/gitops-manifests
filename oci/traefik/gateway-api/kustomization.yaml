@@ -1,6 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../base
-patches:
-  - extraObjects-patch.yaml
+  - gateway-api-standard-install.yaml
+  - traefik-gateway-rbac.yaml
