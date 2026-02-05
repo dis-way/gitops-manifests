@@ -2,7 +2,7 @@
   "oci/altinn-uptime": "1.5.0",
   "oci/azure-service-operator": "1.4.0",
   "oci/blackbox-exporter": "0.7.1",
-  "oci/cert-manager": "2.0.0",
+  "oci/cert-manager": "2.0.1",
   "oci/certm-lets-encrypt-dns-issuer": "0.4.0",
   "flux/dis-identity": "0.1.0",
   "oci/dis-apim": "0.1.0",
