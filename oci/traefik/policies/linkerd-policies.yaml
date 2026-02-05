@@ -1,0 +1,67 @@
+---
+# Server for health probes (kubelet)
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: traefik-health
+  namespace: traefik
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: traefik
+  port: traefik
+  proxyProtocol: HTTP/1
+---
+# Network auth for kubelet
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kubelet
+  namespace: traefik
+spec:
+  networks:
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
+---
+# Proxy admin port for kubelet health checks on meshed pods
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: proxy-admin
+  namespace: traefik
+spec:
+  podSelector: {}
+  port: 4191
+  proxyProtocol: HTTP/1
+---
+# AuthorizationPolicy for health probes
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: traefik-health
+  namespace: traefik
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: traefik-health
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+# AuthorizationPolicy for proxy admin
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: proxy-admin
+  namespace: traefik
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: proxy-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
