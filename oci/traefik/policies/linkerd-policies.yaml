@@ -55,7 +55,7 @@ apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
 metadata:
   name: proxy-admin
-  namespace: azureserviceoperator-system
+  namespace: traefik
 spec:
   targetRef:
     group: policy.linkerd.io

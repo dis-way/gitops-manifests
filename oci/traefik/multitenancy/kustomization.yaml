@@ -24,11 +24,20 @@ patches:
         value: traefik
   - target:
       kind: HelmRelease
-      name: altinn-traefik
+      name: traefik-crds
     patch: |
       - op: add
         path: /spec/values/gatewayAPI
         value: true
+  - target:
+      kind: HelmRelease
+      name: altinn-traefik
+    patch: |
+      - op: replace
+        path: /spec/dependsOn
+        value:
+          - name: traefik-crds
+            namespace: platform-system
       - op: replace
         path: /spec/values/providers/kubernetesCRD/enabled
         value: false
