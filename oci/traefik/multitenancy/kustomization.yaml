@@ -63,3 +63,13 @@ patches:
                 from: All
               certificateRefs:
                 - name: ssl-cert
+      - op: replace
+        path: /spec/values/ports/http/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_VNET_IPV6_CIDR}"
+      - op: replace
+        path: /spec/values/ports/https/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_VNET_IPV6_CIDR}"
