@@ -15,14 +15,12 @@ data:
         "https://af.tt02.altinn.no",
         "https://altinn.studio",
         "https://grafana.altinn.cloud/whoami",
-        "https://at22.corr.altinn.cloud/whoami",
         "https://info.altinn.no",
         "https://prod.admin.altinn.cloud/whoami"
       ],
       "ipv6": [
         "https://altinncdn.no/orgs/altinn-orgs.json",
         "https://grafana.altinn.cloud/whoami",
-        "https://at22.corr.altinn.cloud/whoami",
         "https://info.altinn.no",
         "https://prod.admin.altinn.cloud/whoami"
       ],
