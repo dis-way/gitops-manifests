@@ -162,6 +162,7 @@ spec:
       prometheus: null
       otlp:
         enabled: true
+        pushInterval: 60s
         grpc:
           enabled: true
           endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
