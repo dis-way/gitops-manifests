@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.5.0...oci-altinn-uptime-v1.5.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** remove at22.corr whoami target ([#318](https://github.com/dis-way/gitops-manifests/issues/318)) ([08addeb](https://github.com/dis-way/gitops-manifests/commit/08addeb5c5058fc8b631ec3e2696604a9b49d53a))
+
 ## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.4.0...oci-altinn-uptime-v1.5.0) (2026-01-19)
 
 
