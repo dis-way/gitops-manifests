@@ -4,6 +4,7 @@
   "oci/blackbox-exporter": "0.7.1",
   "oci/cert-manager": "2.0.1",
   "oci/certm-lets-encrypt-dns-issuer": "0.4.0",
+  "oci/container-runtime-aks-config": "0.2.0",
   "flux/dis-identity": "0.1.0",
   "oci/dis-apim": "0.1.0",
   "oci/dis-tls-cert": "2.7.0",

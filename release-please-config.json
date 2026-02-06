@@ -20,6 +20,10 @@
       "release-type": "simple",
       "component": "oci-certm-lets-encrypt-dns-issuer"
     },
+    "oci/container-runtime-aks-config": {
+      "release-type": "simple",
+      "component": "oci-container-runtime-aks-config"
+    },
     "flux/dis-identity": {
       "release-type": "simple",
       "component": "flux-oci-dis-identity"
