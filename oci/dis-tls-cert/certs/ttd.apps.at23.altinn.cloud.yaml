@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ttd-apps-at23-altinn-cloud
+  namespace: dis-tls-cert
+spec:
+  secretName: ttd-apps-at23-altinn-cloud
+  issuerRef:
+    name: zerossl-dis-tls-cert
+    kind: ClusterIssuer
+  dnsNames:
+    - ttd.apps.at23.altinn.cloud
