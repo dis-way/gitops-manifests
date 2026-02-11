@@ -32,6 +32,10 @@
       "release-type": "simple",
       "component": "oci-dis-apim"
     },
+    "oci/dis-pgsql-operator": {
+      "release-type": "simple",
+      "component": "oci-dis-pgsql-operator"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
