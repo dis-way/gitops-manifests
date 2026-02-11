@@ -1,0 +1,17 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: datakeys
+provisioner: file.csi.azure.com
+reclaimPolicy: Retain
+parameters:
+  skuName: Standard_ZRS
+mountOptions:
+  - file_mode=0777
+  - dir_mode=0777
+  - mfsymlinks
+  - uid=3000
+  - gid=2000
+  - nobrl
+  - cache=none
+  - nosharesock

@@ -4,4 +4,5 @@ resources:
   - ../base/ama-metrics-prometheus-config
   - ../base/ama-metrics-settings-configmap
   - ../base/container-azm-ms-agentconfig
+  - ../base/datakeys-storage-class
   - ../base/metrics-server-config
