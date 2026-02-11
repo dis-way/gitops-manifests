@@ -1,0 +1,35 @@
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: ttd-apps-at22-altinn-cloud-push
+  namespace: dis-tls-cert
+spec:
+  refreshInterval: 1h
+  secretStoreRefs:
+    - name: dis-tls-cert-store
+      kind: SecretStore
+  selector:
+    secret:
+      name: ttd-apps-at22-altinn-cloud
+  template:
+    engineVersion: v2
+    type: kubernetes.io/tls
+    data:
+      tls.crt: '{{ index . "tls.crt" }}'
+      tls.key: '{{ index . "tls.key" }}'
+      pfx_bundle: '{{ fullPemToPkcs12 (index . "tls.crt") (index . "tls.key") | b64dec }}'
+  data:
+    # PEM format for Kubernetes clusters
+    - match:
+        secretKey: tls.crt
+        remoteRef:
+          remoteKey: ttd-apps-at22-altinn-cloud-crt
+    - match:
+        secretKey: tls.key
+        remoteRef:
+          remoteKey: ttd-apps-at22-altinn-cloud-key
+    # PFX format for Azure services
+    - match:
+        secretKey: pfx_bundle
+        remoteRef:
+          remoteKey: cert/ttd-apps-at22-altinn-cloud
