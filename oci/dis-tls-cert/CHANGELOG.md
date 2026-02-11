@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.7.0...oci-dis-tls-cert-v2.8.0) (2026-02-11)
+
+
+### Features
+
+* **dis-tls-cert:** Add TTD at/yt certs and PushSecrets ([#350](https://github.com/dis-way/gitops-manifests/issues/350)) ([a45507f](https://github.com/dis-way/gitops-manifests/commit/a45507f6e9ec91bd31e467bc86bcc0b3cfe902e6))
+
 ## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.6.0...oci-dis-tls-cert-v2.7.0) (2026-01-20)
 
 
