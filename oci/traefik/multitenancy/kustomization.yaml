@@ -55,10 +55,24 @@ patches:
               hostname: ${DEFAULT_GATEWAY_HOSTNAME}
               namespacePolicy:
                 from: All
+            http-wildcard:
+              port: 8000
+              protocol: HTTP
+              hostname: "*.${DEFAULT_GATEWAY_HOSTNAME}"
+              namespacePolicy:
+                from: All
             https:
               port: 8443
               protocol: HTTPS
               hostname: ${DEFAULT_GATEWAY_HOSTNAME}
+              namespacePolicy:
+                from: All
+              certificateRefs:
+                - name: ssl-cert
+            https-wildcard:
+              port: 8443
+              protocol: HTTPS
+              hostname: "*.${DEFAULT_GATEWAY_HOSTNAME}"
               namespacePolicy:
                 from: All
               certificateRefs:
