@@ -98,4 +98,5 @@ spec:
       defaultInboundPolicy: "${DEFAULT_INBOUND_POLICY:=all-unauthenticated}"
     podMonitor:
       enabled: true
+      scrapeInterval: 60s
     disableIPv6: "${DISABLE_IPV6:=false}"
