@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.8.0...oci-linkerd-v2.8.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* add scrapeInterval to podMonitor configuration ([#359](https://github.com/dis-way/gitops-manifests/issues/359)) ([434e53c](https://github.com/dis-way/gitops-manifests/commit/434e53ccf39fbdcb888d1c80d9c4c0fceeeaf2eb))
+
 ## [2.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.7.0...oci-linkerd-v2.8.0) (2026-02-04)
 
 
