@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.2.0...oci-traefik-v2.2.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* **oci/traefik:** unquote DEFAULT_GATEWAY_HOSTNAME ([#364](https://github.com/dis-way/gitops-manifests/issues/364)) ([e947e7a](https://github.com/dis-way/gitops-manifests/commit/e947e7a5aebbd96cf57f027c558bdd4c2fa65d44))
+
 ## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.1.0...oci-traefik-v2.2.0) (2026-02-06)
 
 
