@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.5.1...oci-whoami-v0.6.0) (2026-02-12)
+
+
+### Features
+
+* **whoami:** Add HTTPRoute, remove Traefik CRDs ([#368](https://github.com/dis-way/gitops-manifests/issues/368)) ([e593ba4](https://github.com/dis-way/gitops-manifests/commit/e593ba45bc54ba758d0fc5f985cf0bb9a0ab30e9))
+
 ## [0.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.5.0...oci-whoami-v0.5.1) (2026-02-04)
 
 
