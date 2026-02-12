@@ -3,3 +3,23 @@ kind: Kustomization
 resources:
   - ../base
   - ../policies
+  - httproute.yaml
+patches:
+  - target:
+      kind: IngressRoute
+      name: whoami
+    patch: |
+      $patch: delete
+      apiVersion: traefik.io/v1alpha1
+      kind: IngressRoute
+      metadata:
+        name: whoami
+  - target:
+      kind: Middleware
+      name: l5d-header-middleware
+    patch: |
+      $patch: delete
+      apiVersion: traefik.io/v1alpha1
+      kind: Middleware
+      metadata:
+        name: l5d-header-middleware
