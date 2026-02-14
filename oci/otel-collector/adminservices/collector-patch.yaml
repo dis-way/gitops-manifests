@@ -1,0 +1,26 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel
+  namespace: monitoring
+spec:
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      prometheus/headscale:
+        config:
+          scrape_configs:
+            - job_name: headscale
+              scrape_interval: 30s
+              static_configs:
+                - targets:
+                    - headscale.headscale.svc.cluster.local:9090
+    service:
+      pipelines:
+        metrics:
+          receivers: [otlp, prometheus/headscale]

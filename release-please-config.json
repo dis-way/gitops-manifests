@@ -48,6 +48,10 @@
       "release-type": "simple",
       "component": "oci-grafana-operator"
     },
+    "oci/headscale": {
+      "release-type": "simple",
+      "component": "oci-headscale"
+    },
     "oci/kyverno": {
       "release-type": "simple",
       "component": "oci-kyverno"

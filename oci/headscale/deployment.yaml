@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headscale
+  namespace: headscale
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: headscale
+  template:
+    metadata:
+      labels:
+        app: headscale
+    spec:
+      containers:
+        - name: headscale
+          # renovate: datasource=docker depName=headscale/headscale registryUrl=https://ghcr.io
+          image: altinncr.azurecr.io/ghcr.io/juanfont/headscale:0.28.0
+          args: ["serve"]
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+            - name: grpc
+              containerPort: 50443
+              protocol: TCP
+            - name: derp
+              containerPort: 3478
+              protocol: UDP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/headscale
+              readOnly: true
+            - name: data
+              mountPath: /var/lib/headscale
+            - name: run
+              mountPath: /var/run/headscale
+      volumes:
+        - name: config
+          secret:
+            secretName: headscale-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: headscale-data
+        - name: run
+          emptyDir: {}
