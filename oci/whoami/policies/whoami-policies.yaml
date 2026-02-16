@@ -65,6 +65,23 @@ spec:
         - path:
             value: /health
 ---
+# Catch-all route for meshed traffic (all paths)
+apiVersion: policy.linkerd.io/v1beta3
+kind: HTTPRoute
+metadata:
+  name: whoami-mesh
+  namespace: whoami
+spec:
+  parentRefs:
+    - group: policy.linkerd.io
+      kind: Server
+      name: whoami-http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
 # Allow meshed traffic to whoami HTTP (all paths)
 apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
@@ -74,8 +91,8 @@ metadata:
 spec:
   targetRef:
     group: policy.linkerd.io
-    kind: Server
-    name: whoami-http
+    kind: HTTPRoute
+    name: whoami-mesh
   requiredAuthenticationRefs:
     - group: policy.linkerd.io
       kind: MeshTLSAuthentication
