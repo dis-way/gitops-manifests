@@ -66,4 +66,4 @@ spec:
       enabled: true
       targets: []
     podAnnotations:
-      cluster-autoscaler.kubernetes.io/safe-to-evict:"true"
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
