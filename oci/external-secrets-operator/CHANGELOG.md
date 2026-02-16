@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.3](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.5.2...oci-external-secrets-operator-v1.5.3) (2026-02-16)
+
+
+### Bug Fixes
+
+* fix correct placement of podAnnotations ([#394](https://github.com/dis-way/gitops-manifests/issues/394)) ([e07c5ca](https://github.com/dis-way/gitops-manifests/commit/e07c5ca1cf162af0cec8a12e654fccb0ae123f3d))
+
 ## [1.5.2](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.5.1...oci-external-secrets-operator-v1.5.2) (2026-02-16)
 
 
