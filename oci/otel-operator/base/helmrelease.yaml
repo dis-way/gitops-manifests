@@ -34,8 +34,6 @@ spec:
       podAnnotations:
         linkerd.io/inject: "enabled"
         config.linkerd.io/skip-outbound-ports: "443"
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     admissionWebhooks:
       create: false
-    manager:
-      podAnnotations:
-        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
