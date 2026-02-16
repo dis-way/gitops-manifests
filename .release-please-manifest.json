@@ -1,7 +1,7 @@
 {
   "oci/altinn-uptime": "1.5.1",
   "oci/azure-service-operator": "1.4.0",
-  "oci/blackbox-exporter": "0.7.2",
+  "oci/blackbox-exporter": "0.7.3",
   "oci/cert-manager": "2.0.1",
   "oci/certm-lets-encrypt-dns-issuer": "0.4.0",
   "oci/container-runtime-aks-config": "0.4.0",
