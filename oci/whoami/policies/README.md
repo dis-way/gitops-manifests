@@ -6,7 +6,7 @@ Authorization policies for securing the whoami service when using restrictive Li
 
 When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` or `deny`), these policies explicitly allow:
 
-1. **Meshed traffic** - Traefik ingress (meshed) can reach the whoami service
+1. **Meshed traffic** - Any meshed pod can reach the whoami service
 2. **Health checks** - Kubelet can perform liveness/readiness probes via the proxy admin port
 
 ## Architecture
@@ -14,7 +14,7 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 ```
 ┌─────────────────────┐     ┌─────────────────────┐
 │   Traefik Ingress   │     │       kubelet       │
-│   (meshed pod)      │     │    (VNET CIDRs)     │
+│   (meshed pod)      │     │ (Pod + VNET CIDRs)  │
 └──────────┬──────────┘     └──────────┬──────────┘
            │                           │
            ▼                           ▼
@@ -42,7 +42,7 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 | Resource | Type | Purpose |
 |----------|------|---------|
-| `kubelet` | NetworkAuthentication | Allows traffic from VNET CIDRs (for health probes) |
+| `kubelet` | NetworkAuthentication | Allows traffic from pod and VNET CIDRs (for health probes) |
 | `any-meshed-pod` | MeshTLSAuthentication | Allows any pod with valid mesh identity |
 
 ### Servers
@@ -56,7 +56,7 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 | Policy | Target Server | Authentication | Purpose |
 |--------|---------------|----------------|---------|
-| `whoami-http` | whoami-http | MeshTLSAuthentication | Allow meshed ingress traffic |
+| `whoami-http-mesh` | whoami-http | MeshTLSAuthentication | Allow meshed traffic |
 | `whoami-proxy-admin` | whoami-proxy-admin | NetworkAuthentication | Allow kubelet health probes |
 
 ## Why This Matters
@@ -72,5 +72,7 @@ Without these policies, the following will fail when using restrictive inbound p
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for kubelet health checks) |
-| `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR (for kubelet health checks) |
+| `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | AKS overlay pod network IPv4 CIDR |
+| `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | AKS overlay pod network IPv6 CIDR |
+| `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR |
+| `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR |
