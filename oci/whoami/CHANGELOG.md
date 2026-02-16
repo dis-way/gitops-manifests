@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.6.0...oci-whoami-v0.7.0) (2026-02-16)
+
+
+### Features
+
+* **whoami:** include pod CIDRs in kubelet auth ([#428](https://github.com/dis-way/gitops-manifests/issues/428)) ([72282ae](https://github.com/dis-way/gitops-manifests/commit/72282aef9feb0a06ece93de14770ba2d761702df))
+
 ## [0.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.5.1...oci-whoami-v0.6.0) (2026-02-12)
 
 
