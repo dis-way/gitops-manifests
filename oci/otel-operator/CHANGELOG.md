@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.2...oci-otel-operator-v1.3.3) (2026-02-16)
+
+
+### Bug Fixes
+
+* fix correct placement of podAnnotations ([#394](https://github.com/dis-way/gitops-manifests/issues/394)) ([e07c5ca](https://github.com/dis-way/gitops-manifests/commit/e07c5ca1cf162af0cec8a12e654fccb0ae123f3d))
+
+
+### Dependency Updates
+
+* update helm release opentelemetry-operator to v0.105.1 ([#377](https://github.com/dis-way/gitops-manifests/issues/377)) ([eeaf424](https://github.com/dis-way/gitops-manifests/commit/eeaf424bef037a6c62456199b07e2495be05b795))
+
 ## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.1...oci-otel-operator-v1.3.2) (2026-02-16)
 
 
