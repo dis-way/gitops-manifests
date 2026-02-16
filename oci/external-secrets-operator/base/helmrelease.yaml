@@ -37,3 +37,5 @@ spec:
     # actual auth is delegated via SecretStore.serviceAccountRef
     serviceAccount:
       create: false
+    podAnnotations:
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "true"

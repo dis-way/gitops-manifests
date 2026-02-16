@@ -36,3 +36,5 @@ spec:
         config.linkerd.io/skip-outbound-ports: "443"
     admissionWebhooks:
       create: false
+    podAnnotations:
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "true"

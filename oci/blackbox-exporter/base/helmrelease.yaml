@@ -65,3 +65,5 @@ spec:
     serviceMonitor:
       enabled: true
       targets: []
+    podAnnotations:
+      cluster-autoscaler.kubernetes.io/safe-to-evict:"true"
