@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.5.1...oci-external-secrets-operator-v1.5.2) (2026-02-16)
+
+
+### Bug Fixes
+
+* add safe-to-evict to pods to signal autoscaler can evict pods ([#379](https://github.com/dis-way/gitops-manifests/issues/379)) ([767c697](https://github.com/dis-way/gitops-manifests/commit/767c697dfec081e78dc5525661296bb896a77a30))
+
 ## [1.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.5.0...oci-external-secrets-operator-v1.5.1) (2026-02-10)
 
 
