@@ -1,5 +1,6 @@
 ---
 # Network authentication for kubelet health checks
+# Includes both pod CIDRs (overlay network) and VNET CIDRs
 apiVersion: policy.linkerd.io/v1alpha1
 kind: NetworkAuthentication
 metadata:
@@ -7,6 +8,8 @@ metadata:
   namespace: whoami
 spec:
   networks:
+    - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
+    - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
     - cidr: ${AKS_VNET_IPV4_CIDR}
     - cidr: ${AKS_VNET_IPV6_CIDR}
 ---
