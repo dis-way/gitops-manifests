@@ -6,6 +6,8 @@ Deploys the [traefik/whoami](https://github.com/traefik/whoami) test service wit
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
+| `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | AKS overlay pod network IPv4 CIDR |
+| `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | AKS overlay pod network IPv6 CIDR |
 | `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNet IPv4 CIDR for kubelet NetworkAuthentication |
 | `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNet IPv6 CIDR for kubelet NetworkAuthentication |
 
