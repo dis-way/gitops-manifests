@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.0.1...oci-cert-manager-v2.1.0) (2026-02-16)
+
+
+### Features
+
+* Add cert-manager README ([#421](https://github.com/dis-way/gitops-manifests/issues/421)) ([6abfddc](https://github.com/dis-way/gitops-manifests/commit/6abfddc531525a94e3cfcb1f7e5acf4ba926d60c))
+
 ## [2.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.0.0...oci-cert-manager-v2.0.1) (2026-02-05)
 
 
