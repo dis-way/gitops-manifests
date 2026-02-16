@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.4](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.3...oci-blackbox-exporter-v0.7.4) (2026-02-16)
+
+
+### Bug Fixes
+
+* fix correct placement of podAnnotations ([#394](https://github.com/dis-way/gitops-manifests/issues/394)) ([e07c5ca](https://github.com/dis-way/gitops-manifests/commit/e07c5ca1cf162af0cec8a12e654fccb0ae123f3d))
+
 ## [0.7.3](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.2...oci-blackbox-exporter-v0.7.3) (2026-02-16)
 
 
