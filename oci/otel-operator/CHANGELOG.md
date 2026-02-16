@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.3...oci-otel-operator-v1.3.4) (2026-02-16)
+
+
+### Bug Fixes
+
+* move annotation reference ([#405](https://github.com/dis-way/gitops-manifests/issues/405)) ([3703221](https://github.com/dis-way/gitops-manifests/commit/370322131fc1a2e17abfebb03b45d875971899fe))
+
 ## [1.3.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.2...oci-otel-operator-v1.3.3) (2026-02-16)
 
 
