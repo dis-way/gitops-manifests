@@ -9,7 +9,7 @@
   "oci/dis-apim": "0.1.0",
   "oci/dis-pgsql-operator": "0.0.1",
   "oci/dis-tls-cert": "2.8.0",
-  "oci/external-secrets-operator": "1.5.1",
+  "oci/external-secrets-operator": "1.5.2",
   "oci/grafana-operator": "2.0.0",
   "oci/kyverno": "1.2.1",
   "oci/kyverno-policies": "1.3.1",
