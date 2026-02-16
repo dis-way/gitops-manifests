@@ -78,3 +78,17 @@ When creating or updating a README for a `policies/` subfolder containing Linker
 - **Resources**: Tables for Authentication, Servers, and AuthorizationPolicies
 - **Why This Matters**: Failure modes without these policies
 - **Variables**: Required CIDR variables for NetworkAuthentication
+
+## Flux HelmRelease Multitenancy Skill
+
+When adding `spec.targetNamespace` to a Flux HelmRelease (e.g., in a multitenancy overlay), always also add `spec.releaseName` set to the original HelmRelease `metadata.name`. The Flux API defines `releaseName` as: *"ReleaseName used for the Helm release. Defaults to a composition of '[TargetNamespace-]Name'."* This means that when `targetNamespace` is set without an explicit `releaseName`, Flux composes the release name as `<TargetNamespace>-<Name>`, which causes the Helm chart to produce resources with a double-prefixed name (e.g., ServiceAccount `cert-manager-cert-manager` instead of `cert-manager`).
+
+### Checklist
+
+1. Find the HelmRelease `metadata.name` (e.g., `cert-manager`).
+2. Whenever a patch or overlay adds `spec.targetNamespace`, also add:
+   ```yaml
+   spec:
+     releaseName: <metadata.name>
+   ```
+3. Validate with `kustomize build` and confirm the rendered HelmRelease includes both `targetNamespace` and `releaseName`.
