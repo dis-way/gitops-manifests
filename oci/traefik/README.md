@@ -85,16 +85,17 @@ The configuration relies on Flux post-build variable substitution. Required vari
 | `AKS_WORKPOOL_IP_PREFIX_1` | AKS Worker Pool IP Prefix |
 
 ### Multitenancy (`multitenancy`) Specific
-| Variable | Description |
-|----------|-------------|
-| `AKS_VNET_IPV4_CIDR` | Full AKS VNet IPv4 CIDR |
-| `AKS_VNET_IPV6_CIDR` | Full AKS VNet IPv6 CIDR |
-| `DEFAULT_GATEWAY_HOSTNAME`| Hostname for the default Gateway listener |
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `AKS_VNET_IPV4_CIDR` | Full AKS VNet IPv4 CIDR | - |
+| `AKS_VNET_IPV6_CIDR` | Full AKS VNet IPv6 CIDR | - |
+| `DEFAULT_GATEWAY_HOSTNAME`| Hostname for the default Gateway listener | - |
+| `AKS_POD_IPV4_CIDR` | AKS pod network IPv4 CIDR (overlay networking) | `10.240.0.0/16` |
+| `AKS_POD_IPV6_CIDR` | AKS pod network IPv6 CIDR (overlay networking) | `fd10:59f0:8c79:240::/64` |
 
 ## Policies (Multitenancy)
 The `policies/` directory contains Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources. These are critical for the multitenancy setup to allow:
--   Kubelet health probes (liveness/readiness).
--   Proxy admin access (localhost).
--   Prometheus scraping (if not using OTLP exclusively for this path).
+-   Kubelet health probes (liveness/readiness) from both pod and VNET CIDRs.
+-   Linkerd proxy admin health checks on port 4191.
 
-These policies ensure Traefik remains operational even when the cluster enforces a default "deny-all" inbound policy.
+These policies ensure Traefik remains operational even when the cluster enforces a default "deny-all" inbound policy. See [`policies/README.md`](policies/README.md) for details.
