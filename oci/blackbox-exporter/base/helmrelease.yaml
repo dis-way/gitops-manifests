@@ -59,6 +59,7 @@ spec:
                 path: /spec/labelValueLengthLimit
                 value: 1023
   targetNamespace: monitoring
+  releaseName: prometheus-blackbox-exporter
   values:
     image:
       registry: altinncr.azurecr.io/quay.io

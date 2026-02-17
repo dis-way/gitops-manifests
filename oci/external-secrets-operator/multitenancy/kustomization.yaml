@@ -22,3 +22,6 @@ patches:
       - op: add
         path: /spec/targetNamespace
         value: external-secrets
+      - op: add
+        path: /spec/releaseName
+        value: external-secrets
