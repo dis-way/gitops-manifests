@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.3.1...oci-kyverno-policies-v1.3.2) (2026-02-17)
+
+
+### Bug Fixes
+
+* add releaseName to multitenancy HelmReleases ([#446](https://github.com/dis-way/gitops-manifests/issues/446)) ([85a1182](https://github.com/dis-way/gitops-manifests/commit/85a1182e4c1cba6db327bbf4a9fe5d174f0a5b0c))
+
 ## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.3.0...oci-kyverno-policies-v1.3.1) (2026-02-05)
 
 
