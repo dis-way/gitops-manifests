@@ -21,3 +21,6 @@ patches:
       - op: add
         path: /spec/targetNamespace
         value: monitoring
+      - op: add
+        path: /spec/releaseName
+        value: dis-otel-operator

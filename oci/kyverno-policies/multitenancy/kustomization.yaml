@@ -21,3 +21,6 @@ patches:
       - op: add
         path: /spec/targetNamespace
         value: kyverno
+      - op: add
+        path: /spec/releaseName
+        value: kyverno-policies

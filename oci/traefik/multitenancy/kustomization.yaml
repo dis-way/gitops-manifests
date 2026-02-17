@@ -27,12 +27,18 @@ patches:
       name: traefik-crds
     patch: |
       - op: add
+        path: /spec/releaseName
+        value: traefik-crds
+      - op: add
         path: /spec/values/gatewayAPI
         value: true
   - target:
       kind: HelmRelease
       name: altinn-traefik
     patch: |
+      - op: add
+        path: /spec/releaseName
+        value: altinn-traefik
       - op: replace
         path: /spec/dependsOn
         value:

@@ -6,6 +6,7 @@ metadata:
 spec:
   interval: 1h
   targetNamespace: azureserviceoperator-system
+  releaseName: azure-service-operator
   dependsOn:
     - name: cert-manager
       namespace: cert-manager
