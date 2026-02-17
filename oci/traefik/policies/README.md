@@ -14,7 +14,7 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 ```
 ┌─────────────────────┐
 │       kubelet       │
-│    (VNET CIDRs)     │
+│ (Pod + VNET CIDRs)  │
 └──────────┬──────────┘
            │
            ▼
@@ -42,7 +42,7 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 | Resource | Type | Purpose |
 |----------|------|---------|
-| `kubelet` | NetworkAuthentication | Allows traffic from VNET CIDRs (for health probes) |
+| `kubelet` | NetworkAuthentication | Allows traffic from pod and VNET CIDRs (for health probes) |
 
 ### Health Check Servers
 
@@ -69,5 +69,7 @@ Without these policies, the following will fail when using restrictive inbound p
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
+| `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | AKS pod network IPv4 CIDR (overlay networking) |
+| `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | AKS pod network IPv6 CIDR (overlay networking) |
 | `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for API server and kubelet) |
 | `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR (for API server and kubelet) |
