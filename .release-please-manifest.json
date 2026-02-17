@@ -1,5 +1,5 @@
 {
-  "oci/altinn-uptime": "1.5.1",
+  "oci/altinn-uptime": "1.5.2",
   "oci/azure-service-operator": "1.4.1",
   "oci/blackbox-exporter": "0.7.5",
   "oci/cert-manager": "2.1.0",
