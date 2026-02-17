@@ -397,7 +397,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
             apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv4"
@@ -459,7 +459,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
             apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv6"
@@ -524,7 +524,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
             apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv4"
@@ -586,7 +586,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
             apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv6"
@@ -660,7 +660,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
@@ -732,7 +732,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
@@ -806,7 +806,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
@@ -880,7 +880,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
@@ -952,7 +952,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
@@ -1024,7 +1024,7 @@ spec:
     - $NAMESPACE
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring-prometheus-blackbox-exporter
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
