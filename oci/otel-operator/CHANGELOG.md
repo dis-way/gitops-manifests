@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.4...oci-otel-operator-v1.3.5) (2026-02-17)
+
+
+### Bug Fixes
+
+* add releaseName to multitenancy HelmReleases ([#446](https://github.com/dis-way/gitops-manifests/issues/446)) ([85a1182](https://github.com/dis-way/gitops-manifests/commit/85a1182e4c1cba6db327bbf4a9fe5d174f0a5b0c))
+
 ## [1.3.4](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.3...oci-otel-operator-v1.3.4) (2026-02-16)
 
 
