@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.2.1...oci-traefik-v2.3.0) (2026-02-17)
+
+
+### Features
+
+* **traefik:** Include AKS pod CIDRs in policies ([#433](https://github.com/dis-way/gitops-manifests/issues/433)) ([36c86b2](https://github.com/dis-way/gitops-manifests/commit/36c86b2711173686e0ea97b5fdc2b32d90103bc7))
+
 ## [2.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.2.0...oci-traefik-v2.2.1) (2026-02-12)
 
 
