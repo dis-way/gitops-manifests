@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.5.1...oci-altinn-uptime-v1.5.2) (2026-02-17)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** Update ServiceMonitor label ([#471](https://github.com/dis-way/gitops-manifests/issues/471)) ([a9de5b3](https://github.com/dis-way/gitops-manifests/commit/a9de5b3e6617c62843a97e1f1da983ba5563a1fa))
+
 ## [1.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.5.0...oci-altinn-uptime-v1.5.1) (2026-02-06)
 
 
