@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.5](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.4...oci-blackbox-exporter-v0.7.5) (2026-02-17)
+
+
+### Bug Fixes
+
+* add releaseName to multitenancy HelmReleases ([#446](https://github.com/dis-way/gitops-manifests/issues/446)) ([85a1182](https://github.com/dis-way/gitops-manifests/commit/85a1182e4c1cba6db327bbf4a9fe5d174f0a5b0c))
+
 ## [0.7.4](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.3...oci-blackbox-exporter-v0.7.4) (2026-02-16)
 
 
