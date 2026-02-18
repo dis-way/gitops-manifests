@@ -95,14 +95,6 @@
     "prod_ring1": "2.0.0",
     "prod_ring2": "2.0.0"
   },
-  "headscale": {
-    "at_ring1": "1.0.0",
-    "at_ring2": "1.0.0",
-    "tt_ring1": "1.0.0",
-    "tt_ring2": "1.0.0",
-    "prod_ring1": "1.0.0",
-    "prod_ring2": "1.0.0"
-  },
   "kyverno": {
     "at_ring1": "1.2.1",
     "at_ring2": "1.2.1",
