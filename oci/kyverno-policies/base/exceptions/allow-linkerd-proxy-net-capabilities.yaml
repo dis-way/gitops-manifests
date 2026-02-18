@@ -1,0 +1,43 @@
+apiVersion: kyverno.io/v2
+kind: PolicyException
+metadata:
+  name: allow-linkerd-proxy-net-capabilities
+  namespace: kyverno
+spec:
+  exceptions:
+  - policyName: disallow-capabilities
+    ruleNames:
+    - adding-capabilities
+    - autogen-adding-capabilities
+  match:
+    any:
+    - resources:
+        kinds:
+        - Pod
+        - Deployment
+        - ReplicaSet
+        annotations:
+          linkerd.io/inject: enabled
+    - resources:
+        kinds:
+        - Pod
+        - Deployment
+        - ReplicaSet
+        namespaceSelector:
+          matchLabels:
+            linkerd.io/inject: enabled
+    - resources:
+        kinds:
+        - Pod
+        - Deployment
+        - ReplicaSet
+        namespaces:
+          - linkerd
+  podSecurity:
+    - controlName: Capabilities
+      images:
+        - '*/linkerd/proxy*'
+      restrictedField: spec.initContainers[*].securityContext.capabilities.add
+      values:
+        - NET_ADMIN
+        - NET_RAW
