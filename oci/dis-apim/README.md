@@ -10,7 +10,7 @@ Deploys the DIS APIM operator via Flux `OCIRepository` + `Kustomization`.
 | `DISAPIM_RESOURCE_GROUP` | `""` | Yes | Azure resource group containing the APIM instance |
 | `DISAPIM_APIM_SERVICE_NAME` | `""` | Yes | Azure API Management service name |
 | `DISAPIM_DEFAULT_LOGGER_ID` | `""` | Yes | Default logger ID configured in APIM |
-| `DISAPIM_NAMESPACE_SUFFIX` | `""` | Yes | Namespace suffix used by the operator |
+| `DISAPIM_NAMESPACE_SUFFIX` | `""` | No | Namespace suffix used by the operator |
 | `DISAPIM_WORKLOAD_IDENTITY_CLIENT_ID` | `""` | Yes | Workload identity client ID used by the operator |
 | `DISAPIM_TARGET_NAMESPACE` | `dis-apim-operator-system` | No | Target namespace for the operator workload |
 
