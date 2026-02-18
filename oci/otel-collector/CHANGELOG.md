@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.3...oci-otel-collector-v1.4.0) (2026-02-18)
+
+
+### Features
+
+* **oci/headscale:** add Headscale package ([#477](https://github.com/dis-way/gitops-manifests/issues/477)) ([ce2d252](https://github.com/dis-way/gitops-manifests/commit/ce2d25252810e7884e9eb293c1e22d1901dcdda3))
+
 ## [1.3.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.2...oci-otel-collector-v1.3.3) (2026-02-16)
 
 
