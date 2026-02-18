@@ -21,3 +21,6 @@ patches:
       - op: add
         path: /spec/targetNamespace
         value: cert-manager
+      - op: add
+        path: /spec/releaseName
+        value: cert-manager

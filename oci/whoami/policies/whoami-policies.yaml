@@ -1,5 +1,6 @@
 ---
 # Network authentication for kubelet health checks
+# Includes both pod CIDRs (overlay network) and VNET CIDRs
 apiVersion: policy.linkerd.io/v1alpha1
 kind: NetworkAuthentication
 metadata:
@@ -7,6 +8,8 @@ metadata:
   namespace: whoami
 spec:
   networks:
+    - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
+    - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
     - cidr: ${AKS_VNET_IPV4_CIDR}
     - cidr: ${AKS_VNET_IPV6_CIDR}
 ---
@@ -62,6 +65,23 @@ spec:
         - path:
             value: /health
 ---
+# Catch-all route for meshed traffic (all paths)
+apiVersion: policy.linkerd.io/v1beta3
+kind: HTTPRoute
+metadata:
+  name: whoami-mesh
+  namespace: whoami
+spec:
+  parentRefs:
+    - group: policy.linkerd.io
+      kind: Server
+      name: whoami-http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+---
 # Allow meshed traffic to whoami HTTP (all paths)
 apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
@@ -71,8 +91,8 @@ metadata:
 spec:
   targetRef:
     group: policy.linkerd.io
-    kind: Server
-    name: whoami-http
+    kind: HTTPRoute
+    name: whoami-mesh
   requiredAuthenticationRefs:
     - group: policy.linkerd.io
       kind: MeshTLSAuthentication

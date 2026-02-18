@@ -14,6 +14,7 @@ spec:
           key: connectionString
   image: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.140.1
   podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     linkerd.io/inject: "enabled"
     config.linkerd.io/skip-outbound-ports: "443"
   resources:

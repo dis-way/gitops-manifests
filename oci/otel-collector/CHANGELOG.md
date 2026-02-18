@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.2...oci-otel-collector-v1.3.3) (2026-02-16)
+
+
+### Bug Fixes
+
+* add safe-to-evict to pods to signal autoscaler can evict pods ([#379](https://github.com/dis-way/gitops-manifests/issues/379)) ([767c697](https://github.com/dis-way/gitops-manifests/commit/767c697dfec081e78dc5525661296bb896a77a30))
+
 ## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.1...oci-otel-collector-v1.3.2) (2026-02-05)
 
 

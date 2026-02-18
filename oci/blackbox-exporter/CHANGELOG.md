@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.7.5](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.4...oci-blackbox-exporter-v0.7.5) (2026-02-17)
+
+
+### Bug Fixes
+
+* add releaseName to multitenancy HelmReleases ([#446](https://github.com/dis-way/gitops-manifests/issues/446)) ([85a1182](https://github.com/dis-way/gitops-manifests/commit/85a1182e4c1cba6db327bbf4a9fe5d174f0a5b0c))
+
+## [0.7.4](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.3...oci-blackbox-exporter-v0.7.4) (2026-02-16)
+
+
+### Bug Fixes
+
+* fix correct placement of podAnnotations ([#394](https://github.com/dis-way/gitops-manifests/issues/394)) ([e07c5ca](https://github.com/dis-way/gitops-manifests/commit/e07c5ca1cf162af0cec8a12e654fccb0ae123f3d))
+
+## [0.7.3](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.2...oci-blackbox-exporter-v0.7.3) (2026-02-16)
+
+
+### Bug Fixes
+
+* add safe-to-evict to pods to signal autoscaler can evict pods ([#379](https://github.com/dis-way/gitops-manifests/issues/379)) ([767c697](https://github.com/dis-way/gitops-manifests/commit/767c697dfec081e78dc5525661296bb896a77a30))
+
 ## [0.7.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.1...oci-blackbox-exporter-v0.7.2) (2026-02-10)
 
 

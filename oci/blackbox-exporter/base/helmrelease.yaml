@@ -1,3 +1,4 @@
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -59,9 +60,12 @@ spec:
                 path: /spec/labelValueLengthLimit
                 value: 1023
   targetNamespace: monitoring
+  releaseName: prometheus-blackbox-exporter
   values:
     image:
       registry: altinncr.azurecr.io/quay.io
     serviceMonitor:
       enabled: true
       targets: []
+    podAnnotations:
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "true"

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-certm-lets-encrypt-dns-issuer-v0.4.0...oci-certm-lets-encrypt-dns-issuer-v0.4.1) (2026-02-16)
+
+
+### Bug Fixes
+
+* **cert-manager:** Update certm-lets-encrypt-dns-issuer README ([#418](https://github.com/dis-way/gitops-manifests/issues/418)) ([2b8e751](https://github.com/dis-way/gitops-manifests/commit/2b8e7514839fe8c2f7368036196c6310bd8f5d60))
+
 ## [0.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-certm-lets-encrypt-dns-issuer-v0.3.0...oci-certm-lets-encrypt-dns-issuer-v0.4.0) (2026-01-30)
 
 
