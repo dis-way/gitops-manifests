@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.5.2...oci-altinn-uptime-v1.6.0) (2026-02-18)
+
+
+### Features
+
+* **altinn-uptime:** Add at22.dis-core uptime target ([#478](https://github.com/dis-way/gitops-manifests/issues/478)) ([0e5d2b8](https://github.com/dis-way/gitops-manifests/commit/0e5d2b8f25336ebb7bdf7bae201ffe005ae90cb7))
+
 ## [1.5.2](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.5.1...oci-altinn-uptime-v1.5.2) (2026-02-17)
 
 
