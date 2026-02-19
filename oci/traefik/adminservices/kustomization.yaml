@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+      name: traefik-crds
+    patch: |
+      - op: add
+        path: /spec/values/gatewayAPI
+        value: true
+  - target:
+      kind: HelmRelease
+      name: altinn-traefik
+    patch: |
+      - op: replace
+        path: /spec/values/providers/kubernetesGateway/enabled
+        value: true
+      - op: add
+        path: /spec/values/ports/stun
+        value:
+          port: 3478
+          protocol: UDP
+          expose:
+            default: true
+      - op: replace
+        path: /spec/values/ports/http/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_VNET_IPV6_CIDR}"
+      - op: replace
+        path: /spec/values/ports/https/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_VNET_IPV6_CIDR}"
