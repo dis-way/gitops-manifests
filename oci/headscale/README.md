@@ -12,6 +12,18 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 | `HEADSCALE_APP_CLIENT_SECRET` | - | Yes | Microsoft Entra OIDC client secret — source from a secret store, not plain substitution |
 | `HEADSCALE_APP_ALLOWED_GROUP` | - | Yes | Microsoft Entra group allowed for access |
 
+## Prerequisites
+
+### DNS
+
+Add a CNAME record in the `altinn.cloud` zone to delegate the ACME DNS-01 challenge to the Azure DNS zone managed by cert-manager:
+
+```
+_acme-challenge.headscale.altinn.cloud  CNAME  _acme-challenge.headscale.altinn.cloud.prod.admin.altinn.cloud
+```
+
+This is required before deploying `post-deploy/`, as cert-manager will use DNS-01 via the delegated zone to issue the certificate from `letsencrypt-production`.
+
 ## Usage
 
 Two Flux `Kustomization` resources are required: one for the main package and one for `post-deploy/`, which requests the TLS certificate. The `post-deploy` Kustomization sets `wait: false` so cert-manager can issue the certificate asynchronously without blocking health checks.
