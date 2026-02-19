@@ -26,8 +26,25 @@
       "matchPackageNames": [
         "ghcr.io/altinn/altinn-platform/dis-pgsql-operator"
       ],
+      "versioning": "semver",
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/",
       "groupName": "dis pgsql operator image tags",
       "groupSlug": "dis-pgsql-operator-tags"
+    },
+    {
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/dis-pgsql-operator"
+      ],
+      "matchUpdateTypes": [
+        "pin"
+      ],
+      "enabled": false
     },
     {
       "matchDatasources": [
