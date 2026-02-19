@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.3.1...oci-traefik-v2.3.2) (2026-02-19)
+
+
+### Features
+
+* **traefik:** Add adminservices kustomization ([#497](https://github.com/dis-way/gitops-manifests/issues/497)) ([529664f](https://github.com/dis-way/gitops-manifests/commit/529664f6e8f0f2bfb1b854d57a4f164199ef7eee))
+
 ## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.3.0...oci-traefik-v2.3.1) (2026-02-17)
 
 
