@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.0.0...oci-headscale-v1.1.0) (2026-02-19)
+
+
+### Features
+
+* **headscale:** Add Gateway and TLS certificate ([#500](https://github.com/dis-way/gitops-manifests/issues/500)) ([a5d1a7c](https://github.com/dis-way/gitops-manifests/commit/a5d1a7ca3f309ed50f5517f810a3be205442edb3))
+
 ## 1.0.0 (2026-02-18)
 
 
