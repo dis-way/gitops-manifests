@@ -47,3 +47,18 @@ spec:
         config: grpc
         port: ${OTEL_PORT:=4317}
         collector: "${OTEL_URL:=otel-collector.monitoring.svc.cluster.local}"
+    webhooks:
+      # Exclude namespaces from webhook. This should ensure objects in these namespaces aren't blocked from creation.
+      namespaceSelector:
+        matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - kube-public
+            - kube-node-lease
+            - flux-system
+    features:
+      policyExceptions:
+        enabled: true
+        namespace: 'kyverno'
