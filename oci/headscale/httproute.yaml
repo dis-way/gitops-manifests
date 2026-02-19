@@ -5,11 +5,10 @@ metadata:
   namespace: headscale
 spec:
   parentRefs:
-    - name: traefik-gateway
-      namespace: traefik
+    - name: headscale
       sectionName: websecure
   hostnames:
-    - hs.altinn.cloud
+    - headscale.altinn.cloud
   rules:
     - matches:
         - path:

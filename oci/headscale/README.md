@@ -9,14 +9,30 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 | `PUBLIC_IP_V4` | - | Yes | Public IPv4 address for the DERP server |
 | `PUBLIC_IP_V6` | - | Yes | Public IPv6 address for the DERP server |
 | `HEADSCALE_APP_CLIENT_ID` | - | Yes | Microsoft Entra OIDC client ID |
-| `HEADSCALE_APP_CLIENT_SECRET` | - | Yes | Microsoft Entra OIDC client secret |
+| `HEADSCALE_APP_CLIENT_SECRET` | - | Yes | Microsoft Entra OIDC client secret — source from a secret store, not plain substitution |
 | `HEADSCALE_APP_ALLOWED_GROUP` | - | Yes | Microsoft Entra group allowed for access |
 
+## Prerequisites
+
+### DNS
+
+Add a CNAME record in the `altinn.cloud` zone to delegate the ACME DNS-01 challenge to the Azure DNS zone managed by cert-manager:
+
+```
+_acme-challenge.headscale.altinn.cloud  CNAME  _acme-challenge.headscale.altinn.cloud.prod.admin.altinn.cloud
+```
+
+This is required before deploying `post-deploy/`, as cert-manager will use DNS-01 via the delegated zone to issue the certificate from `letsencrypt-production`.
+
 ## Usage
+
+Two Flux `Kustomization` resources are required: one for the main package and one for `post-deploy/`, which requests the TLS certificate. The `post-deploy` Kustomization sets `wait: false` so cert-manager can issue the certificate asynchronously without blocking health checks.
 
 ```yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
+metadata:
+  name: headscale
 spec:
   path: .
   postBuild:
@@ -26,4 +42,14 @@ spec:
       HEADSCALE_APP_CLIENT_ID: "00000000-0000-0000-0000-000000000000"
       HEADSCALE_APP_CLIENT_SECRET: "secret"
       HEADSCALE_APP_ALLOWED_GROUP: "00000000-0000-0000-0000-000000000000"
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: headscale-post-deploy
+spec:
+  path: ./post-deploy
+  wait: false
+  dependsOn:
+    - name: headscale
 ```
