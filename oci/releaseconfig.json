@@ -96,7 +96,7 @@
     "prod_ring2": "2.0.0"
   },
   "kyverno": {
-    "at_ring1": "1.2.2",
+    "at_ring1": "1.3.0",
     "at_ring2": "1.2.2",
     "tt_ring1": "1.2.2",
     "tt_ring2": "1.2.2",
