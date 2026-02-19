@@ -21,7 +21,7 @@ spec:
   images:
     - name: controller
       newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/dis-pgsql-operator
-      newTag: v0.0.1
+      newTag: v0.1.1
   sourceRef:
     kind: OCIRepository
     name: dis-pgsql-operator

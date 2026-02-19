@@ -24,7 +24,7 @@
       "release-type": "simple",
       "component": "oci-container-runtime-aks-config"
     },
-    "flux/dis-identity": {
+    "oci/dis-identity": {
       "release-type": "simple",
       "component": "flux-oci-dis-identity"
     },
