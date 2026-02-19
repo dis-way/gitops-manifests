@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.2.2...oci-kyverno-v1.3.0) (2026-02-19)
+
+
+### Features
+
+* kyverno policy exceptions for linkerd ([#490](https://github.com/dis-way/gitops-manifests/issues/490)) ([e6a261f](https://github.com/dis-way/gitops-manifests/commit/e6a261f5add0ec0f941f5c9759434e4651efcf77))
+
 ## [1.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.2.1...oci-kyverno-v1.2.2) (2026-02-17)
 
 
