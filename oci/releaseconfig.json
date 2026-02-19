@@ -144,11 +144,11 @@
     "prod_ring2": "1.1.0"
   },
   "traefik": {
-    "at_ring1": "2.3.1",
-    "at_ring2": "2.3.1",
-    "tt_ring1": "2.3.1",
+    "at_ring1": "2.3.2",
+    "at_ring2": "2.3.2",
+    "tt_ring1": "2.3.2",
     "tt_ring2": "2.2.0",
-    "prod_ring1": "2.2.1",
+    "prod_ring1": "2.3.2",
     "prod_ring2": "2.2.0"
   },
   "whoami": {
