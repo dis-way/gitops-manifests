@@ -22,7 +22,7 @@ spec:
     - name: controller
       newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/dis-pgsql-operator
       # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-pgsql-operator versioning=semver
-      newTag: v0.1.1
+      newTag: v0.2.0
   sourceRef:
     kind: OCIRepository
     name: dis-pgsql-operator
