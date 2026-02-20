@@ -7,7 +7,7 @@ spec:
   gatewayClassName: traefik
   listeners:
     - name: https
-      port: 443
+      port: 8443
       protocol: HTTPS
       hostname: headscale.altinn.cloud
       tls:
