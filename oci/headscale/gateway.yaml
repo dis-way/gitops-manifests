@@ -6,7 +6,7 @@ metadata:
 spec:
   gatewayClassName: traefik
   listeners:
-    - name: websecure
+    - name: https
       port: 443
       protocol: HTTPS
       hostname: headscale.altinn.cloud
