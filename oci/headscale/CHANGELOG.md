@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.1...oci-headscale-v1.1.2) (2026-02-20)
+
+
+### Bug Fixes
+
+* **headscale:** Rename listener websecure to https ([#536](https://github.com/dis-way/gitops-manifests/issues/536)) ([47f7787](https://github.com/dis-way/gitops-manifests/commit/47f7787804c8a0b17b012b2867c60a8b0bb38b27))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.0...oci-headscale-v1.1.1) (2026-02-20)
 
 
