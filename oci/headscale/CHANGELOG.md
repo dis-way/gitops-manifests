@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.2...oci-headscale-v1.1.3) (2026-02-20)
+
+
+### Bug Fixes
+
+* **headscale:** change gateway HTTPS port to 8443 ([#540](https://github.com/dis-way/gitops-manifests/issues/540)) ([5da76d3](https://github.com/dis-way/gitops-manifests/commit/5da76d35dd5e22ab08eadefdf7827b93e10e00c7))
+
 ## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.1...oci-headscale-v1.1.2) (2026-02-20)
 
 
