@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2026-02-20)
+
+
+### Bug Fixes
+
+* **dis:** correct typos in operators workflows ([#523](https://github.com/dis-way/gitops-manifests/issues/523)) ([27e8dcf](https://github.com/dis-way/gitops-manifests/commit/27e8dcf2a4dc8bdf6a3c4cbc508cf9fadf91ca43))
+
 ## [0.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-operator-v0.0.2...oci-dis-pgsql-operator-v0.1.0) (2026-02-19)
 
 
