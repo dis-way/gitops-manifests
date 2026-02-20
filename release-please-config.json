@@ -26,13 +26,13 @@
     },
     "oci/dis-identity": {
       "release-type": "simple",
-      "component": "flux-oci-dis-identity"
+      "component": "oci-dis-identity"
     },
     "oci/dis-apim": {
       "release-type": "simple",
       "component": "oci-dis-apim"
     },
-    "oci/dis-pgsql-operator": {
+    "oci/dis-pgsql": {
       "release-type": "simple",
       "component": "oci-dis-pgsql-operator"
     },
