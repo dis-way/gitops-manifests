@@ -1,0 +1,23 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: lakmus
+  namespace: flux-system
+spec:
+  force: false
+  interval: 5m0s
+  path: ./default
+  prune: false
+  retryInterval: 5m0s
+  images:
+    - name: controller
+      newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/lakmus
+      # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/lakmus versioning=semver
+      newTag: v1.0.0
+  sourceRef:
+    kind: OCIRepository
+    name: lakmus
+    namespace: flux-system
+  targetNamespace: lakmus-system
+  timeout: 5m0s
+  wait: true

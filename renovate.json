@@ -7,7 +7,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^oci\\/dis-pgsql\\/(flux-kustomize|oci-repository)\\.yaml$/"
+        "/^oci\\/(dis-pgsql|lakmus)\\/(flux-kustomize|oci-repository)\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*newTag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
@@ -35,6 +35,33 @@
       ],
       "matchPackageNames": [
         "ghcr.io/altinn/altinn-platform/dis-pgsql-operator"
+      ],
+      "matchUpdateTypes": [
+        "pin",
+        "pinDigest",
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/lakmus"
+      ],
+      "versioning": "semver",
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/",
+      "pinDigests": false,
+      "groupName": "lakmus image tags",
+      "groupSlug": "lakmus-tags"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/lakmus"
       ],
       "matchUpdateTypes": [
         "pin",
