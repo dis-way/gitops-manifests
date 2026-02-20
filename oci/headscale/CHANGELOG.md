@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.0...oci-headscale-v1.1.1) (2026-02-20)
+
+
+### Bug Fixes
+
+* **headscale:** Run as non-root user ([#528](https://github.com/dis-way/gitops-manifests/issues/528)) ([4b5b10c](https://github.com/dis-way/gitops-manifests/commit/4b5b10cc2f8439580d6e5d8bdc98eb1fa9bcf5e5))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.0.0...oci-headscale-v1.1.0) (2026-02-19)
 
 
