@@ -66,10 +66,10 @@
   "dis-pgsql": {
     "at_ring1": "0.1.1",
     "at_ring2": "0.1.1",
-    "tt_ring1": "0.0.1",
-    "tt_ring2": "0.0.1",
-    "prod_ring1": "0.0.1",
-    "prod_ring2": "0.0.1"
+    "tt_ring1": "0.1.1",
+    "tt_ring2": "0.1.1",
+    "prod_ring1": "0.1.1",
+    "prod_ring2": "0.1.1"
   },
   "dis-tls-cert": {
     "at_ring1": "2.8.0",
