@@ -7,7 +7,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^oci\\/dis-pgsql-operator\\/(flux-kustomize|oci-repository)\\.yaml$/"
+        "/^oci\\/dis-pgsql\\/(flux-kustomize|oci-repository)\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*newTag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
@@ -28,8 +28,8 @@
       ],
       "versioning": "semver",
       "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/",
-      "groupName": "dis pgsql operator image tags",
-      "groupSlug": "dis-pgsql-operator-tags"
+      "groupName": "dis pgsql image tags",
+      "groupSlug": "dis-pgsql-tags"
     },
     {
       "matchManagers": [

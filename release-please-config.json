@@ -34,7 +34,7 @@
     },
     "oci/dis-pgsql": {
       "release-type": "simple",
-      "component": "oci-dis-pgsql-operator"
+      "component": "oci-dis-pgsql"
     },
     "oci/dis-tls-cert": {
       "release-type": "simple",
