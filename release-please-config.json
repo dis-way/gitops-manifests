@@ -32,7 +32,7 @@
       "release-type": "simple",
       "component": "oci-dis-apim"
     },
-    "oci/dis-pgsql-operator": {
+    "oci/dis-pgsql": {
       "release-type": "simple",
       "component": "oci-dis-pgsql-operator"
     },
