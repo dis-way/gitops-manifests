@@ -17,9 +17,6 @@
   ],
   "packageRules": [
     {
-      "matchManagers": [
-        "custom.regex"
-      ],
       "matchDatasources": [
         "docker"
       ],
@@ -28,13 +25,11 @@
       ],
       "versioning": "semver",
       "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/",
+      "pinDigests": false,
       "groupName": "dis pgsql image tags",
       "groupSlug": "dis-pgsql-tags"
     },
     {
-      "matchManagers": [
-        "custom.regex"
-      ],
       "matchDatasources": [
         "docker"
       ],
@@ -42,7 +37,9 @@
         "ghcr.io/altinn/altinn-platform/dis-pgsql-operator"
       ],
       "matchUpdateTypes": [
-        "pin"
+        "pin",
+        "pinDigest",
+        "digest"
       ],
       "enabled": false
     },
