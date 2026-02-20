@@ -6,7 +6,7 @@ metadata:
 spec:
   parentRefs:
     - name: headscale
-      sectionName: websecure
+      sectionName: https
   hostnames:
     - headscale.altinn.cloud
   rules:
