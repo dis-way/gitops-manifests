@@ -60,6 +60,10 @@
       "release-type": "simple",
       "component": "oci-kyverno-policies"
     },
+    "oci/lakmus": {
+      "release-type": "simple",
+      "component": "oci-lakmus"
+    },
     "oci/linkerd": {
       "release-type": "simple",
       "component": "oci-linkerd"
