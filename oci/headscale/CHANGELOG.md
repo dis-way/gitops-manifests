@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.3...oci-headscale-v1.2.0) (2026-02-23)
+
+
+### Features
+
+* **headscale:** update DNS and add split zones ([#547](https://github.com/dis-way/gitops-manifests/issues/547)) ([75ff01f](https://github.com/dis-way/gitops-manifests/commit/75ff01f5f399d65876e800f96088fde4c5152739))
+
 ## [1.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.2...oci-headscale-v1.1.3) (2026-02-20)
 
 
