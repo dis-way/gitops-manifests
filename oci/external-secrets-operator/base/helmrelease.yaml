@@ -40,3 +40,10 @@ spec:
     global:
       podAnnotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+          effect: "NoSchedule"
+      nodeSelector:
+        kubernetes.azure.com/mode: system
+        kubernetes.azure.com/agentpool: syspool

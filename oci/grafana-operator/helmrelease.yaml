@@ -50,3 +50,10 @@ spec:
       enabled: true
     dashboard:
       enabled: true
+    tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
+    nodeSelector:
+      kubernetes.azure.com/mode: system
+      kubernetes.azure.com/agentpool: syspool    
