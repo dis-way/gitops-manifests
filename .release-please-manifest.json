@@ -5,7 +5,7 @@
   "oci/cert-manager": "2.2.0",
   "oci/certm-lets-encrypt-dns-issuer": "0.4.1",
   "oci/container-runtime-aks-config": "0.4.0",
-  "oci/dis-identity": "0.1.0",
+  "oci/dis-identity": "0.2.0",
   "oci/dis-apim": "0.2.1",
   "oci/dis-pgsql": "0.1.1",
   "oci/dis-tls-cert": "2.8.0",
