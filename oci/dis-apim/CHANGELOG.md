@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-apim-v0.2.0...oci-dis-apim-v0.2.1) (2026-02-25)
+
+
+### Bug Fixes
+
+* **dis-apim:** ensure namespace suffix not defined for multitenancy ([#553](https://github.com/dis-way/gitops-manifests/issues/553)) ([d191dcc](https://github.com/dis-way/gitops-manifests/commit/d191dcc8ea73af09b87423865fe2627ce0067484))
+
 ## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-apim-v0.1.0...oci-dis-apim-v0.2.0) (2026-02-18)
 
 
