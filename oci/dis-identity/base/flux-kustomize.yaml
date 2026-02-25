@@ -21,6 +21,6 @@ spec:
     kind: OCIRepository
     name: dis-identity-operator
     namespace: flux-system
-  targetNamespace: ${DISID_TARGET_NAMESPACE:=dis-identity-operator-system}
+  targetNamespace: dis-identity-operator-system
   timeout: 5m0s
   wait: true

@@ -8,7 +8,6 @@ Deploys the DIS Identity operator via Flux `OCIRepository` + `Kustomization`.
 |----------|---------|----------|-------------|
 | `DISID_ISSUER_URL` | `""` | Yes | Issuer URL used by the DIS Identity operator |
 | `DISID_TARGET_RESOURCE_GROUP` | `""` | Yes | Azure resource group containing target identity resources |
-| `DISID_TARGET_NAMESPACE` | `dis-identity-operator-system` | No | Target namespace for the operator workload |
 
 ## Usage
 
@@ -22,6 +21,4 @@ spec:
     substitute:
       DISID_ISSUER_URL: "https://issuer.example.com"
       DISID_TARGET_RESOURCE_GROUP: "dis-identity-rg"
-      # Optional
-      DISID_TARGET_NAMESPACE: "dis-identity-operator-system"
 ```
