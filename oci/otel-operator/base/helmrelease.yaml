@@ -37,3 +37,11 @@ spec:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     admissionWebhooks:
       create: false
+    tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
+    nodeSelector:
+      kubernetes.io/os: linux
+      kubernetes.azure.com/mode: system
+      kubernetes.azure.com/agentpool: syspool

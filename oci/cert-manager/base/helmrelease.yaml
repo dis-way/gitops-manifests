@@ -47,3 +47,11 @@ spec:
     startupapicheck:
       image:
         registry: altinncr.azurecr.io
+    tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
+    nodeSelector:
+      kubernetes.io/os: linux
+      kubernetes.azure.com/mode: system
+      kubernetes.azure.com/agentpool: syspool
