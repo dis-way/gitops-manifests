@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.5...oci-otel-operator-v1.4.0) (2026-02-25)
+
+
+### Features
+
+* remove operators from linkerd mesh and move them to syspool ([#552](https://github.com/dis-way/gitops-manifests/issues/552)) ([66f1a91](https://github.com/dis-way/gitops-manifests/commit/66f1a91fad196c980fb2dbd63ed8b42d3d7c8867))
+
 ## [1.3.5](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.3.4...oci-otel-operator-v1.3.5) (2026-02-17)
 
 
