@@ -7,6 +7,10 @@ spec:
   force: false
   interval: 5m0s
   path: ./
+  postBuild:
+    substitute:
+      AZURE_SUBSCRIPTION_ID: ${AZURE_SUBSCRIPTION_ID}
+      LAKMUS_WORKLOAD_IDENTITY_CLIENT_ID: ${LAKMUS_WORKLOAD_IDENTITY_CLIENT_ID}
   prune: false
   retryInterval: 5m0s
   images:
