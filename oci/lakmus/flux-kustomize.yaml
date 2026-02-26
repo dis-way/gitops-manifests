@@ -11,7 +11,7 @@ spec:
     substitute:
       AZURE_SUBSCRIPTION_ID: ${AZURE_SUBSCRIPTION_ID}
       LAKMUS_WORKLOAD_IDENTITY_CLIENT_ID: ${LAKMUS_WORKLOAD_IDENTITY_CLIENT_ID}
-  prune: false
+  prune: true
   retryInterval: 5m0s
   images:
     - name: controller
