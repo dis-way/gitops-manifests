@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.1...oci-lakmus-v1.1.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* **lakmus:** naming collistion of oci repository ([#592](https://github.com/dis-way/gitops-manifests/issues/592)) ([ca47e75](https://github.com/dis-way/gitops-manifests/commit/ca47e7516f50ccd0cd3ce20f323c3691db7daa4e))
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/lakmus docker tag to v1.1.0 ([#594](https://github.com/dis-way/gitops-manifests/issues/594)) ([749bc03](https://github.com/dis-way/gitops-manifests/commit/749bc03dc9e6a93104ea0ea45b1bd4a1d7ff6f6f))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.0...oci-lakmus-v1.1.1) (2026-02-26)
 
 
