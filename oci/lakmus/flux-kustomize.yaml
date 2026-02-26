@@ -13,7 +13,7 @@ spec:
     - name: controller
       newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/lakmus
       # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/lakmus versioning=semver
-      newTag: v1.0.0
+      newTag: v1.1.0
   sourceRef:
     kind: OCIRepository
     name: lakmus-config
