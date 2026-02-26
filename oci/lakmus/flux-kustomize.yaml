@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: lakmus
+  name: lakmus-config
   namespace: flux-system
 spec:
   force: false
@@ -16,7 +16,7 @@ spec:
       newTag: v1.0.0
   sourceRef:
     kind: OCIRepository
-    name: lakmus
+    name: lakmus-config
     namespace: flux-system
   targetNamespace: lakmus-system
   timeout: 5m0s

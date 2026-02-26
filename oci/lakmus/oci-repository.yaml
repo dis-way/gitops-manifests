@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: lakmus
+  name: lakmus-config
   namespace: flux-system
 spec:
   interval: 5m0s
