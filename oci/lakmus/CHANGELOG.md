@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.3...oci-lakmus-v1.1.4) (2026-02-26)
+
+
+### Bug Fixes
+
+* oidc and old resources are left behind. reverting back to monito… ([#602](https://github.com/dis-way/gitops-manifests/issues/602)) ([7ca745b](https://github.com/dis-way/gitops-manifests/commit/7ca745b0a1e5044a4dc64435582083bf5b5a0ac9))
+
 ## [1.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.2...oci-lakmus-v1.1.3) (2026-02-26)
 
 
