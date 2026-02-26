@@ -22,6 +22,6 @@ spec:
     kind: OCIRepository
     name: lakmus-config
     namespace: flux-system
-  targetNamespace: lakmus-system
+  targetNamespace: monitoring
   timeout: 5m0s
   wait: true
