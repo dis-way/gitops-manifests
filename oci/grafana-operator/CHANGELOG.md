@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.1.0...oci-grafana-operator-v2.1.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* **grafana-operator:** add pod annotations ([#608](https://github.com/dis-way/gitops-manifests/issues/608)) ([42eda7c](https://github.com/dis-way/gitops-manifests/commit/42eda7c478e53680a41e3a4b07b958ae886bc066))
+
 ## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.0.0...oci-grafana-operator-v2.1.0) (2026-02-25)
 
 
