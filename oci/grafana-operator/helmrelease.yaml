@@ -43,6 +43,8 @@ spec:
                 path: /spec/labelValueLengthLimit
                 value: 1023
   values:
+    podAnnotations: 
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     image:
       registry: altinncr.azurecr.io
       repository: ghcr.io/grafana/grafana-operator
