@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.2...oci-lakmus-v1.1.3) (2026-02-26)
+
+
+### Bug Fixes
+
+* **lakmus:** add namespace and substitutions ([#597](https://github.com/dis-way/gitops-manifests/issues/597)) ([d98db00](https://github.com/dis-way/gitops-manifests/commit/d98db00212650f83ec4aafa840ececba65b7babd))
+
 ## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.1...oci-lakmus-v1.1.2) (2026-02-26)
 
 
