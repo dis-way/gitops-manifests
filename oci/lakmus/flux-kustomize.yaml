@@ -6,7 +6,7 @@ metadata:
 spec:
   force: false
   interval: 5m0s
-  path: ./default
+  path: ./
   prune: false
   retryInterval: 5m0s
   images:
