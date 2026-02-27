@@ -83,8 +83,8 @@
     "at_ring1": "1.6.1",
     "at_ring2": "1.6.1",
     "tt_ring1": "1.6.1",
-    "tt_ring2": "1.6.0",
-    "prod_ring1": "1.6.0",
+    "tt_ring2": "1.6.1",
+    "prod_ring1": "1.6.1",
     "prod_ring2": "1.5.4"
   },
   "grafana-operator": {
