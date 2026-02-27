@@ -16,7 +16,8 @@ spec:
   images:
     - name: controller
       newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/dis-identity-operator
-      newTag: v0.0.4
+      # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-identity-operator versioning=semver
+      newTag: v0.1.1
   sourceRef:
     kind: OCIRepository
     name: dis-identity-operator
