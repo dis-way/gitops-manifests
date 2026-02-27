@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.2.0...oci-headscale-v1.3.0) (2026-02-27)
+
+
+### Features
+
+* **headscale:** Add norwayeast privatelink DNS ([#630](https://github.com/dis-way/gitops-manifests/issues/630)) ([5c0683d](https://github.com/dis-way/gitops-manifests/commit/5c0683d94df2cb137a917c39d66881940bf5e23f))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.1.3...oci-headscale-v1.2.0) (2026-02-23)
 
 
