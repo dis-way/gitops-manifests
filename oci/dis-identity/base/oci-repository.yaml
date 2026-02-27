@@ -7,6 +7,7 @@ spec:
   interval: 5m0s
   provider: azure
   ref:
-    tag: v0.0.3
+    # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-identity-operator versioning=semver
+    tag: v0.1.1
   timeout: 5m0s
   url: oci://altinncr.azurecr.io/dis/kustomize/dis-identity-operator
