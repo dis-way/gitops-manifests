@@ -8,6 +8,6 @@ spec:
   provider: azure
   ref:
     # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-pgsql-operator versioning=semver
-    tag: v0.2.0
+    tag: v0.5.0
   timeout: 5m0s
   url: oci://altinncr.azurecr.io/dis/kustomize/dis-pgsql-operator
