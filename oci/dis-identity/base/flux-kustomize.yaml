@@ -11,6 +11,7 @@ spec:
     substitute:
       DISID_ISSUER_URL: ${DISID_ISSUER_URL}
       DISID_TARGET_RESOURCE_GROUP: ${DISID_TARGET_RESOURCE_GROUP}
+      DISID_TARGET_TENANT_ID: ${DISID_TARGET_TENANT_ID}
   prune: false
   retryInterval: 5m0s
   images:
