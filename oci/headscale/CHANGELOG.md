@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.3.0...oci-headscale-v1.4.0) (2026-02-28)
+
+
+### Features
+
+* **headscale:** Correct private DNS keys ([#651](https://github.com/dis-way/gitops-manifests/issues/651)) ([6750263](https://github.com/dis-way/gitops-manifests/commit/67502634471808e96d475c99317445629a669ae3))
+
 ## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.2.0...oci-headscale-v1.3.0) (2026-02-27)
 
 
