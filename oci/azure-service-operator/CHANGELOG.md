@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.1...oci-azure-service-operator-v1.4.2) (2026-03-02)
+
+
+### Dependency Updates
+
+* update helm release azure-service-operator to v2.18.0 ([#621](https://github.com/dis-way/gitops-manifests/issues/621)) ([44844fe](https://github.com/dis-way/gitops-manifests/commit/44844fe6bb9c1e9fcacf39e2b5ded0afa55782a7))
+
 ## [1.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.0...oci-azure-service-operator-v1.4.1) (2026-02-17)
 
 
