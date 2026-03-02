@@ -157,7 +157,7 @@
     "tt_ring1": "2.3.2",
     "tt_ring2": "2.3.2",
     "prod_ring1": "2.3.2",
-    "prod_ring2": "2.2.0"
+    "prod_ring2": "2.3.2"
   },
   "whoami": {
     "at_ring1": "0.7.1",
