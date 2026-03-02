@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.1.1...oci-grafana-operator-v2.1.2) (2026-03-02)
+
+
+### Dependency Updates
+
+* update helm release grafana-operator to v5.22.0 ([#631](https://github.com/dis-way/gitops-manifests/issues/631)) ([f11d8fc](https://github.com/dis-way/gitops-manifests/commit/f11d8fccb143559093069a6054f22285a9efe8e6))
+
 ## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.1.0...oci-grafana-operator-v2.1.1) (2026-02-26)
 
 
