@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   kustomize-diff:
-    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@arealmaas/marseille
+    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@main
     with:
       build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices"
     permissions:
