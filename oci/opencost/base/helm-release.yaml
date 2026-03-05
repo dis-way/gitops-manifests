@@ -34,7 +34,7 @@ spec:
         azure.workload.identity/client-id: ${OPENCOST_CLIENT_ID}
     extraContainers:
       - name: aad-auth-proxy
-        image: mcr.microsoft.com/oss/azure/aad-auth-proxy:v0.4.1
+        image: mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84
         args:
           - --upstream-url=${AZURE_PROMETHEUS_ENDPOINT}
           - --base-auth-url=https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token
