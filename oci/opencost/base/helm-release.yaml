@@ -20,6 +20,8 @@ spec:
         namespace: opencost-system
   values:
     opencost:
+      labels:
+        azure.workload.identity/use: "true"
       prometheus:
         external:
           enabled: true
@@ -29,9 +31,6 @@ spec:
       metrics:
         serviceMonitor:
           enabled: true
-    serviceAccount:
-      annotations:
-        azure.workload.identity/client-id: ${OPENCOST_CLIENT_ID}
     extraContainers:
       - name: aad-auth-proxy
         image: mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84
@@ -53,3 +52,8 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
+    serviceAccount:
+      annotations:
+        azure.workload.identity/client-id: ${OPENCOST_CLIENT_ID}
+    podLabels:
+      azure.workload.identity/use: "true"
