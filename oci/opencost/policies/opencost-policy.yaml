@@ -1,0 +1,63 @@
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: opencost-health
+  namespace: opencost-system
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: opencost
+  port: 9003
+  proxyProtocol: HTTP/1
+---
+# Proxy admin port for kubelet health checks on meshed pods
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: proxy-admin
+  namespace: opencost-system
+spec:
+  podSelector: {}
+  port: 4191
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: opencost-health
+  namespace: opencost-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: opencost-health
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: proxy-admin
+  namespace: opencost-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: proxy-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kubelet
+  namespace: opencost-system
+spec:
+  networks:
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}

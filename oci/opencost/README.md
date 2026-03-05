@@ -9,6 +9,8 @@ OpenCost deployment for AKS clusters with Azure Managed Prometheus integration u
 | `AZURE_TENANT_ID` | - | Yes | Azure Tenant ID |
 | `OPENCOST_CLIENT_ID` | - | Yes | Client ID of the User-Assigned Managed Identity for Workload Identity |
 | `AZURE_PROMETHEUS_ENDPOINT` | - | Yes | Base Azure Monitor workspace URL (e.g. up to `/accounts/<name>`) |
+| `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for policies) |
+| `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR (for policies) |
 
 ## Layers
 
