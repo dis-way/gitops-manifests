@@ -68,6 +68,10 @@
       "release-type": "simple",
       "component": "oci-linkerd"
     },
+    "oci/opencost": {
+      "release-type": "simple",
+      "component": "oci-opencost"
+    },
     "oci/otel-collector": {
       "release-type": "simple",
       "component": "oci-otel-collector"
