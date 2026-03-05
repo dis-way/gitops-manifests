@@ -36,9 +36,13 @@ spec:
       - name: aad-auth-proxy
         image: mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84
         args:
-          - --upstream-url=${AZURE_PROMETHEUS_ENDPOINT}
-          - --base-auth-url=https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token
+          # Note: ${AZURE_PROMETHEUS_ENDPOINT} must be the base workspace-level path
+          # (e.g. up to /accounts/<workspace-name>) WITHOUT the /api/v1/query suffix,
+          # as OpenCost will append that path to the local proxy URL.
+          - --target-host=${AZURE_PROMETHEUS_ENDPOINT}
+          - --audience=https://monitor.azure.com/
           - --listen-address=0.0.0.0:8080
+          # Using DefaultAzureCredential (native Workload Identity) via injected env vars.
         ports:
           - containerPort: 8080
             name: proxy
