@@ -1,0 +1,59 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opencost
+  namespace: opencost-system
+spec:
+  interval: 1h
+  releaseName: opencost
+  targetNamespace: opencost-system
+  install:
+    createNamespace: true
+  chart:
+    spec:
+      chart: opencost
+      # renovate: datasource=helm registryUrl=https://opencost.github.io/opencost-helm-chart packageName=opencost
+      version: "1.30.0"
+      sourceRef:
+        kind: HelmRepository
+        name: opencost
+        namespace: opencost-system
+  values:
+    opencost:
+      labels:
+        azure.workload.identity/use: "true"
+      prometheus:
+        external:
+          enabled: true
+          url: http://localhost:8080
+        internal:
+          enabled: false
+      metrics:
+        serviceMonitor:
+          enabled: true
+    extraContainers:
+      - name: aad-auth-proxy
+        image: mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84
+        args:
+          # Note: ${AZURE_PROMETHEUS_ENDPOINT} must be the base workspace-level path
+          # (e.g. up to /accounts/<workspace-name>) WITHOUT the /api/v1/query suffix,
+          # as OpenCost will append that path to the local proxy URL.
+          - --target-host=${AZURE_PROMETHEUS_ENDPOINT}
+          - --audience=https://monitor.azure.com/
+          - --listen-address=0.0.0.0:8080
+          # Using DefaultAzureCredential (native Workload Identity) via injected env vars.
+        ports:
+          - containerPort: 8080
+            name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+    serviceAccount:
+      annotations:
+        azure.workload.identity/client-id: ${OPENCOST_CLIENT_ID}
+    podLabels:
+      azure.workload.identity/use: "true"
