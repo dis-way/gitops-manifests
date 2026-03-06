@@ -19,3 +19,6 @@ patches:
       - op: replace
         path: /spec/chart/spec/sourceRef/namespace
         value: platform-system
+      - op: add
+        path: /spec/releaseName
+        value: opencost

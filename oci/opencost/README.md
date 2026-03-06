@@ -18,8 +18,44 @@ OpenCost deployment for AKS clusters with Azure Managed Prometheus integration u
 |------|-------------|
 | `base` | Namespace, HelmRepository, and HelmRelease with `aad-auth-proxy` sidecar |
 | `apps` | Standard overlay that includes only base |
-| `multitenancy` | Overlay with `platform-system` namespace patches for shared clusters |
-| `policies` | Placeholder for future authorization or network policies |
+| `multitenancy` | Overlay with `platform-system` namespace patches and Linkerd policies |
+| `policies` | Linkerd authorization policies for health probes and proxy admin |
+
+## Usage
+
+### Standard (`apps`)
+
+Basic deployment in the `opencost-system` namespace.
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+spec:
+  path: ./apps
+  postBuild:
+    substitute:
+      AZURE_TENANT_ID: "..."
+      OPENCOST_CLIENT_ID: "..."
+      AZURE_PROMETHEUS_ENDPOINT: "https://..."
+```
+
+### Multitenancy (`multitenancy`)
+
+Deployment in the `platform-system` namespace with Linkerd authorization policies.
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+spec:
+  path: ./multitenancy
+  postBuild:
+    substitute:
+      AZURE_TENANT_ID: "..."
+      OPENCOST_CLIENT_ID: "..."
+      AZURE_PROMETHEUS_ENDPOINT: "https://..."
+      AKS_VNET_IPV4_CIDR: "10.0.0.0/16"
+      AKS_VNET_IPV6_CIDR: "fd00::/48"
+```
 
 ## Deployment Notes
 
