@@ -1,0 +1,18 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: pull-request-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  kustomize-diff:
+    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@main
+    with:
+      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices"
+    permissions:
+      contents: read
+      pull-requests: write
