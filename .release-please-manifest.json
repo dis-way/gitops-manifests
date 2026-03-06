@@ -17,7 +17,7 @@
   "oci/lakmus": "1.1.4",
   "oci/linkerd": "2.8.1",
   "oci/otel-collector": "1.4.0",
-  "oci/otel-operator": "1.4.0",
+  "oci/otel-operator": "1.4.1",
   "oci/platform-system": "1.1.0",
   "oci/traefik": "2.3.2",
   "oci/whoami": "0.7.1"
