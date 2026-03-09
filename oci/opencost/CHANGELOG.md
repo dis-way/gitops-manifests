@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.1...oci-opencost-v0.2.2) (2026-03-09)
+
+
+### Bug Fixes
+
+* **opencost:** disbale servicemonitor as we are not using it ([#681](https://github.com/dis-way/gitops-manifests/issues/681)) ([3c73a18](https://github.com/dis-way/gitops-manifests/commit/3c73a18c7cb62af42fc2424b1d143bd9b4606741))
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.10 ([#680](https://github.com/dis-way/gitops-manifests/issues/680)) ([3791249](https://github.com/dis-way/gitops-manifests/commit/3791249441b09189cdea963eb7934940d68b6c46))
+
 ## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.0...oci-opencost-v0.2.1) (2026-03-06)
 
 
