@@ -30,7 +30,7 @@ spec:
           enabled: false
       metrics:
         serviceMonitor:
-          enabled: true
+          enabled: false
     extraContainers:
       - name: aad-auth-proxy
         image: mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84
