@@ -4,7 +4,7 @@ metadata:
   name: opencost
   namespace: opencost-system
 spec:
-  interval: 1h
+  interval: 4h
   releaseName: opencost
   targetNamespace: opencost-system
   install:
