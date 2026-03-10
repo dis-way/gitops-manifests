@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.2...oci-opencost-v0.2.3) (2026-03-10)
+
+
+### Bug Fixes
+
+* **opencost:** correct the extraContainers indent ([#685](https://github.com/dis-way/gitops-manifests/issues/685)) ([3fe75e9](https://github.com/dis-way/gitops-manifests/commit/3fe75e9f83f9673c828cf83c4924e51d3db899da))
+
 ## [0.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.1...oci-opencost-v0.2.2) (2026-03-09)
 
 
