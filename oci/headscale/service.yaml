@@ -4,6 +4,7 @@ metadata:
   name: headscale
   namespace: headscale
 spec:
+  type: ClusterIP
   ipFamilyPolicy: PreferDualStack
   ipFamilies:
     - IPv4
@@ -29,12 +30,12 @@ kind: Service
 metadata:
   name: headscale-derp
   namespace: headscale
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "${AKS_NODE_RG}"
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: "${PUBLIC_IP_V4}"
 spec:
-  type: ClusterIP
-  ipFamilyPolicy: PreferDualStack
-  ipFamilies:
-    - IPv4
-    - IPv6
+  type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
     app: headscale
   ports:

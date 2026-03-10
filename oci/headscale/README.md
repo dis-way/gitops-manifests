@@ -6,7 +6,8 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `PUBLIC_IP_V4` | - | Yes | Public IPv4 address for the DERP server |
+| `AKS_NODE_RG` | - | Yes | Azure node resource group containing the public IP (shared with Traefik) |
+| `PUBLIC_IP_V4` | - | Yes | Public IPv4 address for the DERP server and LoadBalancer (shared with Traefik) |
 | `PUBLIC_IP_V6` | - | Yes | Public IPv6 address for the DERP server |
 | `HEADSCALE_APP_CLIENT_ID` | - | Yes | Microsoft Entra OIDC client ID |
 | `HEADSCALE_APP_CLIENT_SECRET` | - | Yes | Microsoft Entra OIDC client secret — source from a secret store, not plain substitution |
@@ -37,6 +38,7 @@ spec:
   path: .
   postBuild:
     substitute:
+      AKS_NODE_RG: "MC_my-rg_my-aks_norwayeast"
       PUBLIC_IP_V4: "203.0.113.1"
       PUBLIC_IP_V6: "2001:db8::1"
       HEADSCALE_APP_CLIENT_ID: "00000000-0000-0000-0000-000000000000"

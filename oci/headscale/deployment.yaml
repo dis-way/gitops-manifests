@@ -24,7 +24,7 @@ spec:
         fsGroup: 65532
       containers:
         - name: headscale
-          # renovate: datasource=docker depName=headscale/headscale registryUrl=https://ghcr.io
+          # renovate: datasource=docker depName=juanfont/headscale registryUrl=https://ghcr.io
           image: altinncr.azurecr.io/ghcr.io/juanfont/headscale:0.28.0
           args: ["serve"]
           ports:
@@ -54,6 +54,12 @@ spec:
               memory: 128Mi
             limits:
               memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
           livenessProbe:
             httpGet:
               path: /health
