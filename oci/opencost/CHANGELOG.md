@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.3...oci-opencost-v0.2.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* **opencost:** use env vars instead of args ([#691](https://github.com/dis-way/gitops-manifests/issues/691)) ([c87cb8e](https://github.com/dis-way/gitops-manifests/commit/c87cb8e11e9dfaa286baadf8e712945cf5c50eee))
+
 ## [0.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.2...oci-opencost-v0.2.3) (2026-03-10)
 
 
