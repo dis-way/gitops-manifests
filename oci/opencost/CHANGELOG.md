@@ -5,7 +5,7 @@
 
 ### Bug Fixes
 
-* **opencost:** use env vars instead of args ([#691](https://github.com/dis-way/gitops-manifests/issues/691)) ([c87cb8e](https://github.com/dis-way/gitops-manifests/commit/c87cb8e11e9dfaa286baadf8e712945cf5c50eee))
+* **opencost:** use env vars instead of args ([#689](https://github.com/dis-way/gitops-manifests/issues/689)) ([e6bbae0](https://github.com/dis-way/gitops-manifests/commit/e6bbae06c548b284bdf5f51509b2cf32beef4f62))
 
 ## [0.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.2...oci-opencost-v0.2.3) (2026-03-10)
 
