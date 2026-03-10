@@ -36,7 +36,7 @@ spec:
           image: mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84
           env:
             - name: AUDIENCE
-              value: "https://monitor.azure.com/.default"
+              value: "https://prometheus.monitor.azure.com/.default"
             - name: TARGET_HOST
               value: "${AZURE_PROMETHEUS_ENDPOINT}"
             - name: LISTENING_PORT
