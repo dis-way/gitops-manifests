@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.4...oci-opencost-v0.2.5) (2026-03-11)
+
+
+### Bug Fixes
+
+* **opencost:** set correct audience for opencost againast prometheus ([#695](https://github.com/dis-way/gitops-manifests/issues/695)) ([65d532f](https://github.com/dis-way/gitops-manifests/commit/65d532f23960573ab6cd0694be5695a3435a154a))
+
 ## [0.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.3...oci-opencost-v0.2.4) (2026-03-10)
 
 
