@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.4.0...oci-headscale-v1.5.0) (2026-03-11)
+
+
+### Features
+
+* **headscale:** Expose DERP via LoadBalancer ([#696](https://github.com/dis-way/gitops-manifests/issues/696)) ([b3b9c6d](https://github.com/dis-way/gitops-manifests/commit/b3b9c6dec2d4606fae2b916575aa09b3d215ea84))
+
 ## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.3.0...oci-headscale-v1.4.0) (2026-02-28)
 
 
