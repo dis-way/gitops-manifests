@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.5.0...oci-headscale-v1.6.0) (2026-03-11)
+
+
+### Features
+
+* **headscale:** Enable IPv6 dual-stack LB ([#708](https://github.com/dis-way/gitops-manifests/issues/708)) ([3f4d4eb](https://github.com/dis-way/gitops-manifests/commit/3f4d4eb57acce606ebe9f490f92387054d8cd398))
+
 ## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.4.0...oci-headscale-v1.5.0) (2026-03-11)
 
 
