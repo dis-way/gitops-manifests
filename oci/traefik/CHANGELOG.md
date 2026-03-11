@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.3.2...oci-traefik-v2.4.0) (2026-03-11)
+
+
+### Features
+
+* **headscale:** Expose DERP via LoadBalancer ([#696](https://github.com/dis-way/gitops-manifests/issues/696)) ([b3b9c6d](https://github.com/dis-way/gitops-manifests/commit/b3b9c6dec2d4606fae2b916575aa09b3d215ea84))
+
 ## [2.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.3.1...oci-traefik-v2.3.2) (2026-02-19)
 
 
