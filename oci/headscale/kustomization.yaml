@@ -9,4 +9,3 @@ resources:
   - service.yaml
   - gateway.yaml
   - httproute.yaml
-  - ingressrouteudp.yaml
