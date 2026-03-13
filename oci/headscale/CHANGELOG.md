@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.6.0...oci-headscale-v1.7.0) (2026-03-13)
+
+
+### Features
+
+* **headscale:** Add Vault privatelink DNS mapping ([#717](https://github.com/dis-way/gitops-manifests/issues/717)) ([9f56731](https://github.com/dis-way/gitops-manifests/commit/9f567319bf4fe9cf9aefdb24eb2fd1a8e30e13f5))
+
 ## [1.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.5.0...oci-headscale-v1.6.0) (2026-03-11)
 
 
