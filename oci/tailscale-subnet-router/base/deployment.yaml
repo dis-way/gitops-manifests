@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale-subnet-router
+  namespace: tailscale-subnet-router
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tailscale-subnet-router
+  template:
+    metadata:
+      labels:
+        app: tailscale-subnet-router
+    spec:
+      serviceAccountName: tailscale
+      containers:
+        - name: tailscale
+          # renovate: datasource=docker depName=tailscale/tailscale
+          image: altinncr.azurecr.io/docker.io/tailscale/tailscale:v1.94.1
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-authkey
+                  key: TS_AUTHKEY
+            - name: TS_EXTRA_ARGS
+              value: "--login-server=https://headscale.altinn.cloud --advertise-routes=${TS_ADVERTISE_ROUTES:=}"
+            - name: TS_USERSPACE
+              value: "true"
+            - name: TS_KUBE_SECRET
+              value: "tailscale-state"
+            - name: TS_ACCEPT_DNS
+              value: "false"
+            - name: TS_HOSTNAME
+              value: "${AKS_NAME}"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi
+          livenessProbe:
+            exec:
+              command:
+                - tailscale
+                - status
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - tailscale
+                - status
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

@@ -177,5 +177,13 @@
   },
   "opencost": {
     "at_ring1": "0.2.5"
+  },
+  "tailscale-subnet-router": {
+    "at_ring1": "0.1.0",
+    "at_ring2": "0.1.0",
+    "tt_ring1": "0.1.0",
+    "tt_ring2": "0.1.0",
+    "prod_ring1": "0.1.0",
+    "prod_ring2": "0.1.0"
   }
 }
