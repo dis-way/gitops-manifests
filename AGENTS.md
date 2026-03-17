@@ -54,18 +54,15 @@ When creating or updating a README for an `oci/<name>/` package, use this format
 |----------|---------|----------|-------------|
 | `VAR_NAME` | `default-value` | Yes/No | Brief description |
 
-## Usage
+## Layers
 
-\```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-spec:
-  path: ./base
-  postBuild:
-    substitute:
-      VAR_NAME: "value"
-\```
+| Path | Description |
+|------|-------------|
+| `base` | Core resources |
+| `<overlay>` | Optional overlay description |
 ```
+
+Never add a `## Usage` section — there are too many ways to deploy these packages and a single example is more confusing than helpful.
 
 To find variables, search for `${VAR_NAME:=default}` or `${VAR_NAME}` patterns in the package YAML files. Variables with `:=` have defaults and are optional; variables without are required.
 

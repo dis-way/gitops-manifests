@@ -10,17 +10,8 @@ Deploys a Tailscale subnet router pod that connects to a Headscale coordination 
 | `TS_ADVERTISE_ROUTES` | `""` | No | Subnet CIDR(s) to advertise, e.g. `10.0.0.0/16`. Empty string clears all advertised routes. |
 | `HEADSCALE_PREAUTH_KEY` | — | Yes | Headscale pre-auth key from the deploy pipeline. Generate with: `headscale preauthkeys create --reusable --tags tag:<aks_name>` |
 
-## Usage
+## Layers
 
-```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-spec:
-  path: ./base
-  postBuild:
-    substitute:
-      AKS_NAME: "my-aks-cluster"
-      HEADSCALE_PREAUTH_KEY: "<preauth-key>"
-      TS_ADVERTISE_ROUTES: "10.0.0.0/16"
-```
-
+| Path | Description |
+|------|-------------|
+| `base` | Namespace, RBAC, and subnet router Deployment |
