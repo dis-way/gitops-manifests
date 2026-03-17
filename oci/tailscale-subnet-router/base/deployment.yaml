@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         app: tailscale-subnet-router
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
       serviceAccountName: tailscale
       containers:
