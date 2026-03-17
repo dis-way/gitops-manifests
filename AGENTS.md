@@ -79,6 +79,18 @@ When creating or updating a README for a `policies/` subfolder containing Linker
 - **Why This Matters**: Failure modes without these policies
 - **Variables**: Required CIDR variables for NetworkAuthentication
 
+## Cluster Autoscaler Safe-to-Evict Annotation
+
+When a pod template uses `emptyDir` volumes, the cluster autoscaler will by default refuse to evict the pod during scale-down (it treats local storage as a reason to block eviction). Add the following annotation to the pod template `metadata.annotations` to allow eviction:
+
+```yaml
+metadata:
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+```
+
+**When to apply:** Any Deployment, StatefulSet, or DaemonSet whose pod spec includes one or more `emptyDir` volumes, unless the data in those volumes must survive node drain (in which case use a PersistentVolume instead).
+
 ## Flux HelmRelease Multitenancy Skill
 
 When adding `spec.targetNamespace` to a Flux HelmRelease (e.g., in a multitenancy overlay), always also add `spec.releaseName` set to the original HelmRelease `metadata.name`. The Flux API defines `releaseName` as: *"ReleaseName used for the Helm release. Defaults to a composition of '[TargetNamespace-]Name'."* This means that when `targetNamespace` is set without an explicit `releaseName`, Flux composes the release name as `<TargetNamespace>-<Name>`, which causes the Helm chart to produce resources with a double-prefixed name (e.g., ServiceAccount `cert-manager-cert-manager` instead of `cert-manager`).
