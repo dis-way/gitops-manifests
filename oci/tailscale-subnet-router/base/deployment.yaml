@@ -36,6 +36,14 @@ spec:
               value: "false"
             - name: TS_HOSTNAME
               value: "${AKS_NAME}"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
           resources:
             requests:
               cpu: 50m
