@@ -9,7 +9,7 @@
   },
   "azure-service-operator": {
     "at_ring1": "1.4.2",
-    "at_ring2": "1.4.1",
+    "at_ring2": "1.4.2",
     "tt_ring1": "1.4.1",
     "tt_ring2": "1.4.1",
     "prod_ring1": "1.4.1",
