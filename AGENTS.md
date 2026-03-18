@@ -54,18 +54,15 @@ When creating or updating a README for an `oci/<name>/` package, use this format
 |----------|---------|----------|-------------|
 | `VAR_NAME` | `default-value` | Yes/No | Brief description |
 
-## Usage
+## Layers
 
-\```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-spec:
-  path: ./base
-  postBuild:
-    substitute:
-      VAR_NAME: "value"
-\```
+| Path | Description |
+|------|-------------|
+| `base` | Core resources |
+| `<overlay>` | Optional overlay description |
 ```
+
+Never add a `## Usage` section — there are too many ways to deploy these packages and a single example is more confusing than helpful.
 
 To find variables, search for `${VAR_NAME:=default}` or `${VAR_NAME}` patterns in the package YAML files. Variables with `:=` have defaults and are optional; variables without are required.
 
@@ -78,6 +75,18 @@ When creating or updating a README for a `policies/` subfolder containing Linker
 - **Resources**: Tables for Authentication, Servers, and AuthorizationPolicies
 - **Why This Matters**: Failure modes without these policies
 - **Variables**: Required CIDR variables for NetworkAuthentication
+
+## Cluster Autoscaler Safe-to-Evict Annotation
+
+When a pod template uses `emptyDir` volumes, the cluster autoscaler will by default refuse to evict the pod during scale-down (it treats local storage as a reason to block eviction). Add the following annotation to the pod template `metadata.annotations` to allow eviction:
+
+```yaml
+metadata:
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+```
+
+**When to apply:** Any Deployment, StatefulSet, or DaemonSet whose pod spec includes one or more `emptyDir` volumes, unless the data in those volumes must survive node drain (in which case use a PersistentVolume instead).
 
 ## Flux HelmRelease Multitenancy Skill
 
