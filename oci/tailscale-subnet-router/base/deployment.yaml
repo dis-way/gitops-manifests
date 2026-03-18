@@ -16,6 +16,14 @@ spec:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
       serviceAccountName: tailscale
+      priorityClassName: system-cluster-critical
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+          effect: "NoSchedule"
+      nodeSelector:
+        kubernetes.io/os: linux
+        kubernetes.azure.com/mode: system
       containers:
         - name: tailscale
           # renovate: datasource=docker depName=tailscale/tailscale
@@ -36,6 +44,14 @@ spec:
               value: "false"
             - name: TS_HOSTNAME
               value: "${AKS_NAME}"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
           resources:
             requests:
               cpu: 50m
