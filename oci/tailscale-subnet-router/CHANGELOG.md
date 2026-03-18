@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.2.0...oci-tailscale-subnet-router-v0.2.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** Mount /root/.cache ([#739](https://github.com/dis-way/gitops-manifests/issues/739)) ([e0deba5](https://github.com/dis-way/gitops-manifests/commit/e0deba582883c98a7e4778832621ae22af0b1f51))
+
 ## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.1.0...oci-tailscale-subnet-router-v0.2.0) (2026-03-18)
 
 
