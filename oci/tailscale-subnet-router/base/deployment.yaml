@@ -64,6 +64,10 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
+            - name: root-cache
+              mountPath: /root/.cache
       volumes:
         - name: tmp
+          emptyDir: {}
+        - name: root-cache
           emptyDir: {}
