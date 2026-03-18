@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.0...oci-otel-collector-v1.4.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* allow all pods to send otel data ([#755](https://github.com/dis-way/gitops-manifests/issues/755)) ([a8a0f79](https://github.com/dis-way/gitops-manifests/commit/a8a0f79a575c6b7810217a2d56c0e7fe753ae752))
+
 ## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.3.3...oci-otel-collector-v1.4.0) (2026-02-18)
 
 
