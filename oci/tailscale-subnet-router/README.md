@@ -1,4 +1,4 @@
-# Tailscale Subnet Router
+# AKS Tailscale Subnet Router
 
 Deploys a Tailscale subnet router pod that connects to a Headscale coordination server and optionally advertises subnets to the Tailnet.
 
