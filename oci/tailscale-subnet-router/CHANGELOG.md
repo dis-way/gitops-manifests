@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.3.0...oci-tailscale-subnet-router-v1.0.0) (2026-03-18)
+
+
+### Features
+
+* **tailscale:** Use Recreate strategy and RBAC ([#761](https://github.com/dis-way/gitops-manifests/issues/761)) ([fb60ac2](https://github.com/dis-way/gitops-manifests/commit/fb60ac29486ee8892adf44275aaf3d53c67a8e50))
+
 ## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.2.2...oci-tailscale-subnet-router-v0.3.0) (2026-03-18)
 
 
