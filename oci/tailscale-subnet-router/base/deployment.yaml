@@ -66,8 +66,12 @@ spec:
               mountPath: /tmp
             - name: root-cache
               mountPath: /root/.cache
+            - name: var-run-tailscale
+              mountPath: /var/run/tailscale
       volumes:
         - name: tmp
           emptyDir: {}
         - name: root-cache
+          emptyDir: {}
+        - name: var-run-tailscale
           emptyDir: {}
