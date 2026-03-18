@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.2.2...oci-tailscale-subnet-router-v0.3.0) (2026-03-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tailscale:** stable release of tailscale-subnet-router ([#751](https://github.com/dis-way/gitops-manifests/issues/751))
+
+### Features
+
+* **tailscale:** stable release of tailscale-subnet-router ([#751](https://github.com/dis-way/gitops-manifests/issues/751)) ([7db0077](https://github.com/dis-way/gitops-manifests/commit/7db007797819b836be5e1bd9154b0d7c53781046))
+
 ## [0.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.2.1...oci-tailscale-subnet-router-v0.2.2) (2026-03-18)
 
 
