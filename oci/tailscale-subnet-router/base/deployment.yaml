@@ -17,6 +17,13 @@ spec:
     spec:
       serviceAccountName: tailscale
       priorityClassName: system-cluster-critical
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+          effect: "NoSchedule"
+      nodeSelector:
+        kubernetes.io/os: linux
+        kubernetes.azure.com/mode: system
       containers:
         - name: tailscale
           # renovate: datasource=docker depName=tailscale/tailscale
