@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.3.1...oci-kyverno-v1.3.2) (2026-03-19)
+
+
+### Bug Fixes
+
+* kyverno should ignore linkerd namespace ([#767](https://github.com/dis-way/gitops-manifests/issues/767)) ([ca634f7](https://github.com/dis-way/gitops-manifests/commit/ca634f7ed9293dc86f571ba3e5a356dce59a0513))
+
 ## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.3.0...oci-kyverno-v1.3.1) (2026-02-26)
 
 
