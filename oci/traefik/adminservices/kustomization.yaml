@@ -10,3 +10,35 @@ patches:
       - op: replace
         path: /spec/values/providers/kubernetesGateway/enabled
         value: true
+      - op: add
+        path: /spec/values/ports/https/http/middlewares
+        value:
+          - traefik-hsts-header@kubernetescrd
+      - op: add
+        path: /spec/values/extraObjects
+        value:
+          - apiVersion: traefik.io/v1alpha1
+            kind: Middleware
+            metadata:
+              name: hsts-header
+              namespace: traefik
+            spec:
+              headers:
+                stsIncludeSubdomains: true
+                stsSeconds: 63072000
+                stsPreload: true
+          - apiVersion: traefik.io/v1alpha1
+            kind: IngressRoute
+            metadata:
+              name: root-ingress-route
+              namespace: traefik
+            spec:
+              entryPoints:
+                - http
+                - https
+              routes:
+                - kind: Rule
+                  match: PathPrefix(`/`)
+                  services:
+                    - kind: TraefikService
+                      name: noop@internal
