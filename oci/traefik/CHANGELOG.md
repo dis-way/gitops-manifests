@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.4.0...oci-traefik-v3.0.0) (2026-03-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate from traefik crds chart and bump version ([#772](https://github.com/dis-way/gitops-manifests/issues/772))
+
+### Features
+
+* migrate from traefik crds chart and bump version ([#772](https://github.com/dis-way/gitops-manifests/issues/772)) ([2c64575](https://github.com/dis-way/gitops-manifests/commit/2c6457523044659607a9c4143129115d6bc068f6))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.3.2...oci-traefik-v2.4.0) (2026-03-11)
 
 
