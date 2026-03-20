@@ -48,6 +48,10 @@
       "release-type": "simple",
       "component": "oci-grafana-operator"
     },
+    "oci/traefik-crd-patch": {
+      "release-type": "simple",
+      "component": "oci-traefik-crd-patch"
+    },
     "oci/headscale": {
       "release-type": "simple",
       "component": "oci-headscale"
