@@ -8,6 +8,10 @@ patches:
       name: altinn-traefik
     patch: |
       - op: add
+        path: /spec/values/ports/https/http/middlewares
+        value:
+          - traefik-hsts-header@kubernetescrd
+      - op: add
         path: /spec/values/extraObjects
         value:
           - apiVersion: traefik.io/v1alpha1
@@ -42,9 +46,6 @@ patches:
               routes:
                 - kind: Rule
                   match: PathPrefix(`/`)
-                  middlewares:
-                    - name: hsts-header
-                      namespace: traefik
                   services:
                     - kind: TraefikService
                       name: noop@internal

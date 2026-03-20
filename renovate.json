@@ -125,20 +125,6 @@
         "helm"
       ],
       "matchPackageNames": [
-        "traefik",
-        "traefik-crds"
-      ],
-      "groupName": "traefik helm charts",
-      "groupSlug": "traefik-helm"
-    },
-    {
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchDatasources": [
-        "helm"
-      ],
-      "matchPackageNames": [
         "kyverno",
         "kyverno-policies"
       ],

@@ -5,25 +5,40 @@ resources:
 patches:
   - target:
       kind: HelmRelease
-      name: traefik-crds
-    patch: |
-      - op: add
-        path: /spec/values/gatewayAPI
-        value: true
-  - target:
-      kind: HelmRelease
       name: altinn-traefik
     patch: |
       - op: replace
         path: /spec/values/providers/kubernetesGateway/enabled
         value: true
-      - op: replace
-        path: /spec/values/ports/http/forwardedHeaders/trustedIPs
+      - op: add
+        path: /spec/values/ports/https/http/middlewares
         value:
-          - "${AKS_VNET_IPV4_CIDR}"
-          - "${AKS_VNET_IPV6_CIDR}"
-      - op: replace
-        path: /spec/values/ports/https/forwardedHeaders/trustedIPs
+          - traefik-hsts-header@kubernetescrd
+      - op: add
+        path: /spec/values/extraObjects
         value:
-          - "${AKS_VNET_IPV4_CIDR}"
-          - "${AKS_VNET_IPV6_CIDR}"
+          - apiVersion: traefik.io/v1alpha1
+            kind: Middleware
+            metadata:
+              name: hsts-header
+              namespace: traefik
+            spec:
+              headers:
+                stsIncludeSubdomains: true
+                stsSeconds: 63072000
+                stsPreload: true
+          - apiVersion: traefik.io/v1alpha1
+            kind: IngressRoute
+            metadata:
+              name: root-ingress-route
+              namespace: traefik
+            spec:
+              entryPoints:
+                - http
+                - https
+              routes:
+                - kind: Rule
+                  match: PathPrefix(`/`)
+                  services:
+                    - kind: TraefikService
+                      name: noop@internal

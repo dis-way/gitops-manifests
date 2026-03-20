@@ -1,101 +1,30 @@
-# Traefik Configuration
+# Traefik
 
-This directory contains the Flux configuration for deploying Traefik as the ingress controller in the Altinn platform. The configuration supports two distinct deployment models: **Apps** (Standard) and **Multitenancy**.
+Deploys Traefik as the ingress controller for the Altinn platform via Flux HelmRelease (chart v39+).
 
-## Overview
+CRDs (Traefik and Gateway API standard channel) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`.
 
-Traefik serves as a reverse proxy and load balancer, handling incoming traffic routing for the Altinn platform. The deployment is managed via Flux CD and is designed for high availability, security, and observability.
+## Variables
 
-## Directory Structure
+| Variable | Default | Required | Description |
+|----------|---------|----------|-------------|
+| `AKS_NODE_RG` | — | Yes | Azure Resource Group for AKS nodes (Load Balancer annotation) |
+| `PUBLIC_IP_V4` | — | Yes | Public IPv4 address for the Azure Load Balancer |
+| `PUBLIC_IP_V6` | — | Yes | Public IPv6 address for the Azure Load Balancer |
+| `AKS_VNET_IPV4_CIDR` | — | Yes | Full AKS VNet IPv4 CIDR; trusted for `X-Forwarded-For` |
+| `AKS_VNET_IPV6_CIDR` | — | Yes | Full AKS VNet IPv6 CIDR; trusted for `X-Forwarded-For` |
+| `EXTERNAL_TRAFFIC_POLICY` | `Local` | No | Service `externalTrafficPolicy` |
+| `OTEL_ENDPOINT` | `otel-collector.monitoring.svc.cluster.local:4317` | No | OTLP gRPC endpoint for logs, metrics, and traces |
+| `DEFAULT_GATEWAY_HOSTNAME` | — | multitenancy only | Hostname for the default Gateway listeners |
+| `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No (policies only) | AKS pod network IPv4 CIDR for Linkerd NetworkAuthentication |
+| `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No (policies only) | AKS pod network IPv6 CIDR for Linkerd NetworkAuthentication |
 
-```text
-.
-├── base/                   # Shared base configuration
-│   ├── helmrelease.yaml    # Core Traefik HelmRelease
-│   ├── helmrepository.yaml # Traefik HelmRepository
-│   └── namespace.yaml      # 'traefik' namespace definition
-├── apps/                   # Standard deployment variant
-│   ├── kustomization.yaml
-│   └── extraObjects-patch.yaml
-├── multitenancy/           # Multitenancy deployment variant
-│   └── kustomization.yaml
-├── policies/               # Linkerd policies for multitenancy
-│   ├── linkerd-policies.yaml
-│   └── README.md
-└── README.md
-```
+## Layers
 
-## Deployment Variants
-
-### 1. Standard (`apps`)
-The standard deployment model used for typical application clusters.
--   **Routing**: Uses Traefik's `IngressRoute` CRD.
--   **Namespace**: Resources are managed in and deployed to the `traefik` namespace.
--   **Network Trust**: Trusts specific AKS System and Worker pool IP ranges.
--   **Middleware**: Includes HSTS headers and a root catch-all redirect.
-
-### 2. Multitenancy (`multitenancy`)
-The deployment model designed for multi-tenant environments using the Gateway API.
--   **Routing**: Uses Kubernetes **Gateway API** (`kubernetesGateway`). `IngressRoute` (CRD) is disabled.
--   **Namespace**: Flux resources (`HelmRelease`, `HelmRepository`) reside in `platform-system` (management plane), while the Traefik workload runs in `traefik`.
--   **Network Trust**: Trusts the entire AKS VNet CIDR.
--   **Security**: Integrates with specific Linkerd policies (from `policies/`) to secure health probes and admin access in a restrictive mesh environment.
-
-## Key Configuration Features
-
-### High Availability & Security
--   **Replicas**: 3 instances with Pod Disruption Budget (min 1 available).
--   **Network**: Dual-stack (IPv4/IPv6) support. Azure Load Balancer with dedicated public IPs.
--   **TLS**: Minimum TLS 1.2 with strong cipher suites.
--   **Service Mesh**: Full Linkerd injection and configuration.
-
-### Observability (OTLP)
-Traefik is configured to export telemetry via OTLP to a collector:
--   **Logs, Metrics, Traces**: All enabled and sent to `otel-collector.monitoring.svc.cluster.local:4317` (configurable via `OTEL_ENDPOINT`).
--   **Prometheus**: Standard Prometheus metrics are replaced/augmented by OTLP.
-
-## Port Configuration
-
-Traefik uses custom internal ports to avoid running as root and to align with Linkerd requirements, mapping them to standard external ports.
-
-| Internal Port | External Port | Protocol | Purpose |
-|---------------|---------------|----------|---------|
-| `8000` | `80` | TCP | HTTP (Redirects to HTTPS) |
-| `8443` | `443` | TCP | HTTPS (TLS Enabled) |
-
-## Environment Variables
-
-The configuration relies on Flux post-build variable substitution. Required variables depend on the deployment variant.
-
-### Common Variables
-| Variable | Description | Default/Example |
-|----------|-------------|-----------------|
-| `AKS_NODE_RG` | Azure Resource Group for AKS nodes | `rg-aks-nodes` |
-| `PUBLIC_IP_V4` | Public IPv4 address for Load Balancer | `20.x.x.x` |
-| `PUBLIC_IP_V6` | Public IPv6 address for Load Balancer | `2603:x:x:x::` |
-| `EXTERNAL_TRAFFIC_POLICY` | Service external traffic policy | `Local` |
-| `OTEL_ENDPOINT` | OTLP Collector endpoint | `otel-collector...:4317` |
-
-### Standard (`apps`) Specific
-| Variable | Description |
-|----------|-------------|
-| `AKS_SYSP00L_IP_PREFIX_0` | AKS System Pool IP Prefix |
-| `AKS_SYSP00L_IP_PREFIX_1` | AKS System Pool IP Prefix |
-| `AKS_WORKPOOL_IP_PREFIX_0` | AKS Worker Pool IP Prefix |
-| `AKS_WORKPOOL_IP_PREFIX_1` | AKS Worker Pool IP Prefix |
-
-### Multitenancy (`multitenancy`) Specific
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `AKS_VNET_IPV4_CIDR` | Full AKS VNet IPv4 CIDR | - |
-| `AKS_VNET_IPV6_CIDR` | Full AKS VNet IPv6 CIDR | - |
-| `DEFAULT_GATEWAY_HOSTNAME`| Hostname for the default Gateway listener | - |
-| `AKS_POD_IPV4_CIDR` | AKS pod network IPv4 CIDR (overlay networking) | `10.240.0.0/16` |
-| `AKS_POD_IPV6_CIDR` | AKS pod network IPv6 CIDR (overlay networking) | `fd10:59f0:8c79:240::/64` |
-
-## Policies (Multitenancy)
-The `policies/` directory contains Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources. These are critical for the multitenancy setup to allow:
--   Kubelet health probes (liveness/readiness) from both pod and VNET CIDRs.
--   Linkerd proxy admin health checks on port 4191.
-
-These policies ensure Traefik remains operational even when the cluster enforces a default "deny-all" inbound policy. See [`policies/README.md`](policies/README.md) for details.
+| Path | Description |
+|------|-------------|
+| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas, dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
+| `apps` | Standard variant; enables Traefik CRD provider, HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
+| `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies |
+| `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
+| `policies` | Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources for kubelet probes and proxy admin in deny-all mesh environments; see [`policies/README.md`](policies/README.md) |
