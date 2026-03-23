@@ -7,7 +7,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^oci\\/(dis-identity|dis-pgsql|lakmus)\\/(base\\/)?(flux-kustomize|oci-repository)\\.yaml$/"
+        "/^oci\\/(dis-apim|dis-identity|dis-pgsql|lakmus)\\/(base\\/)?(flux-kustomize|oci-repository)\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*newTag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
@@ -35,6 +35,33 @@
       ],
       "matchPackageNames": [
         "ghcr.io/altinn/altinn-platform/dis-identity-operator"
+      ],
+      "matchUpdateTypes": [
+        "pin",
+        "pinDigest",
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/dis-apim-operator"
+      ],
+      "versioning": "semver",
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/",
+      "pinDigests": false,
+      "groupName": "dis apim image tags",
+      "groupSlug": "dis-apim-tags"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/dis-apim-operator"
       ],
       "matchUpdateTypes": [
         "pin",
