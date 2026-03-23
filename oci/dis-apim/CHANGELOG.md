@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-apim-v0.2.1...oci-dis-apim-v0.3.0) (2026-03-23)
+
+
+### Features
+
+* **dis-apim:** add renovate config for dis-apim-operator image tracking ([#786](https://github.com/dis-way/gitops-manifests/issues/786)) ([2103e3c](https://github.com/dis-way/gitops-manifests/commit/2103e3cca9e969808f333aee389dfcb78d8d32da))
+
 ## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-apim-v0.2.0...oci-dis-apim-v0.2.1) (2026-02-25)
 
 
