@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.0.0...oci-traefik-v3.0.1) (2026-03-23)
+
+
+### Dependency Updates
+
+* update helm release traefik to v39.0.6 ([#789](https://github.com/dis-way/gitops-manifests/issues/789)) ([71a87b6](https://github.com/dis-way/gitops-manifests/commit/71a87b660b44818b9590bf4a756c8c180b9443b5))
+
 ## [3.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v2.4.0...oci-traefik-v3.0.0) (2026-03-20)
 
 
