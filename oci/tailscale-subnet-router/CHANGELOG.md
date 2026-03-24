@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.0.0...oci-tailscale-subnet-router-v1.1.0) (2026-03-24)
+
+
+### Features
+
+* Enable Auth-Once and raise memory request ([#795](https://github.com/dis-way/gitops-manifests/issues/795)) ([f48bcd7](https://github.com/dis-way/gitops-manifests/commit/f48bcd7bf2ce99e105dd443166fafc818c19fe62))
+
 ## [1.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v0.3.0...oci-tailscale-subnet-router-v1.0.0) (2026-03-18)
 
 
