@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.3.0...oci-cert-manager-v2.4.0) (2026-03-25)
+
+
+### Features
+
+* fake release cer-manager ([#823](https://github.com/dis-way/gitops-manifests/issues/823)) ([91b45ab](https://github.com/dis-way/gitops-manifests/commit/91b45abe2677e32096f848663b87566fe23f7b6e))
+
 ## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.2.2...oci-cert-manager-v2.3.0) (2026-03-25)
 
 
