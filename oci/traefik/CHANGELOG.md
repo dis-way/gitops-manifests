@@ -7,6 +7,13 @@
 
 * add platform-aks overlay ([#811](https://github.com/dis-way/gitops-manifests/issues/811)) ([26353dd](https://github.com/dis-way/gitops-manifests/commit/26353ddd8f6627d2c71fb010d42fda091f7ee73c))
 
+## [3.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.0.1...oci-traefik-v3.1.0) (2026-03-25)
+
+
+### Features
+
+* add platform-aks overlay ([#811](https://github.com/dis-way/gitops-manifests/issues/811)) ([26353dd](https://github.com/dis-way/gitops-manifests/commit/26353ddd8f6627d2c71fb010d42fda091f7ee73c))
+
 ## [3.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.0.0...oci-traefik-v3.0.1) (2026-03-23)
 
 
