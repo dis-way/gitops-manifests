@@ -1,0 +1,58 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+      name: altinn-traefik
+    patch: |
+      - op: add
+        path: /spec/values/ports/https/http/middlewares
+        value:
+          - traefik-hsts-header@kubernetescrd
+      - op: add
+        path: /spec/values/service/spec/loadBalancerSourceRanges
+        value:
+          - "${LB_SOURCE_RANGE_APIM}"
+          - "${LB_SOURCE_RANGE_CORRESPONDENCE}"
+      - op: replace
+        path: /spec/values/metrics/prometheus
+        value:
+          service:
+            enabled: true
+          serviceMonitor:
+            enabled: true
+            metricRelabelings:
+              - sourceLabels: [__name__]
+                separator: ;
+                regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
+                replacement: $1
+                action: drop
+            relabelings:
+              - sourceLabels: [__meta_kubernetes_pod_node_name]
+                separator: ;
+                regex: ^(.*)$
+                targetLabel: nodename
+                replacement: $1
+                action: replace
+            jobLabel: traefik
+            interval: 30s
+            honorLabels: true
+            namespaceSelector:
+              any: true
+            additionalLabels:
+              release: kube-prometheus-stack
+      - op: add
+        path: /spec/values/extraObjects
+        value:
+          - apiVersion: traefik.io/v1alpha1
+            kind: Middleware
+            metadata:
+              name: hsts-header
+              namespace: traefik
+            spec:
+              headers:
+                stsIncludeSubdomains: true
+                stsSeconds: 63072000
+                stsPreload: true
