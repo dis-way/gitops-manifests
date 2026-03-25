@@ -14,3 +14,4 @@ No variables. All values are hardcoded in the HelmRelease.
 | `apps` | Alias for `base` |
 | `platform-aks` | AKS platform overlay; currently identical to `base` |
 | `multitenancy` | Moves HelmRepository and HelmRelease to `platform-system` namespace, sets `targetNamespace: cert-manager` and `releaseName: cert-manager` |
+-
