@@ -12,7 +12,7 @@ patches:
         value:
           - traefik-hsts-header@kubernetescrd
       - op: add
-        path: /spec/values/service/spec/loadBalancerSourceRanges
+        path: /spec/values/service/loadBalancerSourceRanges
         value:
           - "${LB_SOURCE_RANGE_APIM}"
           - "${LB_SOURCE_RANGE_CORRESPONDENCE}"
@@ -23,12 +23,6 @@ patches:
             enabled: true
           serviceMonitor:
             enabled: true
-            metricRelabelings:
-              - sourceLabels: [__name__]
-                separator: ;
-                regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
-                replacement: $1
-                action: drop
             relabelings:
               - sourceLabels: [__meta_kubernetes_pod_node_name]
                 separator: ;
