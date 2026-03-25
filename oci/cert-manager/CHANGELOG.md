@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.2.2...oci-cert-manager-v2.3.0) (2026-03-25)
+
+
+### Features
+
+* add platform-aks overlay ([#811](https://github.com/dis-way/gitops-manifests/issues/811)) ([26353dd](https://github.com/dis-way/gitops-manifests/commit/26353ddd8f6627d2c71fb010d42fda091f7ee73c))
+
 ## [2.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.2.1...oci-cert-manager-v2.2.2) (2026-03-17)
 
 
