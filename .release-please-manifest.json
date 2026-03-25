@@ -22,6 +22,6 @@
   "oci/otel-operator": "1.4.0",
   "oci/platform-system": "1.1.0",
   "oci/tailscale-subnet-router": "1.1.0",
-  "oci/traefik": "3.1.0",
+  "oci/traefik": "3.0.1",
   "oci/whoami": "0.7.1"
 }
