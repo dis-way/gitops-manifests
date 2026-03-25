@@ -13,6 +13,8 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `PUBLIC_IP_V6` | — | Yes | Public IPv6 address for the Azure Load Balancer |
 | `AKS_VNET_IPV4_CIDR` | — | Yes | Full AKS VNet IPv4 CIDR; trusted for `X-Forwarded-For` |
 | `AKS_VNET_IPV6_CIDR` | — | Yes | Full AKS VNet IPv6 CIDR; trusted for `X-Forwarded-For` |
+| `LB_SOURCE_RANGE_APIM` | — | platform-aks only | Load Balancer source range CIDR for API Management (e.g. `1.2.3.4/32`) |
+| `LB_SOURCE_RANGE_CORRESPONDENCE` | — | platform-aks only | Load Balancer source range CIDR for correspondence outbound IP |
 | `EXTERNAL_TRAFFIC_POLICY` | `Local` | No | Service `externalTrafficPolicy` |
 | `OTEL_ENDPOINT` | `otel-collector.monitoring.svc.cluster.local:4317` | No | OTLP gRPC endpoint for logs, metrics, and traces |
 | `DEFAULT_GATEWAY_HOSTNAME` | — | multitenancy only | Hostname for the default Gateway listeners |
@@ -24,6 +26,7 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | Path | Description |
 |------|-------------|
 | `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas, dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
+| `platform-aks` | AKS platform overlay; adds `loadBalancerSourceRanges` (APIM + correspondence IPs), Prometheus ServiceMonitor, and HSTS middleware |
 | `apps` | Standard variant; enables Traefik CRD provider, HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
 | `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies |
 | `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
