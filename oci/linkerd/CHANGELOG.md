@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.8.1...oci-linkerd-v2.9.0) (2026-03-25)
+
+
+### Features
+
+* add platform-aks overlay ([#811](https://github.com/dis-way/gitops-manifests/issues/811)) ([26353dd](https://github.com/dis-way/gitops-manifests/commit/26353ddd8f6627d2c71fb010d42fda091f7ee73c))
+
 ## [2.8.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.8.0...oci-linkerd-v2.8.1) (2026-02-12)
 
 
