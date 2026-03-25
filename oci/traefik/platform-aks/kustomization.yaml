@@ -37,6 +37,23 @@ patches:
               any: true
             additionalLabels:
               release: kube-prometheus-stack
+      - op: replace
+        path: /spec/values/service/ipFamilyPolicy
+        value: SingleStack
+      - op: replace
+        path: /spec/values/service/ipFamilies
+        value:
+          - IPv4
+      - op: remove
+        path: /spec/values/service/annotations/service.beta.kubernetes.io~1azure-load-balancer-ipv6
+      - op: replace
+        path: /spec/values/ports/http/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+      - op: replace
+        path: /spec/values/ports/https/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
       - op: add
         path: /spec/values/extraObjects
         value:
