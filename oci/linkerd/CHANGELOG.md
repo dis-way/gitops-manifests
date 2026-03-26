@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.9.0...oci-linkerd-v2.10.0) (2026-03-26)
+
+
+### Features
+
+* remove linkerd postrender podmonitor platform-aks ([#832](https://github.com/dis-way/gitops-manifests/issues/832)) ([ed6bcf3](https://github.com/dis-way/gitops-manifests/commit/ed6bcf3ff1cc1b17655a1ef9a482ec29f129f79d))
+
 ## [2.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.8.1...oci-linkerd-v2.9.0) (2026-03-25)
 
 
