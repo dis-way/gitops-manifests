@@ -11,8 +11,11 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `AKS_NODE_RG` | — | Yes | Azure Resource Group for AKS nodes (Load Balancer annotation) |
 | `PUBLIC_IP_V4` | — | Yes | Public IPv4 address for the Azure Load Balancer |
 | `PUBLIC_IP_V6` | — | Not platform-aks | Public IPv6 address for the Azure Load Balancer |
-| `AKS_VNET_IPV4_CIDR` | — | Yes | Full AKS VNet IPv4 CIDR; trusted for `X-Forwarded-For` |
+| `AKS_VNET_IPV4_CIDR` | — | Not platform-aks | Full AKS VNet IPv4 CIDR; trusted for `X-Forwarded-For` |
 | `AKS_VNET_IPV6_CIDR` | — | Not platform-aks | Full AKS VNet IPv6 CIDR; trusted for `X-Forwarded-For` |
+| `AKS_SYSTEM_SUBNET_CIDR` | — | platform-aks only | AKS system node subnet CIDR; trusted for `X-Forwarded-For` |
+| `AKS_WORK_SUBNET_CIDR` | — | platform-aks only | AKS work node subnet CIDR; trusted for `X-Forwarded-For` |
+| `AKS_FILESCAN_SUBNET_CIDR` | — | platform-aks only | AKS filescan node subnet CIDR; trusted for `X-Forwarded-For` |
 | `LB_SOURCE_RANGE_APIM` | — | platform-aks only | Load Balancer source range CIDR for API Management (e.g. `1.2.3.4/32`) |
 | `LB_SOURCE_RANGE_CORRESPONDENCE` | — | platform-aks only | Load Balancer source range CIDR for correspondence outbound IP |
 | `EXTERNAL_TRAFFIC_POLICY` | `Local` | No | Service `externalTrafficPolicy` |
