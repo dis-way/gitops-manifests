@@ -49,11 +49,15 @@ patches:
       - op: replace
         path: /spec/values/ports/http/forwardedHeaders/trustedIPs
         value:
-          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_SYSTEM_SUBNET_CIDR}"
+          - "${AKS_WORK_SUBNET_CIDR}"
+          - "${AKS_FILESCAN_SUBNET_CIDR}"
       - op: replace
         path: /spec/values/ports/https/forwardedHeaders/trustedIPs
         value:
-          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_SYSTEM_SUBNET_CIDR}"
+          - "${AKS_WORK_SUBNET_CIDR}"
+          - "${AKS_FILESCAN_SUBNET_CIDR}"
       - op: add
         path: /spec/values/extraObjects
         value:
