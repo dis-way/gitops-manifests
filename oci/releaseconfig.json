@@ -25,8 +25,8 @@
   },
   "cert-manager": {
     "at_ring1": "2.4.0",
-    "at_ring2": "2.2.2",
-    "tt_ring1": "2.2.2",
+    "at_ring2": "2.4.0",
+    "tt_ring1": "2.4.0",
     "tt_ring2": "2.2.2",
     "prod_ring1": "2.2.2",
     "prod_ring2": "2.2.0"
