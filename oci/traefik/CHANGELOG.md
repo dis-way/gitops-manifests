@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.1.0...oci-traefik-v3.2.0) (2026-03-26)
+
+
+### Features
+
+* Add AKS subnet CIDRs to Traefik trusted list ([#828](https://github.com/dis-way/gitops-manifests/issues/828)) ([3a0dd6c](https://github.com/dis-way/gitops-manifests/commit/3a0dd6cf44d44b69ef85edebd6709cb91ea1b2b5))
+
 ## [3.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.0.1...oci-traefik-v3.1.0) (2026-03-25)
 
 
