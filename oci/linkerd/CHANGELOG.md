@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.10.0...oci-linkerd-v2.11.0) (2026-03-26)
+
+
+### Features
+
+* add platform-aks overlay ([#811](https://github.com/dis-way/gitops-manifests/issues/811)) ([26353dd](https://github.com/dis-way/gitops-manifests/commit/26353ddd8f6627d2c71fb010d42fda091f7ee73c))
+* **linkerd:** add cluster-pods network auth ([#252](https://github.com/dis-way/gitops-manifests/issues/252)) ([0063ebf](https://github.com/dis-way/gitops-manifests/commit/0063ebfca26a9140198c61fd99e399b6cd093a82))
+* **linkerd:** Add control-plane policies ([#180](https://github.com/dis-way/gitops-manifests/issues/180)) ([2d14517](https://github.com/dis-way/gitops-manifests/commit/2d14517e24b28211f20c6c2607d86f0cac0bec6e))
+* **linkerd:** Add node CIDR auth and admin svcs ([#215](https://github.com/dis-way/gitops-manifests/issues/215)) ([11a01c0](https://github.com/dis-way/gitops-manifests/commit/11a01c0874338969524ce94bf39d016eb63d1e41))
+* **linkerd:** Update README and add deployment notes ([#284](https://github.com/dis-way/gitops-manifests/issues/284)) ([1bd5566](https://github.com/dis-way/gitops-manifests/commit/1bd5566d4101d8a9c4f24684fa61823d2ecc7a0d))
+* **policies:** Add Linkerd policies and READMEs ([#262](https://github.com/dis-way/gitops-manifests/issues/262)) ([a088422](https://github.com/dis-way/gitops-manifests/commit/a0884220f04e3bc94dc88705b05b102d5366c201))
+* remove linkerd postrender podmonitor platform-aks ([#832](https://github.com/dis-way/gitops-manifests/issues/832)) ([ed6bcf3](https://github.com/dis-way/gitops-manifests/commit/ed6bcf3ff1cc1b17655a1ef9a482ec29f129f79d))
+
+
+### Bug Fixes
+
+* add scrapeInterval to podMonitor configuration ([#359](https://github.com/dis-way/gitops-manifests/issues/359)) ([434e53c](https://github.com/dis-way/gitops-manifests/commit/434e53ccf39fbdcb888d1c80d9c4c0fceeeaf2eb))
+* **linkerd:** use gRPC for proxyProtocol ([#248](https://github.com/dis-way/gitops-manifests/issues/248)) ([bceb94c](https://github.com/dis-way/gitops-manifests/commit/bceb94c5471ebea33d0e962e64dfd4f52de19514))
+* Use NetworkAuthentication for control plane ([#256](https://github.com/dis-way/gitops-manifests/issues/256)) ([300cd32](https://github.com/dis-way/gitops-manifests/commit/300cd32499c337c5e98931a0f34c3fd3e5fbc6da))
+
 ## [2.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.9.0...oci-linkerd-v2.10.0) (2026-03-26)
 
 
