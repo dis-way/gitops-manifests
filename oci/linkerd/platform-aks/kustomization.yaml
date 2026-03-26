@@ -11,3 +11,5 @@ patches:
         path: /spec/values/podMonitor/labels
         value:
           release: kube-prometheus-stack
+      - op: remove
+        path: /spec/postRenderers
