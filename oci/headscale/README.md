@@ -13,6 +13,26 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 | `HEADSCALE_APP_CLIENT_SECRET` | - | Yes | Microsoft Entra OIDC client secret — source from a secret store, not plain substitution |
 | `HEADSCALE_APP_ALLOWED_GROUP` | - | Yes | Microsoft Entra group allowed for access |
 
+## Extra DNS Records
+
+Extra DNS records are served to Tailscale clients via headscale. By default, the `headscale-extra-records` ConfigMap contains an empty array. Patch it in your overlay to add static entries:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: headscale-extra-records
+  namespace: headscale
+data:
+  extra-records.json: |
+    [
+      {"name": "grafana.ts.altinn.cloud", "type": "A", "value": "100.70.0.3"},
+      {"name": "prometheus.ts.altinn.cloud", "type": "A", "value": "100.70.0.4"}
+    ]
+```
+
+Headscale polls `extra-records.json` via checksum and picks up changes without a restart. Sort the JSON keys and records to produce stable output when generating the file with a script.
+
 ## Prerequisites
 
 ### DNS
