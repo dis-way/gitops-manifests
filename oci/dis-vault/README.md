@@ -12,6 +12,7 @@ Deploys the DIS Vault Operator for managing Azure Key Vault resources for DIS ap
 | `DISVAULT_LOCATION` | - | Yes | Azure location for managed vault resources |
 | `DISVAULT_ENV` | - | Yes | DIS environment identifier used in generated naming |
 | `DISVAULT_AKS_SUBNET_IDS` | - | Yes | Comma-separated AKS subnet ARM IDs allowed to reach managed vaults |
+| `DISVAULT_VPN_EXIT_NODE_SUBNET_ID` | - | Yes | Subnet ARM ID used for the VPN exit node path to managed vaults |
 
 ## Layers
 
