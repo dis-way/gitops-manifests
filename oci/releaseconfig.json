@@ -71,6 +71,14 @@
     "prod_ring1": "0.1.3",
     "prod_ring2": "0.1.3"
   },
+  "dis-vault": {
+    "at_ring1": "1.1.0",
+    "at_ring2": "1.1.0",
+    "tt_ring1": "1.1.0",
+    "tt_ring2": "1.1.0",
+    "prod_ring1": "1.1.0",
+    "prod_ring2": "1.1.0"
+  },
   "dis-tls-cert": {
     "at_ring1": "2.8.0",
     "at_ring2": "2.8.0",

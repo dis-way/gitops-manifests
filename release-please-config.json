@@ -36,6 +36,10 @@
       "release-type": "simple",
       "component": "oci-dis-pgsql"
     },
+    "oci/dis-vault": {
+      "release-type": "simple",
+      "component": "oci-dis-vault"
+    },
     "oci/dis-tls-cert": {
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
