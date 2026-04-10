@@ -4,7 +4,9 @@ Deploys kro (Kube Resource Orchestrator) — a Kubernetes-native tool for creati
 
 ## Variables
 
-No configurable variables. kro has no postBuild substitutions.
+| Variable | Default | Required | Description |
+|----------|---------|----------|-------------|
+| - | - | No | No configurable variables for this package |
 
 ## Layers
 
