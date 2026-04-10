@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.1.0...oci-tailscale-subnet-router-v1.2.0) (2026-04-10)
+
+
+### Features
+
+* Refactor TS_ADVERTISE_ROUTES into separate env var ([#868](https://github.com/dis-way/gitops-manifests/issues/868)) ([bf51987](https://github.com/dis-way/gitops-manifests/commit/bf51987087a268618dfbef8f930e7b5eadd4f591))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.0.0...oci-tailscale-subnet-router-v1.1.0) (2026-03-24)
 
 
