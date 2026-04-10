@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.0...oci-dis-vault-v1.2.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* **dis-vault:** add multitenancy overlay ([#859](https://github.com/dis-way/gitops-manifests/issues/859)) ([49b4838](https://github.com/dis-way/gitops-manifests/commit/49b48384e3ea353d4d8f9665bfecd478638e449f))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.1.0...oci-dis-vault-v1.2.0) (2026-04-09)
 
 
