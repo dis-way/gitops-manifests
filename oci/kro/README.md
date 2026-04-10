@@ -14,9 +14,3 @@ No configurable variables. kro has no postBuild substitutions.
 | `apps` | Minimal overlay referencing base |
 | `multitenancy` | Moves HelmRepository/HelmRelease to `platform-system`, deploys chart into `kro-system` |
 
-## Examples
-
-The `examples/` directory contains sample ResourceGraphDefinitions:
-
-- `simple-webapp.yaml` — Creates a Deployment + Service from a single custom resource
-- `namespace-with-quota.yaml` — Creates a namespace with ResourceQuota and NetworkPolicy for tenant isolation
