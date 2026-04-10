@@ -18,4 +18,5 @@ Deploys the DIS Vault Operator for managing Azure Key Vault resources for DIS ap
 
 | Path | Description |
 |------|-------------|
-| `.` | Flux `OCIRepository` and `Kustomization` for deploying the operator from `flux-system` |
+| `base` | Flux `OCIRepository` and `Kustomization` for deploying the operator from `flux-system` |
+| `multitenancy` | Overlay that moves the Flux `OCIRepository` and `Kustomization` to `platform-system` |
