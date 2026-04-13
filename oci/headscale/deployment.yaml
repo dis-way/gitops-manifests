@@ -76,6 +76,9 @@ spec:
               mountPath: /var/lib/headscale
             - name: run
               mountPath: /var/run/headscale
+            - name: extra-records
+              mountPath: /etc/headscale-extra
+              readOnly: true
       volumes:
         - name: config
           secret:
@@ -85,3 +88,6 @@ spec:
             claimName: headscale-data
         - name: run
           emptyDir: {}
+        - name: extra-records
+          configMap:
+            name: headscale-extra-records

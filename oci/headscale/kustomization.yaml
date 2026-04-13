@@ -4,6 +4,7 @@ resources:
   - namespace.yaml
   - storageclass.yaml
   - config-secret.yaml
+  - extra-records-configmap.yaml
   - pvc.yaml
   - deployment.yaml
   - service.yaml
