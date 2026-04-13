@@ -5,4 +5,7 @@ metadata:
   namespace: headscale
 data:
   extra-records.json: |
-    []
+    [
+      {"name": "infop-at22-vllfov-server.privatelink.database.windows.net", "type": "A", "value": "10.205.143.5"},
+      {"name": "infop-prod-hxhapc-server.privatelink.database.windows.net", "type": "A", "value": "10.205.15.4"}
+    ]
