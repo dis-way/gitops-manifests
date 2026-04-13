@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.7.0...oci-headscale-v1.8.0) (2026-04-13)
+
+
+### Features
+
+* **headscale:** support extra DNS records ([#842](https://github.com/dis-way/gitops-manifests/issues/842)) ([d3c0d9c](https://github.com/dis-way/gitops-manifests/commit/d3c0d9cee0cfb50ede269c274b56d801d06a133a))
+
 ## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.6.0...oci-headscale-v1.7.0) (2026-03-13)
 
 
