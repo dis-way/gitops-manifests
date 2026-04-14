@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kro
+  namespace: kro-system
+spec:
+  chart:
+    spec:
+      chart: kro
+      sourceRef:
+        kind: HelmRepository
+        name: kro
+        namespace: kro-system
+      # renovate: datasource=docker depName=registry.k8s.io/kro/charts/kro versioning=semver
+      version: 0.9.1
+  interval: 1h
+  timeout: 5m
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 5

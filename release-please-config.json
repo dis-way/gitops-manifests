@@ -60,6 +60,10 @@
       "release-type": "simple",
       "component": "oci-headscale"
     },
+    "oci/kro": {
+      "release-type": "simple",
+      "component": "oci-kro"
+    },
     "oci/kyverno": {
       "release-type": "simple",
       "component": "oci-kyverno"
