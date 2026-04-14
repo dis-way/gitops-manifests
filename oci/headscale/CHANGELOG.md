@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.8.0...oci-headscale-v1.9.0) (2026-04-14)
+
+
+### Features
+
+* Add Azure database DNS records to headscale ([#885](https://github.com/dis-way/gitops-manifests/issues/885)) ([daf239f](https://github.com/dis-way/gitops-manifests/commit/daf239ff20a78c4a8fcc07eb9e301f631db70a6f))
+
 ## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.7.0...oci-headscale-v1.8.0) (2026-04-13)
 
 
