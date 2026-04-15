@@ -1,5 +1,5 @@
 {
-  "oci/altinn-uptime": "1.7.0",
+  "oci/altinn-uptime": "1.6.0",
   "oci/azure-service-operator": "1.4.2",
   "oci/blackbox-exporter": "0.7.6",
   "oci/cert-manager": "2.4.0",
@@ -10,7 +10,7 @@
   "oci/dis-pgsql": "0.1.3",
   "oci/dis-vault": "1.2.3",
   "oci/dis-tls-cert": "2.8.0",
-  "oci/external-secrets-operator": "1.6.3",
+  "oci/external-secrets-operator": "1.6.4",
   "oci/grafana-operator": "2.1.4",
   "oci/traefik-crd-patch": "1.1.0",
   "oci/headscale": "1.9.0",
