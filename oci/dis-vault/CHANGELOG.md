@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.3...oci-dis-vault-v1.2.4) (2026-04-15)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-vault-operator docker tag to v1.2.1 ([#908](https://github.com/dis-way/gitops-manifests/issues/908)) ([2b0a4c4](https://github.com/dis-way/gitops-manifests/commit/2b0a4c4b52e01a8d3d0df0c61c413e984124b998))
+
 ## [1.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.2...oci-dis-vault-v1.2.3) (2026-04-14)
 
 
