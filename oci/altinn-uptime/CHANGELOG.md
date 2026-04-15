@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.6.0...oci-altinn-uptime-v1.7.0) (2026-04-15)
+
+
+### Features
+
+* Add DIS environment targets to uptime monitoring ([#898](https://github.com/dis-way/gitops-manifests/issues/898)) ([9328a2c](https://github.com/dis-way/gitops-manifests/commit/9328a2cbaf480db3c013dc92f1b629fa1d61864e))
+
 ## [1.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.5.2...oci-altinn-uptime-v1.6.0) (2026-02-18)
 
 
