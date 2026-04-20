@@ -7,6 +7,13 @@
 
 * update linkerd core charts to v2026.4.3 ([#916](https://github.com/dis-way/gitops-manifests/issues/916)) ([87050ee](https://github.com/dis-way/gitops-manifests/commit/87050ee6bbe94a1a04987a586d3b3fde756319c2))
 
+## [2.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.11.0...oci-linkerd-v2.12.0) (2026-04-20)
+
+
+### Features
+
+* update linkerd core charts to v2026.4.3 ([#916](https://github.com/dis-way/gitops-manifests/issues/916)) ([87050ee](https://github.com/dis-way/gitops-manifests/commit/87050ee6bbe94a1a04987a586d3b3fde756319c2))
+
 ## [2.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.10.0...oci-linkerd-v2.11.0) (2026-03-26)
 
 
