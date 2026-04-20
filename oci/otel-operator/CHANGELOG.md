@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.4.1...oci-otel-operator-v1.4.2) (2026-04-20)
+
+
+### Dependency Updates
+
+* update helm release opentelemetry-operator to v0.110.0 ([#722](https://github.com/dis-way/gitops-manifests/issues/722)) ([e9eb20a](https://github.com/dis-way/gitops-manifests/commit/e9eb20a0c9ea2613e77d8c3dcf5cb4a8f20f4e0c))
+
 ## [1.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.4.0...oci-otel-operator-v1.4.1) (2026-04-09)
 
 
