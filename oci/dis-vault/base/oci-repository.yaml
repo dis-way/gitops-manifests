@@ -8,6 +8,6 @@ spec:
   provider: azure
   ref:
     # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-vault-operator versioning=semver
-    tag: v1.2.1
+    tag: v1.3.0
   timeout: 5m0s
   url: oci://altinncr.azurecr.io/dis/kustomize/dis-vault-operator
