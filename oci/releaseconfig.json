@@ -144,9 +144,9 @@
     "prod_ring2": "1.1.4"
   },
   "linkerd": {
-    "at_ring1": "2.11.0",
-    "at_ring2": "2.11.0",
-    "tt_ring1": "2.11.0",
+    "at_ring1": "2.12.0",
+    "at_ring2": "2.12.0",
+    "tt_ring1": "2.12.0",
     "tt_ring2": "2.11.0",
     "prod_ring1": "2.11.0",
     "prod_ring2": "2.11.0"
