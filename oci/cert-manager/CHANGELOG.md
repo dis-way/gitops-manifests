@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.4.0...oci-cert-manager-v2.4.1) (2026-04-20)
+
+
+### Dependency Updates
+
+* update helm release cert-manager to v1.20.2 ([#843](https://github.com/dis-way/gitops-manifests/issues/843)) ([dd8e553](https://github.com/dis-way/gitops-manifests/commit/dd8e553755bc6fc0177f37c85988635d8ebcf3fd))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.3.0...oci-cert-manager-v2.4.0) (2026-03-25)
 
 
