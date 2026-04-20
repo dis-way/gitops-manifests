@@ -163,7 +163,7 @@
       "groupSlug": "linkerd-core",
       "dependencyDashboardApproval": true,
       "prCreation": "not-pending",
-      "minimumReleaseAge": "3 days",
+      "minimumReleaseAge": "14 days",
       "prBodyNotes": [
         "⚠️ **Please verify the release status before merging:**",
         "1. Check https://github.com/linkerd/linkerd2/releases/ release notes",
