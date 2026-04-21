@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.6...oci-dis-vault-v1.2.7) (2026-04-21)
+
+
+### Dependency Updates
+
+* update dis-vault-operator image tag to v1.4.1 ([#950](https://github.com/dis-way/gitops-manifests/issues/950)) ([9117083](https://github.com/dis-way/gitops-manifests/commit/91170838c7d0c04afa8287a1c5cf532b3e433273))
+
 ## [1.2.6](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.5...oci-dis-vault-v1.2.6) (2026-04-21)
 
 
