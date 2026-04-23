@@ -13,3 +13,4 @@ None — all configuration is static in the manifests.
 | `base` | Namespace, StorageClass, PVC, Deployment, and Service |
 | `tt02` | Overrides PVC storage to 2Gi |
 | `prod` | Overrides PVC storage to 20Gi and increases CPU/memory limits |
+.
