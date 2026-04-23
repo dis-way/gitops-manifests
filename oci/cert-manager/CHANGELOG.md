@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.4.1...oci-cert-manager-v2.5.0) (2026-04-23)
+
+
+### Features
+
+* Add eformidling-aks overlays for cert-manager and traefik ([#977](https://github.com/dis-way/gitops-manifests/issues/977)) ([636dccf](https://github.com/dis-way/gitops-manifests/commit/636dccf8912deeaec6d07a2264d340739a2169d0))
+
 ## [2.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-cert-manager-v2.4.0...oci-cert-manager-v2.4.1) (2026-04-20)
 
 
