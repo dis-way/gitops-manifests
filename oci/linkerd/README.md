@@ -21,6 +21,7 @@ Deploys Linkerd service mesh with High Availability configuration.
 | `apps` | Standalone overlay that includes only base |
 | `post-deploy` | Rollout restart job for re-injecting proxies after upgrades |
 | `platform-aks` | AKS platform overlay; sets `podMonitor.labels.release: kube-prometheus-stack` for Prometheus discovery |
+| `eformidling-aks` | eFormidling AKS overlay; disables podMonitor and removes post-renderers |
 | `multitenancy` | Multi-tenant overlay with platform-system namespace patches |
 | `policies` | Linkerd authorization policies for control plane (webhooks, health checks, gRPC) |
 
