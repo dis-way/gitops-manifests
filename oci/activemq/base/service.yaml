@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: activemq-eformidling
+  namespace: activemq
+  labels:
+    app: activemq-eformidling
+spec:
+  ports:
+    - name: openwire
+      port: 61616
+      protocol: TCP
+      targetPort: 61616
+    - name: webconsole
+      port: 8161
+      protocol: TCP
+      targetPort: 8161
+  selector:
+    app: activemq-eformidling
+  type: ClusterIP

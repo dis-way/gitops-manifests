@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activemq-eformidling
+  namespace: activemq
+  labels:
+    app: activemq-eformidling
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: activemq-eformidling
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: activemq-eformidling
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: activemq
+          # renovate: datasource=docker depName=apache/activemq-classic
+          image: altinncr.azurecr.io/docker.io/apache/activemq-classic:5.19.2
+          ports:
+            - name: openwire
+              containerPort: 61616
+              protocol: TCP
+            - name: webconsole
+              containerPort: 8161
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 61616
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 61616
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /opt/activemq/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: activemq-eformidling-data
