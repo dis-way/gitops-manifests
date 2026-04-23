@@ -11,5 +11,5 @@ None — all configuration is static in the manifests.
 | Path | Description |
 |------|-------------|
 | `base` | Namespace, StorageClass, PVC, Deployment, and Service |
-| `staging` | Overrides PVC storage to 2Gi |
+| `tt02` | Overrides PVC storage to 2Gi |
 | `prod` | Overrides PVC storage to 20Gi and increases CPU/memory limits |
