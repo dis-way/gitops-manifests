@@ -22,8 +22,8 @@ spec:
     spec:
       containers:
         - name: activemq
-          # renovate: datasource=docker depName=rmohr/activemq
-          image: altinncr.azurecr.io/docker.io/rmohr/activemq:5.15.9
+          # renovate: datasource=docker depName=apache/activemq-classic
+          image: altinncr.azurecr.io/docker.io/apache/activemq-classic:5.19.2
           ports:
             - name: openwire
               containerPort: 61616
