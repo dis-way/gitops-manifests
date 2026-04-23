@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+      name: altinn-traefik
+    patch: |
+      - op: add
+        path: /spec/values/ports/https/http/middlewares
+        value:
+          - traefik-hsts-header@kubernetescrd
+      - op: add
+        path: /spec/values/service/loadBalancerSourceRanges
+        value:
+          - "${LB_SOURCE_RANGE_APIM}"
+      - op: replace
+        path: /spec/values/service/ipFamilyPolicy
+        value: SingleStack
+      - op: replace
+        path: /spec/values/service/ipFamilies
+        value:
+          - IPv4
+      - op: remove
+        path: /spec/values/service/annotations/service.beta.kubernetes.io~1azure-load-balancer-ipv6
+      - op: replace
+        path: /spec/values/ports/http/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_SYSTEM_SUBNET_CIDR}"
+          - "${AKS_WORK_SUBNET_CIDR}"
+      - op: replace
+        path: /spec/values/ports/https/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_SYSTEM_SUBNET_CIDR}"
+          - "${AKS_WORK_SUBNET_CIDR}"
+      - op: add
+        path: /spec/values/extraObjects
+        value:
+          - apiVersion: traefik.io/v1alpha1
+            kind: Middleware
+            metadata:
+              name: hsts-header
+              namespace: traefik
+            spec:
+              headers:
+                stsIncludeSubdomains: true
+                stsSeconds: 63072000
+                stsPreload: true
