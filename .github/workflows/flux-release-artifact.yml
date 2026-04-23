@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0
       - name: Prepare Job for Pushing OCI Artifacts to Azure Container Registry
         id: setup_flux_acr
-        uses: dis-way/actions/flux/setup-flux-acr@ef62d7a78d1b7ff787129170e35932cd779ce3e3 # main
+        uses: dis-way/actions/flux/setup-flux-acr@3042b24339145361ecee9843a0a3acb5ce3ca9fd # main
         with:
           azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID_ADMINSERVICES_PROD }}
           azure_app_id: ${{ secrets.AZURE_CLIENT_ID_ADMINSERVICES_PROD }}
@@ -96,7 +96,7 @@ jobs:
               return;
             }
       - name: Add release tag to artifacts
-        uses: dis-way/actions/flux/build-push-image@ef62d7a78d1b7ff787129170e35932cd779ce3e3 # main
+        uses: dis-way/actions/flux/build-push-image@3042b24339145361ecee9843a0a3acb5ce3ca9fd # main
         with:
           image_name: "manifests/infra/${{ steps.extract-release.outputs.releaseName }}"
           tag: ${{ steps.extract-release.outputs.releaseVersion }}
