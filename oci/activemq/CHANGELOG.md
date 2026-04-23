@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-activemq-v1.2.0...oci-activemq-v1.3.0) (2026-04-23)
+
+
+### Features
+
+* **activemq:** refactor overlays ([#969](https://github.com/dis-way/gitops-manifests/issues/969)) ([2ca0559](https://github.com/dis-way/gitops-manifests/commit/2ca0559986471e8b3e282a5961704321b72e4838))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-activemq-v1.1.0...oci-activemq-v1.2.0) (2026-04-23)
 
 
