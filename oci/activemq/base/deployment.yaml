@@ -24,6 +24,10 @@ spec:
         - name: activemq
           # renovate: datasource=docker depName=apache/activemq-classic
           image: altinncr.azurecr.io/docker.io/apache/activemq-classic:5.19.2
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - name: openwire
               containerPort: 61616
