@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.12.0...oci-linkerd-v2.13.0) (2026-04-23)
+
+
+### Features
+
+* **linkerd:** Add eFormidling AKS overlay ([#972](https://github.com/dis-way/gitops-manifests/issues/972)) ([cf82ee0](https://github.com/dis-way/gitops-manifests/commit/cf82ee05d411a53f1db46449bbad52259e60fe75))
+
 ## [2.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.11.0...oci-linkerd-v2.12.0) (2026-04-20)
 
 
