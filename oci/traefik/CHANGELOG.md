@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.2.2...oci-traefik-v3.3.0) (2026-04-23)
+
+
+### Features
+
+* Add eformidling-aks overlays for cert-manager and traefik ([#977](https://github.com/dis-way/gitops-manifests/issues/977)) ([636dccf](https://github.com/dis-way/gitops-manifests/commit/636dccf8912deeaec6d07a2264d340739a2169d0))
+
 ## [3.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.2.1...oci-traefik-v3.2.2) (2026-04-21)
 
 
