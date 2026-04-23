@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activemq-eformidling
+  namespace: activemq
+  labels:
+    app: activemq-eformidling
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: activemq-eformidling
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: activemq-eformidling
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: activemq
+          # renovate: datasource=docker depName=rmohr/activemq
+          image: altinncr.azurecr.io/docker.io/rmohr/activemq:5.15.9
+          ports:
+            - name: openwire
+              containerPort: 61616
+              protocol: TCP
+            - name: webconsole
+              containerPort: 8161
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /opt/activemq/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: activemq-eformidling-data

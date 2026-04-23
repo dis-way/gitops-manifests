@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - path: pvc-patch.yaml
+    target:
+      kind: PersistentVolumeClaim
+      name: activemq-eformidling-data
+  - path: resource-patch.yaml
+    target:
+      kind: Deployment
+      name: activemq-eformidling

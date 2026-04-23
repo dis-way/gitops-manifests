@@ -1,5 +1,9 @@
 {
   "packages": {
+    "oci/activemq": {
+      "release-type": "simple",
+      "component": "oci-activemq"
+    },
     "oci/altinn-uptime": {
       "release-type": "simple",
       "component": "oci-altinn-uptime"
