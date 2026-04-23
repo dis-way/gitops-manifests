@@ -10,9 +10,9 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 |----------|---------|----------|-------------|
 | `AKS_NODE_RG` | — | Yes | Azure Resource Group for AKS nodes (Load Balancer annotation) |
 | `PUBLIC_IP_V4` | — | Yes | Public IPv4 address for the Azure Load Balancer |
-| `PUBLIC_IP_V6` | — | Not platform-aks | Public IPv6 address for the Azure Load Balancer |
-| `AKS_VNET_IPV4_CIDR` | — | Not platform-aks | Full AKS VNet IPv4 CIDR; trusted for `X-Forwarded-For` |
-| `AKS_VNET_IPV6_CIDR` | — | Not platform-aks | Full AKS VNet IPv6 CIDR; trusted for `X-Forwarded-For` |
+| `PUBLIC_IP_V6` | — | Not platform-aks / eformidling-aks | Public IPv6 address for the Azure Load Balancer |
+| `AKS_VNET_IPV4_CIDR` | — | Not platform-aks / eformidling-aks | Full AKS VNet IPv4 CIDR; trusted for `X-Forwarded-For` |
+| `AKS_VNET_IPV6_CIDR` | — | Not platform-aks / eformidling-aks | Full AKS VNet IPv6 CIDR; trusted for `X-Forwarded-For` |
 | `AKS_SYSTEM_SUBNET_CIDR` | — | platform-aks / eformidling-aks | AKS system node subnet CIDR; trusted for `X-Forwarded-For` |
 | `AKS_WORK_SUBNET_CIDR` | — | platform-aks / eformidling-aks | AKS work node subnet CIDR; trusted for `X-Forwarded-For` |
 | `AKS_FILESCAN_SUBNET_CIDR` | — | platform-aks only | AKS filescan node subnet CIDR; trusted for `X-Forwarded-For` |
