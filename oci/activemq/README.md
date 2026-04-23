@@ -1,6 +1,10 @@
 # ActiveMQ
 
-Deploys ActiveMQ 5.15.9 (`activemq-eformidling`) for eFormidling messaging with a persistent volume for broker data.
+Deploys ActiveMQ Classic (`activemq-eformidling`) as an external message broker for eFormidling, with a persistent volume for broker data.
+
+## Variables
+
+None — all configuration is static in the manifests.
 
 ## Layers
 
