@@ -9,7 +9,7 @@
   "oci/dis-identity": "0.3.0",
   "oci/dis-apim": "0.3.0",
   "oci/dis-pgsql": "0.1.3",
-  "oci/dis-vault": "1.2.7",
+  "oci/dis-vault": "1.2.8",
   "oci/dis-tls-cert": "2.8.0",
   "oci/external-secrets-operator": "1.6.4",
   "oci/grafana-operator": "2.1.4",
