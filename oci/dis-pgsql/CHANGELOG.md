@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.3...oci-dis-pgsql-v0.1.4) (2026-04-27)
+
+
+### Bug Fixes
+
+* upgrade structure for dis-pgsql manifests ([#690](https://github.com/dis-way/gitops-manifests/issues/690)) ([db5e0e1](https://github.com/dis-way/gitops-manifests/commit/db5e0e194c480abf47a4eb5d28b09ac115ab2f69))
+
 ## [0.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.2...oci-dis-pgsql-v0.1.3) (2026-02-27)
 
 
