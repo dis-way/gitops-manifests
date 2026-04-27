@@ -8,7 +8,7 @@
   "oci/container-runtime-aks-config": "0.4.0",
   "oci/dis-identity": "0.3.0",
   "oci/dis-apim": "0.3.0",
-  "oci/dis-pgsql": "0.1.3",
+  "oci/dis-pgsql": "0.1.4",
   "oci/dis-vault": "1.2.7",
   "oci/dis-tls-cert": "2.8.0",
   "oci/external-secrets-operator": "1.6.4",
