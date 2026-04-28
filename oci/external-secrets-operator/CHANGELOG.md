@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.5](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.4...oci-external-secrets-operator-v1.6.5) (2026-04-28)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.4.0 ([#987](https://github.com/dis-way/gitops-manifests/issues/987)) ([324be85](https://github.com/dis-way/gitops-manifests/commit/324be85c066a600d8d3c5d05e4ce047c17c2df4a))
+
 ## [1.6.4](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.3...oci-external-secrets-operator-v1.6.4) (2026-04-15)
 
 
