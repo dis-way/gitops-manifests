@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.3.0...oci-traefik-v3.4.0) (2026-04-29)
+
+
+### Features
+
+* **traefik:** Add HSTS middleware and root ingress route ([#997](https://github.com/dis-way/gitops-manifests/issues/997)) ([e63f5ce](https://github.com/dis-way/gitops-manifests/commit/e63f5ced3545829a1697d8df14e1bbf2e917e02f))
+
 ## [3.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.2.2...oci-traefik-v3.3.0) (2026-04-23)
 
 
