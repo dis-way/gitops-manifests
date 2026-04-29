@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: root-ingress-route
+  namespace: traefik
+spec:
+  entryPoints:
+    - http
+    - https
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/`)
+      services:
+        - kind: TraefikService
+          name: noop@internal
