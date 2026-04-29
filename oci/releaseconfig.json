@@ -187,9 +187,9 @@
     "at_ring1": "3.4.0",
     "at_ring2": "3.4.0",
     "tt_ring1": "3.4.0",
-    "tt_ring2": "3.3.0",
+    "tt_ring2": "3.4.0",
     "prod_ring1": "3.4.0",
-    "prod_ring2": "3.3.0"
+    "prod_ring2": "3.4.0"
   },
   "whoami": {
     "at_ring1": "0.7.1",
