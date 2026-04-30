@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.5.0...oci-traefik-v3.6.0) (2026-04-30)
+
+
+### Features
+
+* **traefik:** add helm.sh/resource-policy keep before extraObjects removal ([#1007](https://github.com/dis-way/gitops-manifests/issues/1007)) ([237d0a2](https://github.com/dis-way/gitops-manifests/commit/237d0a2f94af9b2cc4de4842e372e349aa0f5286))
+
 ## [3.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.4.0...oci-traefik-v3.5.0) (2026-04-30)
 
 
