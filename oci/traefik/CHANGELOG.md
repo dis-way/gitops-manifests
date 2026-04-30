@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.4.0...oci-traefik-v3.5.0) (2026-04-30)
+
+
+### Features
+
+* **traefik:** remove extraObjects patches in favour of Flux-managed manifests ([#1002](https://github.com/dis-way/gitops-manifests/issues/1002)) ([7c3060b](https://github.com/dis-way/gitops-manifests/commit/7c3060bf79210e4200c8538fcc90df352846adea))
+
 ## [3.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.3.0...oci-traefik-v3.4.0) (2026-04-29)
 
 
