@@ -60,7 +60,7 @@ flowchart LR
         subgraph sampling["Trace tail sampling"]
             s1["default routes → 1%"]
             s2["dis.otel/sampling=all → 100%"]
-            s3["/health · /metrics · /kw/* → 0.1%"]
+            s3["/health · /metrics · /kuberneteswrapper/* → 0.1%"]
             s4["ERROR status → 100%"]
             s5["latency ≥ 1s → 100%"]
         end
@@ -85,7 +85,7 @@ flowchart LR
 ```
 
 **SDK endpoint** — choose one based on your SDK's transport:
-```
+```bash
 # gRPC
 OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring.svc.cluster.local:4317
 
