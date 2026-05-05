@@ -1,6 +1,6 @@
-# OTel Collector — Multitenancy
+# OTel Collector
 
-Deploys an OpenTelemetry Collector in the `monitoring` namespace, managed by the `otel-operator` running in `platform-system`. The collector receives OTLP telemetry from all Linkerd-meshed pods across the cluster, processes it, and exports traces/logs to Azure Application Insights and metrics to an Azure Monitor Workspace via Prometheus remote write.
+Deploys an OpenTelemetry Collector in the `monitoring` namespace, managed by the `otel-operator` running in `monitoring`. The collector receives OTLP telemetry from all Linkerd-meshed pods across the cluster, processes it, and exports traces/logs to Azure Application Insights and metrics to an Azure Monitor Workspace via Prometheus remote write.
 
 ## Architecture
 
@@ -74,7 +74,7 @@ flowchart LR
         amw["Azure Monitor Workspace\nMetrics (Prometheus)"]
     end
 
-    sdk -->|"OTLP gRPC / HTTP\nover Linkerd mTLS\n(transparent to SDK)"| ep
+    sdk -->|"OTLP gRPC :4317 or HTTP :4318\nover Linkerd mTLS\n(transparent to SDK)"| ep
     label -.->|"read by k8sattributes\npromoted to span attribute"| enrich
     ep --> enrich
     enrich --> sampling
@@ -84,9 +84,13 @@ flowchart LR
     enrich -->|"all metrics"| amw
 ```
 
-**SDK endpoint** (same value for gRPC or HTTP):
+**SDK endpoint** — choose one based on your SDK's transport:
 ```
+# gRPC
 OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring.svc.cluster.local:4317
+
+# HTTP
+OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring.svc.cluster.local:4318
 ```
 
 **To increase trace sampling rate** for a noisy-but-important service, add this label to your `Deployment`:
@@ -102,7 +106,7 @@ Without the label the default rate is **1%**. Errors and slow requests (≥ 1 s)
 
 ### Operator → Collector
 
-The `otel-operator` is installed via Helm by Flux. Its `HelmRelease` and `HelmRepository` live in `platform-system` (Flux's management namespace) but target the `monitoring` namespace. The operator watches `OpenTelemetryCollector` CRDs and reconciles the collector deployment defined in `base/collector.yaml`.
+The `otel-operator` is installed via Helm by Flux. Its `HelmRelease` and `HelmRepository` live in `platform-system` (Flux's management namespace) but target the `monitoring` namespace. The operator watches `OpenTelemetryCollector` custom resources and reconciles the collector deployment defined in `base/collector.yaml`.
 
 ### Identity and Secrets
 
@@ -127,7 +131,7 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 
 | Policy | Condition | Rate |
 |--------|-----------|------|
-| `default` | Normal routes, no `dis.otel.sampling=all` label | 1% |
+| `default` | Normal routes, no `dis.otel/sampling: all` label | 1% |
 | `sample-all` | Deployment has label `dis.otel/sampling: all` | 100% |
 | `heavy-sampling` | Routes matching `/metrics`, `/health`, `/kuberneteswrapper/*` | 0.1% |
 | `always-sample-errors` | Span status is ERROR | 100% |
