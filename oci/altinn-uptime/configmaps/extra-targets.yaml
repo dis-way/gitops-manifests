@@ -21,7 +21,6 @@ data:
         "https://at23.dis-core.altinn.cloud/whoami",
         "https://tt02.dis-core.altinn.cloud/whoami",
         "https://prod.dis-core.altinn.cloud/whoami",
-
         "https://discore-at23-m22d0r-apim.azure-api.net/dialogporten/health"
       ],
       "ipv6": [
@@ -58,8 +57,7 @@ data:
           "IPv4 and IPv6 arrays contain targets for regular blackbox jobs",
           "kuberneteswrapper_ipv4 and kuberneteswrapper_ipv6 arrays contain targets for kuberneteswrapper jobs",
           "tls_ipv4 and tls_ipv6 arrays contain targets that require TLS verification, but not 2xx",
-          "Targets are monitored using blackbox HTTP probes",
-          "Within each array, entries are grouped by product and separated by a blank line. Current groups: altinn-core, dialogporten"
+          "Targets are monitored using blackbox HTTP probes"
         ]
       }
     }
