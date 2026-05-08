@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.9.0...oci-headscale-v1.10.0) (2026-05-08)
+
+
+### Features
+
+* **headscale:** Add KIN database DNS records ([#1022](https://github.com/dis-way/gitops-manifests/issues/1022)) ([d562164](https://github.com/dis-way/gitops-manifests/commit/d5621644e2a57a8768e922c883f22371bda3c2c6))
+
 ## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.8.0...oci-headscale-v1.9.0) (2026-04-14)
 
 
