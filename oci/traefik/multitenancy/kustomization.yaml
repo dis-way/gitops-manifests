@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../base
   - ../policies
+  - lb-source-ranges-configmap.yaml
 patches:
   - target:
       kind: HelmRepository
@@ -30,6 +31,12 @@ patches:
       - op: add
         path: /spec/releaseName
         value: altinn-traefik
+      - op: add
+        path: /spec/valuesFrom
+        value:
+          - kind: ConfigMap
+            name: traefik-lb-source-ranges
+            valuesKey: values.yaml
       - op: replace
         path: /spec/values/providers/kubernetesCRD/enabled
         value: false
