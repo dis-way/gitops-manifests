@@ -183,7 +183,7 @@ patches:
                   preferred_ip_protocol: ip4
                   ip_protocol_fallback: false
                   fail_if_body_not_matches_regexp:
-                    - '"status"\s*:\s*"Healthy"'
+                    - '^\{"status"\s*:\s*"Healthy"'
                   tls_config:
                     insecure_skip_verify: false
               http_health_check_ipv6:
@@ -196,6 +196,6 @@ patches:
                   preferred_ip_protocol: ip6
                   ip_protocol_fallback: false
                   fail_if_body_not_matches_regexp:
-                    - '"status"\s*:\s*"Healthy"'
+                    - '^\{"status"\s*:\s*"Healthy"'
                   tls_config:
                     insecure_skip_verify: false
