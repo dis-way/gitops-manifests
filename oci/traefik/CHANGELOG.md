@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.6.0...oci-traefik-v3.7.0) (2026-05-12)
+
+
+### Features
+
+* move HSTS middleware and ingress routes to post-deploy ([#1018](https://github.com/dis-way/gitops-manifests/issues/1018)) ([edd21b1](https://github.com/dis-way/gitops-manifests/commit/edd21b13aaee8bbddbf88c30136e1711951793e7))
+
 ## [3.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.5.0...oci-traefik-v3.6.0) (2026-04-30)
 
 
