@@ -20,7 +20,8 @@ data:
         "https://at22.dis-core.altinn.cloud/whoami",
         "https://at23.dis-core.altinn.cloud/whoami",
         "https://tt02.dis-core.altinn.cloud/whoami",
-        "https://prod.dis-core.altinn.cloud/whoami"
+        "https://prod.dis-core.altinn.cloud/whoami",
+        "https://discore-at23-m22d0r-apim.azure-api.net/dialogporten/health"
       ],
       "ipv6": [
         "https://altinncdn.no/orgs/altinn-orgs.json",
@@ -48,8 +49,8 @@ data:
       "metadata": {
         "description": "Extra targets for Altinn monitoring that are not auto-generated from organizations",
         "maintained_by": "Altinn Platform Team",
-        "last_updated": "2025-11-11",
-        "version": "1.0",
+        "last_updated": "2026-05-06",
+        "version": "1.1",
         "notes": [
           "These targets are manually maintained and will be preserved during automatic updates",
           "Organization targets are auto-generated and should not be added here",
