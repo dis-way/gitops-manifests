@@ -13,7 +13,6 @@
   "oci/dis-tls-cert": "2.8.0",
   "oci/external-secrets-operator": "1.6.5",
   "oci/grafana-operator": "2.1.4",
-  "oci/traefik-crd-patch": "1.1.0",
   "oci/headscale": "1.10.0",
   "oci/kro": "0.2.0",
   "oci/kyverno-policies": "1.4.1",
@@ -25,6 +24,6 @@
   "oci/otel-operator": "1.4.2",
   "oci/platform-system": "1.1.0",
   "oci/tailscale-subnet-router": "1.2.0",
-  "oci/traefik": "3.6.0",
+  "oci/traefik": "3.7.0",
   "oci/whoami": "0.7.1"
 }

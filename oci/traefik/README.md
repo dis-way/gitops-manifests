@@ -24,6 +24,8 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `DEFAULT_GATEWAY_HOSTNAME` | — | multitenancy only | Hostname for the default Gateway listeners |
 | `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No (policies only) | AKS pod network IPv4 CIDR for Linkerd NetworkAuthentication |
 | `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No (policies only) | AKS pod network IPv6 CIDR for Linkerd NetworkAuthentication |
+| `UAMI_CERT_MANAGER_CLIENT_ID` | — | platform-aks / eformidling-aks post-deploy | Managed identity client ID for cert-manager DNS-01 solver |
+| `CERT_DNS_NAME` | — | platform-aks / eformidling-aks post-deploy | Full DNS name for the TLS certificate (e.g. `internal.platform.prod.altinn.cloud`) |
 
 ## Layers
 
@@ -36,3 +38,9 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. Restricts `loadBalancerSourceRanges` to Cloudflare, altinn-uptime, and APIM via a ConfigMap (`valuesFrom`); Cloudflare ranges are updated automatically by the `update-cloudflare-ips` workflow. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
 | `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM IP), and HSTS middleware |
 | `policies` | Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources for kubelet probes and proxy admin in deny-all mesh environments; see [`policies/README.md`](policies/README.md) |
+| `post-deploy` | Shared post-deploy layer; HSTS `Middleware` and root catch-all `IngressRoute` (Traefik CRD resources applied after HelmRelease) |
+| `platform-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
+| `eformidling-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
+| `apps/post-deploy` | Extends `post-deploy`; adds `hsts-header` Middleware in the `default` namespace |
+| `adminservices/post-deploy` | Extends `post-deploy` |
+| `multitenancy/post-deploy` | Empty placeholder |
