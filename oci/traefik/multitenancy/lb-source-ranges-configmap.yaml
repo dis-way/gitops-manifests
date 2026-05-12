@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-lb-source-ranges
+  namespace: platform-system
+data:
+  values.yaml: |
+    service:
+      loadBalancerSourceRanges:
+        # BEGIN CLOUDFLARE
+        - 103.21.244.0/22
+        - 103.22.200.0/22
+        - 103.31.4.0/22
+        - 104.16.0.0/13
+        - 104.24.0.0/14
+        - 108.162.192.0/18
+        - 131.0.72.0/22
+        - 141.101.64.0/18
+        - 162.158.0.0/15
+        - 172.64.0.0/13
+        - 173.245.48.0/20
+        - 188.114.96.0/20
+        - 190.93.240.0/20
+        - 197.234.240.0/22
+        - 198.41.128.0/17
+        - 2400:cb00::/32
+        - 2606:4700::/32
+        - 2803:f800::/32
+        - 2405:b500::/32
+        - 2405:8100::/32
+        - 2a06:98c0::/29
+        - 2c0f:f248::/32
+        # END CLOUDFLARE
+        # altinn-uptime admin-test-aks
+        - 20.251.123.48/28
+        - 2603:1020:e01:4::3b0/124
+        # altinn-uptime admin-prod-aks
+        - 4.220.48.112/28
+        - 2603:1020:e01:c::190/124
+        - ${LB_SOURCE_RANGE_APIM}
+        - ${LB_SOURCE_RANGE_APIM_IPV6}
