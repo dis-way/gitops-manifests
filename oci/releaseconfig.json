@@ -177,8 +177,8 @@
   },
   "traefik": {
     "at_ring1": "3.7.0",
-    "at_ring2": "3.6.0",
-    "tt_ring1": "3.6.0",
+    "at_ring2": "3.7.0",
+    "tt_ring1": "3.7.0",
     "tt_ring2": "3.6.0",
     "prod_ring1": "3.6.0",
     "prod_ring2": "3.6.0"
