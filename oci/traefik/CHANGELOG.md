@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.7.0...oci-traefik-v3.8.0) (2026-05-12)
+
+
+### Features
+
+* **traefik:** automate Cloudflare IP range updates ([#1029](https://github.com/dis-way/gitops-manifests/issues/1029)) ([f2bfd07](https://github.com/dis-way/gitops-manifests/commit/f2bfd0783f7857db7516a6675614284227945fab))
+
 ## [3.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.6.0...oci-traefik-v3.7.0) (2026-05-12)
 
 
