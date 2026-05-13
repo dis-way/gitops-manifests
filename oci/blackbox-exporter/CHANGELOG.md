@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.7...oci-blackbox-exporter-v0.8.0) (2026-05-13)
+
+
+### Features
+
+* **blackbox-exporter:** add http_health_check module ([#1020](https://github.com/dis-way/gitops-manifests/issues/1020)) ([c3eb82a](https://github.com/dis-way/gitops-manifests/commit/c3eb82ae2f2329eb1a7560244e8cdb2092744516))
+
 ## [0.7.7](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.7.6...oci-blackbox-exporter-v0.7.7) (2026-04-20)
 
 
