@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.7.0...oci-altinn-uptime-v1.8.0) (2026-05-13)
+
+
+### Features
+
+* **altinn-uptime:** add Dialogporten health endpoint ([#1017](https://github.com/dis-way/gitops-manifests/issues/1017)) ([b640ac0](https://github.com/dis-way/gitops-manifests/commit/b640ac03cbeb1ee209abb4b1ab7a6afc59a633f5))
+
 ## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.6.0...oci-altinn-uptime-v1.7.0) (2026-04-15)
 
 
