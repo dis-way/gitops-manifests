@@ -43,8 +43,6 @@ spec:
                 path: /spec/labelValueLengthLimit
                 value: 1023
   values:
-    image:
-      registry: altinncr.azurecr.io/registry.k8s.io
     collectors: []
     customResourceStateOnly: true
     customResourceState:
