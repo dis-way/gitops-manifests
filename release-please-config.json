@@ -64,6 +64,10 @@
       "release-type": "simple",
       "component": "oci-kro"
     },
+    "oci/kube-state-metrics": {
+      "release-type": "simple",
+      "component": "oci-kube-state-metrics"
+    },
     "oci/kyverno": {
       "release-type": "simple",
       "component": "oci-kyverno"
