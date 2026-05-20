@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headplane
+  namespace: headplane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headplane
+  template:
+    metadata:
+      labels:
+        app: headplane
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: headplane
+          # renovate: datasource=docker depName=tale/headplane registryUrl=https://ghcr.io
+          image: altinncr.azurecr.io/ghcr.io/tale/headplane:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/headplane/config.yaml
+              subPath: config.yaml
+              readOnly: true
+            - name: data
+              mountPath: /var/lib/headplane
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          secret:
+            secretName: headplane-config
+        - name: data
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: headplane
+  namespace: headplane
+spec:
+  selector:
+    app: headplane
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+      protocol: TCP

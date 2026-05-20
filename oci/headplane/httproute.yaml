@@ -1,0 +1,30 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: headplane
+  namespace: headplane
+spec:
+  parentRefs:
+    - name: headplane
+      sectionName: https
+  hostnames:
+    - headplane.altinn.cloud
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /admin/
+            statusCode: 301
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: headplane
+          port: 3000
