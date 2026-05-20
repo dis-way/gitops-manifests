@@ -26,7 +26,7 @@ spec:
       containers:
         - name: headplane
           # renovate: datasource=docker depName=tale/headplane registryUrl=https://ghcr.io
-          image: altinncr.azurecr.io/ghcr.io/tale/headplane:latest
+          image: altinncr.azurecr.io/ghcr.io/tale/headplane:0.6.3
           imagePullPolicy: Always
           ports:
             - name: http

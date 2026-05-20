@@ -26,14 +26,14 @@ Two records are required in the `altinn.cloud` zone:
 
 1. **Service record** — points the hostname at the Traefik load balancer (same IP used by Traefik and headscale):
 
-```
+```text
 headplane.altinn.cloud  A     <PUBLIC_IP_V4>
 headplane.altinn.cloud  AAAA  <PUBLIC_IP_V6>
 ```
 
 2. **ACME delegation** — delegates the DNS-01 challenge to the Azure DNS zone managed by cert-manager:
 
-```
+```text
 _acme-challenge.headplane.altinn.cloud  CNAME  _acme-challenge.headplane.altinn.cloud.prod.admin.altinn.cloud
 ```
 
