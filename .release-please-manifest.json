@@ -12,7 +12,7 @@
   "oci/dis-vault": "1.2.9",
   "oci/dis-tls-cert": "2.8.0",
   "oci/external-secrets-operator": "1.6.7",
-  "oci/grafana-operator": "2.1.4",
+  "oci/grafana-operator": "2.1.5",
   "oci/headplane": "1.1.0",
   "oci/headscale": "1.10.0",
   "oci/kro": "0.2.0",
