@@ -101,7 +101,7 @@
     "tt_ring1": "1.6.7",
     "tt_ring2": "1.6.7",
     "prod_ring1": "1.6.7",
-    "prod_ring2": "1.6.5"
+    "prod_ring2": "1.6.7"
   },
   "grafana-operator": {
     "at_ring1": "2.1.3",
