@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.3.3...oci-kyverno-v1.3.4) (2026-05-28)
+
+
+### Bug Fixes
+
+* **kyverno:** exclude kyverno namespace from Linkerd proxy injector webhook ([#1119](https://github.com/dis-way/gitops-manifests/issues/1119)) ([8fea260](https://github.com/dis-way/gitops-manifests/commit/8fea2609e57290f814c01ee9c1b364379830f9ae))
+
 ## [1.3.3](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.3.2...oci-kyverno-v1.3.3) (2026-05-22)
 
 
