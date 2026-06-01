@@ -20,7 +20,7 @@ spec:
         name: otel-oci
         namespace: monitoring
       # renovate: datasource=helm registryUrl=https://open-telemetry.github.io/opentelemetry-helm-charts packageName=opentelemetry-operator
-      version: 0.113.1
+      version: 0.114.1
   values:
     manager:
       image:
