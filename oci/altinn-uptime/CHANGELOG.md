@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.8.0...oci-altinn-uptime-v1.9.0) (2026-06-02)
+
+
+### Features
+
+* **altinn-uptime:** Add k1103 to maintenance targets ([#1128](https://github.com/dis-way/gitops-manifests/issues/1128)) ([5b42512](https://github.com/dis-way/gitops-manifests/commit/5b4251214b44a33740896be728e75077fc244efb))
+
 ## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.7.0...oci-altinn-uptime-v1.8.0) (2026-05-13)
 
 
