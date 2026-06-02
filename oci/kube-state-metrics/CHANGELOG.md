@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.1.1...oci-kube-state-metrics-v1.2.0) (2026-06-02)
+
+
+### Features
+
+* **kube-state-metrics:** Add multitenancy overlay ([#1145](https://github.com/dis-way/gitops-manifests/issues/1145)) ([f3fd6f4](https://github.com/dis-way/gitops-manifests/commit/f3fd6f48171893bcb55d62e56e6e53db8d78a78e))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.1.0...oci-kube-state-metrics-v1.1.1) (2026-05-27)
 
 
