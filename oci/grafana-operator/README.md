@@ -25,3 +25,4 @@ Deploys the Grafana Operator via Helm and connects it to an external Azure Manag
 | `grafana-manifests/base` | `GrafanaDashboard` CRs: blackbox exporter, public IP, Traefik, FluxCD, and Linkerd dashboards |
 | `grafana-manifests/apps` | Overlay adding the Altinn pod console error log dashboard |
 | `fqdn-to-azure-grafana` | Traefik redirect from a legacy Grafana FQDN to Azure Managed Grafana (HTTP 301, path-preserving) |
+.
