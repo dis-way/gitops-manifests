@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.1.5...oci-grafana-operator-v2.2.0) (2026-06-05)
+
+
+### Features
+
+* **grafana-operator:** new layers ([#1166](https://github.com/dis-way/gitops-manifests/issues/1166)) ([0c9256b](https://github.com/dis-way/gitops-manifests/commit/0c9256bd2ba62eda78e5b7a2d795634b0de8f837))
+
 ## [2.1.5](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.1.4...oci-grafana-operator-v2.1.5) (2026-05-27)
 
 
