@@ -1,55 +1,27 @@
 # Grafana Operator
 
-## Description
+Deploys the Grafana Operator via Helm and connects it to an external Azure Managed Grafana instance.
 
-This directory contains the Flux configuration for deploying the Grafana Operator using Helm and configuring an external Grafana instance.
+## Variables
 
-## Deployment Image
+| Variable | Default | Required | Description |
+|----------|---------|----------|-------------|
+| `GRAFANA_ADMIN_APIKEY` | — | Yes | Admin API key for the external Grafana instance |
+| `EXTERNAL_GRAFANA_URL` | — | Yes | Full URL of the external Azure Managed Grafana instance |
+| `K8S_DNS_NAME` | — | Yes | Cluster DNS hostname used in the `/monitor` redirect IngressRoute |
+| `REDIRECT_GRAFANA_FROM_FQDN` | — | Yes | Legacy Grafana FQDN to redirect from (no protocol, `fqdn-to-azure-grafana` only) |
+| `REDIRECT_GRAFANA_TO_FQDN` | — | Yes | Target Azure Managed Grafana FQDN to redirect to (no protocol, `fqdn-to-azure-grafana` only) |
 
-The deployment uses the following image:
-- **Repository**: `altinncr.azurecr.io/ghcr.io/grafana/grafana-operator`
-- **Original Source**: `ghcr.io/grafana/grafana-operator`
+## Layers
 
-The image is pulled from Altinn's Azure Container Registry (altinncr.azurecr.io) which mirrors the official Grafana Operator image from GitHub Container Registry.
-
-## Configuration
-
-### Required Environment Variables
-
-The following environment variables must be set for proper deployment:
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `EXTERNAL_GRAFANA_URL` | URL of the external Grafana instance | `https://grafana.example.com` |
-| `GRAFANA_ADMIN_APIKEY` | Admin API key for Grafana authentication | `glsa_xxxxxxxxxxxxxxxxxxxx` |
-
-### Components
-
-1. **Namespace**: Creates `grafana` namespace with Linkerd injection enabled
-2. **Helm Repository**: Configures Grafana Helm repository source
-3. **Helm Release**: Deploys the Grafana Operator with custom configuration
-4. **External Grafana**: Configures connection to external Grafana instance
-5. **API Key Secret**: Stores Grafana admin API key securely
-
-### Features Enabled
-
-- **Service Monitor**: Prometheus monitoring enabled with custom label limits
-- **Dashboard Management**: Automatic dashboard provisioning enabled
-- **Custom Patches**: ServiceMonitor patches for Azure Monitor compatibility
-
-### Resource Customizations
-
-The deployment includes post-render patches that:
-- Update ServiceMonitor API version to `azmonitoring.coreos.com/v1`
-- Set label limits: 63 labels max, 511 char name limit, 1023 char value limit
-- Enable CRD management with create/replace strategy
-
-### Security
-
-- API keys are stored as Kubernetes secrets
-- External Grafana connection uses secure API key authentication
-- Namespace has Linkerd service mesh injection enabled
-
-## Usage
-
-Ensure environment variables are properly substituted in your Flux configuration before deployment.
+| Path | Description |
+|------|-------------|
+| `base` | Namespace, HelmRepository, HelmRelease (grafana-operator), and `grafana-admin-apikey` Secret |
+| `adminservices` | Overlay for the admin services cluster; references `base` |
+| `adminservices/post-deploy` | External Grafana CR and Traefik `/monitor` redirect; depends on `adminservices` |
+| `dis` | Overlay for the DIS cluster; references `base` |
+| `post-deploy` | `Grafana` CR connecting to the external Azure Managed Grafana instance |
+| `grafana-redirect` | Traefik `IngressRoute` and `Middleware` redirecting `/monitor` traffic to Azure Grafana |
+| `grafana-manifests/base` | `GrafanaDashboard` CRs: blackbox exporter, public IP, Traefik, FluxCD, and Linkerd dashboards |
+| `grafana-manifests/apps` | Overlay adding the Altinn pod console error log dashboard |
+| `fqdn-to-azure-grafana` | Traefik redirect from a legacy Grafana FQDN to Azure Managed Grafana (HTTP 301, path-preserving) |
