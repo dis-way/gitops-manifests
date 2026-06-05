@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-platform-system-v1.1.0...oci-platform-system-v1.2.0) (2026-06-05)
+
+
+### Features
+
+* **platform-system:** add dis-console-reader ClusterRole for cross-namespace Flux reads ([#1160](https://github.com/dis-way/gitops-manifests/issues/1160)) ([7a41a60](https://github.com/dis-way/gitops-manifests/commit/7a41a60bfebe48ed603f317176993679be91e47a))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-platform-system-v1.0.0...oci-platform-system-v1.1.0) (2026-01-28)
 
 
