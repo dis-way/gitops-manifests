@@ -15,3 +15,5 @@ resources:
   - af.at23.altinn.cloud-push.yaml
   - af.tt02.altinn.no.yaml
   - af.tt02.altinn.no-push.yaml
+  - dev.altinn.studio.yaml
+  - dev.altinn.studio-push.yaml
