@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.8.0...oci-dis-tls-cert-v2.9.0) (2026-06-08)
+
+
+### Features
+
+* **dis-tls-cert:** Add dev.altinn.studio certificate and push secret ([#1173](https://github.com/dis-way/gitops-manifests/issues/1173)) ([492cc7b](https://github.com/dis-way/gitops-manifests/commit/492cc7bebb93641c3750d344d2b72d6ab79454ee))
+
 ## [2.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.7.0...oci-dis-tls-cert-v2.8.0) (2026-02-11)
 
 
