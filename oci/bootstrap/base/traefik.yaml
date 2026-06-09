@@ -1,0 +1,61 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: traefik
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  provider: azure
+  ref:
+    tag: latest
+  timeout: 5m0s
+  url: oci://altinncr.azurecr.io/manifests/infra/traefik
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: traefik
+  namespace: flux-system
+spec:
+  force: false
+  interval: 5m0s
+  path: ./apps/
+  postBuild:
+    substitute:
+      AKS_VNET_IPV4_CIDR: ${AKS_VNET_IPV4_CIDR}
+      AKS_VNET_IPV6_CIDR: ${AKS_VNET_IPV6_CIDR}
+      AKS_SYSP00L_IP_PREFIX_0: ${AKS_SYSP00L_IP_PREFIX_0}
+      AKS_SYSP00L_IP_PREFIX_1: ${AKS_SYSP00L_IP_PREFIX_1}
+      AKS_WORKPOOL_IP_PREFIX_0: ${AKS_WORKPOOL_IP_PREFIX_0}
+      AKS_WORKPOOL_IP_PREFIX_1: ${AKS_WORKPOOL_IP_PREFIX_1}
+      AKS_NODE_RG: ${AKS_NODE_RG}
+      PUBLIC_IP_V4: ${PUBLIC_IP_V4}
+      PUBLIC_IP_V6: ${PUBLIC_IP_V6}
+  prune: false
+  retryInterval: 5m0s
+  sourceRef:
+    kind: OCIRepository
+    name: traefik
+    namespace: flux-system
+  timeout: 5m0s
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: traefik-post-deploy
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: traefik
+  force: false
+  interval: 5m0s
+  path: ./apps/post-deploy/
+  prune: false
+  retryInterval: 5m0s
+  sourceRef:
+    kind: OCIRepository
+    name: traefik
+    namespace: flux-system
+  timeout: 5m0s
+  wait: false
