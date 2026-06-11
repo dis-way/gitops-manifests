@@ -72,12 +72,12 @@
     "prod_ring2": "0.3.0"
   },
   "dis-pgsql": {
-    "at_ring1": "0.1.11",
-    "at_ring2": "0.1.11",
-    "tt_ring1": "0.1.3",
-    "tt_ring2": "0.1.3",
-    "prod_ring1": "0.1.3",
-    "prod_ring2": "0.1.3"
+    "at_ring1": "0.1.12",
+    "at_ring2": "0.1.12",
+    "tt_ring1": "0.1.12",
+    "tt_ring2": "0.1.12",
+    "prod_ring1": "0.1.12",
+    "prod_ring2": "0.1.12"
   },
   "dis-vault": {
     "at_ring1": "1.2.9",
