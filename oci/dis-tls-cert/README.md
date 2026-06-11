@@ -73,3 +73,4 @@ kubectl -n "$NAMESPACE" get secret "$SECRET_NAME" \
 | openssl rsa -noout -modulus \
 | openssl md5
 ```
+.
