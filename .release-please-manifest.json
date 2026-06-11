@@ -10,7 +10,7 @@
   "oci/dis-apim": "0.3.0",
   "oci/dis-pgsql": "0.1.12",
   "oci/dis-vault": "1.2.9",
-  "oci/dis-tls-cert": "2.10.0",
+  "oci/dis-tls-cert": "2.10.1",
   "oci/external-secrets-operator": "1.6.7",
   "oci/grafana-operator": "2.2.0",
   "oci/headplane": "1.1.0",
