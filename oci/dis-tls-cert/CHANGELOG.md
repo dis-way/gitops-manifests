@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.10.0...oci-dis-tls-cert-v2.10.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **dis-tls-cert:** trigger release for wildcard DNS name ([#1190](https://github.com/dis-way/gitops-manifests/issues/1190)) ([40a4f15](https://github.com/dis-way/gitops-manifests/commit/40a4f15897ef934fd584313539c5cd5eaec83874))
+
 ## [2.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.9.0...oci-dis-tls-cert-v2.10.0) (2026-06-11)
 
 
