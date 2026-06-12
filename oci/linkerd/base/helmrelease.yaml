@@ -96,6 +96,10 @@ spec:
       image:
         name: altinncr.azurecr.io/ghcr.io/linkerd/proxy
       defaultInboundPolicy: "${DEFAULT_INBOUND_POLICY:=all-unauthenticated}"
+      livenessProbe:
+        timeoutSeconds: 10
+      readinessProbe:
+        timeoutSeconds: 10
     podMonitor:
       enabled: true
       scrapeInterval: 60s
