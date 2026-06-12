@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.13.0...oci-linkerd-v2.14.0) (2026-06-12)
+
+
+### Features
+
+* **linkerd:** Add timeout configuration to proxy probes ([#1195](https://github.com/dis-way/gitops-manifests/issues/1195)) ([19e5fef](https://github.com/dis-way/gitops-manifests/commit/19e5fefb05707d3443b79b70dd78c920e1305ab8))
+
 ## [2.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.12.0...oci-linkerd-v2.13.0) (2026-04-23)
 
 
