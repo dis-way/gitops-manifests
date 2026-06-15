@@ -59,7 +59,8 @@ jobs:
           git checkout -b "$BRANCH"
           git add oci/traefik/multitenancy/lb-source-ranges-configmap.yaml
           git commit -m "chore(traefik): update Cloudflare IP ranges"
-          git push origin "$BRANCH"
+          git push --force origin "$BRANCH"
+          gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q . || \
           gh pr create \
             --title "chore(traefik): update Cloudflare IP ranges" \
             --body "Automated update of Cloudflare IP ranges in the traefik load balancer source ranges ConfigMap." \
