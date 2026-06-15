@@ -21,10 +21,12 @@ jobs:
         id: update
         run: |
           python3 - <<'EOF'
-          import urllib.request, re, json
+          import urllib.request, re, json, ipaddress
 
           data = json.loads(urllib.request.urlopen('https://api.cloudflare.com/client/v4/ips').read())
-          new_ips = data['result']['ipv4_cidrs'] + data['result']['ipv6_cidrs']
+          v4 = sorted(data['result']['ipv4_cidrs'], key=ipaddress.ip_network)
+          v6 = sorted(data['result']['ipv6_cidrs'], key=ipaddress.ip_network)
+          new_ips = v4 + v6
 
           path = 'oci/traefik/multitenancy/lb-source-ranges-configmap.yaml'
           with open(path) as f:
