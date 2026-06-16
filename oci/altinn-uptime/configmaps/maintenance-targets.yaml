@@ -11,10 +11,28 @@ data:
     {
       "ipv4": [
         "https://ssikt.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://nav.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://sfd.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://oko.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://hb.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://spk.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://npe.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://nsm.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://mdir.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://dsa.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://k1103.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments"
       ],
       "ipv6": [
         "https://ssikt.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://nav.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://sfd.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://oko.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://hb.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://spk.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://npe.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://nsm.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://mdir.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://dsa.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://k1103.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments"
       ],
       "tls_ipv4": [],
