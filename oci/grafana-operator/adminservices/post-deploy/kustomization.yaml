@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../post-deploy
   - ../../grafana-redirect
+  - ../../grafana-manifests/apps
