@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.2.0...oci-grafana-operator-v2.3.0) (2026-06-17)
+
+
+### Features
+
+* **grafana:** consume unified Grafana OCI artifact from altinn-dashboards-grafana ([#1194](https://github.com/dis-way/gitops-manifests/issues/1194)) ([e0771a3](https://github.com/dis-way/gitops-manifests/commit/e0771a3fd51f5fd6a2dfafebaf4e7a6e1d2de8b8))
+
 ## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.1.5...oci-grafana-operator-v2.2.0) (2026-06-05)
 
 
