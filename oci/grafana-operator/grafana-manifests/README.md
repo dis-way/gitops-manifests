@@ -1,6 +1,8 @@
 # Grafana Manifests
 
-This directory contains Grafana manifests organized into base and application-specific configurations.
+This directory wires the cluster's Grafana content (folders, dashboards, and
+product alerts) to an external Flux OCI artifact. It no longer holds the CRs
+themselves — they are delivered by the `altinn-dashboards-grafana` repository.
 
 ## Structure
 
@@ -8,40 +10,32 @@ This directory contains Grafana manifests organized into base and application-sp
 grafana-manifests/
 ├── README.md
 ├── base/
-│   ├── kustomization.yaml
-│   ├── folders.yaml
-│   └── dashboards/
-│       ├── kustomization.yaml
-│       ├── altinn-blackbox-exporter.yaml
-│       ├── altinn-publicip.yaml
-│       ├── altinn-traefik-official.yaml
-│       ├── fluxcd-*.yaml
-│       └── linkerd-*.yaml
+│   ├── kustomization.yaml      # references the two Flux objects below
+│   ├── oci-repository.yaml     # OCIRepository: grafana-content
+│   └── flux-kustomize.yaml     # Kustomization: grafana-content
 └── apps/
-    ├── kustomization.yaml
-    └── dashboards/
-        ├── kustomization.yaml
-        └── altinn-pod-console-error-logs.yaml
+    └── kustomization.yaml      # thin passthrough to ../base
 ```
 
-## Base Configuration
+## Manifest Sources
 
-The `base/` directory contains shared Grafana manifests that are common across environments:
+Grafana folders, dashboards, and product alerts are delivered by the external
+[`altinn-dashboards-grafana`](https://github.com/Altinn/altinn-dashboards-grafana)
+Flux OCI artifact, published to `oci://altinncr.azurecr.io/monitoring/grafana`
+and pinned to `tag: release`.
 
-- **Folders**: Grafana folder organization (`folders.yaml`)
-- **Infrastructure Dashboards**: Core monitoring dashboards for:
-  - Altinn platform (blackbox-exporter, publicip, traefik)
-  - FluxCD (cluster stats, control plane, deployments)
-  - Linkerd service mesh (daemonset, deployment)
+This package applies that artifact via two Flux objects in `base/`:
 
-## Application Configuration
+- **`oci-repository.yaml`** — an `OCIRepository` named `grafana-content` that
+  pulls `oci://altinncr.azurecr.io/monitoring/grafana:release` (Azure provider).
+- **`flux-kustomize.yaml`** — a `Kustomization` named `grafana-content` that
+  reconciles the artifact's repo-root kustomization (dashboards as
+  self-contained `configMapRef` CRs, the platform folders, and all product
+  alerts) into the `grafana` namespace with `prune: true`.
 
-The `apps/` directory contains apps cluster specific Grafana manifests:
-
-- **Dashboards**: Apps cluster specific monitoring dashboards
-- **Future**: Ready for expansion with alerts, datasources, etc.
-
-The apps configuration includes the base configuration via `../base` reference, so deploying apps will include both base and apps cluster specific manifests.
+Dashboards, folders, and alerts are added or changed in the
+`altinn-dashboards-grafana` repository — not here. Promote `main` → `release`
+there to roll out new content.
 
 ## Usage
 
@@ -57,25 +51,8 @@ Point Flux Kustomization to:
 oci://your-registry/grafana-operator/grafana-manifests/apps
 ```
 
-## Adding New Manifests
-
-### New Base Dashboard
-1. Add the dashboard YAML file to `base/dashboards/`
-2. Update `base/dashboards/kustomization.yaml` to include the new file
-
-### New App Dashboard
-1. Add the dashboard YAML file to `apps/dashboards/`
-2. Update `apps/dashboards/kustomization.yaml` to include the new file
-
-### New Manifest Type (e.g., Alerts)
-1. Create new directory: `apps/alerts/`
-2. Add `apps/alerts/kustomization.yaml`
-3. Add alert YAML files to the alerts directory
-4. Update `apps/kustomization.yaml` to include `- alerts`
-
-## Manifest Sources
-
-Dashboards are sourced from the [Altinn Grafana Dashboards repository](https://github.com/Altinn/altinn-dashboards-grafana) using the `${RELEASE_BRANCH}` variable for version control.
+Both targets render the same two `grafana-content` Flux objects; `apps` is a
+thin passthrough to `base`.
 
 ## Dependencies
 
@@ -83,3 +60,6 @@ These manifests depend on:
 - Grafana Operator being deployed
 - External Grafana instance configured via `EXTERNAL_GRAFANA_URL`
 - Proper RBAC permissions for the Grafana Operator
+- The Flux source-controller identity having `AcrPull` on
+  `altinncr.azurecr.io` so the `grafana-content` `OCIRepository` can pull the
+  artifact
