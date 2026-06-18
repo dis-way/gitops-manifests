@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.3.0...oci-grafana-operator-v2.3.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* **grafana-operator:** deploy grafana-manifests to adminservices ([#1211](https://github.com/dis-way/gitops-manifests/issues/1211)) ([c6913fd](https://github.com/dis-way/gitops-manifests/commit/c6913fdd5999dc4c70b2248422b7068308091763))
+
 ## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.2.0...oci-grafana-operator-v2.3.0) (2026-06-17)
 
 
