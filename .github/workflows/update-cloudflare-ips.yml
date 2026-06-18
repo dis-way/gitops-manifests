@@ -53,13 +53,28 @@ jobs:
       - name: Open pull request
         if: steps.update.outputs.changed == 'true'
         run: |
+          FILE="oci/traefik/multitenancy/lb-source-ranges-configmap.yaml"
           BRANCH="chore/update-cloudflare-ips-$(date +%Y%m%d)"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add oci/traefik/multitenancy/lb-source-ranges-configmap.yaml
-          git commit -m "chore(traefik): update Cloudflare IP ranges"
-          git push --force origin "$BRANCH"
+
+          # Blob SHA of the file on the current branch — required by the Contents API
+          FILE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/contents/$FILE" --jq '.sha')
+
+          # Create or force-reset the branch to the current HEAD (main)
+          HEAD_SHA=$(git rev-parse HEAD)
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f ref="refs/heads/$BRANCH" -f sha="$HEAD_SHA" 2>/dev/null || \
+          gh api "repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH" \
+            -X PATCH -f sha="$HEAD_SHA" -F force=true
+
+          # Commit via the Contents API — GitHub signs these commits automatically
+          CONTENT_B64=$(base64 -w0 < "$FILE")
+          gh api "repos/$GITHUB_REPOSITORY/contents/$FILE" \
+            -X PUT \
+            -f message="chore(traefik): update Cloudflare IP ranges" \
+            -f content="$CONTENT_B64" \
+            -f branch="$BRANCH" \
+            -f sha="$FILE_SHA"
+
           gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q . || \
           gh pr create \
             --title "chore(traefik): update Cloudflare IP ranges" \
