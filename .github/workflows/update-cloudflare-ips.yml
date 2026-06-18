@@ -64,7 +64,7 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/git/refs" \
             -f ref="refs/heads/$BRANCH" -f sha="$HEAD_SHA" 2>/dev/null || \
           gh api "repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH" \
-            -X PATCH -f sha="$HEAD_SHA" -f force=true
+            -X PATCH -f sha="$HEAD_SHA" -F force=true
 
           # Commit via the Contents API — GitHub signs these commits automatically
           CONTENT_B64=$(base64 -w0 < "$FILE")
