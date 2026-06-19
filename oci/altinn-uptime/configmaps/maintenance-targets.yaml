@@ -20,6 +20,8 @@ data:
         "https://nsm.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://mdir.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://dsa.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://kyv.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://kyv.apps.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://k1103.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments"
       ],
       "ipv6": [
@@ -33,6 +35,8 @@ data:
         "https://nsm.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://mdir.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://dsa.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://kyv.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://kyv.apps.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://k1103.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments"
       ],
       "tls_ipv4": [],
