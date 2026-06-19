@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.3.1...oci-grafana-operator-v2.4.0) (2026-06-19)
+
+
+### Features
+
+* **grafana-operator:** track grafana-content main tag instead of release ([#1222](https://github.com/dis-way/gitops-manifests/issues/1222)) ([36c2951](https://github.com/dis-way/gitops-manifests/commit/36c29514d55005af01a8387716b9c874fdb804a4))
+
 ## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.3.0...oci-grafana-operator-v2.3.1) (2026-06-18)
 
 
