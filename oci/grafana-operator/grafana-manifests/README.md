@@ -22,19 +22,19 @@ grafana-manifests/
 Grafana folders, dashboards, and product alerts are delivered by the external
 [`altinn-dashboards-grafana`](https://github.com/Altinn/altinn-dashboards-grafana)
 Flux OCI artifact, published to `oci://altinncr.azurecr.io/monitoring/grafana`
-and pinned to `tag: release`.
+and pinned to `tag: main`.
 
 This package applies that artifact via two Flux objects in `base/`:
 
 - **`oci-repository.yaml`** — an `OCIRepository` named `grafana-content` that
-  pulls `oci://altinncr.azurecr.io/monitoring/grafana:release` (Azure provider).
+  pulls `oci://altinncr.azurecr.io/monitoring/grafana:main` (Azure provider).
 - **`flux-kustomize.yaml`** — a `Kustomization` named `grafana-content` that
   reconciles the artifact's repo-root kustomization (dashboards as
   self-contained `configMapRef` CRs, the platform folders, and all product
   alerts) into the `grafana` namespace with `prune: true`.
 
 Dashboards, folders, and alerts are added or changed in the
-`altinn-dashboards-grafana` repository — not here. Promote `main` → `release`
+`altinn-dashboards-grafana` repository — not here. Merge changes to `main`
 there to roll out new content.
 
 ## Usage
