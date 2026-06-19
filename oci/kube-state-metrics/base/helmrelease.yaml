@@ -12,7 +12,7 @@ spec:
         name: prometheus-community
         namespace: kube-state-metrics
       # renovate: datasource=helm registryUrl=https://prometheus-community.github.io/helm-charts packageName=kube-state-metrics
-      version: 7.4.0
+      version: 7.5.1
   interval: 1h
   timeout: 5m
   install:
