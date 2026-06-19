@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.9.0...oci-altinn-uptime-v1.10.0) (2026-06-19)
+
+
+### Features
+
+* **altinn-uptime:** Add KYV maintenance targets ([#1218](https://github.com/dis-way/gitops-manifests/issues/1218)) ([babe003](https://github.com/dis-way/gitops-manifests/commit/babe003dffcedf6fc1178fa40fa288887e9b2552))
+
 ## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.8.0...oci-altinn-uptime-v1.9.0) (2026-06-02)
 
 
