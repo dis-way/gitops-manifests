@@ -26,6 +26,10 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No (policies only) | AKS pod network IPv6 CIDR for Linkerd NetworkAuthentication |
 | `UAMI_CERT_MANAGER_CLIENT_ID` | — | platform-aks / eformidling-aks post-deploy | Managed identity client ID for cert-manager DNS-01 solver |
 | `CERT_DNS_NAME` | — | platform-aks / eformidling-aks post-deploy | Full DNS name for the TLS certificate (e.g. `internal.platform.prod.altinn.cloud`) |
+| `KV_SECRET_NAME_CERT` | — | apps post-deploy | Key Vault secret name holding the TLS certificate, pulled into `tls.crt` of the `ssl-cert` secret |
+| `KV_SECRET_NAME_KEY` | — | apps post-deploy | Key Vault secret name holding the TLS private key, pulled into `tls.key` of the `ssl-cert` secret |
+| `CERT_KV_UAMI_CLIENT_ID` | — | apps post-deploy | Managed identity client ID (federated to the `dis-tls-cert-kv-uami` SA in `traefik`) with read access to the `dis-tls-cert` Key Vault |
+| `CERT_KV_TENANT_ID` | `cd0026d8-283b-4a55-9bfa-d0ef4a8ba21c` | No | Azure tenant ID for the `dis-tls-cert-kv-uami` workload identity |
 
 ## Layers
 
@@ -41,6 +45,6 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `post-deploy` | Shared post-deploy layer; HSTS `Middleware` and root catch-all `IngressRoute` (Traefik CRD resources applied after HelmRelease) |
 | `platform-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
 | `eformidling-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
-| `apps/post-deploy` | Extends `post-deploy`; adds `hsts-header` Middleware in the `default` namespace |
+| `apps/post-deploy` | Extends `post-deploy`; adds `hsts-header` Middleware in the `default` namespace and an `ssl-cert` ExternalSecret (with SecretStore + workload-identity SA) that pulls the TLS cert/key from the `dis-tls-cert` Azure Key Vault into a `kubernetes.io/tls` secret in the `traefik` namespace |
 | `adminservices/post-deploy` | Extends `post-deploy` |
 | `multitenancy/post-deploy` | Empty placeholder |
