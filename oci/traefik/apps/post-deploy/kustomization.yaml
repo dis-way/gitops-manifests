@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../post-deploy
   - hsts-middleware-default.yaml
+  - ssl-cert-external-secret.yaml
