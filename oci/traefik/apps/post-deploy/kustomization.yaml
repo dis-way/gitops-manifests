@@ -4,3 +4,4 @@ resources:
   - ../../post-deploy
   - hsts-middleware-default.yaml
   - ssl-cert-external-secret.yaml
+  - ssl-cert-migrate-job.yaml

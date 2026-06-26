@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ssl-cert-migrate
+  namespace: traefik
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ssl-cert-migrate
+  namespace: traefik
+rules:
+  # Inspect and remove the legacy Opaque secret so ESO can recreate it as kubernetes.io/tls
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["ssl-cert"]
+    verbs: ["get", "delete"]
+  # Trigger an immediate ExternalSecret resync instead of waiting for the refresh interval
+  - apiGroups: ["external-secrets.io"]
+    resources: ["externalsecrets"]
+    resourceNames: ["ssl-cert"]
+    verbs: ["get", "patch"]
+  # Wait until the SecretStore is Ready before deleting the live secret (watch can't use resourceNames)
+  - apiGroups: ["external-secrets.io"]
+    resources: ["secretstores"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ssl-cert-migrate
+  namespace: traefik
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ssl-cert-migrate
+subjects:
+  - kind: ServiceAccount
+    name: ssl-cert-migrate
+    namespace: traefik
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ssl-cert-migrate
+  namespace: traefik
+  annotations:
+    # Let Flux recreate the (immutable) Job whenever this manifest changes; safe because it is idempotent
+    kustomize.toolkit.fluxcd.io/force: enabled
+spec:
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      serviceAccountName: ssl-cert-migrate
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+        - name: migrate
+          image: altinncr.azurecr.io/docker.io/bitnami/kubectl:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              # Belt-and-suspenders: only touch the live secret once ESO can actually
+              # repopulate it. If the store never goes Ready the job fails and retries,
+              # leaving the existing secret intact -> no serving gap.
+              echo "Waiting for SecretStore dis-tls-cert-store to become Ready..."
+              kubectl wait --for=condition=Ready secretstore/dis-tls-cert-store \
+                -n traefik --timeout=120s
+
+              # A Secret's type is immutable, so an existing Opaque ssl-cert blocks ESO
+              # from owning it as kubernetes.io/tls. Delete it and force an immediate resync.
+              type=$(kubectl get secret ssl-cert -n traefik -o jsonpath='{.type}' 2>/dev/null || echo "")
+              if [ "$type" = "Opaque" ]; then
+                echo "Legacy Opaque ssl-cert found; deleting so ESO recreates it as kubernetes.io/tls"
+                kubectl delete secret ssl-cert -n traefik
+                kubectl annotate externalsecret ssl-cert -n traefik \
+                  force-sync="$(date +%s)" --overwrite
+                echo "Triggered ExternalSecret resync"
+              else
+                echo "ssl-cert type is '${type}' (not Opaque) - nothing to do"
+              fi
