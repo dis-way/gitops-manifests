@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.9.0...oci-traefik-v3.10.0) (2026-06-26)
+
+
+### Features
+
+* **traefik:** Add migration job to convert legacy ssl-cert secret type ([#1235](https://github.com/dis-way/gitops-manifests/issues/1235)) ([63652ae](https://github.com/dis-way/gitops-manifests/commit/63652aebaa44e6d599b60b811f57ed66f543f144))
+
 ## [3.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.8.0...oci-traefik-v3.9.0) (2026-06-26)
 
 
