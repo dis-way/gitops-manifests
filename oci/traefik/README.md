@@ -42,9 +42,9 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. Restricts `loadBalancerSourceRanges` to Cloudflare, altinn-uptime, and APIM via a ConfigMap (`valuesFrom`); Cloudflare ranges are updated automatically by the `update-cloudflare-ips` workflow. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
 | `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM IP), and HSTS middleware |
 | `policies` | Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources for kubelet probes and proxy admin in deny-all mesh environments; see [`policies/README.md`](policies/README.md) |
-| `post-deploy` | Shared post-deploy layer; HSTS `Middleware` and root catch-all `IngressRoute` (Traefik CRD resources applied after HelmRelease) |
-| `platform-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
-| `eformidling-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
-| `apps/post-deploy` | Extends `post-deploy`; adds `hsts-header` Middleware in the `default` namespace and an `ssl-cert` ExternalSecret (with SecretStore + workload-identity SA) that pulls the TLS cert/key from the `dis-tls-cert` Azure Key Vault into a `kubernetes.io/tls` secret in the `traefik` namespace |
-| `adminservices/post-deploy` | Extends `post-deploy` |
-| `multitenancy/post-deploy` | Empty placeholder |
+| `post-deploy` | Manifests applied after the deployment has reconciled |
+| `platform-aks/post-deploy` | Manifests applied after the deployment has reconciled |
+| `eformidling-aks/post-deploy` | Manifests applied after the deployment has reconciled |
+| `apps/post-deploy` | Manifests applied after the deployment has reconciled |
+| `adminservices/post-deploy` | Manifests applied after the deployment has reconciled |
+| `multitenancy/post-deploy` | Manifests applied after the deployment has reconciled |
