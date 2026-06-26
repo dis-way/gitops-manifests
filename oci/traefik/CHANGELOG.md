@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.8.0...oci-traefik-v3.9.0) (2026-06-26)
+
+
+### Features
+
+* **traefik:** Add ExternalSecret for TLS cert/key from Azure Key Vault ([#1229](https://github.com/dis-way/gitops-manifests/issues/1229)) ([bde06a5](https://github.com/dis-way/gitops-manifests/commit/bde06a500bfac982b0881135774773825ebe5f3d))
+
 ## [3.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.7.0...oci-traefik-v3.8.0) (2026-05-12)
 
 
