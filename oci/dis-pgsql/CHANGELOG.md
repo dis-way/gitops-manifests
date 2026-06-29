@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.14](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.13...oci-dis-pgsql-v0.1.14) (2026-06-29)
+
+
+### Bug Fixes
+
+* **dis-pgsql:** forward DISPG_CLUSTER_ID to operator env ([#1245](https://github.com/dis-way/gitops-manifests/issues/1245)) ([6452bbf](https://github.com/dis-way/gitops-manifests/commit/6452bbf69dedb41f665f10743d0bbd99dc227653))
+
 ## [0.1.13](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.12...oci-dis-pgsql-v0.1.13) (2026-06-29)
 
 
