@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.13](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.12...oci-dis-pgsql-v0.1.13) (2026-06-29)
+
+
+### Dependency Updates
+
+* update dis pgsql image tags to v0.11.0 ([#1241](https://github.com/dis-way/gitops-manifests/issues/1241)) ([55c7192](https://github.com/dis-way/gitops-manifests/commit/55c71922e83dd174f993a8191c8d8c9e1e708d30))
+
 ## [0.1.12](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.11...oci-dis-pgsql-v0.1.12) (2026-06-11)
 
 
