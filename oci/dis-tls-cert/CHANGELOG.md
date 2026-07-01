@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.10.1...oci-dis-tls-cert-v2.11.0) (2026-07-01)
+
+
+### Features
+
+* **dis-tls-cert:** Add data.altinn.no certificate and PushSecret ([#1253](https://github.com/dis-way/gitops-manifests/issues/1253)) ([81d9a41](https://github.com/dis-way/gitops-manifests/commit/81d9a416c18e8f17e2648bead092765c5b000c5b))
+
 ## [2.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.10.0...oci-dis-tls-cert-v2.10.1) (2026-06-11)
 
 
