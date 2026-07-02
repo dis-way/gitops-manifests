@@ -306,7 +306,7 @@ generate_expected_names() {
                 hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
                 name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
-                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
                     name="${name:0:$max_name_len}"
                 fi
@@ -321,7 +321,7 @@ generate_expected_names() {
                 hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
                 name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
-                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
                     name="${name:0:$max_name_len}"
                 fi
@@ -1068,7 +1068,7 @@ EOF
                 hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
                 name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
-                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
                     name="${name:0:$max_name_len}"
                 fi
@@ -1140,7 +1140,7 @@ EOF
                 hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
                 name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
-                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
                     name="${name:0:$max_name_len}"
                 fi
