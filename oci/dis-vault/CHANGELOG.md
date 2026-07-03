@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.9...oci-dis-vault-v1.3.0) (2026-07-03)
+
+
+### Features
+
+* update dis operators to latest versions ([#1259](https://github.com/dis-way/gitops-manifests/issues/1259)) ([161a17f](https://github.com/dis-way/gitops-manifests/commit/161a17fe8616fef16a85b0d35eb0bfc4efb13108))
+
 ## [1.2.9](https://github.com/dis-way/gitops-manifests/compare/oci-dis-vault-v1.2.8...oci-dis-vault-v1.2.9) (2026-05-19)
 
 
