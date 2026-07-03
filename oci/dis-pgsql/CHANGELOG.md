@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.15...oci-dis-pgsql-v0.2.0) (2026-07-03)
+
+
+### Features
+
+* update dis operators to latest versions ([#1259](https://github.com/dis-way/gitops-manifests/issues/1259)) ([161a17f](https://github.com/dis-way/gitops-manifests/commit/161a17fe8616fef16a85b0d35eb0bfc4efb13108))
+
 ## [0.1.15](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.14...oci-dis-pgsql-v0.1.15) (2026-06-29)
 
 
