@@ -54,7 +54,7 @@ jobs:
         if: steps.update.outputs.changed == 'true'
         run: |
           FILE="oci/traefik/multitenancy/lb-source-ranges-configmap.yaml"
-          BRANCH="chore/update-cloudflare-ips-$(date +%Y%m%d)"
+          BRANCH="chore/update-cloudflare-ips"
 
           # Blob SHA of the file on the current branch — required by the Contents API
           FILE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/contents/$FILE" --jq '.sha')
