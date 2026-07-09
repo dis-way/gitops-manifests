@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.11.0...oci-dis-tls-cert-v2.12.0) (2026-07-09)
+
+
+### Features
+
+* **dis-tls-cert:** Add certificate and push secret for ([#1284](https://github.com/dis-way/gitops-manifests/issues/1284)) ([08c5445](https://github.com/dis-way/gitops-manifests/commit/08c54452dfbe6d4a7a0afa5eb5be8857f27ed0cc))
+
 ## [2.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.10.1...oci-dis-tls-cert-v2.11.0) (2026-07-01)
 
 
