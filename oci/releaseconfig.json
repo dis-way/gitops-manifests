@@ -216,12 +216,12 @@
     "prod_ring2": "1.10.0"
   },
   "opencost": {
-    "at_ring1": "0.2.10",
-    "at_ring2": "0.2.10",
-    "tt_ring1": "0.2.10",
-    "tt_ring2": "0.2.10",
-    "prod_ring1": "0.2.10",
-    "prod_ring2": "0.2.10"
+    "at_ring1": "0.2.11",
+    "at_ring2": "0.2.11",
+    "tt_ring1": "0.2.11",
+    "tt_ring2": "0.2.11",
+    "prod_ring1": "0.2.11",
+    "prod_ring2": "0.2.11"
   },
   "tailscale-subnet-router": {
     "at_ring1": "1.2.0",
