@@ -120,11 +120,11 @@
     "prod_ring2": "0.2.0"
   },
   "kube-state-metrics": {
-    "at_ring1": "1.2.0",
-    "at_ring2": "1.2.0",
-    "tt_ring1": "1.2.0",
+    "at_ring1": "1.2.1",
+    "at_ring2": "1.2.1",
+    "tt_ring1": "1.2.1",
     "tt_ring2": "1.2.0",
-    "prod_ring1": "1.2.0",
+    "prod_ring1": "1.2.1",
     "prod_ring2": "1.2.0"
   },
   "kyverno": {
