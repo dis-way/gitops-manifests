@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.13.0...oci-dis-tls-cert-v2.14.0) (2026-07-10)
+
+
+### Features
+
+* **dis-tls-cert:** Bump dis-tls-cert ([#1291](https://github.com/dis-way/gitops-manifests/issues/1291)) ([cd0215f](https://github.com/dis-way/gitops-manifests/commit/cd0215f0cad251b67c7dbbc2e2143bec3a9893f1))
+
 ## [2.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.12.0...oci-dis-tls-cert-v2.13.0) (2026-07-10)
 
 
