@@ -8,6 +8,6 @@ spec:
   provider: azure
   ref:
     # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/lakmus versioning=semver
-    tag: v1.1.0
+    tag: v1.1.6
   timeout: 5m0s
   url: oci://altinncr.azurecr.io/dis/kustomize/lakmus
