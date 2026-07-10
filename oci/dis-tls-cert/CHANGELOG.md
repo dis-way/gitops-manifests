@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.12.0...oci-dis-tls-cert-v2.13.0) (2026-07-10)
+
+
+### Features
+
+* Support wildcard domains in dis-tls-cert add-cert script ([#1287](https://github.com/dis-way/gitops-manifests/issues/1287)) ([75886d3](https://github.com/dis-way/gitops-manifests/commit/75886d3bf3a1507088a7138663432f36158cfb5d))
+
 ## [2.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.11.0...oci-dis-tls-cert-v2.12.0) (2026-07-09)
 
 
