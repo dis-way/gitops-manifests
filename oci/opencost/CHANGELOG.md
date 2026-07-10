@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.11](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.10...oci-opencost-v0.2.11) (2026-07-10)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.26 ([#1200](https://github.com/dis-way/gitops-manifests/issues/1200)) ([041aeb7](https://github.com/dis-way/gitops-manifests/commit/041aeb7b63ce27b881263088251b915e342e3d60))
+
 ## [0.2.10](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.9...oci-opencost-v0.2.10) (2026-06-26)
 
 
