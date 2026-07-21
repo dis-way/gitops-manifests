@@ -20,8 +20,7 @@ data:
         "https://at22.dis-core.altinn.cloud/whoami",
         "https://at23.dis-core.altinn.cloud/whoami",
         "https://tt02.dis-core.altinn.cloud/whoami",
-        "https://prod.dis-core.altinn.cloud/whoami",
-        "https://discore-at23-m22d0r-apim.azure-api.net/dialogporten/health"
+        "https://prod.dis-core.altinn.cloud/whoami"
       ],
       "ipv6": [
         "https://altinncdn.no/orgs/altinn-orgs.json",
@@ -46,17 +45,23 @@ data:
         "https://altinn.no",
         "https://grafana.altinn.cloud"
       ],
+      "health_check_ipv4": [
+        "https://discore-at23-m22d0r-apim.azure-api.net/dialogporten/health",
+        "https://info.at22.altinn.cloud/health"
+      ],
+      "health_check_ipv6": [],
       "metadata": {
         "description": "Extra targets for Altinn monitoring that are not auto-generated from organizations",
         "maintained_by": "Altinn Platform Team",
-        "last_updated": "2026-05-06",
-        "version": "1.1",
+        "last_updated": "2026-07-02",
+        "version": "1.2",
         "notes": [
           "These targets are manually maintained and will be preserved during automatic updates",
           "Organization targets are auto-generated and should not be added here",
           "IPv4 and IPv6 arrays contain targets for regular blackbox jobs",
           "kuberneteswrapper_ipv4 and kuberneteswrapper_ipv6 arrays contain targets for kuberneteswrapper jobs",
           "tls_ipv4 and tls_ipv6 arrays contain targets that require TLS verification, but not 2xx",
+          "health_check_ipv4 and health_check_ipv6 arrays contain targets that must return 200 with a JSON body reporting status Healthy",
           "Targets are monitored using blackbox HTTP probes"
         ]
       }

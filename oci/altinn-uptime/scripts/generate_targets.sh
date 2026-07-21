@@ -298,6 +298,36 @@ generate_expected_names() {
                 expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-tls-ipv6"
             fi
         done
+
+        # Process health check IPv4 extra targets
+        HEALTH_CHECK_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv4[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV4_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv4"
+            fi
+        done
+
+        # Process health check IPv6 extra targets
+        HEALTH_CHECK_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv6[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV6_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv6"
+            fi
+        done
     fi
 
     echo "$expected_names" | tr ' ' '\n' | grep -v '^$' | sort
@@ -1019,6 +1049,150 @@ spec:
     port: http
     scheme: http
   jobLabel: blackbox-http-ipv6-tls
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+EOF
+                apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
+            fi
+        done
+
+        # Health check IPv4 extra targets
+        HEALTH_CHECK_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv4[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV4_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                sm_name="blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv4"
+
+                cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+---
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $sm_name
+  namespace: $NAMESPACE
+  labels:
+    app: prometheus-blackbox-exporter
+    release: monitor
+    app.kubernetes.io/name: altinn-uptime
+    app.kubernetes.io/managed-by: altinn-uptime-sync
+    app.kubernetes.io/component: monitoring
+    altinn.no/environment: extra
+    altinn.no/organization: extra
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  endpoints:
+  - honorTimestamps: true
+    interval: 15s
+    scrapeTimeout: 15s
+    metricRelabelings:
+    - action: replace
+      replacement: blackbox-http-ipv4-health-check
+      targetLabel: job
+    - action: replace
+      replacement: $hostname
+      targetLabel: instance
+    - action: replace
+      replacement: extra-${name}-health-check
+      sourceLabels:
+      - target
+      targetLabel: target
+    - action: replace
+      replacement: v4
+      targetLabel: ip_family
+    params:
+      module:
+      - http_health_check_ipv4
+      target:
+      - $target
+    path: /probe
+    port: http
+    scheme: http
+  jobLabel: blackbox-http-ipv4-health-check
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+EOF
+                apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
+            fi
+        done
+
+        # Health check IPv6 extra targets
+        HEALTH_CHECK_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv6[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV6_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                sm_name="blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv6"
+
+                cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+---
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $sm_name
+  namespace: $NAMESPACE
+  labels:
+    app: prometheus-blackbox-exporter
+    release: monitor
+    app.kubernetes.io/name: altinn-uptime
+    app.kubernetes.io/managed-by: altinn-uptime-sync
+    app.kubernetes.io/component: monitoring
+    altinn.no/environment: extra
+    altinn.no/organization: extra
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  endpoints:
+  - honorTimestamps: true
+    interval: 15s
+    scrapeTimeout: 15s
+    metricRelabelings:
+    - action: replace
+      replacement: blackbox-http-ipv6-health-check
+      targetLabel: job
+    - action: replace
+      replacement: $hostname
+      targetLabel: instance
+    - action: replace
+      replacement: extra-${name}-health-check
+      sourceLabels:
+      - target
+      targetLabel: target
+    - action: replace
+      replacement: v6
+      targetLabel: ip_family
+    params:
+      module:
+      - http_health_check_ipv6
+      target:
+      - $target
+    path: /probe
+    port: http
+    scheme: http
+  jobLabel: blackbox-http-ipv6-health-check
   namespaceSelector:
     matchNames:
     - $NAMESPACE
