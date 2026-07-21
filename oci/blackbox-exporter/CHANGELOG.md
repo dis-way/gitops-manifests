@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.8.1...oci-blackbox-exporter-v0.9.0) (2026-07-21)
+
+
+### Features
+
+* **altinn-uptime:** add health check probes for dialogporten and info.at22 ([#1258](https://github.com/dis-way/gitops-manifests/issues/1258)) ([583d1b4](https://github.com/dis-way/gitops-manifests/commit/583d1b4f0c4a17c7659ea2f9173c22887de0df49))
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.15.1 ([#1172](https://github.com/dis-way/gitops-manifests/issues/1172)) ([0f87c12](https://github.com/dis-way/gitops-manifests/commit/0f87c12dc61781fa13880ff2cfc488b557bf6b9e))
+
 ## [0.8.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.8.1...oci-blackbox-exporter-v0.8.2) (2026-07-11)
 
 
