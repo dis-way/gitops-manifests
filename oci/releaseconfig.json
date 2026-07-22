@@ -28,8 +28,8 @@
     "at_ring2": "0.9.0",
     "tt_ring1": "0.9.0",
     "tt_ring2": "0.9.0",
-    "prod_ring1": "0.8.1",
-    "prod_ring2": "0.8.1"
+    "prod_ring1": "0.9.0",
+    "prod_ring2": "0.9.0"
   },
   "cert-manager": {
     "at_ring1": "2.5.0",
