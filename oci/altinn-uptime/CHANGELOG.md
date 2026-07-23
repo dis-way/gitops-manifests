@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.10.0...oci-altinn-uptime-v1.11.0) (2026-07-23)
+
+
+### Features
+
+* **altinn-uptime:** add health check probes for dialogporten and info.at22 ([#1258](https://github.com/dis-way/gitops-manifests/issues/1258)) ([583d1b4](https://github.com/dis-way/gitops-manifests/commit/583d1b4f0c4a17c7659ea2f9173c22887de0df49))
+
 ## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.9.0...oci-altinn-uptime-v1.10.0) (2026-06-19)
 
 
