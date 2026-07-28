@@ -15,6 +15,7 @@ spec:
         metadata:
           annotations:
             linkerd.io/inject: disabled
+            cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
         spec:
           serviceAccountName: altinn-uptime-cronjob
           restartPolicy: OnFailure
