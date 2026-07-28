@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.11.0...oci-altinn-uptime-v1.11.1) (2026-07-28)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** raise sync CronJob memory limit to prevent OOMKill ([#1343](https://github.com/dis-way/gitops-manifests/issues/1343)) ([f9a6d7b](https://github.com/dis-way/gitops-manifests/commit/f9a6d7b539f4c67d9e6de32621fde1eb1fe1b796))
+
 ## [1.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.10.0...oci-altinn-uptime-v1.11.0) (2026-07-28)
 
 
