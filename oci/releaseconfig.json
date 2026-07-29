@@ -12,8 +12,8 @@
     "at_ring2": "1.11.1",
     "tt_ring1": "1.11.1",
     "tt_ring2": "1.11.1",
-    "prod_ring1": "1.10.0",
-    "prod_ring2": "1.10.0"
+    "prod_ring1": "1.11.1",
+    "prod_ring2": "1.11.1"
   },
   "azure-service-operator": {
     "at_ring1": "1.4.3",
