@@ -47,13 +47,14 @@ data:
       ],
       "health_check_ipv4": [
         "https://discore-at23-m22d0r-apim.azure-api.net/dialogporten/health",
-        "https://info.at22.altinn.cloud/health"
+        "https://info.at22.altinn.cloud/health",
+        "https://info.altinn.no/health"
       ],
       "health_check_ipv6": [],
       "metadata": {
         "description": "Extra targets for Altinn monitoring that are not auto-generated from organizations",
         "maintained_by": "Altinn Platform Team",
-        "last_updated": "2026-07-02",
+        "last_updated": "2026-07-29",
         "version": "1.2",
         "notes": [
           "These targets are manually maintained and will be preserved during automatic updates",
