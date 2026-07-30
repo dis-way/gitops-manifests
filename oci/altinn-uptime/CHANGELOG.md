@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.11.1...oci-altinn-uptime-v1.12.0) (2026-07-30)
+
+
+### Features
+
+* **altinn-uptime:** add info.altinn.no/health deep health-check probe ([#1349](https://github.com/dis-way/gitops-manifests/issues/1349)) ([c544f91](https://github.com/dis-way/gitops-manifests/commit/c544f91dda16a7ac7ee72911af673fbd5dddd005))
+
 ## [1.11.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.11.0...oci-altinn-uptime-v1.11.1) (2026-07-28)
 
 
