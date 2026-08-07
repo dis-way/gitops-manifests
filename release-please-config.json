@@ -52,6 +52,10 @@
       "release-type": "simple",
       "component": "oci-external-secrets-operator"
     },
+    "oci/flux-dispatch": {
+      "release-type": "simple",
+      "component": "oci-flux-dispatch"
+    },
     "oci/grafana-operator": {
       "release-type": "simple",
       "component": "oci-grafana-operator"
