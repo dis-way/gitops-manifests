@@ -7,13 +7,21 @@ spec:
   force: false
   interval: 5m0s
   path: ./
+  postBuild:
+    substitute:
+      FLUX_DISPATCH_WORKLOAD_IDENTITY_CLIENT_ID: ${FLUX_DISPATCH_WORKLOAD_IDENTITY_CLIENT_ID}
+      GITHUB_APP_ID: ${GITHUB_APP_ID}
+      GITHUB_INSTALLATION_ID: ${GITHUB_INSTALLATION_ID}
+      KV_URI: ${KV_URI}
+      KV_SECRET_NAME_GITHUB_APP_KEY: ${KV_SECRET_NAME_GITHUB_APP_KEY}
+      KV_SECRET_NAME_HMAC_TOKEN: ${KV_SECRET_NAME_HMAC_TOKEN}
   prune: true
   retryInterval: 5m0s
   images:
     - name: controller
       newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/flux-dispatch
       # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/flux-dispatch versioning=semver
-      newTag: v0.1.0
+      newTag: v1.0.0
   sourceRef:
     kind: OCIRepository
     name: flux-dispatch-config
