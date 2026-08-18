@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.14.0...oci-dis-tls-cert-v2.15.0) (2026-08-18)
+
+
+### Features
+
+* **dis-tls-cert:** Add TLS certificates for platform and wildcard ([#1354](https://github.com/dis-way/gitops-manifests/issues/1354)) ([2d0aebe](https://github.com/dis-way/gitops-manifests/commit/2d0aebec386d9615d075254d6d4804becf19c5f5))
+
 ## [2.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.13.0...oci-dis-tls-cert-v2.14.0) (2026-07-10)
 
 
