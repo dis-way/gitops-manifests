@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dis-tls-cert
+
+resources:
+  - slack-webhook.yaml
+  - cronjob.yaml
+
+configMapGenerator:
+  - name: dis-tls-cert-check-cert-expiry
+    files:
+      - check_cert_expiry.sh=scripts/check_cert_expiry.sh
+    options:
+      labels:
+        app.kubernetes.io/name: dis-tls-cert-expiry-notify
+        app.kubernetes.io/component: config
+      annotations:
+        # The script uses shell variables ($VAULT_URL, $TEXT, ...). Flux postBuild
+        # substitution would blank every one of them that is not a Flux var, so
+        # substitution must be disabled for this ConfigMap.
+        kustomize.toolkit.fluxcd.io/substitute: disabled

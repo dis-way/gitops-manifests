@@ -1,5 +1,101 @@
 # dis-tls-cert
 
+Issues TLS certificates with cert-manager and pushes them to the `dis-tls-cert` Azure Key Vault for Azure services to consume.
+
+## Layers
+
+| Path | Description |
+|------|-------------|
+| `base` | Namespace, workload identity ServiceAccount, `SecretStore`, EAB secrets, `ClusterIssuer`s, and `expiry-notify` |
+| `certs` | One `Certificate` + `PushSecret` pair per domain |
+| `expiry-notify` | Weekly `CronJob` that posts Key Vault certificates nearing expiry to Slack — pulled in by `base` |
+
+## Variables
+
+| Variable | Default | Required | Description |
+|----------|---------|----------|-------------|
+| _none_ | — | No | No layer uses Flux variable substitution. The `expiry-notify` layer reads its only secret from Key Vault with an `ExternalSecret`, and its tunables (`WARN_DAYS`, `NOTIFY_OK`) are plain env values on the CronJob |
+
+## Expiry notifications
+
+`expiry-notify` reads certificate *metadata* from the Key Vault every Monday and reports anything expiring inside
+`WARN_DAYS`, anything already expired, and any certificate with no expiry attribute set. It posts nothing when
+everything is healthy unless `NOTIFY_OK` is set to `true` on the CronJob.
+
+It reads the vault rather than the cluster's `Certificate` resources on purpose: the vault is what Azure services
+actually consume, so this also catches a certificate whose `PushSecret` stopped working, and certificates in the vault
+that no `Certificate` resource manages.
+
+### Slack webhook
+
+The webhook URL lives in the same Key Vault and is synced into the cluster by an `ExternalSecret` through the existing
+`dis-tls-cert-store`, so it never passes through git or Flux substitution vars. The identity already holds Key Vault
+Secrets Officer, so no new role assignment is needed — but the secret has to be created once by hand.
+
+Write it through a protected temporary file rather than `--value`, so the URL stays out of shell history and the
+process list:
+
+```sh
+umask 077 && TMP=$(mktemp)
+printf '%s' "https://hooks.slack.com/services/..." > "$TMP"
+az keyvault secret set \
+  --vault-name dis-tls-cert \
+  --name cert-expiry-slack-webhook-url \
+  --file "$TMP"
+rm -f "$TMP"
+```
+
+`printf` without a trailing newline matters — a newline inside the URL would break the POST.
+
+The job mounts it as `SLACK_WEBHOOK_URL` from the `dis-tls-cert-expiry-slack-webhook` Secret. If that Secret is missing
+the pod never starts, which is one of the failures the job cannot report itself — see below.
+
+### When the check itself fails
+
+Once the script is running, a failure posts a `:x:` message to the same channel with the reason attached, so a broken
+check is not mistaken for a clean bill of health. Covered: missing workload identity environment, `az login` failure,
+a denied or unreachable vault, and a vault that returns zero certificates.
+
+Anything that stops the script from starting, or that breaks the channel itself, cannot be self-reported:
+
+- **The webhook Secret is missing or has not synced.** `secretKeyRef` blocks the pod from starting
+  (`CreateContainerConfigError`), so no code of ours runs. The Job is marked failed in Kubernetes, but nothing reaches
+  Slack.
+- **Slack is unreachable or the webhook was revoked.** The script logs `could not report the failure to Slack either`
+  and exits non-zero, but nothing reaches the channel. Rotating the webhook without updating the vault secret lands
+  here.
+- **The job never runs at all** — not deployed, suspended, deleted, image pull failure, or unschedulable. Again, no
+  code of ours executes.
+
+Catching those needs a watcher outside this job, e.g. a Grafana alert on
+`kube_cronjob_status_last_successful_time{cronjob="dis-tls-cert-expiry-notify"}` going stale (kube-state-metrics is
+scraped into Azure Managed Prometheus on the admin clusters). Until that exists, a healthy week and a dead job look
+the same in Slack — setting `NOTIFY_OK` to `"true"` on the CronJob at least turns silence into a weekly all-clear.
+
+The job reuses the `dis-tls-cert-kv-uami` ServiceAccount, so it needs no new Azure role assignment — but a workload
+identity federated credential only exists for `admin-prod-aks`, and `base` is only deployed there. If `base` is ever
+rolled out to another cluster, add a federated credential for
+`system:serviceaccount:dis-tls-cert:dis-tls-cert-kv-uami` on that cluster's OIDC issuer first, or the job will fail
+every week — and since failures are reported to Slack, it will say so in the channel.
+
+The default of 21 days is deliberate: cert-manager renews 30 days before expiry, so a 30-day threshold would fire on
+every certificate the moment renewal comes due. 21 days leaves room for renewal plus the hourly `PushSecret` refresh,
+while still giving three weeks of warning.
+
+To run it ad hoc without posting to Slack, inject `DRY_RUN=true` before the Job is created — `create --from=cronjob`
+inherits the CronJob's env, where `DRY_RUN` is unset and therefore `false`, so a plain `create` **does** post:
+
+```sh
+kubectl -n dis-tls-cert create job --from=cronjob/dis-tls-cert-expiry-notify expiry-check-manual \
+  --dry-run=client -o yaml \
+  | kubectl set env --local -f - DRY_RUN=true -o yaml \
+  | kubectl apply -f -
+kubectl -n dis-tls-cert logs job/expiry-check-manual
+```
+
+The log then ends with `DRY_RUN=true, not posting to Slack. Message would be:` followed by the message. Drop the
+`set env` step when you want to verify the Slack path itself.
+
 ## Add a certificate
 
 ### Prerequisites

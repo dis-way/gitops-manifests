@@ -1,0 +1,100 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dis-tls-cert-expiry-notify
+  namespace: dis-tls-cert
+  labels:
+    app.kubernetes.io/name: dis-tls-cert-expiry-notify
+spec:
+  schedule: "17 7 * * 1" # Mondays 07:17 UTC
+  # Explicit, so the schedule does not depend on the kube-controller-manager's
+  # local time zone.
+  timeZone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 300
+      template:
+        metadata:
+          annotations:
+            linkerd.io/inject: disabled
+            cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+          labels:
+            azure.workload.identity/use: "true"
+        spec:
+          # Reuses the identity that already pushes certificates to the vault,
+          # which holds Key Vault Certificates Officer (includes list/get).
+          serviceAccountName: dis-tls-cert-kv-uami
+          automountServiceAccountToken: false
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            fsGroup: 65534
+          containers:
+            - name: check-cert-expiry
+              # Not mirrored through altinncr: there is no mcr.microsoft.com cache
+              # rule on the registry, and the cluster already pulls mcr directly.
+              # renovate: datasource=docker depName=mcr.microsoft.com/azure-cli
+              image: mcr.microsoft.com/azure-cli:2.89.1
+              command:
+                - /bin/bash
+                - /scripts/check_cert_expiry.sh
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 65534
+              env:
+                - name: VAULT_NAME
+                  value: "dis-tls-cert"
+                # Used in the troubleshooting hints in the Slack message.
+                - name: NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: CRONJOB_NAME
+                  value: "dis-tls-cert-expiry-notify"
+                # az needs a writable config dir alongside readOnlyRootFilesystem.
+                - name: AZURE_CONFIG_DIR
+                  value: "/tmp/.azure"
+                - name: AZURE_CORE_COLLECT_TELEMETRY
+                  value: "false"
+                # cert-manager renews 30 days before expiry, so a threshold of 30
+                # would fire on every certificate the moment renewal comes due.
+                # 21 days leaves room for renewal plus the 1h PushSecret refresh.
+                - name: WARN_DAYS
+                  value: "21"
+                # Set to "true" to also post an all-clear, so silence stays meaningful.
+                - name: NOTIFY_OK
+                  value: "false"
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: dis-tls-cert-expiry-slack-webhook
+                      key: SLACK_WEBHOOK_URL
+              volumeMounts:
+                - name: script
+                  mountPath: /scripts
+                - name: workspace
+                  mountPath: /tmp
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+          volumes:
+            - name: script
+              configMap:
+                name: dis-tls-cert-check-cert-expiry
+                defaultMode: 0755
+            - name: workspace
+              emptyDir: {}
