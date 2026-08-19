@@ -12,8 +12,9 @@ Issues TLS certificates with cert-manager and pushes them to the `dis-tls-cert` 
 
 ## Variables
 
-None. No layer in this package uses Flux variable substitution — the only secret the
-`expiry-notify` layer needs is read from Key Vault with an `ExternalSecret`.
+| Variable | Default | Required | Description |
+|----------|---------|----------|-------------|
+| _none_ | — | No | No layer uses Flux variable substitution. The `expiry-notify` layer reads its only secret from Key Vault with an `ExternalSecret`, and its tunables (`WARN_DAYS`, `NOTIFY_OK`) are plain env values on the CronJob |
 
 ## Expiry notifications
 
@@ -29,31 +30,42 @@ that no `Certificate` resource manages.
 
 The webhook URL lives in the same Key Vault and is synced into the cluster by an `ExternalSecret` through the existing
 `dis-tls-cert-store`, so it never passes through git or Flux substitution vars. The identity already holds Key Vault
-Secrets Officer, so no new role assignment is needed — but the secret has to be created once by hand:
+Secrets Officer, so no new role assignment is needed — but the secret has to be created once by hand.
+
+Write it through a protected temporary file rather than `--value`, so the URL stays out of shell history and the
+process list:
 
 ```sh
+umask 077 && TMP=$(mktemp)
+printf '%s' "https://hooks.slack.com/services/..." > "$TMP"
 az keyvault secret set \
   --vault-name dis-tls-cert \
   --name cert-expiry-slack-webhook-url \
-  --value "https://hooks.slack.com/services/..."
+  --file "$TMP"
+rm -f "$TMP"
 ```
 
-The job mounts it as `SLACK_WEBHOOK_URL` from the `dis-tls-cert-expiry-slack-webhook` Secret. If the `ExternalSecret`
-has not synced, the pod will not start and the CronJob reports a failure — which is the intended behaviour.
+`printf` without a trailing newline matters — a newline inside the URL would break the POST.
+
+The job mounts it as `SLACK_WEBHOOK_URL` from the `dis-tls-cert-expiry-slack-webhook` Secret. If that Secret is missing
+the pod never starts, which is one of the failures the job cannot report itself — see below.
 
 ### When the check itself fails
 
-A failed check posts a `:x:` message to the same channel with the reason attached, so a broken check is not mistaken
-for a clean bill of health. Covered: missing workload identity environment, `az login` failure, a denied or
-unreachable vault, and a vault that returns zero certificates.
+Once the script is running, a failure posts a `:x:` message to the same channel with the reason attached, so a broken
+check is not mistaken for a clean bill of health. Covered: missing workload identity environment, `az login` failure,
+a denied or unreachable vault, and a vault that returns zero certificates.
 
-Two failures cannot be self-reported, by construction:
+Anything that stops the script from starting, or that breaks the channel itself, cannot be self-reported:
 
+- **The webhook Secret is missing or has not synced.** `secretKeyRef` blocks the pod from starting
+  (`CreateContainerConfigError`), so no code of ours runs. The Job is marked failed in Kubernetes, but nothing reaches
+  Slack.
 - **Slack is unreachable or the webhook was revoked.** The script logs `could not report the failure to Slack either`
   and exits non-zero, but nothing reaches the channel. Rotating the webhook without updating the vault secret lands
   here.
-- **The job never runs at all** — not deployed, suspended, deleted, image pull failure, or unschedulable. No code of
-  ours executes, so nothing can report.
+- **The job never runs at all** — not deployed, suspended, deleted, image pull failure, or unschedulable. Again, no
+  code of ours executes.
 
 Catching those needs a watcher outside this job, e.g. a Grafana alert on
 `kube_cronjob_status_last_successful_time{cronjob="dis-tls-cert-expiry-notify"}` going stale (kube-state-metrics is
@@ -70,12 +82,19 @@ The default of 21 days is deliberate: cert-manager renews 30 days before expiry,
 every certificate the moment renewal comes due. 21 days leaves room for renewal plus the hourly `PushSecret` refresh,
 while still giving three weeks of warning.
 
-Verify the message without posting it:
+To run it ad hoc without posting to Slack, inject `DRY_RUN=true` before the Job is created — `create --from=cronjob`
+inherits the CronJob's env, where `DRY_RUN` is unset and therefore `false`, so a plain `create` **does** post:
 
 ```sh
-kubectl -n dis-tls-cert create job --from=cronjob/dis-tls-cert-expiry-notify expiry-check-manual
+kubectl -n dis-tls-cert create job --from=cronjob/dis-tls-cert-expiry-notify expiry-check-manual \
+  --dry-run=client -o yaml \
+  | kubectl set env --local -f - DRY_RUN=true -o yaml \
+  | kubectl apply -f -
 kubectl -n dis-tls-cert logs job/expiry-check-manual
 ```
+
+The log then ends with `DRY_RUN=true, not posting to Slack. Message would be:` followed by the message. Drop the
+`set env` step when you want to verify the Slack path itself.
 
 ## Add a certificate
 

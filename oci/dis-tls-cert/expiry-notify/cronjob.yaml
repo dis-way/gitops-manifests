@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/name: dis-tls-cert-expiry-notify
 spec:
   schedule: "17 7 * * 1" # Mondays 07:17 UTC
+  # Explicit, so the schedule does not depend on the kube-controller-manager's
+  # local time zone.
+  timeZone: "Etc/UTC"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
