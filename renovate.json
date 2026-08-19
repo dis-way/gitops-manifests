@@ -13,6 +13,15 @@
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*newTag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*tag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^oci\\/dis-tls-cert\\/expiry-notify\\/cronjob\\.yaml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+      ]
     }
   ],
   "packageRules": [
