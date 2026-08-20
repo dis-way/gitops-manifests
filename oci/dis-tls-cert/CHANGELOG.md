@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.16.0...oci-dis-tls-cert-v2.17.0) (2026-08-20)
+
+
+### Features
+
+* **dis-tls-cert:** add weekly certificate expiry report to Slack ([#1384](https://github.com/dis-way/gitops-manifests/issues/1384)) ([2d8b805](https://github.com/dis-way/gitops-manifests/commit/2d8b805b35b272eceeae660e616b0fe041624d1f))
+
 ## [2.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.15.0...oci-dis-tls-cert-v2.16.0) (2026-08-19)
 
 
