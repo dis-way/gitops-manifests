@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.3...oci-kube-state-metrics-v1.2.4) (2026-08-20)
+
+
+### Bug Fixes
+
+* **kube-state-metrics:** raise memory limit to 256Mi ([#1386](https://github.com/dis-way/gitops-manifests/issues/1386)) ([fd3a4e5](https://github.com/dis-way/gitops-manifests/commit/fd3a4e5e3945638decd634e0a2e011c500c05a68))
+
 ## [1.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.2...oci-kube-state-metrics-v1.2.3) (2026-08-19)
 
 
