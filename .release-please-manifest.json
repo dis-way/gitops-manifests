@@ -13,7 +13,7 @@
   "oci/dis-tls-cert": "2.17.0",
   "oci/external-secrets-operator": "1.6.9",
   "oci/grafana-operator": "2.5.0",
-  "oci/headplane": "1.1.0",
+  "oci/headplane": "1.2.0",
   "oci/headscale": "1.10.0",
   "oci/kro": "0.2.0",
   "oci/kube-state-metrics": "1.2.5",
