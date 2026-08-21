@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.0...oci-headscale-v2.0.1) (2026-08-21)
+
+
+### Bug Fixes
+
+* **headscale:** migrate config keys removed in 0.29 ([#1414](https://github.com/dis-way/gitops-manifests/issues/1414)) ([694b15c](https://github.com/dis-way/gitops-manifests/commit/694b15c56b1b06294874450810fda64a78c00299))
+
 ## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.10.0...oci-headscale-v2.0.0) (2026-08-21)
 
 
