@@ -17,7 +17,35 @@ Fragments (`#...`) are never sent to the server and are not part of the redirect
 ## Resources
 
 - Traefik Middleware: `redirect-grafana-fqdn-to-azure-grafana`
-- Traefik IngressRoute: `redirect-grafana-fqdn-to-azure-grafana` (entryPoint: `https`, service: `noop@internal`)
+- Traefik IngressRoute: `redirect-grafana-fqdn-to-azure-grafana` (entryPoint: `https`, service: `noop@internal`, TLS secret: `redirect-grafana-fqdn-to-azure-grafana-tls`)
+- cert-manager Certificate (`post-deploy`): `redirect-grafana-fqdn-to-azure-grafana-tls` in namespace `traefik`, issued by the `letsencrypt-production` ClusterIssuer for `${REDIRECT_GRAFANA_FROM_FQDN}`
+
+## Layers
+
+| Path | Description |
+|------|-------------|
+| `.` | Traefik Middleware and IngressRoute performing the redirect |
+| `post-deploy` | cert-manager Certificate for the source FQDN |
+
+Deploy `post-deploy` from a separate Flux `Kustomization` with `wait: false` and `dependsOn` the main one, so cert-manager can issue the certificate asynchronously without blocking health checks. Until the certificate is issued, Traefik serves the default certificate from the `tlsStore` for this host.
+
+### DNS prerequisite
+
+The `letsencrypt-production` ClusterIssuer comes from the `certm-lets-encrypt-dns-issuer` config, which solves DNS-01 against a single Azure DNS zone (`AZURE_DNS_ZONE_NAME` — the cluster's delegated child zone, e.g. `test.admin.altinn.cloud`) and leaves `cnameStrategy` unset.
+
+When `${REDIRECT_GRAFANA_FROM_FQDN}` lives outside that zone, cert-manager cannot trim the zone suffix off `_acme-challenge.${REDIRECT_GRAFANA_FROM_FQDN}`, so it writes the challenge TXT record at the full name *inside* the child zone. Delegate to it with a CNAME in the source FQDN's own zone before deploying `post-deploy`:
+
+```
+_acme-challenge.<REDIRECT_GRAFANA_FROM_FQDN>  CNAME  _acme-challenge.<REDIRECT_GRAFANA_FROM_FQDN>.<AZURE_DNS_ZONE_NAME>
+```
+
+For example, with `REDIRECT_GRAFANA_FROM_FQDN=grafana.altinn.cloud` and a `test.admin.altinn.cloud` child zone, add this to the `altinn.cloud` zone:
+
+```
+_acme-challenge.grafana  CNAME  _acme-challenge.grafana.altinn.cloud.test.admin.altinn.cloud
+```
+
+This mirrors how `headscale.altinn.cloud` and `headplane.altinn.cloud` are issued from the `admin-prod` cluster.
 
 ## Test
 
