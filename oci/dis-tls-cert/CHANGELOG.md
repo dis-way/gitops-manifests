@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.16.0...oci-dis-tls-cert-v2.17.0) (2026-08-20)
+## [2.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.16.0...oci-dis-tls-cert-v2.17.0) (2026-08-21)
 
 
 ### Features
