@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.10.0...oci-headscale-v2.0.0) (2026-08-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **headscale:** headscale 0.29 migrates the sqlite database and blocks downgrades to 0.28, so a rollback requires restoring the PVC rather than reverting the image tag. The ACL policy is in database mode and must be reviewed before rollout: `*` now resolves to the CGNAT and ULA ranges instead of all IPs, tags/hosts/IPs are rejected as sources for `autogroup:self` destinations, and `proto:icmp` covers only ICMPv4. MagicDNS names change for any node whose label used the old random-suffix form. Minimum Tailscale client version is 1.80.0.
+
+### Features
+
+* **headscale:** upgrade to headscale 0.29.3 ([#1403](https://github.com/dis-way/gitops-manifests/issues/1403)) ([dfc44f5](https://github.com/dis-way/gitops-manifests/commit/dfc44f52af9ade8bc37379ccba631b5bbe784da9))
+
 ## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.9.0...oci-headscale-v1.10.0) (2026-05-08)
 
 
