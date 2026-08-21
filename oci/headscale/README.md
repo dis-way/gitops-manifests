@@ -12,6 +12,8 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 | `HEADSCALE_APP_CLIENT_ID` | - | Yes | Microsoft Entra OIDC client ID |
 | `HEADSCALE_APP_CLIENT_SECRET` | - | Yes | Microsoft Entra OIDC client secret — source from a secret store, not plain substitution |
 | `HEADSCALE_APP_ALLOWED_GROUP` | - | Yes | Microsoft Entra group allowed for access |
+| `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | Pod network IPv4 CIDR, trusted for forwarded client-IP headers |
+| `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | Pod network IPv6 CIDR, trusted for forwarded client-IP headers |
 
 ## Extra DNS Records
 
