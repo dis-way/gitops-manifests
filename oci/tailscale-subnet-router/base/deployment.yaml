@@ -29,7 +29,7 @@ spec:
       containers:
         - name: tailscale
           # renovate: datasource=docker depName=tailscale/tailscale
-          image: altinncr.azurecr.io/docker.io/tailscale/tailscale:v1.94.1
+          image: altinncr.azurecr.io/docker.io/tailscale/tailscale:v1.102.2
           env:
             - name: TS_AUTHKEY
               valueFrom:
