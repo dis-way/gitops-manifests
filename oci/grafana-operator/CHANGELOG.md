@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.4.0...oci-grafana-operator-v2.5.0) (2026-08-21)
+
+
+### Features
+
+* Add TLS certificate to grafana FQDN redirect ([#1398](https://github.com/dis-way/gitops-manifests/issues/1398)) ([8f8d0d9](https://github.com/dis-way/gitops-manifests/commit/8f8d0d9cf5cbf775781f7b1486f2f731f1e7ddc1))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.3.1...oci-grafana-operator-v2.4.0) (2026-06-19)
 
 
