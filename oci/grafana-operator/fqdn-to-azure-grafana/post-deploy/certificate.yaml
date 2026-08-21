@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: redirect-grafana-fqdn-to-azure-grafana-tls
+  namespace: traefik
+spec:
+  secretName: redirect-grafana-fqdn-to-azure-grafana-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  dnsNames:
+    - "${REDIRECT_GRAFANA_FROM_FQDN}"
