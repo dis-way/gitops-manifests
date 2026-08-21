@@ -25,7 +25,7 @@ spec:
       containers:
         - name: headscale
           # renovate: datasource=docker depName=juanfont/headscale registryUrl=https://ghcr.io
-          image: altinncr.azurecr.io/ghcr.io/juanfont/headscale:0.28.0
+          image: altinncr.azurecr.io/ghcr.io/juanfont/headscale:0.29.3
           args: ["serve"]
           ports:
             - name: http

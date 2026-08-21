@@ -26,8 +26,8 @@ metadata:
 data:
   extra-records.json: |
     [
-      {"name": "grafana.ts.altinn.cloud", "type": "A", "value": "100.70.0.3"},
-      {"name": "prometheus.ts.altinn.cloud", "type": "A", "value": "100.70.0.4"}
+      {"name": "grafana.ts.altinn.cloud", "type": "A", "value": "100.64.0.3"},
+      {"name": "prometheus.ts.altinn.cloud", "type": "A", "value": "100.64.0.4"}
     ]
 ```
 
