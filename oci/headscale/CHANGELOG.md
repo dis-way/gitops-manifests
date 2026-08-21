@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.1...oci-headscale-v2.1.0) (2026-08-21)
+
+
+### Features
+
+* **headscale:** trust pod CIDRs for forwarded client IP headers ([#1418](https://github.com/dis-way/gitops-manifests/issues/1418)) ([7282af2](https://github.com/dis-way/gitops-manifests/commit/7282af244c1b3bf6062fd3177a25d2478c56c406))
+
 ## [2.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.0...oci-headscale-v2.0.1) (2026-08-21)
 
 
