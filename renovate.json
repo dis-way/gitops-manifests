@@ -16,12 +16,14 @@
     },
     {
       "customType": "regex",
+      "description": "Container images annotated with a renovate comment, including those pulled through the altinncr.azurecr.io mirror",
       "managerFilePatterns": [
-        "/^oci\\/dis-tls-cert\\/expiry-notify\\/cronjob\\.yaml$/"
+        "/^oci\\/.+\\.ya?ml$/"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
-      ]
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
   "packageRules": [
@@ -193,6 +195,20 @@
       ],
       "groupName": "kyverno helm charts",
       "groupSlug": "kyverno-helm"
+    },
+    {
+      "description": "Headscale enforces a strict upgrade path and cannot skip minor versions",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "juanfont/headscale",
+        "ghcr.io/juanfont/headscale"
+      ],
+      "prBodyNotes": [
+        "⚠️ **Headscale blocks skipping minor versions** (e.g. 0.28 → 0.30) and blocks downgrades. Upgrade one minor version at a time.",
+        "Review the BREAKING section of https://github.com/juanfont/headscale/releases for `config.yaml` keys and ACL policy changes before merging."
+      ]
     }
   ]
 }
