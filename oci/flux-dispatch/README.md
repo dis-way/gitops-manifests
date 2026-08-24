@@ -13,6 +13,7 @@ triggers GitHub Actions workflows in product repositories via `repository_dispat
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
+| `DRY_RUN` | `false` | No | Set `true` for the initial rollout so the service logs the dispatches it would send without calling GitHub; set `false` once the GitHub App is provisioned |
 | `FLUX_DISPATCH_WORKLOAD_IDENTITY_CLIENT_ID` | - | Yes | Client ID of the Azure Workload Identity used by Flux Dispatch |
 | `GITHUB_APP_ID` | - | Yes | App ID of the `flux-dispatch` GitHub App registration |
 | `GITHUB_INSTALLATION_ID` | - | Yes | Installation ID of the `flux-dispatch` GitHub App registration |
