@@ -32,6 +32,7 @@ spec:
   path: ./
   postBuild:
     substitute:
+      DRY_RUN: "true"   # initial rollout: log intended dispatches, don't call GitHub
       FLUX_DISPATCH_WORKLOAD_IDENTITY_CLIENT_ID: "00000000-0000-0000-0000-000000000000"
       GITHUB_APP_ID: "000000"
       GITHUB_INSTALLATION_ID: "00000000"
