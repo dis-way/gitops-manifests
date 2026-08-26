@@ -1,6 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ddlabs.apps.tt02.altinn.no.yaml
+  - ddlabs.apps.tt02.altinn.no-push.yaml
   - star.altinn.cloud.yaml
   - star.altinn.cloud-push.yaml
   - platform.yt01.altinn.cloud.yaml
