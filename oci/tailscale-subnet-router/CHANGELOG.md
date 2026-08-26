@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.1...oci-tailscale-subnet-router-v1.2.2) (2026-08-26)
+
+
+### Dependency Updates
+
+* update tailscale/tailscale docker tag to v1.102.3 ([#1427](https://github.com/dis-way/gitops-manifests/issues/1427)) ([08712ff](https://github.com/dis-way/gitops-manifests/commit/08712ff821094ef5bf2fc5fadbbb25cb8acbdc18))
+
 ## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.0...oci-tailscale-subnet-router-v1.2.1) (2026-08-21)
 
 
