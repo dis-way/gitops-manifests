@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.17.0...oci-dis-tls-cert-v2.18.0) (2026-08-26)
+
+
+### Features
+
+* **dis-tls-cert:** Add TLS certificate for ddlabs.apps.tt02.altinn.no ([#1430](https://github.com/dis-way/gitops-manifests/issues/1430)) ([6771f42](https://github.com/dis-way/gitops-manifests/commit/6771f4238d4bc0edadd4576aa047acb06a7cbdd6))
+
 ## [2.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.16.0...oci-dis-tls-cert-v2.17.0) (2026-08-21)
 
 
