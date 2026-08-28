@@ -1,0 +1,42 @@
+apiVersion: kyverno.io/v2
+kind: PolicyException
+metadata:
+  name: allow-kube-system
+  namespace: kyverno
+spec:
+  exceptions:
+  - policyName: disallow-capabilities
+    ruleNames:
+    - adding-capabilities
+    - autogen-adding-capabilities
+  - policyName: disallow-host-namespaces
+    ruleNames:
+    - host-namespaces
+    - autogen-host-namespaces
+  - policyName: disallow-host-path
+    ruleNames:
+    - host-path
+    - autogen-host-path
+  - policyName: disallow-host-ports
+    ruleNames:
+    - host-ports-none
+    - autogen-host-ports-none
+  - policyName: disallow-privileged-containers
+    ruleNames:
+    - privileged-containers
+    - autogen-privileged-containers
+  - policyName: disallow-selinux
+    ruleNames:
+    - selinux-type
+    - autogen-selinux-type
+  match:
+    any:
+    - resources:
+        kinds:
+        - Pod
+        - DaemonSet
+        - Deployment
+        - ReplicaSet
+        - StatefulSet
+        namespaces:
+        - kube-system
