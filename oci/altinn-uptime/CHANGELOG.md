@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.12.0...oci-altinn-uptime-v1.13.0) (2026-08-31)
+
+
+### Features
+
+* **altinn-uptime:** add at23 and tt02 info-portal health-check probes ([#1442](https://github.com/dis-way/gitops-manifests/issues/1442)) ([aae3d0e](https://github.com/dis-way/gitops-manifests/commit/aae3d0e18b17c7cd6ab871638f039ce2e317c26d))
+
 ## [1.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.11.1...oci-altinn-uptime-v1.12.0) (2026-07-30)
 
 
