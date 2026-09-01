@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.2...oci-tailscale-subnet-router-v1.2.3) (2026-09-01)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** add missing get verb to events RBAC rule ([#1440](https://github.com/dis-way/gitops-manifests/issues/1440)) ([3e451c0](https://github.com/dis-way/gitops-manifests/commit/3e451c0d0a48ab3aa423e1574e96ad32d39f4452))
+
 ## [1.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.1...oci-tailscale-subnet-router-v1.2.2) (2026-08-26)
 
 
