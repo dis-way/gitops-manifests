@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.9.0...oci-blackbox-exporter-v0.9.1) (2026-09-04)
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.17.2 ([#1364](https://github.com/dis-way/gitops-manifests/issues/1364)) ([08c420f](https://github.com/dis-way/gitops-manifests/commit/08c420fffed1989d7e231154a0d1a9622191aabb))
+
 ## [0.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.8.1...oci-blackbox-exporter-v0.9.0) (2026-07-21)
 
 
