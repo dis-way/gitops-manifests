@@ -20,7 +20,9 @@ data:
         "https://at22.dis-core.altinn.cloud/whoami",
         "https://at23.dis-core.altinn.cloud/whoami",
         "https://tt02.dis-core.altinn.cloud/whoami",
-        "https://prod.dis-core.altinn.cloud/whoami"
+        "https://prod.dis-core.altinn.cloud/whoami",
+        "https://ki.test.norge.no",
+        "https://ki.norge.no"
       ],
       "ipv6": [
         "https://altinncdn.no/orgs/altinn-orgs.json",
@@ -30,7 +32,9 @@ data:
         "https://at22.dis-core.altinn.cloud/whoami",
         "https://at23.dis-core.altinn.cloud/whoami",
         "https://tt02.dis-core.altinn.cloud/whoami",
-        "https://prod.dis-core.altinn.cloud/whoami"
+        "https://prod.dis-core.altinn.cloud/whoami",
+        "https://ki.test.norge.no",
+        "https://ki.norge.no"
       ],
       "kuberneteswrapper_ipv4": [
         "https://platform.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
@@ -56,7 +60,7 @@ data:
       "metadata": {
         "description": "Extra targets for Altinn monitoring that are not auto-generated from organizations",
         "maintained_by": "Altinn Platform Team",
-        "last_updated": "2026-08-31",
+        "last_updated": "2026-09-04",
         "version": "1.2",
         "notes": [
           "These targets are manually maintained and will be preserved during automatic updates",
