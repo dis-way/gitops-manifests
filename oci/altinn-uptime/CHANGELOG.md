@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.13.0...oci-altinn-uptime-v1.14.0) (2026-09-06)
+
+
+### Features
+
+* **altinn-uptime:** add ki.norge.no and ki.test.norge.no uptime probes ([#1453](https://github.com/dis-way/gitops-manifests/issues/1453)) ([588573d](https://github.com/dis-way/gitops-manifests/commit/588573deec9a67288c61b1f88670a5ef936ef457))
+
 ## [1.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.12.0...oci-altinn-uptime-v1.13.0) (2026-08-31)
 
 
