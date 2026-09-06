@@ -24,12 +24,12 @@
     "prod_ring2": "1.4.3"
   },
   "blackbox-exporter": {
-    "at_ring1": "0.9.0",
-    "at_ring2": "0.9.0",
-    "tt_ring1": "0.9.0",
-    "tt_ring2": "0.9.0",
-    "prod_ring1": "0.9.0",
-    "prod_ring2": "0.9.0"
+    "at_ring1": "0.9.1",
+    "at_ring2": "0.9.1",
+    "tt_ring1": "0.9.1",
+    "tt_ring2": "0.9.1",
+    "prod_ring1": "0.9.1",
+    "prod_ring2": "0.9.1"
   },
   "cert-manager": {
     "at_ring1": "2.5.1",
