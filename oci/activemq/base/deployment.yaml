@@ -23,7 +23,7 @@ spec:
       containers:
         - name: activemq
           # renovate: datasource=docker depName=apache/activemq-classic
-          image: altinncr.azurecr.io/docker.io/apache/activemq-classic:5.19.2
+          image: altinncr.azurecr.io/docker.io/apache/activemq-classic:6.2.0
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
