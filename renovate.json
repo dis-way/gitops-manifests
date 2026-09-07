@@ -164,6 +164,25 @@
     },
     {
       "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/valkey-io/valkey-helm/valkey-operator"
+      ],
+      "groupName": "valkey-operator chart",
+      "groupSlug": "valkey-operator",
+      "dependencyDashboardApproval": true,
+      "prCreation": "not-pending",
+      "minimumReleaseAge": "3 days",
+      "prBodyNotes": [
+        "⚠️ **Upstream is alpha — verify before merging:**",
+        "1. Read https://github.com/valkey-io/valkey-operator/releases release notes",
+        "2. Check for schema changes to the `valkey.io/v1alpha1` CRDs (ValkeyCluster, ValkeyNode)",
+        "3. dis-cache-operator pins these API types — coordinate the Go dependency bump"
+      ]
+    },
+    {
+      "matchDatasources": [
         "helm"
       ],
       "matchPackageNames": [

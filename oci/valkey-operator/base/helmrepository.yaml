@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: valkey-operator
+  namespace: valkey-operator-system
+spec:
+  type: oci
+  interval: 1h
+  url: oci://ghcr.io/valkey-io/valkey-helm

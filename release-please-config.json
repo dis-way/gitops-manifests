@@ -112,6 +112,10 @@
       "release-type": "simple",
       "component": "oci-traefik"
     },
+    "oci/valkey-operator": {
+      "release-type": "simple",
+      "component": "oci-valkey-operator"
+    },
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"
