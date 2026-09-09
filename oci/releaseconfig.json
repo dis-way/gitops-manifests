@@ -16,12 +16,12 @@
     "prod_ring2": "1.14.0"
   },
   "azure-service-operator": {
-    "at_ring1": "1.4.3",
-    "at_ring2": "1.4.3",
-    "tt_ring1": "1.4.3",
-    "tt_ring2": "1.4.3",
-    "prod_ring1": "1.4.3",
-    "prod_ring2": "1.4.3"
+    "at_ring1": "1.4.4",
+    "at_ring2": "1.4.4",
+    "tt_ring1": "1.4.4",
+    "tt_ring2": "1.4.4",
+    "prod_ring1": "1.4.4",
+    "prod_ring2": "1.4.4"
   },
   "blackbox-exporter": {
     "at_ring1": "0.9.1",
