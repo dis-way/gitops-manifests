@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.4.0...oci-container-runtime-aks-config-v0.5.0) (2026-09-09)
+
+
+### Features
+
+* **container-runtime-aks-config:** disable retina network observability metrics ([#1469](https://github.com/dis-way/gitops-manifests/issues/1469)) ([55198a3](https://github.com/dis-way/gitops-manifests/commit/55198a3a3643d59b4af39fb0b89a8698e209ec4a))
+
 ## [0.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.3.0...oci-container-runtime-aks-config-v0.4.0) (2026-02-11)
 
 
