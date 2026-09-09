@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.10](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.9...oci-external-secrets-operator-v1.6.10) (2026-09-09)
+
+
+### Bug Fixes
+
+* external secret operator was unmeshed so no linker policies needed ([#1465](https://github.com/dis-way/gitops-manifests/issues/1465)) ([283bed9](https://github.com/dis-way/gitops-manifests/commit/283bed9e526df2ba4f49dd3714a0ce76e1f47cbb))
+
 ## [1.6.9](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.8...oci-external-secrets-operator-v1.6.9) (2026-08-18)
 
 
