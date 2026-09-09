@@ -161,8 +161,8 @@
   },
   "otel-operator": {
     "at_ring1": "1.4.6",
-    "at_ring2": "1.4.5",
-    "tt_ring1": "1.4.5",
+    "at_ring2": "1.4.6",
+    "tt_ring1": "1.4.6",
     "tt_ring2": "1.4.3",
     "prod_ring1": "1.4.5",
     "prod_ring2": "1.4.3"
