@@ -52,6 +52,10 @@
       "release-type": "simple",
       "component": "oci-external-secrets-operator"
     },
+    "oci/gateway-api": {
+      "release-type": "simple",
+      "component": "oci-gateway-api"
+    },
     "oci/grafana-operator": {
       "release-type": "simple",
       "component": "oci-grafana-operator"

@@ -7,7 +7,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^oci\\/(dis-apim|dis-identity|dis-pgsql|dis-vault|lakmus)\\/(base\\/)?(flux-kustomize|oci-repository)\\.yaml$/"
+        "/^oci\\/(dis-apim|dis-identity|dis-pgsql|dis-vault|gateway-api|lakmus)\\/(base\\/)?(flux-kustomize|git-repository|oci-repository)\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*newTag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
