@@ -16,6 +16,10 @@ patches:
         value:
           - "${LB_SOURCE_RANGE_APIM}"
           - "${LB_SOURCE_RANGE_CORRESPONDENCE}"
+          # altinn-uptime TLS probes (admin-test-aks egress)
+          - "20.251.123.48/28"
+          # altinn-uptime TLS probes (admin-prod-aks egress)
+          - "4.220.48.112/28"
       - op: replace
         path: /spec/values/metrics/prometheus
         value:
