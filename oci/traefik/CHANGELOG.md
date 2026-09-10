@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.1...oci-traefik-v3.11.0) (2026-09-10)
+
+
+### Features
+
+* **traefik:** update traefik chart to 41.5.0 ([#1488](https://github.com/dis-way/gitops-manifests/issues/1488)) ([1abe155](https://github.com/dis-way/gitops-manifests/commit/1abe1551e1723a8ce5e660466626048c21ccc265))
+
 ## [3.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.0...oci-traefik-v3.10.1) (2026-09-10)
 
 
