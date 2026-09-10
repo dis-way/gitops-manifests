@@ -2,8 +2,8 @@ name: Update Cloudflare IP Ranges
 
 on:
   schedule:
-    - cron: '0 6 * * 1'  # Mondays at 06:00 UTC
-    - cron: '0 6 * * 4'  # Thursdays at 06:00 UTC
+    - cron: '19 6 * * 1'  # Mondays at 06:19 UTC (off the hour — GitHub delays runs scheduled on the hour)
+    - cron: '19 6 * * 4'  # Thursdays at 06:19 UTC
   workflow_dispatch:
 
 permissions:
