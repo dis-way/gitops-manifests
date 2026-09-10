@@ -42,6 +42,7 @@ jobs:
     if: >-
       github.event_name == 'pull_request' &&
       !(github.event.pull_request.user.login == 'renovate[bot]' &&
+        github.actor == 'renovate[bot]' &&
         github.event.pull_request.head.repo.full_name == github.repository &&
         startsWith(github.head_ref, 'renovate/'))
     runs-on: ubuntu-latest
@@ -52,6 +53,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref }}
+          persist-credentials: false
 
       - name: Verify the vendored manifest matches upstream
         env:
@@ -68,9 +70,18 @@ jobs:
     # Gated on the Renovate bot identity, a same-repo head ref, and the branch
     # prefix. Renovate only rewrites the version pin, so the script executed
     # here is the base branch's own copy.
+    #
+    # github.actor is checked as well as pull_request.user.login: the author
+    # stays renovate[bot] after someone pushes to a Renovate branch, so without
+    # it a human push would be executed here with a write token. Such a push
+    # falls through to the verify job instead, which is what we want - it fails
+    # loudly rather than auto-committing on top of hand-pushed content.
+    # Neither login can be spoofed: '[' and ']' are not legal in a GitHub
+    # username, so that login belongs only to the App's Bot actor (id 29139614).
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.pull_request.user.login == 'renovate[bot]' &&
+       github.actor == 'renovate[bot]' &&
        github.event.pull_request.head.repo.full_name == github.repository &&
        startsWith(github.head_ref, 'renovate/'))
     runs-on: ubuntu-latest
@@ -81,6 +92,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.ref_name }}
+          persist-credentials: false
 
       - name: Re-vendor the manifest for the pinned version
         env:
@@ -98,6 +110,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           FILE: oci/envoy-gateway-crds/base/envoy-gateway-crds.yaml
           BRANCH: ${{ github.head_ref || github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
           if git diff --quiet; then
@@ -105,12 +118,27 @@ jobs:
             exit 0
           fi
 
+          # A manual dispatch runs against whatever branch was selected, which
+          # could be the default branch. Refuse: this step commits without
+          # review, so it must only ever touch a topic branch.
+          if [ "$BRANCH" = "$DEFAULT_BRANCH" ]; then
+            echo "::error::refusing to commit directly to $DEFAULT_BRANCH; run this on a topic branch and open a pull request" >&2
+            exit 1
+          fi
+
           # Commit via the Git Data API so GitHub signs the commit. The Contents
           # API is not usable here: its read path caps at 1 MB and this file is
           # 2.4 MB. A push made with GITHUB_TOKEN does not trigger further
           # workflow runs, so this cannot loop.
-          BLOB_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/blobs" \
-            -f content="$(base64 -w0 < "$FILE")" -f encoding=base64 --jq '.sha')
+          #
+          # The blob body goes through a file and --input, never through argv:
+          # the base64 of this file is ~3.4 MB and Linux caps a single argument
+          # at 128 KB (MAX_ARG_STRLEN), so passing it inline fails with
+          # "Argument list too long".
+          BODY="$(mktemp)"
+          trap 'rm -f "$BODY"' EXIT
+          python3 .github/workflows/scripts/git-blob-body.py "$FILE" > "$BODY"
+          BLOB_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/blobs" --input "$BODY" --jq '.sha')
           HEAD_SHA=$(git rev-parse HEAD)
           BASE_TREE=$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$HEAD_SHA" --jq '.tree.sha')
           TREE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/trees" \
