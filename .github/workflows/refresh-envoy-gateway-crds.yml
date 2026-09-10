@@ -1,54 +1,93 @@
-name: Refresh Envoy Gateway CRDs
+name: Envoy Gateway CRDs
 
-# The rendered Envoy Gateway CRDs are only published as a GitHub release asset,
-# so they are vendored into oci/envoy-gateway-crds/base/. Renovate bumps the
-# version pin in the update script; this workflow re-downloads the matching
-# asset and commits it onto the Renovate branch.
+# oci/envoy-gateway-crds/base/envoy-gateway-crds.yaml is vendored from the
+# envoyproxy/gateway release assets, because the rendered CRDs are published
+# nowhere else. Renovate rewrites only the version pin in the update script, so:
+#
+#   - on a Renovate branch, re-vendor the manifest for the new version and
+#     commit it onto the branch, and
+#   - on any other pull request, verify the committed manifest still matches
+#     upstream for the pinned version (this is what catches a hand-edit of the
+#     generated file, and an upstream release asset changing after the fact -
+#     GitHub release assets are mutable, unlike git tags).
+#
+# The script also verifies every download against the sha256 digest GitHub
+# publishes for the asset via api.github.com, and fails closed if that digest
+# cannot be read.
 
 on:
   pull_request:
     branches: [main]
     paths:
-      - oci/envoy-gateway-crds/scripts/update-crds.sh
+      - oci/envoy-gateway-crds/**
+      - .github/workflows/refresh-envoy-gateway-crds.yml
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: envoy-gateway-crds-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  refresh:
+  vendored-crds:
+    name: Vendored CRDs
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'renovate/')
+    permissions:
+      contents: write # only used to push the re-vendored manifest to renovate/** branches
+    env:
+      SCRIPT: ./oci/envoy-gateway-crds/scripts/update-crds.sh
+      # Refresh only on same-repo Renovate branches. Everything else - human
+      # pull requests, forks - is verify-only, so the check name is stable and
+      # no write token is ever used on an untrusted head ref.
+      REFRESH: ${{ github.event_name == 'workflow_dispatch' || (startsWith(github.head_ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository) }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Refresh vendored CRDs
-        run: ./oci/envoy-gateway-crds/scripts/update-crds.sh
+      - name: Refresh or verify the vendored manifest
+        env:
+          # Raises the api.github.com rate limit for the asset digest lookup.
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "$REFRESH" = "true" ]; then
+            "$SCRIPT"
+          else
+            "$SCRIPT" --check
+          fi
 
       # A GITHUB_TOKEN commit does not re-trigger pull_request workflows, so the
-      # kustomize-diff check will not re-run against the refreshed file. Validate
-      # here instead, using the same kustomize/kubectl fallback as
+      # kustomize-diff check will not re-run against the refreshed file.
+      # Validate here instead, using the same kustomize/kubectl fallback as
       # dis-way/actions/.github/workflows/kustomize-diff.yml.
       - name: Validate
         run: |
           set -euo pipefail
           build() {
             if command -v kustomize >/dev/null 2>&1; then
-              kustomize build "$1" > /dev/null
+              kustomize build "$1"
             elif command -v kubectl >/dev/null 2>&1; then
-              kubectl kustomize "$1" > /dev/null
+              kubectl kustomize "$1"
             else
               echo "Error: neither 'kustomize' nor 'kubectl' found in runner PATH." >&2
               exit 1
             fi
           }
-          build oci/envoy-gateway-crds
-          build oci/envoy-gateway-crds/multitenancy
+          for path in oci/envoy-gateway-crds oci/envoy-gateway-crds/multitenancy; do
+            crds=$(build "$path" | grep -c '^kind: CustomResourceDefinition$')
+            echo "$path -> ${crds} CRDs"
+            if [ "$crds" -ne 8 ]; then
+              echo "::error::expected 8 CRDs from ${path}, got ${crds}" >&2
+              exit 1
+            fi
+          done
 
       - name: Commit if changed
+        if: env.REFRESH == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           FILE: oci/envoy-gateway-crds/base/envoy-gateway-crds.yaml
@@ -60,9 +99,10 @@ jobs:
             exit 0
           fi
 
-          # Commit via the API so GitHub signs the commit, as in update-cloudflare-ips.yml.
-          # A push made with GITHUB_TOKEN does not trigger further workflow runs,
-          # so this cannot loop.
+          # Commit via the Git Data API so GitHub signs the commit. The Contents
+          # API is not usable here: its read path caps at 1 MB and this file is
+          # 2.4 MB. A push made with GITHUB_TOKEN does not trigger further
+          # workflow runs, so this cannot loop.
           BLOB_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/blobs" \
             -f content="$(base64 -w0 < "$FILE")" -f encoding=base64 --jq '.sha')
           HEAD_SHA=$(git rev-parse HEAD)
