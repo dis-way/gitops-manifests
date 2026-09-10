@@ -96,7 +96,7 @@
     "prod_ring2": "2.18.0"
   },
   "envoy-gateway": {
-    "at_ring1": "0.0.0",
+    "at_ring1": "1.0.0",
     "at_ring2": "0.0.0",
     "tt_ring1": "0.0.0",
     "tt_ring2": "0.0.0",
