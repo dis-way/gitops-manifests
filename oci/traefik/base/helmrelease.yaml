@@ -13,7 +13,7 @@ spec:
         name: traefik
         namespace: traefik
       # renovate: datasource=helm registryUrl=https://traefik.github.io/charts packageName=traefik
-      version: 39.0.8
+      version: 41.5.0
   interval: 1h
   timeout: 5m
   install:
@@ -113,10 +113,10 @@ spec:
         service.beta.kubernetes.io/azure-load-balancer-ipv6: "${PUBLIC_IP_V6}"
       spec:
         externalTrafficPolicy: "${EXTERNAL_TRAFFIC_POLICY:=Local}"
-      ipFamilyPolicy: PreferDualStack
-      ipFamilies:
-        - IPv4
-        - IPv6
+        ipFamilyPolicy: PreferDualStack
+        ipFamilies:
+          - IPv4
+          - IPv6
     resources:
       requests:
         cpu: "100m"
@@ -139,15 +139,14 @@ spec:
           enabled: true
           endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
           insecure: true
-    logs:
-      general:
-        level: "ERROR"
-        otlp:
+    log:
+      level: "ERROR"
+      otlp:
+        enabled: true
+        grpc:
           enabled: true
-          grpc:
-            enabled: true
-            endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
-            insecure: true
+          endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
+          insecure: true
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
