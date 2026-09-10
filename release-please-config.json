@@ -52,6 +52,10 @@
       "release-type": "simple",
       "component": "oci-envoy-gateway"
     },
+    "oci/envoy-gateway-crds": {
+      "release-type": "simple",
+      "component": "oci-envoy-gateway-crds"
+    },
     "oci/external-secrets-operator": {
       "release-type": "simple",
       "component": "oci-external-secrets-operator"
