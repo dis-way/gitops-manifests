@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system
+spec:
+  chart:
+    spec:
+      chart: gateway-helm
+      sourceRef:
+        kind: HelmRepository
+        name: envoy-gateway
+        namespace: envoy-gateway-system
+      # renovate: datasource=docker depName=docker.io/envoyproxy/gateway-helm versioning=semver
+      version: v1.9.1
+  interval: 1h
+  timeout: 5m
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
+  values:
+    config:
+      envoyGateway:
+        extensionApis:
+          enableBackend: true
+    crds:
+      enabled: false
+    deployment:
+      pod:
+        annotations:
+          cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    global:
+      imageRegistry: altinncr.azurecr.io/docker.io
+      images:
+        # Untagged on purpose: the chart's eg.envoyProxy.image helper fills in the
+        # Envoy version matching the chart, so this tracks chart upgrades on its own.
+        envoyProxy:
+          image: docker.io/envoyproxy/envoy

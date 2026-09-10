@@ -48,6 +48,10 @@
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
     },
+    "oci/envoy-gateway": {
+      "release-type": "simple",
+      "component": "oci-envoy-gateway"
+    },
     "oci/external-secrets-operator": {
       "release-type": "simple",
       "component": "oci-external-secrets-operator"
