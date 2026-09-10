@@ -103,6 +103,14 @@
     "prod_ring1": "0.0.0",
     "prod_ring2": "0.0.0"
   },
+  "envoy-gateway-crds": {
+    "at_ring1": "0.0.0",
+    "at_ring2": "0.0.0",
+    "tt_ring1": "0.0.0",
+    "tt_ring2": "0.0.0",
+    "prod_ring1": "0.0.0",
+    "prod_ring2": "0.0.0"
+  },
   "external-secrets-operator": {
     "at_ring1": "1.6.10",
     "at_ring2": "1.6.9",

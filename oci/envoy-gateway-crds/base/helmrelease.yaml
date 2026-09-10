@@ -1,0 +1,32 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway-crds
+  namespace: envoy-gateway-system
+spec:
+  chart:
+    spec:
+      chart: gateway-crds-helm
+      sourceRef:
+        kind: HelmRepository
+        name: envoy-gateway-crds
+        namespace: envoy-gateway-system
+      # renovate: datasource=docker depName=docker.io/envoyproxy/gateway-crds-helm versioning=semver
+      version: v1.9.1
+  interval: 1h
+  timeout: 5m
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  values:
+    crds:
+      gatewayAPI:
+        enabled: false
+        channel: standard   # Available options: standard, experimental
+      envoyGateway:
+        enabled: true
