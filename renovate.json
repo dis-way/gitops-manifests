@@ -26,6 +26,9 @@
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
+  "gitIgnoredAuthors": [
+    "41898282+github-actions[bot]@users.noreply.github.com"
+  ],
   "packageRules": [
     {
       "matchDatasources": [
@@ -215,6 +218,15 @@
         "⚠️ **Headscale blocks skipping minor versions** (e.g. 0.28 → 0.30) and blocks downgrades. Upgrade one minor version at a time.",
         "Review the BREAKING section of https://github.com/juanfont/headscale/releases for `config.yaml` keys and ACL policy changes before merging."
       ]
+    },
+    {
+      "description": "Envoy Gateway control plane and CRDs must move together - the vendored CRDs in oci/envoy-gateway-crds must match the chart version in oci/envoy-gateway",
+      "matchPackageNames": [
+        "docker.io/envoyproxy/gateway-helm",
+        "envoyproxy/gateway"
+      ],
+      "groupName": "envoy gateway",
+      "groupSlug": "envoy-gateway"
     }
   ]
 }
