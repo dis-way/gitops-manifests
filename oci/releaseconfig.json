@@ -164,7 +164,7 @@
     "at_ring2": "2.15.0",
     "tt_ring1": "2.15.0",
     "tt_ring2": "2.14.0",
-    "prod_ring1": "2.14.0",
+    "prod_ring1": "2.15.0",
     "prod_ring2": "2.14.0"
   },
   "otel-operator": {
