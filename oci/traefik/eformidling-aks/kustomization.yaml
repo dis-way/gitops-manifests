@@ -12,14 +12,18 @@ patches:
         value:
           - traefik-hsts-header@kubernetescrd
       - op: add
-        path: /spec/values/service/loadBalancerSourceRanges
+        path: /spec/values/service/spec/loadBalancerSourceRanges
         value:
           - "${LB_SOURCE_RANGE_APIM}"
+          # altinn-uptime TLS probes (admin-test-aks egress)
+          - "20.251.123.48/28"
+          # altinn-uptime TLS probes (admin-prod-aks egress)
+          - "4.220.48.112/28"
       - op: replace
-        path: /spec/values/service/ipFamilyPolicy
+        path: /spec/values/service/spec/ipFamilyPolicy
         value: SingleStack
       - op: replace
-        path: /spec/values/service/ipFamilies
+        path: /spec/values/service/spec/ipFamilies
         value:
           - IPv4
       - op: remove

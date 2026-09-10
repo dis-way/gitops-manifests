@@ -32,10 +32,10 @@ jobs:
           with open(path) as f:
               content = f.read()
 
-          items = ''.join(f'        - {ip}\n' for ip in new_ips)
+          items = ''.join(f'          - {ip}\n' for ip in new_ips)
 
           new_content = re.sub(
-              r'(        # BEGIN CLOUDFLARE\n)(?:        - .+\n)+(        # END CLOUDFLARE\n)',
+              r'(          # BEGIN CLOUDFLARE\n)(?:          - .+\n)+(          # END CLOUDFLARE\n)',
               r'\g<1>' + items + r'\g<2>',
               content,
           )
