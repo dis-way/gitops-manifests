@@ -1,0 +1,90 @@
+name: Refresh Envoy Gateway CRDs
+
+# The rendered Envoy Gateway CRDs are only published as a GitHub release asset,
+# so they are vendored into oci/envoy-gateway-crds/base/. Renovate bumps the
+# version pin in the update script; this workflow re-downloads the matching
+# asset and commits it onto the Renovate branch.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - oci/envoy-gateway-crds/scripts/update-crds.sh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'renovate/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Refresh vendored CRDs
+        run: ./oci/envoy-gateway-crds/scripts/update-crds.sh
+
+      # A GITHUB_TOKEN commit does not re-trigger pull_request workflows, so the
+      # kustomize-diff check will not re-run against the refreshed file. Validate
+      # here instead, using the same kustomize/kubectl fallback as
+      # dis-way/actions/.github/workflows/kustomize-diff.yml.
+      - name: Validate
+        run: |
+          set -euo pipefail
+          build() {
+            if command -v kustomize >/dev/null 2>&1; then
+              kustomize build "$1" > /dev/null
+            elif command -v kubectl >/dev/null 2>&1; then
+              kubectl kustomize "$1" > /dev/null
+            else
+              echo "Error: neither 'kustomize' nor 'kubectl' found in runner PATH." >&2
+              exit 1
+            fi
+          }
+          build oci/envoy-gateway-crds
+          build oci/envoy-gateway-crds/multitenancy
+
+      - name: Commit if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILE: oci/envoy-gateway-crds/base/envoy-gateway-crds.yaml
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Vendored CRDs already match the pinned version, nothing to do."
+            exit 0
+          fi
+
+          # Commit via the API so GitHub signs the commit, as in update-cloudflare-ips.yml.
+          # A push made with GITHUB_TOKEN does not trigger further workflow runs,
+          # so this cannot loop.
+          BLOB_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/blobs" \
+            -f content="$(base64 -w0 < "$FILE")" -f encoding=base64 --jq '.sha')
+          HEAD_SHA=$(git rev-parse HEAD)
+          BASE_TREE=$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$HEAD_SHA" --jq '.tree.sha')
+          TREE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/trees" \
+            -f base_tree="$BASE_TREE" \
+            -f 'tree[][path]'="$FILE" \
+            -f 'tree[][mode]'=100644 \
+            -f 'tree[][type]'=blob \
+            -f 'tree[][sha]'="$BLOB_SHA" --jq '.sha')
+          # Author is set explicitly so it matches gitIgnoredAuthors in
+          # renovate.json - otherwise Renovate sees a commit it did not make,
+          # treats the branch as user-modified, and stops maintaining the PR.
+          COMMIT_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/commits" \
+            -f message="deps: refresh vendored envoy gateway CRDs" \
+            -f tree="$TREE_SHA" \
+            -f 'parents[]'="$HEAD_SHA" \
+            -f 'author[name]'="github-actions[bot]" \
+            -f 'author[email]'="41898282+github-actions[bot]@users.noreply.github.com" \
+            -f 'committer[name]'="github-actions[bot]" \
+            -f 'committer[email]'="41898282+github-actions[bot]@users.noreply.github.com" \
+            --jq '.sha')
+          gh api "repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH" \
+            -X PATCH -f sha="$COMMIT_SHA"
+          echo "Committed $COMMIT_SHA to $BRANCH"

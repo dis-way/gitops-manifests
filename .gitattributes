@@ -1,0 +1,3 @@
+# Vendored verbatim from the envoyproxy/gateway release assets by
+# oci/envoy-gateway-crds/scripts/update-crds.sh. Collapse it in diffs.
+oci/envoy-gateway-crds/base/envoy-gateway-crds.yaml linguist-generated=true
