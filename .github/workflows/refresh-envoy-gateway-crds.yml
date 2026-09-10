@@ -5,15 +5,20 @@ name: Envoy Gateway CRDs
 # nowhere else. Renovate rewrites only the version pin in the update script, so:
 #
 #   - on a Renovate branch, re-vendor the manifest for the new version and
-#     commit it onto the branch, and
+#     commit it onto the branch (the "refresh" job), and
 #   - on any other pull request, verify the committed manifest still matches
-#     upstream for the pinned version (this is what catches a hand-edit of the
-#     generated file, and an upstream release asset changing after the fact -
-#     GitHub release assets are mutable, unlike git tags).
+#     upstream for the pinned version (the "verify" job). This catches a
+#     hand-edit of the generated file, and an upstream release asset changing
+#     after the fact - GitHub release assets are mutable, unlike git tags.
 #
 # The script also verifies every download against the sha256 digest GitHub
 # publishes for the asset via api.github.com, and fails closed if that digest
 # cannot be read.
+#
+# The two paths are separate jobs on purpose. Both check out the pull request
+# head, so both execute pull-request-controlled content; only the refresh job
+# gets a write-capable token, and it is gated on the Renovate bot identity
+# rather than on the branch name, which anyone with push access could choose.
 
 on:
   pull_request:
@@ -31,63 +36,64 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  vendored-crds:
-    name: Vendored CRDs
+  verify:
+    name: Verify vendored CRDs
+    # Every pull request except the Renovate refresh case handled below.
+    if: >-
+      github.event_name == 'pull_request' &&
+      !(github.event.pull_request.user.login == 'renovate[bot]' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        startsWith(github.head_ref, 'renovate/'))
     runs-on: ubuntu-latest
     permissions:
-      contents: write # only used to push the re-vendored manifest to renovate/** branches
-    env:
-      SCRIPT: ./oci/envoy-gateway-crds/scripts/update-crds.sh
-      # Refresh only on same-repo Renovate branches. Everything else - human
-      # pull requests, forks - is verify-only, so the check name is stable and
-      # no write token is ever used on an untrusted head ref.
-      REFRESH: ${{ github.event_name == 'workflow_dispatch' || (startsWith(github.head_ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository) }}
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Verify the vendored manifest matches upstream
+        env:
+          # Read-only in this job: `permissions: contents: read` above. Used
+          # only to raise the api.github.com rate limit for the digest lookup.
+          GH_TOKEN: ${{ github.token }}
+        run: ./oci/envoy-gateway-crds/scripts/update-crds.sh --check
+
+      - name: Validate
+        run: .github/workflows/scripts/validate-envoy-gateway-crds.sh
+
+  refresh:
+    name: Refresh vendored CRDs
+    # Gated on the Renovate bot identity, a same-repo head ref, and the branch
+    # prefix. Renovate only rewrites the version pin, so the script executed
+    # here is the base branch's own copy.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.user.login == 'renovate[bot]' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       startsWith(github.head_ref, 'renovate/'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # pushes the re-vendored manifest onto the Renovate branch
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Refresh or verify the vendored manifest
+      - name: Re-vendor the manifest for the pinned version
         env:
-          # Raises the api.github.com rate limit for the asset digest lookup.
           GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          if [ "$REFRESH" = "true" ]; then
-            "$SCRIPT"
-          else
-            "$SCRIPT" --check
-          fi
+        run: ./oci/envoy-gateway-crds/scripts/update-crds.sh
 
       # A GITHUB_TOKEN commit does not re-trigger pull_request workflows, so the
       # kustomize-diff check will not re-run against the refreshed file.
-      # Validate here instead, using the same kustomize/kubectl fallback as
-      # dis-way/actions/.github/workflows/kustomize-diff.yml.
+      # Validate here, before committing, instead.
       - name: Validate
-        run: |
-          set -euo pipefail
-          build() {
-            if command -v kustomize >/dev/null 2>&1; then
-              kustomize build "$1"
-            elif command -v kubectl >/dev/null 2>&1; then
-              kubectl kustomize "$1"
-            else
-              echo "Error: neither 'kustomize' nor 'kubectl' found in runner PATH." >&2
-              exit 1
-            fi
-          }
-          for path in oci/envoy-gateway-crds oci/envoy-gateway-crds/multitenancy; do
-            crds=$(build "$path" | grep -c '^kind: CustomResourceDefinition$')
-            echo "$path -> ${crds} CRDs"
-            if [ "$crds" -ne 8 ]; then
-              echo "::error::expected 8 CRDs from ${path}, got ${crds}" >&2
-              exit 1
-            fi
-          done
+        run: .github/workflows/scripts/validate-envoy-gateway-crds.sh
 
       - name: Commit if changed
-        if: env.REFRESH == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           FILE: oci/envoy-gateway-crds/base/envoy-gateway-crds.yaml
