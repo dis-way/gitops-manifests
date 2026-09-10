@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.0...oci-traefik-v3.10.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **traefik:** remove completed ssl-cert type migration ([#1481](https://github.com/dis-way/gitops-manifests/issues/1481)) ([70192fa](https://github.com/dis-way/gitops-manifests/commit/70192fa685f3de96e1072e3c38cee90e94a82222))
+
 ## [3.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.9.0...oci-traefik-v3.10.0) (2026-06-26)
 
 
