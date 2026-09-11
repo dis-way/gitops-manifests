@@ -1,0 +1,215 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: eg
+  namespace: envoy-gateway-system
+spec:
+  routingType: Endpoint
+  ipFamily: DualStack
+  # Envoy flushes its whole stats set to every metrics sink every 5s by
+  # default. That is far more than this cluster needs, so stretch it to
+  # the interval the Prometheus scrape used to run at.
+  bootstrap:
+    type: Merge
+    value: |
+      stats_flush_interval: 15s
+  shutdown:
+    drainTimeout: 60s
+    minDrainDuration: 30s
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        # Load-bearing for the ClientTrafficPolicy's clientIPDetection, not a
+        # tuning knob. Azure Load Balancer does not SNAT inbound flows, so the
+        # real client IP survives all the way to the node - kube-proxy is what
+        # destroys it. With "Cluster" every request arrives from a node address
+        # and geo rules, CIDR denies and rate limit buckets all collapse into
+        # one bucket per node.
+        #
+        # Envoy Gateway already defaults this to Local. It is written out
+        # because directSourceIP is only correct while it holds, and a default
+        # can change under a version bump without anyone reading this file.
+        externalTrafficPolicy: Local
+        annotations:
+          service.beta.kubernetes.io/azure-pip-name: ${AKS_LB_PIP4_NAME}
+          service.beta.kubernetes.io/azure-pip-name-ipv6: ${AKS_LB_PIP6_NAME}
+      envoyDeployment:
+        pod:
+          # externalTrafficPolicy: Local drops traffic on nodes with no local
+          # Envoy pod, so replicas sharing a node means the Azure LB health
+          # probe keeps only that one node in rotation. Spread them.
+          #
+          # ScheduleAnyway, not DoNotSchedule: a hard constraint would cap the
+          # HPA at the node count instead of merely degrading the spread.
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: envoy
+                  app.kubernetes.io/component: proxy
+                  app.kubernetes.io/managed-by: envoy-gateway
+                  gateway.envoyproxy.io/owning-gateway-name: eg
+                  gateway.envoyproxy.io/owning-gateway-namespace: envoy-gateway-system
+      envoyPDB:
+        maxUnavailable: 1
+      envoyHpa:
+        # Not 1: with externalTrafficPolicy: Local a single replica means a
+        # single node carries all ingress, and one node event is an outage.
+        # Three is the floor, not a load-test result - see maxReplicas.
+        minReplicas: 3
+        maxReplicas: 10
+        metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 50
+        behavior:
+          scaleUp:
+            stabilizationWindowSeconds: 0
+            selectPolicy: Max
+            policies:
+              - type: Percent
+                value: 100
+                periodSeconds: 15
+              - type: Pods
+                value: 2
+                periodSeconds: 15
+          scaleDown:
+            stabilizationWindowSeconds: 900
+            policies:
+              - type: Pods
+                value: 1
+                periodSeconds: 120
+  telemetry:
+    metrics:
+      # Without this Envoy generates every stat it knows about - thousands of
+      # series per proxy pod, most of them histogram buckets nothing queries.
+      # An inclusion list keeps the golden signals and drops the rest, which
+      # also saves Envoy's own CPU and memory. Anything not matched here stops
+      # existing, so add to the list rather than trimming it if a dashboard
+      # goes blank.
+      matches:
+        # Cluster health. Envoy Gateway explicitly warns against dropping
+        # these - warming_clusters and the membership gauges are load-bearing
+        # for the control plane, not just dashboards.
+        - type: Exact
+          value: cluster_manager.warming_clusters
+        - type: Suffix
+          value: membership_total
+        - type: Suffix
+          value: membership_healthy
+        - type: Suffix
+          value: membership_degraded
+        # Upstream (per cluster) request and connection signals.
+        - type: Suffix
+          value: upstream_rq_total
+        - type: Suffix
+          value: upstream_rq_time
+        - type: Suffix
+          value: upstream_rq_2xx
+        - type: Suffix
+          value: upstream_rq_4xx
+        - type: Suffix
+          value: upstream_rq_5xx
+        - type: Suffix
+          value: upstream_rq_pending_overflow
+        - type: Suffix
+          value: upstream_cx_active
+        - type: Suffix
+          value: upstream_cx_connect_fail
+        # Downstream (per listener / HTTP connection manager) signals.
+        - type: Suffix
+          value: downstream_rq_total
+        - type: Suffix
+          value: downstream_rq_time
+        - type: Suffix
+          value: downstream_rq_2xx
+        - type: Suffix
+          value: downstream_rq_3xx
+        - type: Suffix
+          value: downstream_rq_4xx
+        - type: Suffix
+          value: downstream_rq_5xx
+        - type: Suffix
+          value: downstream_cx_active
+        - type: Suffix
+          value: downstream_cx_total
+        # Proxy process health - uptime, memory, concurrency. Low cardinality.
+        - type: Prefix
+          value: server.
+
+        # Connection limit enforcement — page-worthy
+        - type: Suffix
+          value: downstream_cx_overflow
+        - type: Suffix
+          value: downstream_cx_destroy_remote_active_rq
+        # Local rate limit and the silent-failure signal
+        - type: Prefix
+          value: http_local_rate_limit
+        # Global rate limit — failure_mode_allowed is the fail-open detector
+        - type: Prefix
+          value: ratelimit.
+        # JWT enforcement and JWKS health
+        - type: Prefix
+          value: jwt_authn.
+        # Overload manager
+        - type: Prefix
+          value: overload.
+        # TLS handshake rate: the real capacity number per test
+        - type: Suffix
+          value: ssl.handshake
+        - type: Suffix
+          value: ssl.connection_error
+        - type: Suffix
+          value: downstream_pre_cx_timeout
+        # HTTP/2 abuse — rx_reset is the Rapid Reset signal
+        - type: Suffix
+          value: http2.rx_reset
+        - type: Suffix
+          value: http2.streams_active
+        # Circuit breakers and retry amplification
+        - type: Suffix
+          value: circuit_breakers.default.cx_open
+        - type: Suffix
+          value: circuit_breakers.default.rq_pending_open
+        - type: Suffix
+          value: upstream_rq_retry
+        - type: Suffix
+          value: upstream_rq_retry_overflow
+        - type: Suffix
+          value: upstream_rq_timeout
+      sinks:
+        - type: OpenTelemetry
+          openTelemetry:
+            host: otel-collector.monitoring.svc.cluster.local
+            port: 4317
+    tracing:
+      # sample 100% of requests in envoy and let otel-collectors tailsampler decide if it should be sampled. Lower if overwhelmed with requests
+      samplingRate: 100
+      provider:
+        backendRefs:
+        - name: otel-collector
+          namespace: monitoring
+          port: 4317
+        type: OpenTelemetry
+      customTags:
+        # This is an example of using a literal as a tag value
+        source:
+          type: Literal
+          literal:
+            value: "${AKS_NAME}"
+        "k8s.pod.name":
+          type: Environment
+          environment:
+            name: ENVOY_POD_NAME
+            defaultValue: "-"
+        "k8s.namespace.name":
+          type: Environment
+          environment:
+            name: ENVOY_POD_NAMESPACE
+            defaultValue: "envoy-gateway-system"
