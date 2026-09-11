@@ -132,6 +132,36 @@ spec:
       streamIdleTimeout: 5m
   tls:
     minVersion: "1.2"
+
+  # --- HSTS ---------------------------------------------------------------
+  # The :80 -> :443 redirect alone leaves the first request of every session
+  # on plaintext, where it can be intercepted before the redirect is ever seen.
+  # HSTS closes that window for every subsequent visit.
+  #
+  # It must be set here rather than on the redirect: RFC 6797 requires a user
+  # agent to IGNORE a Strict-Transport-Security header received over
+  # non-secure transport, so a header on the :80 response is discarded. This
+  # policy is Gateway-wide, so the header is emitted on the :80 redirect too -
+  # harmless, and ignored by compliant clients - and on every listener that
+  # ListenerSets attach later, which is the point.
+  #
+  # Set, not add: overwrite whatever a backend may already have sent rather
+  # than appending a second value.
+  #
+  # includeSubDomains covers every subdomain of ${BASE_HOSTNAME}. Remove it if
+  # any subdomain is served over plain HTTP - the browser will refuse those
+  # for max-age once this is seen.
+  #
+  # `preload` is deliberately absent. It is only meaningful once the domain is
+  # submitted at hstspreload.org, and it is close to a one-way door: removal
+  # is slow and browsers ship the list in their binaries. Add it together with
+  # that submission, not before.
+  headers:
+    lateResponseHeaders:
+      set:
+        - name: Strict-Transport-Security
+          value: "max-age=31536000; includeSubDomains"
+
   tcpKeepalive:
     idleTime: 60s
     interval: 10s

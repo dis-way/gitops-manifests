@@ -26,4 +26,23 @@ spec:
             # scheme (https -> 443) and, per spec, leaves the port out of the
             # Location header entirely for https/443 - so clients get
             # https://host/path rather than https://host:443/path.
-            statusCode: 301
+            # HSTS is NOT set here on purpose - RFC 6797 makes user agents
+            # ignore Strict-Transport-Security received over plaintext. It
+            # lives in client-traffic-policy.yaml, on the HTTPS responses.
+            #
+            # 308, not 301: 301 permits a client to rewrite POST/PUT/PATCH
+            # into GET and drop the body, so an API call arriving on :80
+            # reaches the backend as a bodyless GET and fails in a way that
+            # looks like a routing bug. 308 is the method-preserving
+            # equivalent, so the request completes over TLS instead.
+            #
+            # This does not un-leak anything: a body that reached :80 was
+            # already sent in cleartext, and 301 would not have prevented
+            # that - it only breaks the request afterwards. HSTS is the
+            # actual mitigation; this just avoids a confusing failure mode.
+            #
+            # 308 is Extended support in Gateway API, not Core. Envoy Gateway
+            # implements it (SupportedRedirectCodes covers 301/302/303/307/308),
+            # but pre-2015 clients may not follow it - revert to 301 if any
+            # such client matters.
+            statusCode: 308
