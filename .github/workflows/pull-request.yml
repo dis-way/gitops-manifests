@@ -12,7 +12,7 @@ jobs:
   kustomize-diff:
     uses: dis-way/actions/.github/workflows/kustomize-diff.yml@45eae05af29ddb403645fc226d22ce63d3ca1ed4 # main
     with:
-      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices,oci/*/platform-aks"
+      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices,oci/*/platform-aks,oci/*/edge"
     permissions:
       contents: read
       pull-requests: write
