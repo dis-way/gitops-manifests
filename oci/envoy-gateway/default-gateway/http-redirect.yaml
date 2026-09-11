@@ -1,0 +1,29 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: eg-http-to-https
+  namespace: envoy-gateway-system
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: eg
+      # Pinned to the :80 listener by name. Without sectionName this route
+      # would attach to every listener the Gateway has, including :443, and
+      # redirect HTTPS traffic to itself in a loop.
+      sectionName: http
+  # No hostnames: the route inherits the listener's ${BASE_HOSTNAME}. Adding
+  # one here would have to intersect the listener hostname or the route is
+  # rejected as having no matching host.
+  rules:
+      # A rule with only filters and no backendRefs is the standard redirect
+      # shape - Envoy answers directly, nothing is proxied upstream.
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            # Port is deliberately omitted. Gateway API derives it from the
+            # scheme (https -> 443) and, per spec, leaves the port out of the
+            # Location header entirely for https/443 - so clients get
+            # https://host/path rather than https://host:443/path.
+            statusCode: 301

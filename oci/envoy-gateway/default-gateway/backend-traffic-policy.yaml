@@ -1,0 +1,63 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: eg-local-ratelimit
+  namespace: envoy-gateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: eg
+  rateLimit:
+    # `local`, not `global`. The global limiter round-trips to the Valkey
+    # rate limit service on every request, which under a flood is both an
+    # extra hop per request and a single component whose failure takes the
+    # limiter down with it - it stops working exactly when it is needed.
+    # The local limiter is in-process in each Envoy pod: no shared state,
+    # no network, no dependency.
+    #
+    # The cost of that is precision. Envoy's local limiter has no per-client
+    # descriptors, so this CANNOT single out an abusive IP - once the
+    # threshold is hit it sheds whatever arrives next, attacker or customer
+    # alike. Treat it as a survival ceiling that keeps backends up during a
+    # flood, not as a fairness mechanism. Per-client fairness needs the
+    # global limiter, and the two can be used together.
+    #
+    # `spec.rateLimit.type` is deprecated in this CRD - the `local` and
+    # `global` fields are set directly instead.
+    local:
+      rules:
+        # No clientSelectors, so this is the catch-all ceiling.
+        #
+        # SCOPE: because the policy targets the Gateway rather than a Route,
+        # this limit is instantiated PER ROUTE, each with its own counter -
+        # ten routes at 2000/s is a 20000/s aggregate, not 2000. And each
+        # Envoy pod counts independently, so multiply again by replica count.
+        # The real ceiling is (routes x replicas x requests).
+        #
+        # SIZE THIS from real traffic. Because it is enforced from the
+        # moment it is applied (see the shadowMode note below), 10000/s is
+        # deliberately generous - comfortably above anything the test
+        # environments produce, so it acts as a backstop rather than a
+        # control. Tune it down per environment using peace-time p99 per
+        # route from envoy.cluster.upstream_rq_total in Mimir, then leave
+        # headroom - sizing to the observed maximum leaves it too generous
+        # to help, sizing to the mean causes outages at every legitimate peak.
+        - limit:
+            requests: 10000
+            unit: Second
+          # WARNING: shadowMode does NOT work on this rule, and setting it
+          # true would be a false sense of safety rather than log-only mode.
+          # Envoy Gateway uses the first rule without clientSelectors as the
+          # filter-level default token bucket, and that path carries only
+          # requests and unit - shadowMode is read solely when building
+          # descriptors, which a selector-less rule never becomes. The filter
+          # is emitted with FilterEnforced hardcoded to 100%, so the limit
+          # below is always enforced. The CRD says as much in passing:
+          # "Only supported for Global Rate Limits."
+          #
+          # Written out as false so nobody flips it to true expecting the
+          # limit to stop applying. To actually observe before enforcing,
+          # either move to the global limiter or give the rule a
+          # clientSelector so it becomes a descriptor.
+          shadowMode: false

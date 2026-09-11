@@ -4,3 +4,6 @@ resources:
   - envoy-proxy.yaml
   - tls-secrets.yaml
   - gateway-api-resources.yaml
+  - http-redirect.yaml
+  - backend-traffic-policy.yaml
+  - client-traffic-policy.yaml

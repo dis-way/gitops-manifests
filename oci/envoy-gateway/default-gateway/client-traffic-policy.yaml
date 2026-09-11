@@ -1,0 +1,138 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: eg-client-policy
+  namespace: envoy-gateway-system
+spec:
+  # Attaches to the whole Gateway rather than one listener - client IP
+  # detection is a property of how traffic reaches us, not of any single
+  # route, and every listener added later should inherit it.
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: eg
+  clientIPDetection:
+    # Use the TCP peer of the connection Envoy terminates.
+    #
+    # This is the correct option for this topology, and stays correct while a
+    # plain Azure Load Balancer is the only thing in front. Azure LB is a
+    # layer-4 pass-through: it DNATs the flow to a node without terminating
+    # HTTP and without SNATing the source, so the real client IP arrives as the
+    # TCP peer and nothing in the path has written an X-Forwarded-For entry.
+    # Envoy Gateway names this case explicitly in the API docs for
+    # directSourceIP, alongside AWS NLB with target-type=instance.
+    #
+    # That the peer is the *client* and not a node depends entirely on
+    # externalTrafficPolicy: Local, which is pinned in envoy-proxy.yaml.
+    # Flipping it to Cluster makes kube-proxy SNAT every request to a node
+    # address, and every per-client rule here - geo, CIDR denies, rate limit
+    # buckets - silently collapses into one bucket per node. That failure is
+    # invisible from this file, so change the two together or not at all.
+    #
+    # Do NOT turn on xForwardedFor while the path looks like this. There is no
+    # proxy in front to trust, so any XFF that arrives is entirely
+    # client-authored:
+    #
+    #   - trustedCIDRs would be inert. Envoy checks the immediate peer against
+    #     the list first and ignores XFF completely when it does not match; the
+    #     peer here is the client, so no sane list ever matches.
+    #   - The tempting fix - listing the node/pod subnets (10.206.161.0/24,
+    #     10.206.162.0/24, fd2b:87a9:3ca4:601::/64, ...:602::/64) to make it
+    #     "work" - is the one way to make this actively dangerous. With SNAT
+    #     putting a node address in the peer slot, every direct client becomes
+    #     a trusted proxy and picks its own client IP per request, defeating
+    #     geo, CIDR and rate limits at once. Never list cluster-internal CIDRs.
+    #   - numTrustedHops is never the answer here. The CRD rejects it next to
+    #     trustedCIDRs (only one of the two may be set), and it performs no peer
+    #     check at all - it reads the header directly, so anything that can
+    #     reach Envoy, including the Service's NodePort behind the LB or any
+    #     in-cluster client, chooses the address it is judged by.
+    #
+    # xForwardedFor only becomes correct once an L7 tier terminates HTTP in
+    # front and appends a trustworthy entry. Prefer trustedCIDRs over
+    # numTrustedHops then too: trustedCIDRs fails safe, because Envoy consults
+    # XFF only when the immediate peer is itself in a trusted CIDR, and falls
+    # back to the peer address otherwise. Both future paths have a trap:
+    #
+    #   Azure Front Door
+    #     xForwardedFor:
+    #       trustedCIDRs: [<AzureFrontDoor.Backend service tag ranges>]
+    #     That range list changes, so it needs a refresh mechanism - a stale
+    #     list means Front Door stops being recognised and every client appears
+    #     to come from Front Door. Pair it with an NSG restricted to the same
+    #     service tag and X-Azure-FDID validation, so the origin cannot be
+    #     reached off-Front-Door at all.
+    #
+    #   Azure Application Gateway
+    #     xForwardedFor:
+    #       trustedCIDRs: [<the AGW instances' subnet CIDR>]
+    #     AGW reaches private backends from its own instance IPs, so the subnet
+    #     is the right thing to trust. But AGW writes XFF entries as IP:port,
+    #     while Envoy parses each entry as a bare IP and aborts detection on the
+    #     first entry it cannot parse - falling back to the peer, i.e. every
+    #     client IP silently becomes the App Gateway's. Rewrite XFF at AGW, or
+    #     prove it with an access log, before relying on it.
+    #
+    # Either way the list must carry both v4 and v6 ranges: this vnet is
+    # dual-stack and DNS publishes an AAAA, so an IPv4-only list leaves the
+    # entire v6 path unrecognised.
+    directSourceIP: {}
+
+  # --- Connection limits -----------------------------------------------
+  # Cheapest possible drop: rejected at accept(), before Envoy parses a
+  # single byte of HTTP. Everything below this line costs more per request,
+  # so this is the layer that decides whether a flood is survivable.
+  connection:
+    connectionLimit:
+      # SIZE THIS. Per listener, per Envoy pod - with N replicas the real
+      # ceiling is N x value. Too low is an outage; too high is no limit at
+      # all. Take peak concurrent connections from
+      # envoy.listener.downstream_cx_active (now in Mimir), then leave
+      # generous headroom above the peak.
+      value: 50000
+      closeDelay: 0s
+      maxConnectionDuration: 1h
+      maxRequestsPerConnection: 10000
+    # bufferLimit is left at Envoy's 32768-byte default. It bounds how much
+    # memory one connection can pin, so it is the lever that decides how
+    # expensive a slow-read attack is. Lower it only with real request sizes
+    # in hand - it applies to legitimate large requests too.
+    bufferLimit: 32768
+    maxAcceptPerSocketEvent: 1 # default; keeps accept fair under flood
+
+  # --- Timeouts ---------------------------------------------------------
+  # These defaults are the liability. Envoy's idleTimeout is ONE HOUR, so an
+  # attacker can hold connections open doing nothing, at no cost, and pin
+  # file descriptors and memory in the edge proxies for an hour each. That
+  # is the cheapest L7 attack there is and it is on by default.
+  timeout:
+    tcp:
+      # Connect and then say nothing: closed in 5s rather than 15s.
+      connectionInspectionTimeout: 5s
+      idleTimeout: 300s
+    http:
+      # Slowloris defence - caps how long a client may dribble out request
+      # headers. Legitimate clients send headers in one go, so this can be
+      # tight without affecting anyone real.
+      requestHeadersReceivedTimeout: 10s
+      # Slow-POST / RUDY defence: total time to receive the whole request.
+      # RAISE THIS if you accept large uploads over slow connections - it
+      # applies to the request body, and a mobile client on a bad link
+      # uploading a photo is indistinguishable from an attack at this layer.
+      requestReceivedTimeout: 30s
+      # Connection idle with no active streams: 1 hour -> 1 minute. Safe
+      # for SSE, because a stream that is actively held is not idle.
+      idleTimeout: 60s
+      # Per-stream idle timeout. THIS one does bound SSE: a stream with no
+      # events for longer than this is reset. Kept at Envoy's 5m default
+      # rather than tightened, which means SSE endpoints must emit a
+      # heartbeat (a `:` comment line) comfortably more often than every
+      # 5 minutes. Cutting this without adding heartbeats will break
+      # streaming in a way that looks like an intermittent network fault.
+      streamIdleTimeout: 5m
+  tls:
+    minVersion: "1.2"
+  tcpKeepalive:
+    idleTime: 60s
+    interval: 10s
+    probes: 3
