@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.19.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.19.0...oci-dis-tls-cert-v2.19.1) (2026-09-12)
+
+
+### Dependency Updates
+
+* update mcr.microsoft.com/azure-cli docker tag to v2.90.0 ([#1539](https://github.com/dis-way/gitops-manifests/issues/1539)) ([12f7c3f](https://github.com/dis-way/gitops-manifests/commit/12f7c3f50a4d70a711653820743280b6d89b1bdd))
+
 ## [2.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.18.0...oci-dis-tls-cert-v2.19.0) (2026-09-10)
 
 
