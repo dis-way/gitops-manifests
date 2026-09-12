@@ -157,6 +157,58 @@ spec:
   # is slow and browsers ship the list in their binaries. Add it together with
   # that submission, not before.
   headers:
+    # --- X-Real-IP ------------------------------------------------------
+    # Envoy already appends X-Forwarded-For, but many backends and libraries
+    # read the nginx-era X-Real-IP instead. Set it here so every upstream
+    # gets the client address in whichever form it expects.
+    #
+    # `set`, not `add`: this compiles to OVERWRITE_IF_EXISTS_OR_ADD, so a
+    # client-supplied X-Real-IP is replaced rather than appended to. That is
+    # the whole point - the header is trivially spoofable, and a backend
+    # trusting an appended value would be trusting the client. Never change
+    # this to `add`.
+    #
+    # earlyRequestHeaders runs before routing, so this applies to every
+    # route and every listener, including ones ListenerSets attach later.
+    #
+    # %DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT% here is the CONNECTION peer,
+    # not an XFF-derived address. These mutations are attached as the HCM's
+    # early_header_mutation_extensions, which Envoy runs before it works out
+    # the final remote address, so XFF has not been consulted yet. That is
+    # correct today because directSourceIP means the peer IS the client.
+    #
+    # It stops being correct the moment an L7 tier is put in front and
+    # xForwardedFor is enabled: this would then be the tier's IP, not the
+    # client's. Revisit it in the same change - see the xForwardedFor notes
+    # under clientIPDetection above.
+    #
+    # VERIFY ONCE DEPLOYED: if the operator is not evaluated, backends
+    # receive the literal string rather than an IP. Curl an echo backend and
+    # confirm X-Real-IP holds an address.
+    earlyRequestHeaders:
+      set:
+        - name: X-Real-IP
+          value: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+      # Drop any client-supplied X-Forwarded-For before Envoy appends to it.
+      #
+      # Envoy appends rather than replaces, so without this a request
+      # arriving with "X-Forwarded-For: 1.2.3.4" reaches backends as
+      # "1.2.3.4, <real client>". Envoy itself is not fooled - directSourceIP
+      # reads the TCP peer, so rate limits, CIDR denies and access logs all
+      # use the real address - but any backend that takes the LEFTMOST entry
+      # as the client, which is the default in most web frameworks, reads a
+      # value the caller chose.
+      #
+      # Removing it early means Envoy's own append is the only entry left, so
+      # leftmost and rightmost are both the true client and no backend can
+      # get this wrong.
+      #
+      # This is only correct while nothing trusted sits in front. An L7 tier
+      # (Front Door, App Gateway) puts the real client in X-Forwarded-For
+      # itself - stripping it there would throw that away. Remove this at the
+      # same time as enabling xForwardedFor trustedCIDRs, not before.
+      remove:
+        - x-forwarded-for
     lateResponseHeaders:
       set:
         - name: Strict-Transport-Security
