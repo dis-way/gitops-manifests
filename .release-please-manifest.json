@@ -10,7 +10,7 @@
   "oci/dis-apim": "0.3.0",
   "oci/dis-pgsql": "0.2.2",
   "oci/dis-vault": "1.3.0",
-  "oci/dis-tls-cert": "2.19.0",
+  "oci/dis-tls-cert": "2.19.1",
   "oci/envoy-gateway": "2.1.0",
   "oci/envoy-gateway-crds": "1.0.1",
   "oci/external-secrets-operator": "1.6.10",
