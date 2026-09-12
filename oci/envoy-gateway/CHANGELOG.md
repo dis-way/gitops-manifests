@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.0.0...oci-envoy-gateway-v2.1.0) (2026-09-12)
+
+
+### Features
+
+* **envoy-gateway:** set X-Real-IP and strip inbound X-Forwarded-For ([#1531](https://github.com/dis-way/gitops-manifests/issues/1531)) ([b32ae15](https://github.com/dis-way/gitops-manifests/commit/b32ae15a5bcec5574f0f8f445d014b29501f45a2))
+
 ## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v1.0.0...oci-envoy-gateway-v2.0.0) (2026-09-11)
 
 
