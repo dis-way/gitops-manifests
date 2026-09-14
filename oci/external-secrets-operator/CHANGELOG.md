@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.10...oci-external-secrets-operator-v1.7.0) (2026-09-14)
+
+
+### Features
+
+* **oci/external-secrets-operator:** add Key Vault ClusterSecretStores ([#1555](https://github.com/dis-way/gitops-manifests/issues/1555)) ([4c7bd5a](https://github.com/dis-way/gitops-manifests/commit/4c7bd5ac7193860a23a6e6424674b455768c6f32))
+
 ## [1.6.10](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.9...oci-external-secrets-operator-v1.6.10) (2026-09-09)
 
 
