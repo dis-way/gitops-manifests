@@ -208,7 +208,64 @@ spec:
       # itself - stripping it there would throw that away. Remove this at the
       # same time as enabling xForwardedFor trustedCIDRs, not before.
       remove:
+        - forwarded
         - x-forwarded-for
+        - x-forwarded-host
+        - x-forwarded-port
+        - x-forwarded-proto
+        - x-forwarded-scheme
+        - x-forwarded-server
+        - x-forwarded-prefix
+        - x-forwarded-path
+        - x-forwarded-uri
+        - x-forwarded-ssl
+        - front-end-https
+        - x-arr-ssl
+        - x-arr-log-id
+
+        # Client-IP variants
+        - x-client-ip
+        - x-cluster-client-ip
+        - true-client-ip
+        - cf-connecting-ip
+        - cf-connecting-ipv6
+        - fastly-client-ip
+        - x-azure-clientip
+        - x-azure-socketip
+
+        # Path / host override (auth-bypass vectors)
+        - x-original-url
+        - x-rewrite-url
+        - x-original-host
+        - x-original-uri
+        - x-override-url
+        - x-http-method-override
+        - x-method-override
+        - x-host
+        - x-forwarded-by
+
+        # Envoy's own trusted headers
+        - x-envoy-internal
+        - x-envoy-external-address
+        - x-envoy-original-path
+        - x-envoy-original-dst-host
+        - x-envoy-force-trace
+        - x-envoy-decorator-operation
+        - x-envoy-expected-rq-timeout-ms
+        - x-envoy-upstream-rq-timeout-ms
+        - x-envoy-upstream-rq-per-try-timeout-ms
+        - x-envoy-upstream-rq-timeout-alt-response
+        - x-envoy-retry-on
+        - x-envoy-retry-grpc-on
+        - x-envoy-retriable-status-codes
+        - x-envoy-max-retries
+        - x-envoy-hedge-on-per-try-timeout
+        - x-envoy-upstream-alt-stat-name
+        - x-envoy-ip-tags
+        - x-envoy-original-method
+
+        # Request correlation
+        - x-request-id
     lateResponseHeaders:
       set:
         - name: Strict-Transport-Security
