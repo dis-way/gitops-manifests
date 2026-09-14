@@ -49,10 +49,10 @@
   },
   "container-runtime-aks-config": {
     "at_ring1": "0.6.0",
-    "at_ring2": "0.5.0",
-    "tt_ring1": "0.5.0",
+    "at_ring2": "0.6.0",
+    "tt_ring1": "0.6.0",
     "tt_ring2": "0.5.0",
-    "prod_ring1": "0.5.0",
+    "prod_ring1": "0.6.0",
     "prod_ring2": "0.5.0"
   },
   "dis-apim": {
