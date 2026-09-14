@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.6.0...oci-container-runtime-aks-config-v0.7.0) (2026-09-14)
+
+
+### Features
+
+* **oci/container-runtime-aks-config:** sync altinn-appsettings-secret from Key Vault ([#1570](https://github.com/dis-way/gitops-manifests/issues/1570)) ([ba0ce68](https://github.com/dis-way/gitops-manifests/commit/ba0ce68538cd0017094e978db19d9c339e4388e3))
+
 ## [0.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.5.0...oci-container-runtime-aks-config-v0.6.0) (2026-09-14)
 
 
