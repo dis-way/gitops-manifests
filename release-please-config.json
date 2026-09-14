@@ -36,6 +36,11 @@
       "release-type": "simple",
       "component": "oci-dis-apim"
     },
+    "oci/dis-cache": {
+      "release-type": "simple",
+      "component": "oci-dis-cache",
+      "initial-version": "0.1.0"
+    },
     "oci/dis-pgsql": {
       "release-type": "simple",
       "component": "oci-dis-pgsql"
