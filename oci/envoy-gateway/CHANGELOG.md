@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.1.0...oci-envoy-gateway-v2.1.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* set resources request and limit explicitly ([#1565](https://github.com/dis-way/gitops-manifests/issues/1565)) ([2e83cb4](https://github.com/dis-way/gitops-manifests/commit/2e83cb43bccc97180094b674e82dfb4860aa41a5))
+
 ## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.0.0...oci-envoy-gateway-v2.1.0) (2026-09-12)
 
 
