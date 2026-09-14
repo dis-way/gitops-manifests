@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.5.0...oci-container-runtime-aks-config-v0.6.0) (2026-09-14)
+
+
+### Features
+
+* **oci/container-runtime-aks-config:** provision default/accesstoken via ExternalSecret ([#1561](https://github.com/dis-way/gitops-manifests/issues/1561)) ([756ed84](https://github.com/dis-way/gitops-manifests/commit/756ed84bba96a5b5e273aaf6ddcaed5a1e0e6a0e))
+
 ## [0.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.4.0...oci-container-runtime-aks-config-v0.5.0) (2026-09-09)
 
 
