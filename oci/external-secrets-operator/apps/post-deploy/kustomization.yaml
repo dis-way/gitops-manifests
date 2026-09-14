@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # One ServiceAccount + ClusterSecretStore pair per Key Vault. The operator itself
+  # runs without an Azure identity; auth is delegated to these ServiceAccounts via
+  # the stores' serviceAccountRef.
+  - altinn-kv-eso-sa.yaml
+  - altinn-kv-clustersecretstore.yaml
+  - so-kv-eso-sa.yaml
+  - so-kv-clustersecretstore.yaml
