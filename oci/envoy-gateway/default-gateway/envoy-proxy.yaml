@@ -35,6 +35,13 @@ spec:
           service.beta.kubernetes.io/azure-pip-name: ${AKS_LB_PIP4_NAME}
           service.beta.kubernetes.io/azure-pip-name-ipv6: ${AKS_LB_PIP6_NAME}
       envoyDeployment:
+        container:
+          resources:
+            requests:
+              cpu: "1"
+              memory: 512Mi
+            limits:
+              memory: 1Gi  # deliberately NO cpu limit
         pod:
           # externalTrafficPolicy: Local drops traffic on nodes with no local
           # Envoy pod, so replicas sharing a node means the Azure LB health
