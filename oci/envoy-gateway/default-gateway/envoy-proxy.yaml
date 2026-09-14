@@ -39,7 +39,7 @@ spec:
           resources:
             requests:
               cpu: "1"
-              memory: 512Mi
+              memory: 512Mi # TODO: update when loadtested
             limits:
               memory: 512Mi  # deliberately NO cpu limit
         pod:
