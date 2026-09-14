@@ -41,7 +41,7 @@ spec:
               cpu: "1"
               memory: 512Mi
             limits:
-              memory: 1Gi  # deliberately NO cpu limit
+              memory: 512Mi  # deliberately NO cpu limit
         pod:
           # externalTrafficPolicy: Local drops traffic on nodes with no local
           # Envoy pod, so replicas sharing a node means the Azure LB health
