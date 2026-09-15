@@ -17,6 +17,8 @@ All variables are consumed by the `default-gateway` layer; `base` needs none.
 | `DIS_TLS_READER_TENANT_ID` | - | Yes | Tenant ID for that workload identity |
 | `DIS_TLS_CRT_SECRET_NAME` | - | Yes | Key Vault secret name holding the certificate, synced to `tls.crt` |
 | `DIS_TLS_KEY_SECRET_NAME` | - | Yes | Key Vault secret name holding the private key, synced to `tls.key` |
+| `ENVOY_CPU_REQUEST` | `1` | No | CPU request per Envoy data plane pod. No CPU limit is set |
+| `ENVOY_MEMORY_REQUEST` | `512Mi` | No | Memory request per Envoy data plane pod. The memory limit is set to the same value |
 
 ## Layers
 
@@ -30,6 +32,7 @@ All variables are consumed by the `default-gateway` layer; `base` needs none.
 
 - CRDs are not managed by this package (`crds.enabled: false`, `install.crds: Skip` / `upgrade.crds: Skip`); both the Gateway API and Envoy Gateway CRDs must already be present in the cluster. Envoy Gateway v1.9 requires **Gateway API v1.6** CRDs, standard channel. The `default-gateway` layer additionally requires the External Secrets Operator CRDs (`external-secrets.io/v1`).
 - The `eg` EnvoyProxy in `default-gateway` configures the data plane: dual-stack, `externalTrafficPolicy: Local` (load-bearing for client IP detection on Azure), hostname topology spread, a PDB, an HPA at 3-10 replicas on 50% CPU, and OpenTelemetry metrics and tracing to `otel-collector.monitoring`.
+- Data plane sizing is set by `ENVOY_CPU_REQUEST` and `ENVOY_MEMORY_REQUEST`. The memory limit always mirrors `ENVOY_MEMORY_REQUEST` — there is no separate limit variable, so more headroom means raising the request. CPU is request-only by design; a CPU limit would throttle the data plane and surface as latency on every route at once. Raising the CPU request also raises the absolute CPU the HPA's 50% utilization target corresponds to, so a larger request scales out later, not sooner.
 - `client-traffic-policy.yaml` holds the edge hardening: `directSourceIP` client IP detection (which depends on `externalTrafficPolicy: Local` in the EnvoyProxy — change the two together), connection limits, the slowloris/slow-POST timeouts, an `X-Real-IP` request header set from the client address (with any client-supplied `X-Forwarded-For` stripped first, so Envoy's own entry is the only one), and an HSTS response header (`max-age=31536000; includeSubDomains`, no `preload`). `backend-traffic-policy.yaml` holds a catch-all local rate limit. Both target the Gateway, so listeners added later by ListenerSets inherit them unless a ListenerSet-scoped policy overrides.
 - Metrics use an inclusion list — a stat not matched by `telemetry.metrics.matches` is not produced at all. Add to the list rather than trimming it if a dashboard goes blank.
 - `edge` places the control plane in `platform-system`, which this package does not create — it must already exist. The root `kustomization.yaml` and `base` instead leave the HelmRelease in `envoy-gateway-system`, so the two paths are not interchangeable on a live cluster: switching between them moves the Helm release between namespaces.
