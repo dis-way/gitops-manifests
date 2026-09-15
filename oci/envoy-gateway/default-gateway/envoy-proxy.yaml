@@ -210,6 +210,25 @@ spec:
           namespace: monitoring
           port: 4317
         type: OpenTelemetry
+      # `tags` values are Envoy access-log format strings, and unlike
+      # `customTags` they are applied to both the downstream (ingress) span and
+      # the upstream (egress) span. That matters because envoy only sets
+      # http.url on the ingress span, so without these the egress span has no
+      # request context at all and Application Insights records it as an
+      # untyped dependency with no name.
+      #
+      # These are the current semantic convention names on purpose: the
+      # azuremonitor exporter reads only those, and envoy's own tags are the
+      # pre-1.0 OpenTracing ones. The otel-collector translates the rest (see
+      # transform/envoy in oci/otel-collector) - it cannot do these two because
+      # the information is not on the egress span to begin with.
+      tags:
+        http.request.method: "%REQ(:METHOD)%"
+        server.address: "%REQ(:AUTHORITY)%"
+        # Application Insights names the request "{method} {http.route}". The
+        # raw path is what traefik's spans end up with too; the collector cuts
+        # both down to the first two segments so the operation list stays small.
+        http.route: "%PATH(NQ)%"
       customTags:
         # This is an example of using a literal as a tag value
         source:
