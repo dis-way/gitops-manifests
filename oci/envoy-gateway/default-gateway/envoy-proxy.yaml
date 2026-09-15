@@ -36,12 +36,18 @@ spec:
           service.beta.kubernetes.io/azure-pip-name-ipv6: ${AKS_LB_PIP6_NAME}
       envoyDeployment:
         container:
+          # The memory limit is deliberately pinned to the memory request, so
+          # the proxy is Guaranteed on memory and cannot grow into a node's
+          # spare capacity before being OOM-killed on an unrelated node event.
+          # Raise ENVOY_MEMORY_REQUEST to give it more headroom - there is no
+          # separate limit knob. There is deliberately NO cpu limit: throttling
+          # the data plane shows up as latency on every route at once.
           resources:
             requests:
-              cpu: "1"
-              memory: 512Mi # TODO: update when loadtested
+              cpu: "${ENVOY_CPU_REQUEST:=1}"
+              memory: "${ENVOY_MEMORY_REQUEST:=512Mi}"
             limits:
-              memory: 512Mi  # deliberately NO cpu limit
+              memory: "${ENVOY_MEMORY_REQUEST:=512Mi}"
         pod:
           # externalTrafficPolicy: Local drops traffic on nodes with no local
           # Envoy pod, so replicas sharing a node means the Azure LB health
