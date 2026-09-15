@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.1.1...oci-envoy-gateway-v2.2.0) (2026-09-15)
+
+
+### Features
+
+* drop more headers in edge proxy ([#1578](https://github.com/dis-way/gitops-manifests/issues/1578)) ([d71a753](https://github.com/dis-way/gitops-manifests/commit/d71a75381d0470097dba1c480681fa3b1786a79a))
+* **envoy-gateway:** make the cpu and memory request/limit configurable with default ([#1581](https://github.com/dis-way/gitops-manifests/issues/1581)) ([f48574b](https://github.com/dis-way/gitops-manifests/commit/f48574bdd30908c77a122b7f3a91dbd9b964da4d))
+
+
+### Bug Fixes
+
+* **envoy-gateway:** add tags to otel traces to improve visualization ([#1583](https://github.com/dis-way/gitops-manifests/issues/1583)) ([6af93dd](https://github.com/dis-way/gitops-manifests/commit/6af93dd6a376b16b19b39c5e47e08e8a02237b1e))
+
 ## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.1.0...oci-envoy-gateway-v2.1.1) (2026-09-14)
 
 
