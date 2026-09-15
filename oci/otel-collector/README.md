@@ -123,9 +123,15 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 
 | Pipeline | Key processors | Exporter |
 |----------|---------------|----------|
-| Traces | `k8sattributes`, `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
+| Traces | `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
 | Logs | `filter/logs` (drop below WARN), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
 | Metrics | `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
+
+### Envoy Spans
+
+Envoy — and therefore every `envoy-proxy` fronting a Gateway — still tags spans with the pre-1.0 OpenTracing names (`http.method`, `http.url`, `http.status_code`) and sends every one of them as a string ([envoyproxy/envoy#30821](https://github.com/envoyproxy/envoy/issues/30821)). The `azuremonitor` exporter reads only the stable semantic conventions, and needs `http.request.method` before it will treat a span as HTTP at all, so untranslated Envoy spans land in Application Insights as a request literally named `ingress`, with no URL, no client IP and a `resultCode` taken from the span status instead of the HTTP status.
+
+`transform/envoy` translates the tags on any span carrying `component=proxy` — including the `Int()` conversion the status code needs — so Envoy requests render like the Traefik ones. It pairs with `telemetry.tracing.tags` on the `eg` EnvoyProxy in `oci/envoy-gateway`, which supplies the few attributes that are not recoverable here because Envoy never puts them on the upstream (egress) span.
 
 ### Tail Sampling Strategy
 
