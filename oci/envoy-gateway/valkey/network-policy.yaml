@@ -1,0 +1,31 @@
+# Valkey holds the global rate-limit counters. Without this, any pod in the cluster
+# could connect to 6379 and FLUSHALL them, silently disabling rate limiting
+# cluster-wide. The only legitimate client is Envoy Gateway's ratelimit service.
+#
+# There is no auth or TLS on this Valkey (see the package README) - this policy is
+# the only thing restricting access.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: valkey-allow-ratelimit
+  namespace: envoy-valkey
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: valkey
+      app.kubernetes.io/instance: valkey
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # namespaceSelector and podSelector in ONE element = AND, so this matches
+        # only the ratelimit pods in the control plane namespace.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy-ratelimit
+      ports:
+        - port: 6379
+          protocol: TCP
