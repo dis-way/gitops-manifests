@@ -246,6 +246,49 @@ spec:
             # Ensure otel sampling suggestion is set
             - set(attributes["dis.otel.sampling"], resource.attributes["dis.otel.sampling"]) where resource.attributes["dis.otel.sampling"] != nil
             - set(attributes["dis.otel.sampling"], "minimum") where attributes["dis.otel.sampling"] == nil
+      # Envoy still tags spans with the pre-1.0 OpenTracing names - http.method,
+      # http.url, http.status_code - and emits every one of them as a string
+      # (envoyproxy/envoy#30821). The azuremonitor exporter only reads the
+      # stable semantic conventions, and it needs http.request.method just to
+      # classify a span as HTTP at all. Untranslated, an envoy-proxy request
+      # reaches Application Insights as a request literally named "ingress",
+      # with no URL, no client IP, and a resultCode taken from the span status
+      # ("0"/"2") rather than the HTTP status. Translating the tags here is what
+      # makes envoy requests render like the traefik ones.
+      #
+      # Runs before transform/azuremonitor, which re-derives the legacy names as
+      # custom dimensions from whatever this produces.
+      transform/envoy:
+        error_mode: ignore
+        trace_statements:
+          - context: span
+            conditions:
+              # Envoy sets component=proxy on every span it produces, for both
+              # the downstream (ingress) and the upstream (egress) side. It is a
+              # more stable marker than the generated envoy Deployment name.
+              - attributes["component"] == "proxy"
+            statements:
+              - set(attributes["http.request.method"], attributes["http.method"]) where attributes["http.method"] != nil
+              # Int(): envoy sends the status as the string "200", and the
+              # exporter reads http.response.status_code as an integer - a
+              # string leaves it at 0 and the request is reported as a failure.
+              - set(attributes["http.response.status_code"], Int(attributes["http.status_code"])) where attributes["http.status_code"] != nil
+              # "-" is envoy's placeholder for a header that was not sent.
+              - set(attributes["user_agent.original"], attributes["user_agent"]) where attributes["user_agent"] != nil and attributes["user_agent"] != "-"
+              # On an ingress span peer.address is the downstream client. On an
+              # egress span it is the upstream host, which is not a client IP.
+              - set(attributes["client.address"], attributes["peer.address"]) where attributes["peer.address"] != nil and kind == SPAN_KIND_SERVER
+              # http.url is the full original URI and is only set on ingress
+              # spans. Split it so the exporter can rebuild the request URL.
+              # Note envoy truncates it at 256 characters by default.
+              - set(attributes["url.full"], attributes["http.url"]) where attributes["http.url"] != nil
+              - set(attributes["url.scheme"], URL(attributes["http.url"])["url.scheme"]) where attributes["http.url"] != nil
+              - set(attributes["url.path"], URL(attributes["http.url"])["url.path"]) where attributes["http.url"] != nil
+              - set(attributes["url.query"], URL(attributes["http.url"])["url.query"]) where attributes["http.url"] != nil
+              # server.address normally arrives as an envoy tag (see the
+              # EnvoyProxy telemetry.tracing.tags block); this covers proxies
+              # that do not set it.
+              - set(attributes["server.address"], URL(attributes["http.url"])["url.domain"]) where attributes["http.url"] != nil and attributes["server.address"] == nil
       # Hack to make azure application insights display traces somewhat correctly
       transform/azuremonitor:
         error_mode: ignore
@@ -273,7 +316,12 @@ spec:
             - set(attributes["db.system"], attributes["db.system.name"]) where attributes["db.system.name"] != nil
             # set http.route to url.path if deployment traefik and url.full not set
             - set(attributes["http.route"], attributes["url.path"]) where attributes["url.path"] != nil and attributes["http.route"] == nil
-            - replace_pattern(attributes["http.route"], "/(.*?)/(.*?)?/(.*?)?$","/$$1/$$2") where resource.attributes["k8s.deployment.name"] == "traefik" and attributes["http.route"] != nil
+            # Application Insights uses http.route as the operation name, so an
+            # ingress proxy that sees every path in the cluster has to be cut
+            # down to the first two segments or the operation list is one entry
+            # per resource id. component=proxy is envoy, which needs the same
+            # treatment as traefik now that its spans carry a url.path.
+            - replace_pattern(attributes["http.route"], "/(.*?)/(.*?)?/(.*?)?$","/$$1/$$2") where (resource.attributes["k8s.deployment.name"] == "traefik" or attributes["component"] == "proxy") and attributes["http.route"] != nil
             # The "Internal Identity" (Service Mesh Fix)
             - set(attributes["http.host"], resource.attributes["service.name"]) where resource.attributes["linkerd.io/proxy-deployment"] != nil
             - set(attributes["http.target"], resource.attributes["service.name"]) where resource.attributes["linkerd.io/proxy-deployment"] != nil
@@ -409,7 +457,7 @@ spec:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
+          processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
           exporters: [azuremonitor]
         logs:
           receivers: [otlp]
