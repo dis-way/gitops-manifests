@@ -26,7 +26,7 @@
   "oci/lakmus": "1.1.5",
   "oci/linkerd": "2.15.0",
   "oci/opencost": "0.2.13",
-  "oci/otel-collector": "1.4.1",
+  "oci/otel-collector": "1.4.2",
   "oci/otel-operator": "1.4.6",
   "oci/platform-system": "1.2.1",
   "oci/tailscale-subnet-router": "1.2.3",
