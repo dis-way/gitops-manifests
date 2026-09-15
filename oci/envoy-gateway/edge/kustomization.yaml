@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ../valkey
   - ../base
   - ../default-gateway
 patches:
@@ -27,3 +28,32 @@ patches:
       - op: add
         path: /spec/releaseName
         value: envoy-gateway
+      - op: add
+        path: /spec/values/config/envoyGateway/rateLimit
+        value:
+          backend:
+            type: Redis
+            redis:
+              url: valkey.envoy-valkey.svc.cluster.local:6379
+      - op: add
+        path: /spec/dependsOn
+        value:
+          - name: valkey
+            namespace: platform-system
+  - target:
+      kind: HelmRepository
+      name: valkey
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+  - target:
+      kind: HelmRelease
+      name: valkey
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+      - op: replace
+        path: /spec/chart/spec/sourceRef/namespace
+        value: platform-system
