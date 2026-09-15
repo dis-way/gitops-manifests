@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.1...oci-otel-collector-v1.4.2) (2026-09-15)
+
+
+### Bug Fixes
+
+* **otel-collector:** transform envoy traces to make them display correctly in azure ([#1582](https://github.com/dis-way/gitops-manifests/issues/1582)) ([e7455e4](https://github.com/dis-way/gitops-manifests/commit/e7455e4559ed163bd5fa10f1fb6512d86dfdaeac))
+
 ## [1.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.0...oci-otel-collector-v1.4.1) (2026-03-18)
 
 
