@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.19.1...oci-dis-tls-cert-v2.20.0) (2026-09-16)
+
+
+### Features
+
+* **dis-tls-cert:** add TLS certificate for af.altinn.no ([#1606](https://github.com/dis-way/gitops-manifests/issues/1606)) ([a83570f](https://github.com/dis-way/gitops-manifests/commit/a83570f74f3770d3eb96af6d8559bbc72b775083))
+
 ## [2.19.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.19.0...oci-dis-tls-cert-v2.19.1) (2026-09-12)
 
 
