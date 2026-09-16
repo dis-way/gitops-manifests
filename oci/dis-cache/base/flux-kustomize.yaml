@@ -7,10 +7,27 @@ spec:
   force: false
   interval: 5m0s
   path: ./default
-  postBuild:
-    substitute:
-      DISCACHE_VALKEY_IMAGE: ${DISCACHE_VALKEY_IMAGE}
-      DISCACHE_EXPORTER_IMAGE: ${DISCACHE_EXPORTER_IMAGE}
+  patches:
+    - target:
+        kind: Deployment
+        name: dis-cache-operator-controller-manager
+      patch: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: dis-cache-operator-controller-manager
+        spec:
+          template:
+            spec:
+              containers:
+                - name: manager
+                  env:
+                    - name: DISCACHE_VALKEY_IMAGE
+                      # renovate: datasource=docker depName=valkey/valkey
+                      value: altinncr.azurecr.io/docker.io/valkey/valkey:9.0.0
+                    - name: DISCACHE_EXPORTER_IMAGE
+                      # renovate: datasource=docker depName=oliver006/redis_exporter
+                      value: altinncr.azurecr.io/docker.io/oliver006/redis_exporter:v1.80.0
   prune: false
   retryInterval: 5m0s
   images:

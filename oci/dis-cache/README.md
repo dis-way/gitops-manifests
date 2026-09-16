@@ -6,8 +6,16 @@ Deploys dis-cache-operator. It turns a team's `Cache` resource into a Valkey ins
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `DISCACHE_VALKEY_IMAGE` | - | Yes | Valkey image for every cache, on the ACR pull-through path. An empty string keeps the upstream default image. |
-| `DISCACHE_EXPORTER_IMAGE` | - | Yes | Metrics exporter image for every cache, on the ACR pull-through path. An empty string keeps the upstream default image. |
+| - | - | No | No configurable variables for this package |
+
+## Images
+
+The Flux Kustomization patches two environment variables into the operator Deployment. They name the images the operator sets on every cache, on the ACR pull-through path. Renovate updates the tags.
+
+| Variable | Image |
+|----------|-------|
+| `DISCACHE_VALKEY_IMAGE` | `altinncr.azurecr.io/docker.io/valkey/valkey` |
+| `DISCACHE_EXPORTER_IMAGE` | `altinncr.azurecr.io/docker.io/oliver006/redis_exporter` |
 
 ## Layers
 
