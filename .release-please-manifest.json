@@ -14,7 +14,7 @@
   "oci/dis-tls-cert": "2.19.1",
   "oci/envoy-gateway": "2.3.0",
   "oci/envoy-gateway-crds": "1.0.1",
-  "oci/external-secrets-operator": "1.7.0",
+  "oci/external-secrets-operator": "1.8.0",
   "oci/gateway-api": "1.1.1",
   "oci/grafana-operator": "2.5.0",
   "oci/headplane": "1.2.1",
