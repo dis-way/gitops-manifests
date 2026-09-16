@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.1.0...oci-dis-cache-v0.2.0) (2026-09-16)
+
+
+### Features
+
+* **dis-cache:** set the cache images in the package and let Renovate track them ([#1605](https://github.com/dis-way/gitops-manifests/issues/1605)) ([43ac965](https://github.com/dis-way/gitops-manifests/commit/43ac965895135e5a95321f99ec3b3e4b511f73cb))
+
 ## 0.1.0 (2026-09-16)
 
 
