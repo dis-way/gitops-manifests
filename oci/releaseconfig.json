@@ -262,5 +262,9 @@
     "tt_ring2": "1.2.3",
     "prod_ring1": "1.2.3",
     "prod_ring2": "1.2.3"
+  },
+  "dis-cache": {
+    "at_ring1": "0.2.0",
+    "at_ring2": "0.2.0"
   }
 }
