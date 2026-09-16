@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.2.0...oci-envoy-gateway-v2.3.0) (2026-09-16)
+
+
+### Features
+
+* **envoy-gateway:** back global rate limiting with Valkey ([#1590](https://github.com/dis-way/gitops-manifests/issues/1590)) ([d462036](https://github.com/dis-way/gitops-manifests/commit/d462036f00693c04f35281f73d454db81c4609a3))
+
 ## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.1.1...oci-envoy-gateway-v2.2.0) (2026-09-15)
 
 
