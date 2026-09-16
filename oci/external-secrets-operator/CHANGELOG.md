@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.7.0...oci-external-secrets-operator-v1.8.0) (2026-09-16)
+
+
+### Features
+
+* **external-secrets-operator:** add platform-aks layer ([#1598](https://github.com/dis-way/gitops-manifests/issues/1598)) ([de6d486](https://github.com/dis-way/gitops-manifests/commit/de6d486b4b2147193428a61a84c42ff8b215fe8b))
+
 ## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.10...oci-external-secrets-operator-v1.7.0) (2026-09-14)
 
 
