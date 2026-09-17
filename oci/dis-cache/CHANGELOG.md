@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.0...oci-dis-cache-v0.2.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **dis-cache:** set the cache images through Flux substitution ([#1633](https://github.com/dis-way/gitops-manifests/issues/1633)) ([2efc39d](https://github.com/dis-way/gitops-manifests/commit/2efc39de57604a12dacf30491e52e0f1c61de92e))
+
 ## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.1.0...oci-dis-cache-v0.2.0) (2026-09-16)
 
 
