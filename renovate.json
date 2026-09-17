@@ -22,7 +22,8 @@
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*value:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*value:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*DISCACHE_[A-Z_]+_IMAGE:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
