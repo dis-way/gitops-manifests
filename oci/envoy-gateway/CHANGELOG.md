@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.0...oci-envoy-gateway-v2.3.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **envoy-proxy:** enhance metrics collection and update rate limit configurations ([#1619](https://github.com/dis-way/gitops-manifests/issues/1619)) ([c48d7c8](https://github.com/dis-way/gitops-manifests/commit/c48d7c85bab0081ebc8f04583a5b7d329bd06519))
+
 ## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.2.0...oci-envoy-gateway-v2.3.0) (2026-09-16)
 
 
