@@ -12,7 +12,7 @@ spec:
       # renovate: datasource=docker depName=valkey/valkey
       DISCACHE_VALKEY_IMAGE: altinncr.azurecr.io/docker.io/valkey/valkey:9.0.0
       # renovate: datasource=docker depName=oliver006/redis_exporter
-      DISCACHE_EXPORTER_IMAGE: altinncr.azurecr.io/docker.io/oliver006/redis_exporter:v1.80.0
+      DISCACHE_EXPORTER_IMAGE: altinncr.azurecr.io/docker.io/oliver006/redis_exporter:v1.91.1
   prune: false
   retryInterval: 5m0s
   images:
