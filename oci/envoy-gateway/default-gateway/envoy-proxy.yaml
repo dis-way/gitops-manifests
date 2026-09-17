@@ -118,6 +118,11 @@ spec:
           value: membership_healthy
         - type: Suffix
           value: membership_degraded
+        # Endpoints excluded from load balancing (failed active health checks,
+        # outlier-ejected). membership_healthy alone cannot distinguish "no
+        # endpoints" from "all endpoints ejected".
+        - type: Suffix
+          value: membership_excluded
         # Upstream (per cluster) request and connection signals.
         - type: Suffix
           value: upstream_rq_total
@@ -135,6 +140,17 @@ spec:
           value: upstream_cx_active
         - type: Suffix
           value: upstream_cx_connect_fail
+        # Connections opened over time, not just the active gauge - a cluster
+        # churning connections and one holding them steady look identical on
+        # upstream_cx_active alone.
+        - type: Suffix
+          value: upstream_cx_total
+        # Upstream throughput. tx is here as the pair of rx: bytes in without
+        # bytes out cannot answer "is this route slow or just large".
+        - type: Suffix
+          value: upstream_cx_rx_bytes_total
+        - type: Suffix
+          value: upstream_cx_tx_bytes_total
         # Downstream (per listener / HTTP connection manager) signals.
         - type: Suffix
           value: downstream_rq_total
@@ -150,8 +166,18 @@ spec:
           value: downstream_rq_5xx
         - type: Suffix
           value: downstream_cx_active
+        # Also matches the TCP proxy's tcp.<stat_prefix>.downstream_cx_total.
+        # Envoy namespaces the HTTP connection manager's counters under
+        # http.<stat_prefix>. and the TCP proxy's under tcp.<stat_prefix>.,
+        # and these names are identical after the namespace - so one suffix
+        # covers both and TCP listeners need no entries of their own.
         - type: Suffix
           value: downstream_cx_total
+        # Downstream throughput, likewise both http.* and tcp.*.
+        - type: Suffix
+          value: downstream_cx_rx_bytes_total
+        - type: Suffix
+          value: downstream_cx_tx_bytes_total
         # Proxy process health - uptime, memory, concurrency. Low cardinality.
         - type: Prefix
           value: server.
@@ -161,12 +187,41 @@ spec:
           value: downstream_cx_overflow
         - type: Suffix
           value: downstream_cx_destroy_remote_active_rq
-        # Local rate limit and the silent-failure signal
+        # Local rate limit and the silent-failure signal.
+        #
+        # Suffix, not Prefix: Envoy namespaces these as
+        # <stat_prefix>.http_local_rate_limit.*, so the stat name does not
+        # start with the filter name and a Prefix match never fires. The
+        # Prefix entry is kept because it costs nothing and does match if a
+        # future version emits these unprefixed.
         - type: Prefix
           value: http_local_rate_limit
-        # Global rate limit — failure_mode_allowed is the fail-open detector
-        - type: Prefix
-          value: ratelimit.
+        - type: Suffix
+          value: http_local_rate_limit.enabled
+        - type: Suffix
+          value: http_local_rate_limit.enforced
+        - type: Suffix
+          value: http_local_rate_limit.rate_limited
+        # Global rate limit. failure_mode_allowed is THE fail-open detector:
+        # the limiter is configured failClosed: false (see the README note),
+        # so when the ratelimit service or Valkey is unreachable every request
+        # is allowed and nothing else in this list moves. That counter is the
+        # only signal that it happened - alert on it being non-zero.
+        #
+        # These were a `Prefix: ratelimit.` match, which produced nothing.
+        # Envoy emits the rate limit filter's stats as
+        # cluster.<target cluster>.ratelimit.*, so the name starts with
+        # "cluster." and the prefix never matched - and because `matches` is
+        # an inclusion list, the detector was filtered out by the very list
+        # meant to collect it. Match on the suffix instead.
+        - type: Suffix
+          value: ratelimit.failure_mode_allowed
+        - type: Suffix
+          value: ratelimit.error
+        - type: Suffix
+          value: ratelimit.over_limit
+        - type: Suffix
+          value: ratelimit.ok
         # JWT enforcement and JWKS health
         - type: Prefix
           value: jwt_authn.
@@ -178,6 +233,17 @@ spec:
           value: ssl.handshake
         - type: Suffix
           value: ssl.connection_error
+        # Certificate expiry as an absolute timestamp, per listener and per
+        # certificate. The cert name sits in the middle of the stat name
+        # (listener.<addr>.ssl.certificate.<name>.expiration_unix_time_seconds),
+        # so match the tail rather than a prefix. Alert on
+        # (value - now) dropping below the External Secrets refresh window,
+        # which catches a stalled Key Vault sync before the cert actually
+        # expires. server.days_until_first_cert_expiring is already covered by
+        # the server. prefix above, but it collapses every cert into one
+        # number and cannot say which one is expiring.
+        - type: Suffix
+          value: expiration_unix_time_seconds
         - type: Suffix
           value: downstream_pre_cx_timeout
         # HTTP/2 abuse — rx_reset is the Rapid Reset signal
@@ -185,6 +251,12 @@ spec:
           value: http2.rx_reset
         - type: Suffix
           value: http2.streams_active
+        # Passive health checking: how many endpoints are currently ejected.
+        # Only produced once something configures outlier detection - a
+        # BackendTrafficPolicy healthCheck.passive - which nothing in this
+        # package does; it is here for the policies teams add.
+        - type: Suffix
+          value: outlier_detection.ejections_active
         # Circuit breakers and retry amplification
         - type: Suffix
           value: circuit_breakers.default.cx_open

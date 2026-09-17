@@ -35,6 +35,25 @@ patches:
             type: Redis
             redis:
               url: valkey.envoy-valkey.svc.cluster.local:6379
+          # Written out although false is already the upstream default, for
+          # the same reason externalTrafficPolicy is written out in
+          # envoy-proxy.yaml: a default that flips under a version bump would
+          # change this cluster's behaviour with nobody reading the file.
+          #
+          # false = fail OPEN. When the ratelimit service cannot answer -
+          # pod rolling, Valkey restarted or slow, NetworkPolicy blocking the
+          # path, or the 20ms call timeout overrun - the request is allowed.
+          # This is deliberate: Valkey here is a single replica on an emptyDir
+          # with no PDB, so fail-closed would turn every Valkey restart into
+          # cluster-wide 500s, and the in-process local limit in
+          # backend-traffic-policy.yaml keeps a survival ceiling in place
+          # meanwhile. See the README note before changing it - flipping this
+          # to true without making Valkey survivable first is an outage.
+          #
+          # Fail-open is silent: cluster.<cluster>.ratelimit.failure_mode_allowed
+          # is the only signal it happened, which is why envoy-proxy.yaml
+          # matches that stat explicitly.
+          failClosed: false
       - op: add
         path: /spec/dependsOn
         value:
