@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.9.1...oci-blackbox-exporter-v0.10.0) (2026-09-17)
+
+
+### Features
+
+* **blackbox-exporter:** add platform-aks layer ([#1625](https://github.com/dis-way/gitops-manifests/issues/1625)) ([17965da](https://github.com/dis-way/gitops-manifests/commit/17965da19639022879ca9b7ca61d16d02503cfd6))
+
 ## [0.9.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.9.0...oci-blackbox-exporter-v0.9.1) (2026-09-06)
 
 
