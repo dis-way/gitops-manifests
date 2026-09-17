@@ -10,7 +10,7 @@ spec:
   postBuild:
     substitute:
       # renovate: datasource=docker depName=valkey/valkey
-      DISCACHE_VALKEY_IMAGE: altinncr.azurecr.io/docker.io/valkey/valkey:9.0.0
+      DISCACHE_VALKEY_IMAGE: altinncr.azurecr.io/docker.io/valkey/valkey:9.1.2
       # renovate: datasource=docker depName=oliver006/redis_exporter
       DISCACHE_EXPORTER_IMAGE: altinncr.azurecr.io/docker.io/oliver006/redis_exporter:v1.80.0
   prune: false
