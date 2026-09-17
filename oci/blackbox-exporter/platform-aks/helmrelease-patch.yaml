@@ -1,0 +1,16 @@
+- op: add
+  path: /spec/values/serviceMonitor/targets/-
+  value:
+    name: kuberneteswrapper-${ENVIRONMENT}
+    url: https://${PLATFORM_URL}/kuberneteswrapper/api/v1/Deployments
+    hostname: ${PLATFORM_URL}
+    labels:
+      release: kube-prometheus-stack
+- op: add
+  path: /spec/values/serviceMonitor/targets/-
+  value:
+    name: ${MASKINPORTEN_URL}
+    url: https://${MASKINPORTEN_URL}
+    hostname: ${MASKINPORTEN_URL}
+    labels:
+      release: kube-prometheus-stack
