@@ -33,5 +33,5 @@
   "oci/traefik": "3.11.0",
   "oci/valkey-operator": "0.3.0",
   "oci/whoami": "0.7.1",
-  "oci/workload-identity-serviceaccount": "0.0.0"
+  "oci/workload-identity-serviceaccount": "1.0.0"
 }
