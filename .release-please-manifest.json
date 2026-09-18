@@ -9,7 +9,7 @@
   "oci/dis-identity": "0.4.0",
   "oci/dis-apim": "0.3.0",
   "oci/dis-cache": "0.2.2",
-  "oci/dis-core-proxies": "0.1.0",
+  "oci/dis-core-proxies": "0.1.1",
   "oci/dis-pgsql": "0.2.3",
   "oci/dis-vault": "1.3.0",
   "oci/dis-tls-cert": "2.20.0",
