@@ -41,6 +41,11 @@
       "component": "oci-dis-cache",
       "initial-version": "0.1.0"
     },
+    "oci/dis-core-proxies": {
+      "release-type": "simple",
+      "component": "oci-dis-core-proxies",
+      "initial-version": "0.1.0"
+    },
     "oci/dis-pgsql": {
       "release-type": "simple",
       "component": "oci-dis-pgsql"
