@@ -136,6 +136,11 @@
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"
+    },
+    "oci/workload-identity-serviceaccount": {
+      "release-type": "simple",
+      "component": "oci-workload-identity-serviceaccount",
+      "initial-version": "1.0.0"
     }
   },
   "separate-pull-requests": true,
