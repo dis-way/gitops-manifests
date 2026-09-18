@@ -32,5 +32,6 @@
   "oci/tailscale-subnet-router": "1.2.3",
   "oci/traefik": "3.11.0",
   "oci/valkey-operator": "0.3.0",
-  "oci/whoami": "0.7.1"
+  "oci/whoami": "0.7.1",
+  "oci/workload-identity-serviceaccount": "0.0.0"
 }
