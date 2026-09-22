@@ -16,6 +16,8 @@ patches:
         value:
           - "${LB_SOURCE_RANGE_APIM}"
           - "${LB_SOURCE_RANGE_CORRESPONDENCE}"
+          - "${LB_SOURCE_RANGE_DIS_CORE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
           # altinn-uptime TLS probes (admin-test-aks egress)
           - "20.251.123.48/28"
           # altinn-uptime TLS probes (admin-prod-aks egress)
@@ -56,12 +58,16 @@ patches:
           - "${AKS_SYSTEM_SUBNET_CIDR}"
           - "${AKS_WORK_SUBNET_CIDR}"
           - "${AKS_FILESCAN_SUBNET_CIDR}"
+          - "${LB_SOURCE_RANGE_DIS_CORE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
       - op: replace
         path: /spec/values/ports/https/forwardedHeaders/trustedIPs
         value:
           - "${AKS_SYSTEM_SUBNET_CIDR}"
           - "${AKS_WORK_SUBNET_CIDR}"
           - "${AKS_FILESCAN_SUBNET_CIDR}"
+          - "${LB_SOURCE_RANGE_DIS_CORE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
       - op: add
         path: /spec/values/extraObjects
         value:
