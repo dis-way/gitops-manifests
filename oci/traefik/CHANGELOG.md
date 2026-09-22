@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.11.0...oci-traefik-v3.12.0) (2026-09-22)
+
+
+### Features
+
+* update load balancer source ranges and trusted IPs for DIS core and edge clusters ([#1656](https://github.com/dis-way/gitops-manifests/issues/1656)) ([4b4ee84](https://github.com/dis-way/gitops-manifests/commit/4b4ee84ded27c5cd4b4dbe3031a0cd2d448140ae))
+
 ## [3.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.1...oci-traefik-v3.11.0) (2026-09-10)
 
 

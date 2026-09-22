@@ -31,7 +31,7 @@
   "oci/otel-operator": "1.4.6",
   "oci/platform-system": "1.2.1",
   "oci/tailscale-subnet-router": "1.2.3",
-  "oci/traefik": "3.11.0",
+  "oci/traefik": "3.12.0",
   "oci/valkey-operator": "0.3.0",
   "oci/whoami": "0.7.1",
   "oci/workload-identity-serviceaccount": "1.0.0"
