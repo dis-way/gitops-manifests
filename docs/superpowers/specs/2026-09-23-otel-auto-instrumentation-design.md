@@ -411,8 +411,11 @@ transform/servicenamespace:
 It runs before `k8sattributes`, which adds `k8s.namespace.name` to every pod's
 telemetry. At this point the attribute can only have come from the SDK itself — in
 practice from the operator, which sets both — so services that set their own
-`service.namespace` keep it. The one exception is a service whose SDK already sends
-both, set equal; V0 (c) looks for such services before rollout.
+`service.namespace` keep it. The exception is a service that sets `service.namespace`
+to its own namespace: once it opts in, the operator adds the equal `k8s.namespace.name`
+(leaving the service's own `service.namespace` alone), and the value is dropped. A
+service whose SDK already sends both loses it at Phase 2 already. V0 (c) finds these
+services before rollout.
 
 Verified with `otelcol-contrib` `0.140.1`, the collector's own version: `validate`
 accepts the rendered `multitenancy` and `adminservices` configs (and rejects a
@@ -691,13 +694,18 @@ without explicit confirmation.
   `v0.158.0` validator found no rejection path this CR hits: it uses no mode-gated
   fields, its ports already parse in the running reconciler, and the RBAC-escalation
   check is skipped while `createRbacPermissions` is off. (c) Before Phase 2, since C6
-  applies to all telemetry: list services that already send `service.namespace` equal
-  to their namespace, e.g. `union requests, dependencies | where timestamp > ago(7d) |
-  extend sns = tostring(customDimensions["service.namespace"]) | where isnotempty(sns)
-  and sns == tostring(customDimensions["k8s.namespace.name"]) | distinct
-  cloud_RoleName`. Any listed service whose SDK also sends `k8s.namespace.name` itself
-  would lose the namespace prefix from its `cloud_RoleName`. It keeps the prefix by no
-  longer sending `k8s.namespace.name` — `k8sattributes` adds it server-side anyway.
+  applies to all telemetry: list services that already set `service.namespace` equal
+  to their namespace. In Application Insights: `union requests, dependencies, traces,
+  exceptions | where timestamp > ago(7d) | extend sns =
+  tostring(customDimensions["service.namespace"]) | where isnotempty(sns) and sns ==
+  tostring(customDimensions["k8s.namespace.name"]) | distinct cloud_RoleName`. For
+  metrics-only senders, in AMW: `group by (job, service_namespace, k8s_namespace_name)
+  ({service_namespace!=""})` — the labels exist because `transform/metrics` merges
+  resource attributes into them. Every listed service loses the `<namespace>.` prefix
+  from its `cloud_RoleName` when it opts in, because the operator then sends the equal
+  `k8s.namespace.name`. Those whose SDK already sends `k8s.namespace.name` lose it at
+  Phase 2. A team that wants to keep a namespaced role name has to use a
+  `service.namespace` that differs from the Kubernetes namespace.
 - **V1** — `kubectl get certificate -n monitoring` shows Ready; the
   `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` have a non-empty
   `caBundle` on every entry, and so does `spec.conversion.webhook.clientConfig` on the
@@ -757,7 +765,7 @@ jsonpath='{.spec.conversion.strategy}'` should print `None`.
 | R8 | A workload that opts out of Linkerd's native sidecar has `linkerd-proxy` at `containers[0]`; it is then only skipped because the operator's webhook configuration sorts before Linkerd's. Renaming the release or setting `admissionWebhooks.namePrefix` could inject into the proxy instead. | No workload in the repo opts out. Documented in both READMEs; V5 checks which container received the env; `container-names` removes the dependency. |
 | R9 | The otel-operator Flux `Kustomization` has no `postBuild` substitution (this package had no variables before), so the `NetworkAuthentication` CIDRs stay literal, Linkerd rejects them, and nothing in the package applies. | Enable `postBuild` and supply `AKS_VNET_*` before Phase 1 — **handoff to the deployment repo**, alongside R2. |
 | R10 | Every pod CREATE is round-tripped through the operator's typed `corev1.Pod`; pod fields newer than its `k8s.io/api` would be stripped cluster-wide. | Keep the operator (Renovate) current, and check its `k8s.io/api` version before each AKS minor upgrade. |
-| R11 | Opting in changes the service's identity: `cloud_RoleName` becomes `<namespace>.<service>` in Application Insights and `job` becomes `<namespace>/<service>` in AMW, because the operator always sets `service.namespace` (D2). | **Decided: keep today's names.** C6 drops the operator-set `service.namespace` in the collector. Residual: a service whose SDK already sends `service.namespace` and `k8s.namespace.name` set equal would lose its namespace prefix too — V0 (c) checks for that before Phase 2. |
+| R11 | Opting in changes the service's identity: `cloud_RoleName` becomes `<namespace>.<service>` in Application Insights and `job` becomes `<namespace>/<service>` in AMW, because the operator always sets `service.namespace` (D2). | **Decided: keep today's names.** C6 drops the operator-set `service.namespace` in the collector. Residual: a service that sets `service.namespace` to its own namespace loses the prefix too — on opt-in, or at Phase 2 if its SDK already sends `k8s.namespace.name`. V0 (c) lists such services before Phase 2; to keep a namespaced name they need a `service.namespace` other than the namespace. |
 | R12 | While the operator is unreachable, Flux cannot reconcile any of `oci/otel-collector`, because the dry-runs of both CRs pass through fail-closed webhooks. | Two replicas + PDB (C1). For bootstrap and upgrade ordering, the otel-collector `Kustomization` `dependsOn` otel-operator, with `wait: true` on the latter — **handoff to the deployment repo**. |
 
 ## References
@@ -831,4 +839,6 @@ After an independent review of the implementation:
 10. **R11 decided: keep today's service names.** Added C6, a collector `transform`
     that drops the operator-set `service.namespace` before `k8sattributes`, so
     `cloud_RoleName` and the AMW `job` label do not change when a workload opts in.
-    Added V0 (c) for the one residual case, and updated V4 and V6.
+    Added V0 (c) for the residual case — services that set `service.namespace` to their
+    own namespace, which the final review pointed out lose it on opt-in too — and
+    updated V4 and V6.

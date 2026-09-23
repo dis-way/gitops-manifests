@@ -128,7 +128,7 @@ Once your telemetry looks right, delete the hand-written equivalents: `OTEL_EXPO
 
 Helm sets `app.kubernetes.io/instance` to the release name, and it is checked **before** `app.kubernetes.io/name`. If your release name is not your service name, pin it with `resource.opentelemetry.io/service.name: <name>`. Otherwise the service is renamed in Application Insights, and dashboards and alerts keyed on the old name stop matching.
 
-**Service identity** — your service keeps its name: Application Insights `cloud_RoleName` and the Azure Monitor Workspace `job` label stay equal to the service name. (The operator also sets `service.namespace`, which the exporters would prefix to both; the collector drops it again — see *Service Identity* under How It Works.) What does change is the instance: the operator sets `service.instance.id` to `<namespace>.<pod>.<container>`, which becomes `cloud_RoleInstance` in Application Insights and the `instance` label in the Azure Monitor Workspace.
+**Service identity** — your service keeps its name: Application Insights `cloud_RoleName` and the Azure Monitor Workspace `job` label stay equal to the service name. (The operator also sets `service.namespace`, which the exporters would prefix to both; the collector drops it again — see *Service Identity* under How It Works.) One exception: if you already set `service.namespace` to your own namespace yourself, it is indistinguishable from the operator's value and is dropped too, so your role name loses its `<namespace>.` prefix. Use a different value to keep a namespaced name. What does change for everyone is the instance: the operator sets `service.instance.id` to `<namespace>.<pod>.<container>`, which becomes `cloud_RoleInstance` in Application Insights and the `instance` label in the Azure Monitor Workspace.
 
 **Rules**
 
@@ -196,7 +196,7 @@ Envoy — and therefore every `envoy-proxy` fronting a Gateway — still tags sp
 
 Workloads that opt into the operator's SDK injection get `service.namespace` set to their Kubernetes namespace. Both exporters build the service's identity from it: `azuremonitor` would report `cloud_RoleName` as `<namespace>.<service>`, and `prometheusremotewrite` would label series `job="<namespace>/<service>"`. Opting in would then rename the service in Application Insights and the Azure Monitor Workspace, breaking dashboards and alerts keyed on the old name.
 
-`transform/servicenamespace` drops `service.namespace` when it equals `k8s.namespace.name`. It runs before `k8sattributes`, so that `k8s.namespace.name` can only have come from the SDK itself — in practice from the operator — and services that set their own `service.namespace` keep it.
+`transform/servicenamespace` drops `service.namespace` when it equals `k8s.namespace.name`. It runs before `k8sattributes`, so that `k8s.namespace.name` can only have come from the SDK itself — in practice from the operator. Services that set their own `service.namespace` keep it, unless the value is their own namespace and the SDK also sends `k8s.namespace.name`, as every opted-in workload's does.
 
 ### Tail Sampling Strategy
 

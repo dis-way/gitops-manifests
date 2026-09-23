@@ -95,6 +95,8 @@ spec:
             - k8s.daemonset.name
             - k8s.node.name
             - service.name
+            # Keep this list explicit and without service.namespace: k8sattributes
+            # would re-add the value transform/servicenamespace drops.
           labels:
             - tag_name: dis.otel.sampling
               key: dis.otel/sampling
