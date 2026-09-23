@@ -22,6 +22,13 @@ spec:
       # renovate: datasource=helm registryUrl=https://open-telemetry.github.io/opentelemetry-helm-charts packageName=opentelemetry-operator
       version: 0.122.0
   values:
+    # Every pod CREATE in the cluster now passes through the operator's webhook,
+    # which fails open. At one replica a syspool node drain is a window in which
+    # annotated pods start un-instrumented without any error.
+    replicaCount: 2
+    pdb:
+      create: true
+      minAvailable: 1
     manager:
       image:
         repository: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator
@@ -30,13 +37,35 @@ spec:
       serviceMonitor:
         enabled: false
       env:
-        ENABLE_WEBHOOKS: "false"
+        ENABLE_WEBHOOKS: "true"
       podAnnotations:
         linkerd.io/inject: "enabled"
         config.linkerd.io/skip-outbound-ports: "443"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    # The instrumentation.opentelemetry.io/inject-* pod annotations are handled by
+    # the mpod.kb.io webhook and are silently ignored without it. Enabling it also
+    # turns on defaulting and fail-closed validation of the Instrumentation and
+    # OpenTelemetryCollector CRs, and a conversion webhook on the collector CRD.
     admissionWebhooks:
-      create: false
+      create: true
+      # Serving cert from the chart's self-signed Issuer. The cert secret is mounted
+      # unconditionally, so cert-manager must be running before the operator starts.
+      certManager:
+        enabled: true
+      pods:
+        # The chart default, pinned because it is load-bearing: an operator outage
+        # must never block pod creation.
+        failurePolicy: Ignore
+      # Down from the chart's 10: Linkerd's proxy injector and Kyverno also sit on
+      # every pod CREATE, so keep the worst case this webhook adds short.
+      timeoutSeconds: 5
+      # One selector is shared by all seven webhooks, so it cannot scope injection
+      # to opted-in namespaces without also disabling CR validation in monitoring.
+      # This is the exclusion AKS documents; injection is gated by the pod annotation.
+      namespaceSelector:
+        matchExpressions:
+          - key: control-plane
+            operator: DoesNotExist
     tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
