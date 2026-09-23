@@ -215,6 +215,9 @@ explicit.
 
 ```yaml
 spec:
+  dependsOn:                           # the multitenancy overlay patches the namespace to platform-system
+    - name: cert-manager
+      namespace: cert-manager
   values:
     replicaCount: 2
     pdb:
@@ -574,18 +577,28 @@ when `admissionWebhooks.create: true`. If cert-manager has not issued the
 the collector's reconciler. The `cert-manager.io/inject-ca-from` annotation
 additionally requires cainjector to be running to patch the caBundle.
 
-**Handoff item:** the otel-operator Flux `Kustomization` needs `dependsOn` cert-manager.
-That lives in the deployment repo, not here. Two more handoffs go with it:
+The draft made this a deployment-repo handoff (a Flux `Kustomization` `dependsOn`).
+It is handled here instead, the way `azure-service-operator` and `linkerd` already do
+it: the HelmRelease `dependsOn` the `cert-manager` HelmRelease (C1), which is only
+Ready once cert-manager's install or upgrade has completed, cainjector included. A
+Kustomization-level `dependsOn` would only wait for the cert-manager Kustomization to
+*apply*, unless that Kustomization sets `wait: true`.
 
-- The same `Kustomization` must set `spec.postBuild` and supply `AKS_VNET_IPV4_CIDR`
-  and `AKS_VNET_IPV6_CIDR` (C2). This package had no variables before, and
-  kustomize-controller substitutes only when `postBuild` is set — without it even the
-  defaulted pod CIDRs stay literal. Linkerd's admission rejects the unparseable
-  `cidr`, and the whole package, HelmRelease included, fails to apply (R9).
-- The otel-collector `Kustomization` should `dependsOn` the otel-operator one. Flux
-  dry-runs every object on every reconciliation, and the dry-runs of the
-  `Instrumentation` and collector CRs now pass through fail-closed webhooks, so the
-  collector package cannot reconcile at all while the operator is unreachable (R12).
+**Handoff items** — these do live in the deployment repo:
+
+- The otel-operator `Kustomization` must set `spec.postBuild` and supply
+  `AKS_VNET_IPV4_CIDR` and `AKS_VNET_IPV6_CIDR` (C2). This package had no variables
+  before, and kustomize-controller substitutes only when `postBuild` is set — without
+  it even the defaulted pod CIDRs stay literal. Linkerd's admission rejects the
+  unparseable `cidr`, and the whole package, HelmRelease included, fails to apply (R9).
+- The otel-collector `Kustomization` should `dependsOn` the otel-operator one, and for
+  that to mean anything the otel-operator `Kustomization` needs `wait: true` (or a
+  health check on the operator Deployment); without either it is Ready as soon as it
+  applies. This orders bootstrap and upgrades. It does not help during an outage: Flux
+  dry-runs every object on every reconciliation, the dry-runs of the `Instrumentation`
+  and collector CRs pass through fail-closed webhooks, and the collector package
+  cannot reconcile while the operator is unreachable (R12) — the protection there is
+  the two replicas and the PDB.
 
 ### AKS specifics
 
@@ -636,8 +649,10 @@ without explicit confirmation.
   oci/otel-collector/multitenancy`, which server-side dry-runs with the
   Kustomization's own substitutions and field manager; in a scratch cluster, pipe
   `kustomize build oci/otel-collector/multitenancy | flux envsubst --strict` (with
-  representative values exported) into `kubectl apply --server-side --dry-run=server
-  -f -`. A plain `kubectl apply -k` sends unsubstituted `${…}` values under kubectl's
+  representative values exported), filtered to the two CRs with `yq
+  'select(.kind=="OpenTelemetryCollector" or .kind=="Instrumentation")'`, into
+  `kubectl apply --server-side --dry-run=server -f -` — a scratch cluster lacks the
+  ExternalSecret and Linkerd CRDs the rest of the layer needs. A plain `kubectl apply -k` sends unsubstituted `${…}` values under kubectl's
   field manager and fails for reasons unrelated to the webhook. The webhook only
   exists once Phase 1 has landed, so run (b) in a scratch cluster with the chart at
   C1's values before Phase 1, or in the first ring straight after it. A rejection there
@@ -694,7 +709,7 @@ jsonpath='{.spec.conversion.strategy}'` should print `None`.
 | # | Risk | Mitigation |
 |---|------|------------|
 | R1 | Existing collector CR fails the newly-active validating webhook, blocking Flux. | V0 dry-run, in a scratch cluster or straight after Phase 1. The `v0.158.0` validator was read against the CR and no rejection path applies; V0 is the definitive check. |
-| R2 | cert-manager unavailable at bootstrap leaves the operator in `ContainerCreating`, stalling collector reconciliation too. | Flux `dependsOn` cert-manager — **handoff to the deployment repo**. |
+| R2 | cert-manager unavailable at bootstrap leaves the operator in `ContainerCreating`, stalling collector reconciliation too. | HelmRelease `dependsOn` the `cert-manager` HelmRelease (C1), as `azure-service-operator` and `linkerd` already do. |
 | R3 | Every cluster gets a fail-closed conversion webhook on the collector CRD. | Only called for `v1alpha1` ↔ `v1beta1` conversion; nothing in the repo requests `OpenTelemetryCollector` at `v1alpha1`. V0 (a) checks stored versions, V1 checks its `caBundle`. Accepted. |
 | R4 | A chart's `app.kubernetes.io/instance` differs from its service name, renaming it in App Insights. | `resource.opentelemetry.io/service.name` override documented; V6 compares before/after per app. |
 | R5 | Webhook serving might be gated on leader election, making the second replica dead weight. | Resolved from source: controller-runtime `v0.24.1`'s webhook server does not need leader election, so both replicas serve. V2 confirms in the cluster. |
@@ -704,7 +719,7 @@ jsonpath='{.spec.conversion.strategy}'` should print `None`.
 | R9 | The otel-operator Flux `Kustomization` has no `postBuild` substitution (this package had no variables before), so the `NetworkAuthentication` CIDRs stay literal, Linkerd rejects them, and nothing in the package applies. | Enable `postBuild` and supply `AKS_VNET_*` before Phase 1 — **handoff to the deployment repo**, alongside R2. |
 | R10 | Every pod CREATE is round-tripped through the operator's typed `corev1.Pod`; pod fields newer than its `k8s.io/api` would be stripped cluster-wide. | Keep the operator (Renovate) current, and check its `k8s.io/api` version before each AKS minor upgrade. |
 | R11 | Opting in changes the service's identity: `cloud_RoleName` becomes `<namespace>.<service>` in Application Insights and `job` becomes `<namespace>/<service>` in AMW, because the operator always sets `service.namespace` (D2). | **Open decision.** (a) Accept and document — the current state: the collector README tells teams to update dashboards and alerts when they opt in. (b) Keep today's names: drop `service.namespace` in the collector when it equals the SDK-sent `k8s.namespace.name`, before `k8sattributes`. |
-| R12 | While the operator is unreachable, Flux cannot reconcile any of `oci/otel-collector`, because the dry-runs of both CRs pass through fail-closed webhooks. | Two replicas + PDB (C1); the otel-collector `Kustomization` should `dependsOn` otel-operator — **handoff to the deployment repo**. |
+| R12 | While the operator is unreachable, Flux cannot reconcile any of `oci/otel-collector`, because the dry-runs of both CRs pass through fail-closed webhooks. | Two replicas + PDB (C1). For bootstrap and upgrade ordering, the otel-collector `Kustomization` `dependsOn` otel-operator, with `wait: true` on the latter — **handoff to the deployment repo**. |
 
 ## References
 
@@ -748,8 +763,8 @@ Changes from the approved draft, made while implementing it:
    V5, and added R8 for the opt-out case.
 4. **V0 split into a stored-versions check and a dry-run**, noting that the dry-run
    needs the validating webhook, which only exists once Phase 1 has landed.
-5. **Added R9**: the `AKS_VNET_*` variables C2 makes required are a second
-   deployment-repo handoff, next to `dependsOn` cert-manager.
+5. **Added R9**: the `AKS_VNET_*` variables C2 makes required are a deployment-repo
+   handoff.
 
 After an independent review of the implementation:
 
@@ -762,8 +777,14 @@ After an independent review of the implementation:
    annotations before `OTEL_RESOURCE_ATTRIBUTES` is deleted; and an `Instrumentation`
    change reaches only recreated pods (Goals, rules, a comment in C3's file).
 8. **Handoffs and risks.** R9 now requires enabling `postBuild`, not just supplying
-   variables. Added R12 (a collector `dependsOn` for operator outages) and R10 (every pod
-   is round-tripped through the operator's typed Pod). R5 is resolved from
-   controller-runtime source. V0(b) uses `flux diff kustomization`, and V6 now also
-   checks identity, label count and webhook latency. Tail sampling does not key on the
-   service name, which the draft's D2 claimed it did.
+   variables. Added R12 (an operator outage blocks all collector reconciliation; the
+   replicas and PDB are the mitigation) and R10 (every pod is round-tripped through
+   the operator's typed Pod). R5 is resolved from controller-runtime source. V0(b) uses
+   `flux diff kustomization`, and V6 now also checks identity, label count and webhook
+   latency. Tail sampling does not key on the service name, which the draft's D2
+   claimed it did.
+9. **cert-manager ordering moved into this repo** (R2). The HelmRelease `dependsOn` the
+   `cert-manager` HelmRelease, as `azure-service-operator` and `linkerd` do, instead of
+   a deployment-repo `Kustomization` `dependsOn`. The latter only waits for the
+   dependency to apply unless it sets `wait: true`, which the collector → operator
+   handoff (R12) now spells out.
