@@ -45,8 +45,10 @@ spec:
 
 and gets a superset of the same environment, plus `k8s.namespace.name`,
 `k8s.node.name`, `k8s.deployment.name`, `service.instance.id` and
-`service.namespace`. The last two are not free: the exporters build the service's
-identity from them, so opting in changes it (see D2 and R11).
+`service.namespace`. The last two feed the service's identity in Application
+Insights and AMW: the collector drops the operator's `service.namespace` again so that
+service names stay unchanged (C6), and `service.instance.id` becomes the per-pod
+instance ID (see D2).
 
 ## Goals
 
@@ -133,19 +135,21 @@ side in between.
 annotation says otherwise) and `service.instance.id` (`<namespace>.<pod>.<container>`),
 and the collector's exporters fold both into the service's identity:
 
-| Sink | Today | After opting in |
-|------|-------|-----------------|
-| Application Insights `cloud_RoleName` (`azuremonitor`) | `<service>` | `<namespace>.<service>` |
-| Application Insights `cloud_RoleInstance` | SDK-dependent | `<namespace>.<pod>.<container>` |
-| AMW `job` label (`prometheusremotewrite`) | `<service>` | `<namespace>/<service>` |
-| AMW `instance` label | SDK-dependent | `<namespace>.<pod>.<container>` |
+| Sink | Today | Opted in, as exported | Opted in, with C6 |
+|------|-------|-----------------------|-------------------|
+| Application Insights `cloud_RoleName` (`azuremonitor`) | `<service>` | `<namespace>.<service>` | `<service>` |
+| Application Insights `cloud_RoleInstance` | SDK-dependent | `<namespace>.<pod>.<container>` | same |
+| AMW `job` label (`prometheusremotewrite`) | `<service>` | `<namespace>/<service>` | `<service>` |
+| AMW `instance` label | SDK-dependent | `<namespace>.<pod>.<container>` | same |
 
 (`contracts_utils.go` `applyCloudTagsToEnvelope` and `prometheusremotewrite/helper.go`
-in collector-contrib `v0.140.1`, the image `collector.yaml` runs.) This happens the
-moment a workload is annotated, whatever its own `OTEL_SERVICE_NAME` says, and cannot
-be switched off per pod — an empty annotation falls back to the namespace. The
-approved draft listed `service.namespace` as a free extra; it is a rename, tracked
-as R11.
+in collector-contrib `v0.140.1`, the image `collector.yaml` runs.) The rename happens
+the moment a workload is annotated, whatever its own `OTEL_SERVICE_NAME` says, and
+cannot be switched off per pod — an empty annotation falls back to the namespace. The
+approved draft listed `service.namespace` as a free extra. Since keeping service names
+stable is the point of this decision, C6 drops the operator-set `service.namespace` in
+the collector (R11). The per-pod instance ID is kept: instances are ephemeral anyway,
+and it is more meaningful than what SDKs generate.
 
 ### D3 — One `Instrumentation` CR, referenced explicitly
 
@@ -376,7 +380,8 @@ printer column.
 ### C4 — Documentation
 
 - **`oci/otel-collector/README.md`** — extend the existing "Developer View" section
-  with the annotation contract (below), and add `Instrumentation` to the Layers table.
+  with the annotation contract (below), add `Instrumentation` to the Layers table, and
+  explain C6 under How It Works.
 - **`oci/otel-operator/README.md`** — new; the package has none. Use the OCI Package
   README format from `CLAUDE.md`, and document that enabling webhooks makes
   cert-manager a startup dependency.
@@ -387,6 +392,32 @@ printer column.
 Both packages are already registered in `release-please-config.json` and
 `.release-please-manifest.json`. Only `oci/releaseconfig.json` ring versions change,
 during rollout.
+
+### C6 — `oci/otel-collector/base/collector.yaml`: keep service names stable
+
+Added during implementation (R11). A `transform` processor drops `service.namespace`
+when it equals `k8s.namespace.name`, as the first processor after `memory_limiter` in
+all three pipelines:
+
+```yaml
+transform/servicenamespace:
+  error_mode: ignore
+  trace_statements:   # likewise log_statements and metric_statements
+    - context: resource
+      statements:
+        - delete_key(attributes, "service.namespace") where attributes["service.namespace"] != nil and attributes["service.namespace"] == attributes["k8s.namespace.name"]
+```
+
+It runs before `k8sattributes`, which adds `k8s.namespace.name` to every pod's
+telemetry. At this point the attribute can only have come from the SDK itself — in
+practice from the operator, which sets both — so services that set their own
+`service.namespace` keep it. The one exception is a service whose SDK already sends
+both, set equal; V0 (c) looks for such services before rollout.
+
+Verified with `otelcol-contrib` `0.140.1`, the collector's own version: `validate`
+accepts the rendered `multitenancy` and `adminservices` configs (and rejects a
+deliberately broken statement), and a functional run over OTLP traces, metrics and
+logs dropped `service.namespace` only where it equalled `k8s.namespace.name`.
 
 ## App-facing contract
 
@@ -619,7 +650,7 @@ collector.
 
 | Phase | Action |
 |-------|--------|
-| 0 | Pre-flight checks (V0): stored CRD versions in the first ring, and a dry-run of the collector CR against the validating webhook. |
+| 0 | Pre-flight checks (V0): stored CRD versions in the first ring, a dry-run of the collector CR against the validating webhook, and services that already send `service.namespace`. |
 | 1 | Bump `otel-operator` in `at_ring1`. Verify V1–V3. |
 | 2 | Bump `otel-collector` in `at_ring1`. Verify V4. |
 | 3 | Annotate `oci/whoami` as the injection canary. Verify V5. Revert the annotation afterwards. |
@@ -659,7 +690,14 @@ without explicit confirmation.
   blocks reconciliation of the collector package, not the running collector. Reading the
   `v0.158.0` validator found no rejection path this CR hits: it uses no mode-gated
   fields, its ports already parse in the running reconciler, and the RBAC-escalation
-  check is skipped while `createRbacPermissions` is off.
+  check is skipped while `createRbacPermissions` is off. (c) Before Phase 2, since C6
+  applies to all telemetry: list services that already send `service.namespace` equal
+  to their namespace, e.g. `union requests, dependencies | where timestamp > ago(7d) |
+  extend sns = tostring(customDimensions["service.namespace"]) | where isnotempty(sns)
+  and sns == tostring(customDimensions["k8s.namespace.name"]) | distinct
+  cloud_RoleName`. Any listed service whose SDK also sends `k8s.namespace.name` itself
+  would lose the namespace prefix from its `cloud_RoleName`. It keeps the prefix by no
+  longer sending `k8s.namespace.name` — `k8sattributes` adds it server-side anyway.
 - **V1** — `kubectl get certificate -n monitoring` shows Ready; the
   `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` have a non-empty
   `caBundle` on every entry, and so does `spec.conversion.webhook.clientConfig` on the
@@ -671,7 +709,8 @@ without explicit confirmation.
 - **V3** — the collector still reconciles: `kubectl get otelcol -n monitoring` and the
   Flux Kustomization stays Ready.
 - **V4** — `kubectl get otelinst -n monitoring` shows `cluster` with the expected
-  Endpoint and Sampler printer columns.
+  Endpoint and Sampler printer columns, and existing services keep their
+  `cloud_RoleName` and `job` after the collector bump (C6 sees all telemetry).
 - **V5** — annotate `oci/whoami`'s pod template (the change rolls its pods) and
   confirm the injected environment on the `whoami` container — `linkerd-proxy`, a
   native sidecar in `initContainers`, gets none: endpoint, protocol,
@@ -680,9 +719,9 @@ without explicit confirmation.
 - **V6** — on the first real app, compare before and after: (a) `service.name` is
   unchanged; (b) `k8s.pod.uid` survives — it is what the collector's `k8sattributes`
   `pod_association` keys on (`oci/otel-collector/base/collector.yaml`), and losing it
-  would break server-side enrichment for that workload; (c) `cloud_RoleName` /
-  `cloud_RoleInstance` in Application Insights and `job` / `instance` in AMW match
-  what R11 decides, with the app's dashboards and alerts updated accordingly; (d) its
+  would break server-side enrichment for that workload; (c) `cloud_RoleName` in
+  Application Insights and `job` in AMW are unchanged (C6), while `cloud_RoleInstance`
+  and `instance` become `<namespace>.<pod>.<container>`; (d) its
   metric series stay within AMW's labels-per-series limit, since `transform/metrics`
   copies every resource attribute into labels and opting in adds several; (e)
   `mpod.kb.io` latency (`apiserver_admission_webhook_admission_duration_seconds`)
@@ -718,7 +757,7 @@ jsonpath='{.spec.conversion.strategy}'` should print `None`.
 | R8 | A workload that opts out of Linkerd's native sidecar has `linkerd-proxy` at `containers[0]`; it is then only skipped because the operator's webhook configuration sorts before Linkerd's. Renaming the release or setting `admissionWebhooks.namePrefix` could inject into the proxy instead. | No workload in the repo opts out. Documented in both READMEs; V5 checks which container received the env; `container-names` removes the dependency. |
 | R9 | The otel-operator Flux `Kustomization` has no `postBuild` substitution (this package had no variables before), so the `NetworkAuthentication` CIDRs stay literal, Linkerd rejects them, and nothing in the package applies. | Enable `postBuild` and supply `AKS_VNET_*` before Phase 1 — **handoff to the deployment repo**, alongside R2. |
 | R10 | Every pod CREATE is round-tripped through the operator's typed `corev1.Pod`; pod fields newer than its `k8s.io/api` would be stripped cluster-wide. | Keep the operator (Renovate) current, and check its `k8s.io/api` version before each AKS minor upgrade. |
-| R11 | Opting in changes the service's identity: `cloud_RoleName` becomes `<namespace>.<service>` in Application Insights and `job` becomes `<namespace>/<service>` in AMW, because the operator always sets `service.namespace` (D2). | **Open decision.** (a) Accept and document — the current state: the collector README tells teams to update dashboards and alerts when they opt in. (b) Keep today's names: drop `service.namespace` in the collector when it equals the SDK-sent `k8s.namespace.name`, before `k8sattributes`. |
+| R11 | Opting in changes the service's identity: `cloud_RoleName` becomes `<namespace>.<service>` in Application Insights and `job` becomes `<namespace>/<service>` in AMW, because the operator always sets `service.namespace` (D2). | **Decided: keep today's names.** C6 drops the operator-set `service.namespace` in the collector. Residual: a service whose SDK already sends `service.namespace` and `k8s.namespace.name` set equal would lose its namespace prefix too — V0 (c) checks for that before Phase 2. |
 | R12 | While the operator is unreachable, Flux cannot reconcile any of `oci/otel-collector`, because the dry-runs of both CRs pass through fail-closed webhooks. | Two replicas + PDB (C1). For bootstrap and upgrade ordering, the otel-collector `Kustomization` `dependsOn` otel-operator, with `wait: true` on the latter — **handoff to the deployment repo**. |
 
 ## References
@@ -770,7 +809,8 @@ After an independent review of the implementation:
 
 6. **`service.namespace` is a rename, not a free extra** (D2, R11). The operator always
    sets it, and the exporters fold it into `cloud_RoleName` and the AMW `job` label.
-   Documented; accepting it versus stripping it in the collector is an open decision.
+   Documented, with accepting it versus stripping it in the collector left open —
+   decided in item 10.
 7. **The contract rules are more precise**: only `env` is honoured, not `envFrom`;
    variables are filled one at a time; three resource keys are appended twice;
    `container-names` must match `^[a-zA-Z0-9-,]+$`; custom resource keys need
@@ -788,3 +828,7 @@ After an independent review of the implementation:
    a deployment-repo `Kustomization` `dependsOn`. The latter only waits for the
    dependency to apply unless it sets `wait: true`, which the collector → operator
    handoff (R12) now spells out.
+10. **R11 decided: keep today's service names.** Added C6, a collector `transform`
+    that drops the operator-set `service.namespace` before `k8sattributes`, so
+    `cloud_RoleName` and the AMW `job` label do not change when a workload opts in.
+    Added V0 (c) for the one residual case, and updated V4 and V6.

@@ -16,9 +16,9 @@ flowchart TB
         es["ExternalSecret\napp-insights-connstring"]
         subgraph col["otel-collector pod"]
             recv["Receivers\nOTLP gRPC :4317\nOTLP HTTP :4318"]
-            proc_t["Traces pipeline\nmemory_limiter → resourcedetection/aks\n→ k8sattributes → transform/*\n→ tail_sampling → batch"]
-            proc_l["Logs pipeline\nfilter/logs → memory_limiter\n→ resourcedetection/aks → k8sattributes\n→ transform/drop → batch"]
-            proc_m["Metrics pipeline\nmemory_limiter → resourcedetection/aks\n→ k8sattributes → transform/* → batch"]
+            proc_t["Traces pipeline\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → tail_sampling → batch"]
+            proc_l["Logs pipeline\nfilter/logs → memory_limiter\n→ transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/drop → batch"]
+            proc_m["Metrics pipeline\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → batch"]
         end
     end
 
@@ -128,7 +128,7 @@ Once your telemetry looks right, delete the hand-written equivalents: `OTEL_EXPO
 
 Helm sets `app.kubernetes.io/instance` to the release name, and it is checked **before** `app.kubernetes.io/name`. If your release name is not your service name, pin it with `resource.opentelemetry.io/service.name: <name>`. Otherwise the service is renamed in Application Insights, and dashboards and alerts keyed on the old name stop matching.
 
-**Service identity** — the operator also sets `service.namespace` to your namespace and `service.instance.id` to `<namespace>.<pod>.<container>`, and both exporters build the service's identity from them. In Application Insights `cloud_RoleName` becomes `<namespace>.<service name>` and `cloud_RoleInstance` the instance ID; in the Azure Monitor Workspace the `job` label becomes `<namespace>/<service name>` and `instance` the instance ID. This happens as soon as the pod is annotated — even while your own `OTEL_SERVICE_NAME` is still set — so update dashboards and alerts that filter on these fields when you opt in.
+**Service identity** — your service keeps its name: Application Insights `cloud_RoleName` and the Azure Monitor Workspace `job` label stay equal to the service name. (The operator also sets `service.namespace`, which the exporters would prefix to both; the collector drops it again — see *Service Identity* under How It Works.) What does change is the instance: the operator sets `service.instance.id` to `<namespace>.<pod>.<container>`, which becomes `cloud_RoleInstance` in Application Insights and the `instance` label in the Azure Monitor Workspace.
 
 **Rules**
 
@@ -182,15 +182,21 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 
 | Pipeline | Key processors | Exporter |
 |----------|---------------|----------|
-| Traces | `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
-| Logs | `filter/logs` (drop below WARN), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
-| Metrics | `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
+| Traces | `transform/servicenamespace` (drop operator-set `service.namespace`), `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
+| Logs | `filter/logs` (drop below WARN), `transform/servicenamespace`, `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
+| Metrics | `transform/servicenamespace`, `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
 
 ### Envoy Spans
 
 Envoy — and therefore every `envoy-proxy` fronting a Gateway — still tags spans with the pre-1.0 OpenTracing names (`http.method`, `http.url`, `http.status_code`) and sends every one of them as a string ([envoyproxy/envoy#30821](https://github.com/envoyproxy/envoy/issues/30821)). The `azuremonitor` exporter reads only the stable semantic conventions, and needs `http.request.method` before it will treat a span as HTTP at all, so untranslated Envoy spans land in Application Insights as a request literally named `ingress`, with no URL, no client IP and a `resultCode` taken from the span status instead of the HTTP status.
 
 `transform/envoy` translates the tags on any span carrying `component=proxy` — including the `Int()` conversion the status code needs — so Envoy requests render like the Traefik ones. It pairs with `telemetry.tracing.tags` on the `eg` EnvoyProxy in `oci/envoy-gateway`, which supplies the few attributes that are not recoverable here because Envoy never puts them on the upstream (egress) span.
+
+### Service Identity
+
+Workloads that opt into the operator's SDK injection get `service.namespace` set to their Kubernetes namespace. Both exporters build the service's identity from it: `azuremonitor` would report `cloud_RoleName` as `<namespace>.<service>`, and `prometheusremotewrite` would label series `job="<namespace>/<service>"`. Opting in would then rename the service in Application Insights and the Azure Monitor Workspace, breaking dashboards and alerts keyed on the old name.
+
+`transform/servicenamespace` drops `service.namespace` when it equals `k8s.namespace.name`. It runs before `k8sattributes`, so that `k8s.namespace.name` can only have come from the SDK itself — in practice from the operator — and services that set their own `service.namespace` keep it.
 
 ### Tail Sampling Strategy
 
