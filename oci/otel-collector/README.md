@@ -12,6 +12,7 @@ flowchart TB
 
     subgraph mon["monitoring namespace (Linkerd mesh)"]
         op["otel-operator pod\n(syspool)"]
+        inst["Instrumentation\ncluster"]
         es["ExternalSecret\napp-insights-connstring"]
         subgraph col["otel-collector pod"]
             recv["Receivers\nOTLP gRPC :4317\nOTLP HTTP :4318"]
@@ -33,6 +34,8 @@ flowchart TB
 
     hr -->|"Flux manages"| op
     op -->|"reconciles OpenTelemetryCollector CR"| col
+    inst -.->|"read on pod CREATE"| op
+    op -->|"injects OTEL_* env\n(annotated pods)"| app
     kv -->|"ExternalSecret pulls connection string"| es
     es -->|"mounts as k8s Secret"| col
     app -->|"OTLP over Linkerd mTLS"| recv
@@ -44,7 +47,7 @@ flowchart TB
 
 ## Developer View
 
-What an application developer needs to know: configure your SDK to send OTLP to the collector's in-cluster address, optionally label your Deployment to control sampling, and your telemetry will appear in Application Insights (traces/logs) and Azure Monitor Workspace (metrics).
+What an application developer needs to know: annotate your pod template so the operator points your SDK at the collector (or configure the endpoint yourself), optionally label your Deployment to control sampling, and your telemetry will appear in Application Insights (traces/logs) and Azure Monitor Workspace (metrics).
 
 ```mermaid
 flowchart LR
@@ -84,7 +87,57 @@ flowchart LR
     enrich -->|"all metrics"| amw
 ```
 
-**SDK endpoint** — choose one based on your SDK's transport:
+### Automatic SDK configuration
+
+Add one annotation to your pod template and the `otel-operator` injects the SDK environment from `Instrumentation/cluster` (`base/instrumentation.yaml`) when each pod is created. Only environment variables are injected — no init containers, sidecars or volumes — so your application keeps shipping its own OpenTelemetry SDK.
+
+```yaml
+spec:
+  template:
+    metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-sdk: "monitoring/cluster"
+        # only for pods with more than one application container
+        instrumentation.opentelemetry.io/container-names: "app"
+      labels:
+        app.kubernetes.io/name: access-management
+        app.kubernetes.io/version: "1.4.2"
+```
+
+What each selected container gets:
+
+| Variable | Value |
+|----------|-------|
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://otel-collector.monitoring.svc.cluster.local:4317` |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | `grpc` |
+| `OTEL_SERVICE_NAME` | Derived — see *Service name* below |
+| `OTEL_RESOURCE_ATTRIBUTES` | `k8s.namespace.name`, `k8s.pod.name`, `k8s.pod.uid`, `k8s.container.name`, `k8s.node.name`, `service.instance.id`, `service.namespace`, `service.version` (the `app.kubernetes.io/version` label, else the image tag), plus the name and UID of the owning workload (`k8s.deployment.*`, `k8s.replicaset.*`, `k8s.statefulset.*`, `k8s.daemonset.*`, `k8s.job.*`, `k8s.cronjob.*`) |
+| `OTEL_PROPAGATORS` | `tracecontext,baggage` |
+| `OTEL_TRACES_SAMPLER` | `parentbased_always_on` — the sampling decision is made by the collector's tail sampling |
+| `OTEL_RESOURCE_ATTRIBUTES_POD_NAME`, `OTEL_RESOURCE_ATTRIBUTES_POD_UID`, `OTEL_RESOURCE_ATTRIBUTES_NODE_NAME`, `OTEL_POD_IP`, `OTEL_NODE_IP` | Downward API values that `OTEL_RESOURCE_ATTRIBUTES` refers to |
+
+Once your telemetry looks right, delete the hand-written equivalents: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_SERVICE_NAME`, `POD_UID` and `OTEL_RESOURCE_ATTRIBUTES`.
+
+**Service name** — the first match wins:
+
+1. `OTEL_SERVICE_NAME` already set on the container
+2. The `resource.opentelemetry.io/service.name` pod annotation
+3. The `app.kubernetes.io/instance` label, then the `app.kubernetes.io/name` label
+4. The owning Deployment, ReplicaSet, StatefulSet, DaemonSet, CronJob or Job, then the pod or container name
+
+Helm sets `app.kubernetes.io/instance` to the release name, and it is checked **before** `app.kubernetes.io/name`. If your release name is not your service name, pin it with `resource.opentelemetry.io/service.name: <name>`. Otherwise the service is renamed in Application Insights, and dashboards, alerts and sampling rules keyed on the old name stop matching.
+
+**Rules**
+
+- The annotation and labels go on `spec.template.metadata`, **not** on the Deployment's own `metadata`. This is the most common mistake.
+- Injection happens when a pod is **created**. Adding or changing the annotation does nothing until the pods are recreated, e.g. with `kubectl rollout restart`.
+- Any `OTEL_*` variable your container already sets wins; the operator leaves it alone. `OTEL_RESOURCE_ATTRIBUTES` is the exception: the operator appends its attributes, skipping keys you already set. You can therefore add the annotation first and delete the hand-written variables in a later change.
+- Without `instrumentation.opentelemetry.io/container-names`, only `.spec.containers[0]` is configured. In a Linkerd-meshed pod that is still your application container, because the operator sees the pod before Linkerd inserts `linkerd-proxy` at index 0. If the pod has more than one application container, list them — comma-separated names from `.spec.containers` or `.spec.initContainers`.
+- Injection fails open. If the operator is unavailable, or the annotation names an `Instrumentation` that does not exist, the pod starts without the variables; the only trace is an error in the operator's log. Check the running pod (`kubectl get pod <pod> -o yaml`) after the first rollout.
+
+### Manual SDK configuration
+
+For workloads that do not opt in, set the endpoint yourself. Choose one based on your SDK's transport:
 ```bash
 # gRPC
 OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring.svc.cluster.local:4317
@@ -92,6 +145,8 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring.svc.cluster.local:4
 # HTTP
 OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring.svc.cluster.local:4318
 ```
+
+### Trace sampling
 
 **To increase trace sampling rate** for a noisy-but-important service, add this label to your `Deployment`:
 ```yaml
@@ -106,7 +161,7 @@ Without the label the default rate is **1%**. Errors and slow requests (≥ 1 s)
 
 ### Operator → Collector
 
-The `otel-operator` is installed via Helm by Flux. Its `HelmRelease` and `HelmRepository` live in `platform-system` (Flux's management namespace) but target the `monitoring` namespace. The operator watches `OpenTelemetryCollector` custom resources and reconciles the collector deployment defined in `base/collector.yaml`.
+The `otel-operator` is installed via Helm by Flux. Its `HelmRelease` and `HelmRepository` live in `platform-system` (Flux's management namespace) but target the `monitoring` namespace. The operator watches `OpenTelemetryCollector` custom resources and reconciles the collector deployment defined in `base/collector.yaml`. It also serves the admission webhook that injects the SDK configuration from `Instrumentation/cluster` (`base/instrumentation.yaml`) into annotated pods; see `oci/otel-operator/README.md` for the webhooks and their failure modes.
 
 ### Identity and Secrets
 
@@ -158,7 +213,7 @@ The sampling hint is propagated via the `dis.otel/sampling` label on the Deploym
 
 | Path | Description |
 |------|-------------|
-| `base` | Core resources: namespace, `OpenTelemetryCollector` CR, ServiceAccount, ClusterRole/Binding, ExternalSecret |
+| `base` | Core resources: namespace, `OpenTelemetryCollector` CR, `Instrumentation` CR, ServiceAccount, ClusterRole/Binding, ExternalSecret |
 | `multitenancy` | Includes `base` + `policies`; entry point for Flux multitenancy deployments |
 | `apps` | Alias for `base`; no additional changes |
 | `policies` | Linkerd `Server` resources opening OTLP ports 4317 and 4318 to cluster-wide traffic |

@@ -1,0 +1,30 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: cluster
+  namespace: monitoring
+spec:
+  # Derive service.name/service.version from the standard app.kubernetes.io labels,
+  # falling back to the owning workload. resource.opentelemetry.io/* annotations
+  # outrank both.
+  defaults:
+    useLabelsForResourceAttributes: true
+  exporter:
+    endpoint: http://otel-collector.monitoring.svc.cluster.local:4317
+  env:
+    # Not a CRD field, so it has to live here. Most SDKs default to http/protobuf,
+    # which the collector serves on 4318 - pointing that default at 4317 fails.
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: grpc
+  propagators:
+    - tracecontext
+    - baggage
+  resource:
+    # A pod has no UID yet when the webhook sees it, so k8s.pod.uid is only
+    # injected (via the downward API) with this enabled. k8sattributes needs it to
+    # match telemetry to its pod - see pod_association in collector.yaml.
+    addK8sUIDAttributes: true
+  # Head sampling passes everything through; the collector owns the decision via
+  # tail_sampling (see the Tail Sampling Strategy table in this package's README).
+  sampler:
+    type: parentbased_always_on
