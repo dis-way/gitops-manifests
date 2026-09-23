@@ -45,12 +45,15 @@ spec:
 
 and gets a superset of the same environment, plus `k8s.namespace.name`,
 `k8s.node.name`, `k8s.deployment.name`, `service.instance.id` and
-`service.namespace` for free.
+`service.namespace`. The last two are not free: the exporters build the service's
+identity from them, so opting in changes it (see D2 and R11).
 
 ## Goals
 
 - One annotation opts a workload in. No per-app OTel environment plumbing.
 - Endpoint, protocol, propagators and sampler are changed in one place, by one commit.
+  Running pods pick a change up when they are recreated; injection happens only at
+  pod creation.
 - Nothing is injected into any workload that has not explicitly opted in.
 - Migration is incremental and reversible per workload.
 
@@ -116,13 +119,33 @@ The operator resolves `service.name` first-found-wins:
 
 Step 3 is the trap: `instance` is checked **before** `name`, and Helm sets `instance`
 to the release name. Any chart whose release name differs from its service name would
-silently rename itself in Application Insights, breaking dashboards, alerts and the
-collector's tail-sampling rules. The documented annotation override is the escape
+silently rename itself in Application Insights, breaking dashboards and alerts. (Tail
+sampling is unaffected: it keys on `http.route`, `dis.otel.sampling`, status and
+latency, not on the service name.) The documented annotation override is the escape
 hatch, and it outranks every label.
 
-Migration is safe regardless: the operator never overwrites an `OTEL_SERVICE_NAME`
-the container already declares. Teams annotate first, delete the env var later, and
-can compare the two side by side in between.
+The operator never overwrites an `OTEL_SERVICE_NAME` the container declares in `env`,
+so teams can annotate first, delete the env var later, and compare the two side by
+side in between.
+
+`service.name` is not the whole identity, though. The operator also always sets
+`service.namespace` (the pod's namespace, unless a `resource.opentelemetry.io/service.namespace`
+annotation says otherwise) and `service.instance.id` (`<namespace>.<pod>.<container>`),
+and the collector's exporters fold both into the service's identity:
+
+| Sink | Today | After opting in |
+|------|-------|-----------------|
+| Application Insights `cloud_RoleName` (`azuremonitor`) | `<service>` | `<namespace>.<service>` |
+| Application Insights `cloud_RoleInstance` | SDK-dependent | `<namespace>.<pod>.<container>` |
+| AMW `job` label (`prometheusremotewrite`) | `<service>` | `<namespace>/<service>` |
+| AMW `instance` label | SDK-dependent | `<namespace>.<pod>.<container>` |
+
+(`contracts_utils.go` `applyCloudTagsToEnvelope` and `prometheusremotewrite/helper.go`
+in collector-contrib `v0.140.1`, the image `collector.yaml` runs.) This happens the
+moment a workload is annotated, whatever its own `OTEL_SERVICE_NAME` says, and cannot
+be switched off per pod — an empty annotation falls back to the namespace. The
+approved draft listed `service.namespace` as a free extra; it is a rename, tracked
+as R11.
 
 ### D3 — One `Instrumentation` CR, referenced explicitly
 
@@ -176,7 +199,7 @@ flowchart TB
     hr -->|"Flux manages"| op
     cert -->|"serving cert + caBundle"| op
     dep -->|"pod CREATE"| api
-    api -->|"mpod.kb.io<br/>over Linkerd mTLS"| op
+    api -->|"mpod.kb.io<br/>TLS via Linkerd inbound proxy"| op
     op -->|"reads"| inst
     op -->|"mutates pod env"| pod
     pod -->|"OTLP gRPC :4317"| col
@@ -394,7 +417,9 @@ spec:
 
 **What the app can then delete:** `OTEL_EXPORTER_OTLP_ENDPOINT`,
 `OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_SERVICE_NAME`, `POD_UID`,
-`OTEL_RESOURCE_ATTRIBUTES`.
+`OTEL_RESOURCE_ATTRIBUTES`. Custom keys in `OTEL_RESOURCE_ATTRIBUTES` (e.g.
+`deployment.environment`) must move to `resource.opentelemetry.io/<key>` pod
+annotations first, or they are lost with it.
 
 **Rules to document:**
 
@@ -403,21 +428,30 @@ spec:
 - `resource.opentelemetry.io/service.name: <name>` pins the service name and
   outranks every label. Use it whenever the Helm release name is not the service name.
 - `app.kubernetes.io/instance` is checked **before** `app.kubernetes.io/name`.
-- Any `OTEL_*` variable the container already sets wins; the operator skips it.
-  `OTEL_RESOURCE_ATTRIBUTES` is the exception — the computed string is appended,
-  comma-joined, with already-present keys skipped.
-- Injection happens on **pod CREATE only**. Adding the annotation does nothing until
-  the pods are recreated.
+- Any `OTEL_*` variable the container already sets in `env` wins; the operator skips
+  it. Only `container.Env` is checked: values from `envFrom` are invisible to the
+  operator and are overridden by what it injects, since `env` takes precedence over
+  `envFrom`. Variables are filled independently, so endpoint and protocol must be set
+  together or not at all.
+- `OTEL_RESOURCE_ATTRIBUTES` is the exception — the computed string is appended,
+  comma-joined, with already-present keys skipped, except `k8s.pod.name`,
+  `k8s.pod.uid` and `k8s.node.name`, which are appended again with the same values.
+- Injection happens on **pod CREATE only**. Adding the annotation to a workload's pod
+  template rolls it out as usual; a change to the `Instrumentation` reaches running
+  pods only when they are recreated.
 - `instrumentation.opentelemetry.io/container-names` is a comma-separated list of
-  names from `.spec.containers` or `.spec.initContainers`. Without it the operator
-  targets `.spec.containers[0]`. In a Linkerd-meshed pod that is still the app
-  container, but not because the proxy is appended: with Linkerd's default
-  `proxy-await`, the injector inserts `linkerd-proxy` at `/spec/containers/0`. It
-  works because kube-apiserver runs mutating webhook configurations sorted by name
-  (`mutating_webhook_manager.go`), and `dis-otel-operator-opentelemetry-operator-mutation`
-  sorts before `linkerd-proxy-injector-webhook-config` — the operator sees the pod
-  before the proxy exists. Name the containers explicitly for any pod with more than
-  one application container.
+  names from `.spec.containers` or `.spec.initContainers`, matching
+  `^[a-zA-Z0-9-,]+$` — a value with spaces leaves the pod un-instrumented, and unknown
+  names are skipped. Without it the operator targets `.spec.containers[0]`, which in a
+  Linkerd-meshed pod is the app container: Linkerd `edge-26.7.2`, which every ring
+  runs, injects `linkerd-proxy` as a native sidecar in `.spec.initContainers`
+  (`proxy.nativeSidecar: true` by default since `edge-26.5.2`). A workload that opts
+  out with `config.linkerd.io/proxy-enable-native-sidecar: "false"` gets the proxy
+  at `/spec/containers/0` (`proxy.await`), and is still safe only because
+  kube-apiserver runs mutating webhook configurations sorted by name
+  (`mutating_webhook_manager.go`) and `dis-otel-operator-opentelemetry-operator-mutation`
+  sorts before `linkerd-proxy-injector-webhook-config`. Name the containers
+  explicitly for any pod with more than one application container.
 
 ## Ramifications of enabling the admission webhook
 
@@ -480,8 +514,8 @@ any other release object:
   enables webhooks, with the `caBundle` filled in by cainjector via the CRD's
   `cert-manager.io/inject-ca-from` annotation. There is no divergence between
   existing and rebuilt clusters.
-- **Disabling webhooks again** renders the CRD without the stanza, and Helm's
-  three-way merge removes it.
+- **Disabling webhooks again** renders the CRD without the stanza, and Helm's upgrade
+  patch (a JSON merge patch, for CRDs) removes it.
 
 The conversion webhook still buys nothing here, but it is the chart's standard
 configuration and costs nothing unless a `v1alpha1` request arrives. V0 checks
@@ -508,7 +542,11 @@ carries no such label.
 
 This is acceptable because scoping is not where the safety comes from: **injection is
 annotation-gated**, so the webhook is invoked for every pod CREATE but mutates almost
-none. The cost is one extra round-trip per pod creation, not a mutation risk.
+none. The cost is one extra round-trip per pod creation, not a mutation risk — with
+one caveat (R10): the handler decodes every pod into the operator's `corev1.Pod` type
+and answers with `PatchResponseFromRaw(original, re-encoded)`
+(`internal/webhook/podmutation/webhookhandler.go`), so pod fields newer than the
+operator's `k8s.io/api` would be stripped from every pod in the cluster.
 
 ### Availability and admission-chain behaviour
 
@@ -518,8 +556,8 @@ explicit that ordering should not be relied on: "Mutating admission webhooks don
 run in a consistent order." All three must be idempotent; the operator's injection
 is, since it skips any variable the container already declares. In practice
 kube-apiserver sorts webhook configurations by name, so the operator runs before
-Kyverno's and Linkerd's — and the default container selection depends on that (see
-App-facing contract).
+Kyverno's and Linkerd's. The default container selection only depends on that for
+workloads that opt out of Linkerd's native sidecar (see App-facing contract).
 
 Because `mpod.kb.io` is `Ignore` with `sideEffects: None`, an operator outage can
 never block pod creation. The failure mode is silent non-instrumentation, not a
@@ -537,10 +575,17 @@ the collector's reconciler. The `cert-manager.io/inject-ca-from` annotation
 additionally requires cainjector to be running to patch the caBundle.
 
 **Handoff item:** the otel-operator Flux `Kustomization` needs `dependsOn` cert-manager.
-That lives in the deployment repo, not here. The same `Kustomization` must also
-substitute `AKS_VNET_IPV4_CIDR` and `AKS_VNET_IPV6_CIDR` (C2): without them the
-`NetworkAuthentication` renders with empty CIDRs, and the whole package — HelmRelease
-included — fails to apply.
+That lives in the deployment repo, not here. Two more handoffs go with it:
+
+- The same `Kustomization` must set `spec.postBuild` and supply `AKS_VNET_IPV4_CIDR`
+  and `AKS_VNET_IPV6_CIDR` (C2). This package had no variables before, and
+  kustomize-controller substitutes only when `postBuild` is set — without it even the
+  defaulted pod CIDRs stay literal. Linkerd's admission rejects the unparseable
+  `cidr`, and the whole package, HelmRelease included, fails to apply (R9).
+- The otel-collector `Kustomization` should `dependsOn` the otel-operator one. Flux
+  dry-runs every object on every reconciliation, and the dry-runs of the
+  `Instrumentation` and collector CRs now pass through fail-closed webhooks, so the
+  collector package cannot reconcile at all while the operator is unreachable (R12).
 
 ### AKS specifics
 
@@ -586,11 +631,17 @@ without explicit confirmation.
 - **V0** — (a) `kubectl get crd opentelemetrycollectors.opentelemetry.io -o
   jsonpath='{.status.storedVersions}'` is `["v1beta1"]`; if `v1alpha1` is listed, some
   objects may still be stored at `v1alpha1`, and reading them would go through the
-  conversion webhook. (b) `kubectl apply --server-side --dry-run=server -k
-  oci/otel-collector` returns clean against the validating webhook. The webhook only
+  conversion webhook. (b) The collector CR passes the validating webhook. In a ring,
+  use `flux diff kustomization <otel-collector Kustomization> --path
+  oci/otel-collector/multitenancy`, which server-side dry-runs with the
+  Kustomization's own substitutions and field manager; in a scratch cluster, pipe
+  `kustomize build oci/otel-collector/multitenancy | flux envsubst --strict` (with
+  representative values exported) into `kubectl apply --server-side --dry-run=server
+  -f -`. A plain `kubectl apply -k` sends unsubstituted `${…}` values under kubectl's
+  field manager and fails for reasons unrelated to the webhook. The webhook only
   exists once Phase 1 has landed, so run (b) in a scratch cluster with the chart at
   C1's values before Phase 1, or in the first ring straight after it. A rejection there
-  blocks changes to the collector CR, not the running collector. Reading the
+  blocks reconciliation of the collector package, not the running collector. Reading the
   `v0.158.0` validator found no rejection path this CR hits: it uses no mode-gated
   fields, its ports already parse in the running reconciler, and the RBAC-escalation
   check is skipped while `createRbacPermissions` is off.
@@ -598,22 +649,30 @@ without explicit confirmation.
   `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` have a non-empty
   `caBundle` on every entry, and so does `spec.conversion.webhook.clientConfig` on the
   `opentelemetrycollectors.opentelemetry.io` CRD.
-- **V2** — both operator replicas are Ready, and the webhook answers on both. Confirms
-  the assumption that controller-runtime does not gate webhook serving on leader
-  election. If it does, drop to one replica and record it.
+- **V2** — both operator replicas are Ready, and the webhook answers on both.
+  controller-runtime `v0.24.1`, which operator `v0.158.0` uses, does not gate webhook
+  serving on leader election (`DefaultServer.NeedLeaderElection()` returns `false`),
+  so this confirms in the cluster what the source already shows.
 - **V3** — the collector still reconciles: `kubectl get otelcol -n monitoring` and the
   Flux Kustomization stays Ready.
 - **V4** — `kubectl get otelinst -n monitoring` shows `cluster` with the expected
   Endpoint and Sampler printer columns.
-- **V5** — annotate `oci/whoami`, restart it, and confirm the injected environment on
-  the `whoami` container — not on `linkerd-proxy`, which sits at `containers[0]`
-  after injection: endpoint, protocol, `OTEL_SERVICE_NAME=whoami`, and an
-  `OTEL_RESOURCE_ATTRIBUTES` containing `k8s.pod.uid`.
-- **V6** — on the first real app, compare Application Insights before and after for
-  (a) an unchanged service name and (b) a surviving `k8s.pod.uid`. The latter is what
-  the collector's `k8sattributes` `pod_association` keys on
-  (`oci/otel-collector/base/collector.yaml`); losing it would break server-side
-  enrichment for that workload.
+- **V5** — annotate `oci/whoami`'s pod template (the change rolls its pods) and
+  confirm the injected environment on the `whoami` container — `linkerd-proxy`, a
+  native sidecar in `initContainers`, gets none: endpoint, protocol,
+  `OTEL_SERVICE_NAME=whoami`, and an `OTEL_RESOURCE_ATTRIBUTES` containing
+  `k8s.pod.uid`.
+- **V6** — on the first real app, compare before and after: (a) `service.name` is
+  unchanged; (b) `k8s.pod.uid` survives — it is what the collector's `k8sattributes`
+  `pod_association` keys on (`oci/otel-collector/base/collector.yaml`), and losing it
+  would break server-side enrichment for that workload; (c) `cloud_RoleName` /
+  `cloud_RoleInstance` in Application Insights and `job` / `instance` in AMW match
+  what R11 decides, with the app's dashboards and alerts updated accordingly; (d) its
+  metric series stay within AMW's labels-per-series limit, since `transform/metrics`
+  copies every resource attribute into labels and opting in adds several; (e)
+  `mpod.kb.io` latency (`apiserver_admission_webhook_admission_duration_seconds`)
+  stays well under the 5 s timeout — the operator's owner lookups retry on a cache
+  miss.
 
 ## Rollback
 
@@ -638,11 +697,14 @@ jsonpath='{.spec.conversion.strategy}'` should print `None`.
 | R2 | cert-manager unavailable at bootstrap leaves the operator in `ContainerCreating`, stalling collector reconciliation too. | Flux `dependsOn` cert-manager — **handoff to the deployment repo**. |
 | R3 | Every cluster gets a fail-closed conversion webhook on the collector CRD. | Only called for `v1alpha1` ↔ `v1beta1` conversion; nothing in the repo requests `OpenTelemetryCollector` at `v1alpha1`. V0 (a) checks stored versions, V1 checks its `caBundle`. Accepted. |
 | R4 | A chart's `app.kubernetes.io/instance` differs from its service name, renaming it in App Insights. | `resource.opentelemetry.io/service.name` override documented; V6 compares before/after per app. |
-| R5 | Webhook serving might be gated on leader election, making the second replica dead weight. | V2. Unverified assumption — drop to one replica if it fails. |
+| R5 | Webhook serving might be gated on leader election, making the second replica dead weight. | Resolved from source: controller-runtime `v0.24.1`'s webhook server does not need leader election, so both replicas serve. V2 confirms in the cluster. |
 | R6 | Added latency on every pod CREATE cluster-wide. | `timeoutSeconds: 5`; injection is annotation-gated so the mutation path is near-empty. |
 | R7 | Node drain with one replica silently un-instruments pods created in that window. | `replicaCount: 2` + PDB (C1). |
-| R8 | Default container selection relies on the operator's webhook configuration sorting before Linkerd's. Renaming the release or setting `admissionWebhooks.namePrefix` could inject into `linkerd-proxy` instead. | Documented in both READMEs; V5 checks which container received the env; `container-names` removes the dependency. |
-| R9 | The otel-operator Flux `Kustomization` lacks the `AKS_VNET_*` substitutions, so the `NetworkAuthentication` is invalid and nothing in the package applies. | Confirm the substitutions before Phase 1 — **handoff to the deployment repo**, alongside R2. |
+| R8 | A workload that opts out of Linkerd's native sidecar has `linkerd-proxy` at `containers[0]`; it is then only skipped because the operator's webhook configuration sorts before Linkerd's. Renaming the release or setting `admissionWebhooks.namePrefix` could inject into the proxy instead. | No workload in the repo opts out. Documented in both READMEs; V5 checks which container received the env; `container-names` removes the dependency. |
+| R9 | The otel-operator Flux `Kustomization` has no `postBuild` substitution (this package had no variables before), so the `NetworkAuthentication` CIDRs stay literal, Linkerd rejects them, and nothing in the package applies. | Enable `postBuild` and supply `AKS_VNET_*` before Phase 1 — **handoff to the deployment repo**, alongside R2. |
+| R10 | Every pod CREATE is round-tripped through the operator's typed `corev1.Pod`; pod fields newer than its `k8s.io/api` would be stripped cluster-wide. | Keep the operator (Renovate) current, and check its `k8s.io/api` version before each AKS minor upgrade. |
+| R11 | Opting in changes the service's identity: `cloud_RoleName` becomes `<namespace>.<service>` in Application Insights and `job` becomes `<namespace>/<service>` in AMW, because the operator always sets `service.namespace` (D2). | **Open decision.** (a) Accept and document — the current state: the collector README tells teams to update dashboards and alerts when they opt in. (b) Keep today's names: drop `service.namespace` in the collector when it equals the SDK-sent `k8s.namespace.name`, before `k8sattributes`. |
+| R12 | While the operator is unreachable, Flux cannot reconcile any of `oci/otel-collector`, because the dry-runs of both CRs pass through fail-closed webhooks. | Two replicas + PDB (C1); the otel-collector `Kustomization` should `dependsOn` otel-operator — **handoff to the deployment repo**. |
 
 ## References
 
@@ -656,9 +718,14 @@ jsonpath='{.spec.conversion.strategy}'` should print `None`.
   - chart `opentelemetry-operator-0.122.0`: `templates/admission-webhooks/operator-webhook.yaml`,
     `conf/crds/crd-opentelemetrycollector.yaml`, `templates/deployment.yaml`, `values.schema.json`
   - [operator `v0.158.0` — `internal/instrumentation/sdk.go`](https://github.com/open-telemetry/opentelemetry-operator/blob/v0.158.0/internal/instrumentation/sdk.go),
-    [`internal/webhook/collector_webhook.go`](https://github.com/open-telemetry/opentelemetry-operator/blob/v0.158.0/internal/webhook/collector_webhook.go)
-  - [Linkerd — `charts/patch/templates/patch.json`](https://github.com/linkerd/linkerd2/blob/main/charts/patch/templates/patch.json) (proxy at `containers/0` with `proxy.await`)
+    [`internal/webhook/collector_webhook.go`](https://github.com/open-telemetry/opentelemetry-operator/blob/v0.158.0/internal/webhook/collector_webhook.go),
+    [`internal/webhook/podmutation/webhookhandler.go`](https://github.com/open-telemetry/opentelemetry-operator/blob/v0.158.0/internal/webhook/podmutation/webhookhandler.go)
+  - Linkerd `edge-26.7.2` — [`values.yaml`](https://github.com/linkerd/linkerd2/blob/edge-26.7.2/charts/linkerd-control-plane/values.yaml) (`proxy.nativeSidecar: true`) and
+    [`charts/patch/templates/patch.json`](https://github.com/linkerd/linkerd2/blob/edge-26.7.2/charts/patch/templates/patch.json) (proxy in `initContainers`, or at `containers/0` with `proxy.await` when opted out)
   - [kube-apiserver — `mutating_webhook_manager.go`](https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apiserver/pkg/admission/configuration/mutating_webhook_manager.go) (configurations sorted by name)
+  - collector-contrib `v0.140.1` — [`exporter/azuremonitorexporter/contracts_utils.go`](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.140.1/exporter/azuremonitorexporter/contracts_utils.go) (`cloud_RoleName`),
+    [`pkg/translator/prometheusremotewrite/helper.go`](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.140.1/pkg/translator/prometheusremotewrite/helper.go) (`job` / `instance`)
+  - [controller-runtime `v0.24.1` — `pkg/webhook/server.go`](https://github.com/kubernetes-sigs/controller-runtime/blob/v0.24.1/pkg/webhook/server.go) (`NeedLeaderElection` is `false`)
 - In-repo precedents: `oci/azure-service-operator/policies/linkerd-policies.yaml`,
   `oci/linkerd/post-deploy/rollout-restart-job.yaml`, `oci/otel-collector/README.md`
 
@@ -673,11 +740,30 @@ Changes from the approved draft, made while implementing it:
 2. **C3 sets `resource.addK8sUIDAttributes: true`.** Without it the operator never
    injects `k8s.pod.uid`, and migrated workloads would lose the attribute the
    collector's `pod_association` keys on.
-3. **Linkerd puts its proxy at `containers[0]`, not at the end.** The default container
-   selection still targets the app, because the operator's webhook runs before
-   Linkerd's (name ordering). Corrected the App-facing contract rule, extended V5, and
-   added R8.
+3. **Linkerd runs its proxy as a native sidecar in `initContainers`**, not appended to
+   `containers`: every ring runs `edge-26.7.2`, where `proxy.nativeSidecar` defaults
+   to `true`. `containers[0]` is therefore the app. Only a workload that opts out of
+   native sidecars gets the proxy at `containers[0]`, where the operator's webhook
+   sorting before Linkerd's keeps it safe. Corrected the App-facing contract rule and
+   V5, and added R8 for the opt-out case.
 4. **V0 split into a stored-versions check and a dry-run**, noting that the dry-run
    needs the validating webhook, which only exists once Phase 1 has landed.
 5. **Added R9**: the `AKS_VNET_*` variables C2 makes required are a second
    deployment-repo handoff, next to `dependsOn` cert-manager.
+
+After an independent review of the implementation:
+
+6. **`service.namespace` is a rename, not a free extra** (D2, R11). The operator always
+   sets it, and the exporters fold it into `cloud_RoleName` and the AMW `job` label.
+   Documented; accepting it versus stripping it in the collector is an open decision.
+7. **The contract rules are more precise**: only `env` is honoured, not `envFrom`;
+   variables are filled one at a time; three resource keys are appended twice;
+   `container-names` must match `^[a-zA-Z0-9-,]+$`; custom resource keys need
+   annotations before `OTEL_RESOURCE_ATTRIBUTES` is deleted; and an `Instrumentation`
+   change reaches only recreated pods (Goals, rules, a comment in C3's file).
+8. **Handoffs and risks.** R9 now requires enabling `postBuild`, not just supplying
+   variables. Added R12 (a collector `dependsOn` for operator outages) and R10 (every pod
+   is round-tripped through the operator's typed Pod). R5 is resolved from
+   controller-runtime source. V0(b) uses `flux diff kustomization`, and V6 now also
+   checks identity, label count and webhook latency. Tail sampling does not key on the
+   service name, which the draft's D2 claimed it did.

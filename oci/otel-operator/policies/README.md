@@ -52,6 +52,12 @@ Health checks and the proxy admin port are not covered here: no `Server` selects
 |--------|-----------|------|---------|
 | `otel-operator-webhook` | controller-manager | webhook-server | Pod SDK injection, `Instrumentation` and `OpenTelemetryCollector` defaulting/validation, collector CRD conversion |
 
+### AuthorizationPolicies
+
+| Policy | Server | Authentication |
+|--------|--------|----------------|
+| `otel-operator-webhook` | `otel-operator-webhook` | `kube-api-server` |
+
 ## Why This Matters
 
 Without these policies, the following will fail when using restrictive inbound policies:
@@ -59,7 +65,7 @@ Without these policies, the following will fail when using restrictive inbound p
 | Failure Mode | Symptom |
 |--------------|---------|
 | Pod webhook blocked | Annotated pods start without the `OTEL_*` environment, silently — `mpod.kb.io` fails open |
-| CR webhooks blocked | `Instrumentation` and `OpenTelemetryCollector` create/update rejected; Flux cannot reconcile `oci/otel-collector` |
+| CR webhooks blocked | `Instrumentation` and `OpenTelemetryCollector` writes and dry-runs rejected, so Flux cannot reconcile any of `oci/otel-collector` |
 | Conversion webhook blocked | `OpenTelemetryCollector` requests that need `v1alpha1` ↔ `v1beta1` conversion fail |
 
 ## Variables

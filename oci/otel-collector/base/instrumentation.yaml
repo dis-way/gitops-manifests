@@ -1,3 +1,6 @@
+# Workloads opt in with instrumentation.opentelemetry.io/inject-sdk: "monitoring/cluster".
+# The operator copies these values into a pod when it is created, so a change here
+# reaches running pods only once they are recreated.
 apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:

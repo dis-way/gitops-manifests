@@ -114,9 +114,10 @@ What each selected container gets:
 | `OTEL_RESOURCE_ATTRIBUTES` | `k8s.namespace.name`, `k8s.pod.name`, `k8s.pod.uid`, `k8s.container.name`, `k8s.node.name`, `service.instance.id`, `service.namespace`, `service.version` (the `app.kubernetes.io/version` label, else the image tag), plus the name and UID of the owning workload (`k8s.deployment.*`, `k8s.replicaset.*`, `k8s.statefulset.*`, `k8s.daemonset.*`, `k8s.job.*`, `k8s.cronjob.*`) |
 | `OTEL_PROPAGATORS` | `tracecontext,baggage` |
 | `OTEL_TRACES_SAMPLER` | `parentbased_always_on` — the sampling decision is made by the collector's tail sampling |
-| `OTEL_RESOURCE_ATTRIBUTES_POD_NAME`, `OTEL_RESOURCE_ATTRIBUTES_POD_UID`, `OTEL_RESOURCE_ATTRIBUTES_NODE_NAME`, `OTEL_POD_IP`, `OTEL_NODE_IP` | Downward API values that `OTEL_RESOURCE_ATTRIBUTES` refers to |
+| `OTEL_RESOURCE_ATTRIBUTES_POD_NAME`, `OTEL_RESOURCE_ATTRIBUTES_POD_UID`, `OTEL_RESOURCE_ATTRIBUTES_NODE_NAME` | Downward API values that `OTEL_RESOURCE_ATTRIBUTES` refers to |
+| `OTEL_POD_IP`, `OTEL_NODE_IP` | The pod and node IP, from the downward API |
 
-Once your telemetry looks right, delete the hand-written equivalents: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_SERVICE_NAME`, `POD_UID` and `OTEL_RESOURCE_ATTRIBUTES`.
+Once your telemetry looks right, delete the hand-written equivalents: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_SERVICE_NAME`, `POD_UID` and `OTEL_RESOURCE_ATTRIBUTES`. If your `OTEL_RESOURCE_ATTRIBUTES` carries keys of its own, such as `deployment.environment`, first move them to `resource.opentelemetry.io/<key>: <value>` pod annotations; the operator turns those into resource attributes.
 
 **Service name** — the first match wins:
 
@@ -125,15 +126,18 @@ Once your telemetry looks right, delete the hand-written equivalents: `OTEL_EXPO
 3. The `app.kubernetes.io/instance` label, then the `app.kubernetes.io/name` label
 4. The owning Deployment, ReplicaSet, StatefulSet, DaemonSet, CronJob or Job, then the pod or container name
 
-Helm sets `app.kubernetes.io/instance` to the release name, and it is checked **before** `app.kubernetes.io/name`. If your release name is not your service name, pin it with `resource.opentelemetry.io/service.name: <name>`. Otherwise the service is renamed in Application Insights, and dashboards, alerts and sampling rules keyed on the old name stop matching.
+Helm sets `app.kubernetes.io/instance` to the release name, and it is checked **before** `app.kubernetes.io/name`. If your release name is not your service name, pin it with `resource.opentelemetry.io/service.name: <name>`. Otherwise the service is renamed in Application Insights, and dashboards and alerts keyed on the old name stop matching.
+
+**Service identity** — the operator also sets `service.namespace` to your namespace and `service.instance.id` to `<namespace>.<pod>.<container>`, and both exporters build the service's identity from them. In Application Insights `cloud_RoleName` becomes `<namespace>.<service name>` and `cloud_RoleInstance` the instance ID; in the Azure Monitor Workspace the `job` label becomes `<namespace>/<service name>` and `instance` the instance ID. This happens as soon as the pod is annotated — even while your own `OTEL_SERVICE_NAME` is still set — so update dashboards and alerts that filter on these fields when you opt in.
 
 **Rules**
 
 - The annotation and labels go on `spec.template.metadata`, **not** on the Deployment's own `metadata`. This is the most common mistake.
-- Injection happens when a pod is **created**. Adding or changing the annotation does nothing until the pods are recreated, e.g. with `kubectl rollout restart`.
-- Any `OTEL_*` variable your container already sets wins; the operator leaves it alone. `OTEL_RESOURCE_ATTRIBUTES` is the exception: the operator appends its attributes, skipping keys you already set. You can therefore add the annotation first and delete the hand-written variables in a later change.
-- Without `instrumentation.opentelemetry.io/container-names`, only `.spec.containers[0]` is configured. In a Linkerd-meshed pod that is still your application container, because the operator sees the pod before Linkerd inserts `linkerd-proxy` at index 0. If the pod has more than one application container, list them — comma-separated names from `.spec.containers` or `.spec.initContainers`.
-- Injection fails open. If the operator is unavailable, or the annotation names an `Instrumentation` that does not exist, the pod starts without the variables; the only trace is an error in the operator's log. Check the running pod (`kubectl get pod <pod> -o yaml`) after the first rollout.
+- Injection happens when a pod is **created**. Adding the annotation to a pod template rolls the workload out as usual, but a change to `Instrumentation/cluster` reaches running pods only once they are recreated, e.g. with `kubectl rollout restart`.
+- The operator fills in only the variables your container does not set in `env`, one at a time. Values from `envFrom` (a ConfigMap or Secret) are not seen, and the injected `env` entries override them, so move `OTEL_*` settings into `env` before opting in. Set `OTEL_EXPORTER_OTLP_ENDPOINT` and `OTEL_EXPORTER_OTLP_PROTOCOL` together or not at all: set only `OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf` and you still get the gRPC endpoint on port 4317.
+- `OTEL_RESOURCE_ATTRIBUTES` is merged rather than skipped: the operator appends its attributes to yours, leaving out keys you already set — except `k8s.pod.name`, `k8s.pod.uid` and `k8s.node.name`, which are appended again with the same values. You can therefore add the annotation first and delete the hand-written variables in a later change.
+- Without `instrumentation.opentelemetry.io/container-names`, only `.spec.containers[0]` is configured. In a Linkerd-meshed pod that is your application container: `linkerd-proxy` runs as a native sidecar in `.spec.initContainers`. If the pod has more than one application container, list them as comma-separated names from `.spec.containers` or `.spec.initContainers`, without spaces. A value that does not match `^[a-zA-Z0-9-,]+$` leaves the pod un-instrumented, and unknown names are skipped.
+- Injection fails open. If the operator is unavailable when the pod is created, or the annotation names an `Instrumentation` that does not exist, the pod starts without the variables and no error reaches you. Check the running pod (`kubectl get pod <pod> -o yaml`) after the first rollout.
 
 ### Manual SDK configuration
 
