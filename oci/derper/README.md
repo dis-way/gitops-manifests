@@ -8,7 +8,7 @@ The image is built from `tailscale.com/cmd/derper` in [dis-way/adminservices](ht
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `DERP_HOSTNAME` | - | Yes | Public hostname of the relay, e.g. `derp-admin-test.altinn.cloud`. Used by the Gateway, HTTPRoute and certificate |
+| `DERP_HOSTNAME` | - | Yes | Public hostname of the relay, e.g. `derp-altinn-900.altinn.cloud`. Used by the Gateway, HTTPRoute and certificate |
 | `AKS_NODE_RG` | - | Yes | Azure node resource group containing the public IP (shared with Traefik) |
 | `PUBLIC_IP_V4` | - | Yes | Public IPv4 address for the STUN LoadBalancer (shared with Traefik) |
 | `PUBLIC_IP_V6` | - | Yes | Public IPv6 address for the STUN LoadBalancer (shared with Traefik) |
