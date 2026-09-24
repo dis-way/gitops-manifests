@@ -11,12 +11,12 @@ data:
     regions:
       900:
         regionid: 900
-        regioncode: admin-test
+        regioncode: altinn-900
         regionname: Altinn admin-test-aks
         nodes:
           - name: 900a
             regionid: 900
-            hostname: derp-admin-test.altinn.cloud
+            hostname: derp-altinn-900.altinn.cloud
             stunport: 3478
             stunonly: false
             derpport: 443
