@@ -5,6 +5,7 @@ resources:
   - storageclass.yaml
   - config-secret.yaml
   - extra-records-configmap.yaml
+  - derp-map-configmap.yaml
   - pvc.yaml
   - deployment.yaml
   - service.yaml
