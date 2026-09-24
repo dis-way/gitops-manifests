@@ -92,14 +92,24 @@ spec:
                 exit 1
               fi
               echo "Control plane proxy version: $TARGET_TAG"
-              # List meshed pods whose proxy is not the control plane version, as the workload that owns them.
+              # Namespaces that pin a proxy version with config.linkerd.io/proxy-version, as "ns=version" words
+              NS_PINS=$(kubectl get namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"="}{.metadata.annotations.config\.linkerd\.io/proxy-version}{" "}{end}') || exit 1
+              # List meshed pods whose proxy is not the version they should run, as the workload that owns them.
               # Fields are separated by '|' so that empty fields do not shift the columns.
               # The proxy is a native sidecar (initContainers) or a normal container, so check both.
               # Kept in variables because the root filesystem is read-only
-              PODS=$(kubectl get pods -A -o jsonpath='{range .items[*]}{.metadata.namespace}{"|"}{.spec.containers[?(@.name=="linkerd-proxy")].image}{.spec.initContainers[?(@.name=="linkerd-proxy")].image}{"|"}{.metadata.ownerReferences[0].kind}{"|"}{.metadata.ownerReferences[0].name}{"\n"}{end}') || exit 1
-              OUTDATED=$(echo "$PODS" | while IFS='|' read -r ns image kind owner; do
+              PODS=$(kubectl get pods -A -o jsonpath='{range .items[*]}{.metadata.namespace}{"|"}{.spec.containers[?(@.name=="linkerd-proxy")].image}{.spec.initContainers[?(@.name=="linkerd-proxy")].image}{"|"}{.metadata.annotations.config\.linkerd\.io/proxy-version}{"|"}{.metadata.ownerReferences[0].kind}{"|"}{.metadata.ownerReferences[0].name}{"\n"}{end}') || exit 1
+              OUTDATED=$(echo "$PODS" | while IFS='|' read -r ns image pin kind owner; do
                 [ -n "$image" ] || continue
-                [ "${image##*:}" = "$TARGET_TAG" ] && continue
+                # A pod or namespace that pins a proxy version must be compared with that version,
+                # or it would be restarted on every run
+                if [ -z "$pin" ]; then
+                  for p in $NS_PINS; do
+                    case "$p" in "$ns="?*) pin="${p#*=}" ;; esac
+                  done
+                fi
+                expected="${pin:-$TARGET_TAG}"
+                [ "${image##*:}" = "$expected" ] && continue
                 case " $EXCLUDED_NAMESPACES " in *" $ns "*) continue ;; esac
                 case "$kind" in
                   # A Deployment's ReplicaSet is named <deployment>-<pod-template-hash>
@@ -114,6 +124,13 @@ spec:
                 exit 0
               fi
               echo "$OUTDATED" | while read -r ns workload; do
+                # A rollout that is still running replaces the old pods anyway. Restarting it again
+                # (for example when this Job runs twice in a short time) only causes more churn.
+                case "$(kubectl -n "$ns" rollout status "$workload" --watch=false 2>&1)" in
+                  *"successfully rolled out"*|*"roll out complete"*|*"rolling update complete"*) ;;
+                  *"only available for RollingUpdate"*) echo "Skipping $workload in namespace $ns: OnDelete update strategy, restart its pods manually"; continue ;;
+                  *) echo "Skipping $workload in namespace $ns: its rollout is still in progress"; continue ;;
+                esac
                 echo "Restarting $workload in namespace $ns"
                 kubectl -n "$ns" rollout restart "$workload" || echo "Could not restart $workload in namespace $ns"
               done
