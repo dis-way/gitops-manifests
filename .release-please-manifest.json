@@ -19,7 +19,7 @@
   "oci/gateway-api": "1.1.1",
   "oci/grafana-operator": "2.5.0",
   "oci/headplane": "1.2.1",
-  "oci/headscale": "2.1.0",
+  "oci/headscale": "2.1.1",
   "oci/kro": "0.2.0",
   "oci/kube-state-metrics": "1.2.6",
   "oci/kyverno-policies": "1.4.2",

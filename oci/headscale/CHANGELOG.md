@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.0...oci-headscale-v2.1.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* **headscale:** upgrade to headscale 0.29.4 ([#1665](https://github.com/dis-way/gitops-manifests/issues/1665)) ([7b255af](https://github.com/dis-way/gitops-manifests/commit/7b255afc519278f9fa6d5e133935db8ce9d39469))
+
 ## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.1...oci-headscale-v2.1.0) (2026-08-21)
 
 
