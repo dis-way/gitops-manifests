@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: derper
+  namespace: derper
+spec:
+  # One replica only. Separate derper instances behind one load balancer cannot
+  # relay between each other without DERP mesh mode, so each cluster runs one
+  # instance and is its own region in the headscale DERP map.
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: derper
+  template:
+    metadata:
+      labels:
+        app: derper
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: derper
+          # renovate: datasource=docker depName=ghcr.io/dis-way/derper
+          image: altinncr.azurecr.io/ghcr.io/dis-way/derper:v1.102.3
+          args:
+            # Traefik terminates TLS, so derper serves plain HTTP on a non-443 port.
+            - -a=:3340
+            - -http-port=-1
+            - -stun-port=3478
+            # Required when running as non-root. The node key is regenerated on
+            # restart; clients do not pin it.
+            - -c=/var/lib/derper/derper.key
+            - -home=blank
+            # Only nodes registered in headscale may use this relay. Fails open
+            # (derper default) so the relay keeps working if headscale is down.
+            - -verify-client-url=${HEADSCALE_URL:=https://headscale.altinn.cloud}/verify
+          ports:
+            - name: http
+              containerPort: 3340
+              protocol: TCP
+            - name: stun
+              containerPort: 3478
+              protocol: UDP
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /derp/probe
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /derp/probe
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /derp/probe
+              port: http
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/derper
+      volumes:
+        - name: data
+          emptyDir: {}

@@ -28,6 +28,10 @@
       "release-type": "simple",
       "component": "oci-container-runtime-aks-config"
     },
+    "oci/derper": {
+      "release-type": "simple",
+      "component": "oci-derper"
+    },
     "oci/dis-identity": {
       "release-type": "simple",
       "component": "oci-dis-identity"
