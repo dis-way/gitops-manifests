@@ -18,6 +18,10 @@ Web UI for managing the headscale control server, authenticated via Microsoft En
 | `.` | Core resources: namespace, secret, deployment, service, gateway, and HTTPRoute |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
 
+## Roles
+
+Headplane takes the user's role from the `roles` claim at each sign-in (`oidc.role_claim`). Define Entra app roles on the Headplane app registration with values that match Headplane role names (for example `admin`, `auditor`) and assign them to groups. Users without a matching role get `default_role` (`member`, no access). The first user in an empty Headplane database becomes `owner`.
+
 ## Prerequisites
 
 ### DNS
