@@ -48,6 +48,28 @@ spec:
           federated_token_file: "$${env:AZURE_FEDERATED_TOKEN_FILE}"
     processors:
       batch: {}
+      # The otel-operator's SDK injection (Instrumentation/cluster) always sets
+      # service.namespace to the pod's namespace, and both exporters fold it into
+      # the service's identity: azuremonitor makes cloud_RoleName
+      # "<namespace>.<name>", prometheusremotewrite makes job "<namespace>/<name>".
+      # Dropping it keeps a service under the name it had before it opted in.
+      #
+      # Runs before k8sattributes, so the k8s.namespace.name it compares against
+      # can only have come from the SDK itself - in practice, from the operator.
+      transform/servicenamespace:
+        error_mode: ignore
+        trace_statements:
+          - context: resource
+            statements:
+              - delete_key(attributes, "service.namespace") where attributes["service.namespace"] != nil and attributes["service.namespace"] == attributes["k8s.namespace.name"]
+        log_statements:
+          - context: resource
+            statements:
+              - delete_key(attributes, "service.namespace") where attributes["service.namespace"] != nil and attributes["service.namespace"] == attributes["k8s.namespace.name"]
+        metric_statements:
+          - context: resource
+            statements:
+              - delete_key(attributes, "service.namespace") where attributes["service.namespace"] != nil and attributes["service.namespace"] == attributes["k8s.namespace.name"]
       # Extract aks cluster name
       resourcedetection/aks:
         detectors: [aks]
@@ -73,6 +95,8 @@ spec:
             - k8s.daemonset.name
             - k8s.node.name
             - service.name
+            # Keep this list explicit and without service.namespace: k8sattributes
+            # would re-add the value transform/servicenamespace drops.
           labels:
             - tag_name: dis.otel.sampling
               key: dis.otel/sampling
@@ -457,13 +481,13 @@ spec:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
+          processors: [memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
           exporters: [azuremonitor]
         logs:
           receivers: [otlp]
-          processors: [filter/logs, memory_limiter, resourcedetection/aks, k8sattributes, transform/drop, batch]
+          processors: [filter/logs, memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/drop, batch]
           exporters: [azuremonitor]
         metrics:
           receivers: [otlp]
-          processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/metrics, transform/drop, batch]
+          processors: [memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/metrics, transform/drop, batch]
           exporters: [prometheusremotewrite]

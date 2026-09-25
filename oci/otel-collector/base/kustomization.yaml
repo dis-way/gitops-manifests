@@ -4,5 +4,6 @@ resources:
   - namespace.yaml
   - external-secrets.yaml
   - collector.yaml
+  - instrumentation.yaml
   - sa.yaml
   - sa-rbac.yaml
