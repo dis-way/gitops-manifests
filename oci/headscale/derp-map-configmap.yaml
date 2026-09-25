@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: headscale-derp-map
+  namespace: headscale
+data:
+  # Extra DERP regions served to clients in addition to the embedded DERP
+  # (region 999) and derp.urls. Region IDs 900-998 are reserved for Altinn relays
+  # so they never collide with Tailscale's regions or the embedded one.
+  derp.yaml: |
+    regions:
+      900:
+        regionid: 900
+        regioncode: altinn-900
+        regionname: Altinn admin-test-aks
+        nodes:
+          - name: 900a
+            regionid: 900
+            hostname: derp-altinn-900.altinn.cloud
+            stunport: 3478
+            stunonly: false
+            derpport: 443

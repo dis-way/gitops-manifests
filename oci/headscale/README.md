@@ -35,6 +35,18 @@ data:
 
 Headscale polls `extra-records.json` via checksum and picks up changes without a restart. Sort the JSON keys and records to produce stable output when generating the file with a script.
 
+## DERP Map
+
+Clients get DERP regions from three sources, merged by headscale:
+
+| Source | Regions |
+|--------|---------|
+| Embedded DERP server (`derp.server`) | 999 (`headscale-server`) |
+| `headscale-derp-map` ConfigMap (`derp.paths`) | 900–998: standalone relays from the `oci/derper` package |
+| `derp.urls` | Tailscale's public DERP servers |
+
+Headscale fails to start if a file in `derp.paths` does not parse, so test changes to `derp.yaml` before release. A pod restart always picks up ConfigMap changes.
+
 ## Prerequisites
 
 ### DNS
