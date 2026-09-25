@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.14.0...oci-altinn-uptime-v1.15.0) (2026-09-25)
+
+
+### Features
+
+* Remove deprecated discore health check endpoint ([#1680](https://github.com/dis-way/gitops-manifests/issues/1680)) ([95e27ad](https://github.com/dis-way/gitops-manifests/commit/95e27addd89bfafe776811538fe28f7996d00e0e))
+
 ## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.13.0...oci-altinn-uptime-v1.14.0) (2026-09-06)
 
 
