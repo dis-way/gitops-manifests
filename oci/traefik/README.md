@@ -22,6 +22,10 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `LB_SOURCE_RANGE_DIS_CORE` | — | platform-aks / eformidling-aks | Load Balancer source range CIDR for DIS core cluster egress IPv4; also trusted for `X-Forwarded-For` |
 | `LB_SOURCE_RANGE_DIS_EDGE` | — | platform-aks / eformidling-aks / multitenancy | Load Balancer source range CIDR for DIS edge cluster egress IPv4; also trusted for `X-Forwarded-For` |
 | `LB_SOURCE_RANGE_DIS_EDGE_IPV6` | — | multitenancy only | Load Balancer source range CIDR for DIS edge cluster egress IPv6; also trusted for `X-Forwarded-For` |
+| `TRAEFIK_INTERNAL_ENABLED` | `false` | No (adminservices only) | Create the private `internal` Load Balancer Service for the `https-internal` entrypoint |
+| `TRAEFIK_INTERNAL_SUBNET` | `""` | When internal is enabled | AKS VNet subnet name for the internal Load Balancer frontend |
+| `TRAEFIK_INTERNAL_IP_V4` | `""` | When internal is enabled | Static private IPv4 address for the internal Load Balancer |
+| `TRAEFIK_INTERNAL_IP_V6` | `""` | When internal is enabled | Static private IPv6 address for the internal Load Balancer |
 | `EXTERNAL_TRAFFIC_POLICY` | `Local` | No | Service `externalTrafficPolicy` |
 | `OTEL_ENDPOINT` | `otel-collector.monitoring.svc.cluster.local:4317` | No | OTLP gRPC endpoint for logs, metrics, and traces |
 | `DEFAULT_GATEWAY_HOSTNAME` | — | multitenancy only | Hostname for the default Gateway listeners |
@@ -41,7 +45,7 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas, dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
 | `platform-aks` | AKS platform overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + correspondence + DIS core/edge IPs + altinn-uptime), trusts the DIS core/edge ranges for `X-Forwarded-For`, Prometheus ServiceMonitor, and HSTS middleware |
 | `apps` | Standard variant; enables Traefik CRD provider, HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
-| `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies |
+| `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies. Adds a private `https-internal` entrypoint (port 8444, Gateway listeners use `port: 8444`) exposed only on an optional internal dual-stack Load Balancer Service (`TRAEFIK_INTERNAL_*`), for admin UIs that must be reachable only over the VPN |
 | `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. Restricts `loadBalancerSourceRanges` to Cloudflare, altinn-uptime, APIM, and the DIS edge cluster via a ConfigMap (`valuesFrom`), and trusts the APIM and DIS edge ranges (both families) for `X-Forwarded-For`; Cloudflare ranges are updated automatically by the `update-cloudflare-ips` workflow. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
 | `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + DIS core/edge IPs + altinn-uptime), trusts the DIS core/edge ranges for `X-Forwarded-For`, and HSTS middleware |
 | `policies` | Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources for kubelet probes and proxy admin in deny-all mesh environments; see [`policies/README.md`](policies/README.md) |
