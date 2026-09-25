@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: derper
+  namespace: derper
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: https
+      port: 8443
+      protocol: HTTPS
+      hostname: "${DERP_HOSTNAME}"
+      tls:
+        certificateRefs:
+          - name: derper-tls
+      allowedRoutes:
+        namespaces:
+          from: Same

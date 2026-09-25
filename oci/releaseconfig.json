@@ -55,6 +55,14 @@
     "prod_ring1": "0.7.0",
     "prod_ring2": "0.7.0"
   },
+  "derper": {
+    "at_ring1": "0.0.0",
+    "at_ring2": "0.0.0",
+    "tt_ring1": "0.0.0",
+    "tt_ring2": "0.0.0",
+    "prod_ring1": "0.0.0",
+    "prod_ring2": "0.0.0"
+  },
   "dis-apim": {
     "at_ring1": "0.3.0",
     "at_ring2": "0.1.0",
