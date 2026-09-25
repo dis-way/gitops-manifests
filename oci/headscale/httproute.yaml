@@ -10,6 +10,19 @@ spec:
   hostnames:
     - headscale.altinn.cloud
   rules:
+    # Do not publish the API documentation. Redirect instead of a Traefik
+    # middleware to stay on standard Gateway API resources.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /swagger
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /
+            statusCode: 302
     - matches:
         - path:
             type: PathPrefix
