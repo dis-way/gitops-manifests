@@ -6,7 +6,7 @@
   "oci/cert-manager": "2.5.1",
   "oci/certm-lets-encrypt-dns-issuer": "0.4.1",
   "oci/container-runtime-aks-config": "0.7.0",
-  "oci/derper": "0.0.0",
+  "oci/derper": "1.0.0",
   "oci/dis-identity": "0.4.0",
   "oci/dis-apim": "0.3.0",
   "oci/dis-cache": "0.2.2",
