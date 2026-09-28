@@ -2,7 +2,7 @@
 
 Deploys Traefik as the ingress controller for the Altinn platform via Flux HelmRelease (chart v39+).
 
-CRDs (Traefik and Gateway API standard channel) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`.
+Traefik's own CRDs (`traefik.io`, `hub.traefik.io`) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`. Gateway API CRDs are not: chart v41 dropped `crds/gateway-standard-install.yaml`, so they come from the `gateway-api` package instead.
 
 ## Variables
 
