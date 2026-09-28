@@ -20,3 +20,14 @@ data:
             stunport: 3478
             stunonly: false
             derpport: 443
+      901:
+        regionid: 901
+        regioncode: altinn-901
+        regionname: Altinn ttd-prod-aks
+        nodes:
+          - name: 901a
+            regionid: 901
+            hostname: derp-altinn-901.apps.altinn.no
+            stunport: 3478
+            stunonly: false
+            derpport: 443
