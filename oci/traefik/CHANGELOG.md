@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.13.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.0...oci-traefik-v3.13.1) (2026-09-29)
+
+
+### Dependency Updates
+
+* update helm release traefik to v41.6.0 ([#1711](https://github.com/dis-way/gitops-manifests/issues/1711)) ([7b674e4](https://github.com/dis-way/gitops-manifests/commit/7b674e42a906be19eadcde82ed2642bed13dedd1))
+
+## [3.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.12.0...oci-traefik-v3.13.0) (2026-09-28)
+
+
+### Features
+
+* **traefik:** enable Gateway API provider in the apps overlay ([#1692](https://github.com/dis-way/gitops-manifests/issues/1692)) ([9e666d1](https://github.com/dis-way/gitops-manifests/commit/9e666d16379c218a488105bb41ee0e60da10559d))
+
 ## [3.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.11.0...oci-traefik-v3.12.0) (2026-09-22)
 
 

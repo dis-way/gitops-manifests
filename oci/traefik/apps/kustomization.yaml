@@ -7,6 +7,12 @@ patches:
       kind: HelmRelease
       name: altinn-traefik
     patch: |
+      # Gateway API provider, next to the CRD provider, to prepare the move from
+      # Traefik CRDs to Gateway API. The Gateway API CRDs (v1.6.2 standard, incl.
+      # TLSRoute/TCPRoute that Traefik v3.7 watches) come from oci/gateway-api.
+      - op: replace
+        path: /spec/values/providers/kubernetesGateway/enabled
+        value: true
       - op: add
         path: /spec/values/ports/https/http/middlewares
         value:
