@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.1...oci-traefik-v3.14.0) (2026-09-29)
+
+
+### Features
+
+* **traefik:** improve availability of the ingress pods ([#1720](https://github.com/dis-way/gitops-manifests/issues/1720)) ([46e1662](https://github.com/dis-way/gitops-manifests/commit/46e16628e63cef388677c05a1f0400a0a5d0e12f))
+
 ## [3.13.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.0...oci-traefik-v3.13.1) (2026-09-29)
 
 
