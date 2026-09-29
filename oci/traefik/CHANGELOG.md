@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.14.0...oci-traefik-v3.15.0) (2026-09-29)
+
+
+### Features
+
+* **traefik:** prepare for externalTrafficPolicy Local ([#1740](https://github.com/dis-way/gitops-manifests/issues/1740)) ([6cec6fa](https://github.com/dis-way/gitops-manifests/commit/6cec6fa61e16663781220a5fadd1d0fa66bdf7e2))
+
 ## [3.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.1...oci-traefik-v3.14.0) (2026-09-29)
 
 
