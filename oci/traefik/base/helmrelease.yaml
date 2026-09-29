@@ -38,9 +38,13 @@ spec:
         config.linkerd.io/proxy-memory-limit: 250Mi
         config.linkerd.io/proxy-memory-request: 40Mi
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    # At most one pod down at a time during node drains and upgrades
+    # (minAvailable: 1 allowed 2 of 3 pods to be evicted at once).
     podDisruptionBudget:
       enabled: true
-      minAvailable: 1
+      maxUnavailable: 1
+    # Ingress for the whole cluster: do not preempt or evict before app pods.
+    priorityClassName: system-cluster-critical
     ingressClass:
       enabled: false
     providers:
@@ -159,4 +163,15 @@ spec:
                     values:
                       - traefik
               topologyKey: kubernetes.io/hostname
+    # Spread pods across availability zones. ScheduleAnyway: never blocks
+    # scheduling. matchLabelKeys counts only pods of the same ReplicaSet.
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik
+        matchLabelKeys:
+          - pod-template-hash
     extraObjects: []
