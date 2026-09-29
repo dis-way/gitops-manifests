@@ -38,7 +38,7 @@ Traefik's own CRDs (`traefik.io`, `hub.traefik.io`) are managed directly by the 
 
 | Path | Description |
 |------|-------------|
-| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas, dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
+| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas (PDB `maxUnavailable: 1`, spread across zones, `system-cluster-critical`), dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
 | `platform-aks` | AKS platform overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + correspondence + DIS core/edge IPs + altinn-uptime), trusts the DIS core/edge ranges for `X-Forwarded-For`, Prometheus ServiceMonitor, and HSTS middleware |
 | `apps` | Standard variant; enables Traefik CRD provider and the Gateway API provider (default GatewayClass `traefik` and Gateway `traefik-gateway`; CRDs from `oci/gateway-api`), HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
 | `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies |
