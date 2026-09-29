@@ -266,10 +266,10 @@
   "tailscale-subnet-router": {
     "at_ring1": "1.2.4",
     "at_ring2": "1.2.4",
-    "tt_ring1": "1.2.3",
-    "tt_ring2": "1.2.3",
-    "prod_ring1": "1.2.3",
-    "prod_ring2": "1.2.3"
+    "tt_ring1": "1.2.4",
+    "tt_ring2": "1.2.4",
+    "prod_ring1": "1.2.4",
+    "prod_ring2": "1.2.4"
   },
   "dis-cache": {
     "at_ring1": "0.2.2",
