@@ -69,6 +69,12 @@ spec:
           default: true
         exposedPort: 80
         protocol: TCP
+        # With externalTrafficPolicy: Local the Azure LB only stops sending to a node
+        # once its healthCheckNodePort probe fails. Keep accepting requests after
+        # SIGTERM until then, so terminating pods drain without connection resets.
+        transport:
+          lifeCycle:
+            requestAcceptGraceTimeout: 15s
         http:
           redirections:
             entryPoint:
@@ -86,6 +92,9 @@ spec:
           default: true
         exposedPort: 443
         protocol: TCP
+        transport:
+          lifeCycle:
+            requestAcceptGraceTimeout: 15s
         forwardedHeaders:
           insecure: false
           trustedIPs:
