@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.0.1...oci-derper-v1.1.0) (2026-09-29)
+
+
+### Features
+
+* **derper:** add apps overlay using the cluster wildcard certificate ([#1693](https://github.com/dis-way/gitops-manifests/issues/1693)) ([be6ded7](https://github.com/dis-way/gitops-manifests/commit/be6ded7ae12c13866db1bd3ed25a1f0c7e9f3960))
+
 ## [1.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.0.0...oci-derper-v1.0.1) (2026-09-29)
 
 
