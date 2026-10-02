@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.1...oci-envoy-gateway-v2.4.0) (2026-10-02)
+
+
+### Features
+
+* increase maxReplicas from 10 to 20 ([#1704](https://github.com/dis-way/gitops-manifests/issues/1704)) ([6aff507](https://github.com/dis-way/gitops-manifests/commit/6aff5070f93e59265e189171363fb689e8a2e654))
+
 ## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.0...oci-envoy-gateway-v2.3.1) (2026-09-17)
 
 
