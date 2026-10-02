@@ -73,7 +73,7 @@ spec:
         # single node carries all ingress, and one node event is an outage.
         # Three is the floor, not a load-test result - see maxReplicas.
         minReplicas: 3
-        maxReplicas: 10
+        maxReplicas: 20
         metrics:
           - type: Resource
             resource:
