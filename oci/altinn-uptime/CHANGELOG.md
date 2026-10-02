@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.15.0...oci-altinn-uptime-v1.16.0) (2026-10-02)
+
+
+### Features
+
+* **altinn-uptime:** add oed maintenance targets ([#1752](https://github.com/dis-way/gitops-manifests/issues/1752)) ([7fc613b](https://github.com/dis-way/gitops-manifests/commit/7fc613bf82c2f3ee923b566ba07ce40a7cb4bd55))
+
 ## [1.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.14.0...oci-altinn-uptime-v1.15.0) (2026-09-25)
 
 
