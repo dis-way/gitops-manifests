@@ -285,7 +285,7 @@ spec:
         # (http.<stat_prefix>.*), not per route - the access log is needed to
         # find which route a timeout hit.
         #
-        # ClientTrafficPolicy requestReceivedTimeout (30s): the whole request,
+        # ClientTrafficPolicy requestReceivedTimeout (120s): the whole request,
         # body included, must arrive in time. Slow uploads end here with a 408.
         - type: Suffix
           value: downstream_rq_timeout

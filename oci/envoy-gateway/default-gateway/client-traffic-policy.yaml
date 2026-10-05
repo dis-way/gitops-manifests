@@ -121,7 +121,13 @@ spec:
       # uploading a photo is indistinguishable from an attack at this layer.
       # When it fires Envoy answers 408 and increments the per-listener
       # downstream_rq_timeout counter (exported, see envoy-proxy.yaml).
-      requestReceivedTimeout: 30s
+      #
+      # 120s rather than 30s because some applications have large uploads
+      # that need the time. Under a slow-POST attack, cutting this back to
+      # e.g. 30s is a valid lever: those large uploads will fail with 408
+      # while it is in place, and that is an accepted failure mode during an
+      # attack. Restore 120s afterwards.
+      requestReceivedTimeout: 120s
       # Connection idle with no active streams: 1 hour -> 1 minute. Safe
       # for SSE, because a stream that is actively held is not idle.
       idleTimeout: 60s
