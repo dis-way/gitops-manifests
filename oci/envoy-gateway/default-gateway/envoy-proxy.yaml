@@ -266,8 +266,38 @@ spec:
           value: upstream_rq_retry
         - type: Suffix
           value: upstream_rq_retry_overflow
+        # Request and route timeouts. Each counter belongs to exactly one
+        # timeout setting, so a spike says which limit clients ran into.
+        #
+        # Route timeout: Envoy's 15s default, since no HTTPRoute sets
+        # timeouts.request. It runs until the upstream response is fully
+        # processed, so long downloads end here. Per cluster, i.e. per route
+        # rule. The client sees a 504 with flag UT, or a reset if the
+        # response headers were already sent.
         - type: Suffix
           value: upstream_rq_timeout
+        # Per-try timeout, set by HTTPRoute timeouts.backendRequest when
+        # retries are configured. Per cluster. A timed-out try is retried;
+        # once retries run out the client sees a 504 UT.
+        - type: Suffix
+          value: upstream_rq_per_try_timeout
+        # The downstream_* counters below are per listener
+        # (http.<stat_prefix>.*), not per route - the access log is needed to
+        # find which route a timeout hit.
+        #
+        # ClientTrafficPolicy requestReceivedTimeout (30s): the whole request,
+        # body included, must arrive in time. Slow uploads end here with a 408.
+        - type: Suffix
+          value: downstream_rq_timeout
+        # ClientTrafficPolicy requestHeadersReceivedTimeout (10s): the slowloris
+        # defence. Clients dribbling out headers end here with a 408.
+        - type: Suffix
+          value: downstream_rq_header_timeout
+        # ClientTrafficPolicy streamIdleTimeout (5m): a stream with no activity
+        # is reset (a 408 if no response has started). Stalled streams and SSE
+        # endpoints without heartbeats end here.
+        - type: Suffix
+          value: downstream_rq_idle_timeout
       sinks:
         - type: OpenTelemetry
           openTelemetry:
