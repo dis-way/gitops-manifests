@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.4.0...oci-envoy-gateway-v2.5.0) (2026-10-05)
+
+
+### Features
+
+* **envoy-gateway:** export request and route timeout stats ([#1771](https://github.com/dis-way/gitops-manifests/issues/1771)) ([543f6bf](https://github.com/dis-way/gitops-manifests/commit/543f6bffad7a6d3a26e418e78bd32a1771ac3d25))
+* **envoy-gateway:** raise requestReceivedTimeout to 120s for large uploads ([#1773](https://github.com/dis-way/gitops-manifests/issues/1773)) ([0a2195d](https://github.com/dis-way/gitops-manifests/commit/0a2195d948c6c49591a20180b9ce916857ff7aba))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.1...oci-envoy-gateway-v2.4.0) (2026-10-02)
 
 
