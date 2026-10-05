@@ -17,7 +17,7 @@ Web UI for managing the headscale control server, authenticated via Microsoft En
 |------|-------------|
 | `.` | Core resources: namespace, secret, deployment, service, gateway, and HTTPRoute |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
-| `policies` | Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headscale, Entra ID and metrics scraping (ama-metrics, otel collector) |
+| `policies` | Included by the root kustomization. Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headscale, Entra ID and metrics scraping (ama-metrics, otel collector) |
 
 ## Roles
 
