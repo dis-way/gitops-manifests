@@ -137,6 +137,14 @@ get_organizations() {
     fi
 }
 
+# Function to derive the instance label of a health check target: host and path without the
+# trailing /health, so several services behind one host (API Management) get their own series.
+# https://info.altinn.no/health -> info.altinn.no
+# https://platform.altinn.no/dialogporten/health -> platform.altinn.no/dialogporten
+health_check_instance() {
+    echo "$1" | sed -E -e 's|^https?://||' -e 's|/+$||' -e 's|/health$||'
+}
+
 # Function to apply a ServiceMonitor to Kubernetes
 apply_servicemonitor() {
     local yaml_content="$1"
@@ -303,8 +311,8 @@ generate_expected_names() {
         HEALTH_CHECK_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv4[]?' 2>/dev/null)
         for target in $HEALTH_CHECK_IPV4_TARGETS; do
             if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
-                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
-                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
                 max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
@@ -318,8 +326,8 @@ generate_expected_names() {
         HEALTH_CHECK_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv6[]?' 2>/dev/null)
         for target in $HEALTH_CHECK_IPV6_TARGETS; do
             if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
-                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
-                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
                 max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
@@ -1065,8 +1073,8 @@ EOF
         HEALTH_CHECK_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv4[]?' 2>/dev/null)
         for target in $HEALTH_CHECK_IPV4_TARGETS; do
             if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
-                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
-                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
                 max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
@@ -1102,7 +1110,7 @@ spec:
       replacement: blackbox-http-ipv4-health-check
       targetLabel: job
     - action: replace
-      replacement: $hostname
+      replacement: $instance
       targetLabel: instance
     - action: replace
       replacement: extra-${name}-health-check
@@ -1137,8 +1145,8 @@ EOF
         HEALTH_CHECK_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv6[]?' 2>/dev/null)
         for target in $HEALTH_CHECK_IPV6_TARGETS; do
             if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
-                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
-                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
                 # Ensure name doesn't exceed k8s limits (253 chars total)
                 max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
                 if [ ${#name} -gt $max_name_len ]; then
@@ -1174,7 +1182,7 @@ spec:
       replacement: blackbox-http-ipv6-health-check
       targetLabel: job
     - action: replace
-      replacement: $hostname
+      replacement: $instance
       targetLabel: instance
     - action: replace
       replacement: extra-${name}-health-check
