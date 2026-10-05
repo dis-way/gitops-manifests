@@ -298,6 +298,72 @@ spec:
         # endpoints without heartbeats end here.
         - type: Suffix
           value: downstream_rq_idle_timeout
+
+        # xDS health, seen from the proxy. Without these a proxy that lost the
+        # control plane, or rejected the config it was sent, keeps serving
+        # its last good config and nothing else in this list moves.
+        #
+        # connected_state is 1 while the xDS stream to envoy-gateway is up.
+        - type: Exact
+          value: control_plane.connected_state
+        # One suffix covers every xDS type: cluster_manager.cds.update_rejected,
+        # listener_manager.lds.update_rejected and the per route config
+        # http.<stat_prefix>.rds.<route_config>.update_rejected. Any increase
+        # means envoy-gateway produced config Envoy refused (the controller
+        # side of the same event is xds_nack_total).
+        - type: Suffix
+          value: update_rejected
+
+        # Envoy-generated failures. Envoy does not export response flags as
+        # stats, so these counters are how a 5xx Envoy produced itself is told
+        # apart from a 5xx the backend returned. The flag each one maps to is
+        # what the access log would show.
+        #
+        # UH: no healthy endpoint - every endpoint failed health checks or was
+        # ejected, or the Service has no ready pods. Per cluster.
+        - type: Suffix
+          value: upstream_cx_none_healthy
+        # UF: the TCP connect to the backend timed out (connect_fail above
+        # covers refused connections).
+        - type: Suffix
+          value: upstream_cx_connect_timeout
+        # UO: the connection circuit breaker rejected a new connection.
+        - type: Suffix
+          value: upstream_cx_overflow
+        # URX: retries ran out - the client got the last failed attempt.
+        - type: Suffix
+          value: upstream_rq_retry_limit_exceeded
+        # UC: the backend closed a connection with a request still in
+        # flight, usually a keepalive timeout on the backend that is shorter
+        # than Envoy's.
+        - type: Suffix
+          value: upstream_cx_destroy_remote_with_active_rq
+        # The rest of the circuit breaker set started above.
+        - type: Suffix
+          value: circuit_breakers.default.rq_open
+        - type: Suffix
+          value: circuit_breakers.default.rq_retry_open
+
+        # Downstream saturation and rejection.
+        #
+        # The bootstrap's global_downstream_max_connections (50000 per proxy
+        # pod) is enforced separately from the ClientTrafficPolicy
+        # connectionLimit, and downstream_cx_overflow above does not count it.
+        - type: Suffix
+          value: downstream_global_cx_overflow
+        # Overload manager acting: connections refused and requests closed
+        # under memory or connection pressure.
+        - type: Suffix
+          value: downstream_cx_overload_reject
+        - type: Suffix
+          value: downstream_rq_overload_close
+        # A TLS client offered an SNI that no listener or ListenerSet serves -
+        # a typo in a hostname, or a ListenerSet that was not accepted.
+        - type: Suffix
+          value: no_filter_chain_match
+        # Malformed HTTP from clients, including HTTP/2 protocol violations.
+        - type: Suffix
+          value: downstream_cx_protocol_error
       sinks:
         - type: OpenTelemetry
           openTelemetry:

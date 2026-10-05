@@ -24,6 +24,19 @@ spec:
       envoyGateway:
         extensionApis:
           enableBackend: true
+        # Control plane metrics (xds_nack_total, watchable_*, status_update_*,
+        # resource_apply_*), pushed to the same collector as the data plane.
+        # The Prometheus endpoint stays on for port-forward debugging. Envoy
+        # Gateway reads this config only at startup - see the README note on
+        # restarting the controller after config.envoyGateway changes.
+        telemetry:
+          metrics:
+            sinks:
+              - type: OpenTelemetry
+                openTelemetry:
+                  host: otel-collector.monitoring.svc.cluster.local
+                  port: 4317
+                  protocol: grpc
     crds:
       enabled: false
     deployment:

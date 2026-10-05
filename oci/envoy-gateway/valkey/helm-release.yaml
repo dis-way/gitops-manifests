@@ -33,3 +33,11 @@ spec:
         memory: "${VALKEY_MEMORY_REQUEST:=1Gi}"
       limits:
         memory: "${VALKEY_MEMORY_REQUEST:=1Gi}"
+    # redis_exporter sidecar on :9121 (container port "metrics"), for the
+    # otel-collector to scrape (see the README). The chart's
+    # ServiceMonitor/PodMonitor stay off: collection follows the OTel path
+    # like the rest of this package. global.imageRegistry also rewrites
+    # this image, so it is pulled as docker.io/oliver006/redis_exporter
+    # through the mirror (the image is published there as well as on ghcr.io).
+    metrics:
+      enabled: true

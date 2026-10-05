@@ -4,6 +4,10 @@
 #
 # There is no auth or TLS on this Valkey (see the package README) - this policy is
 # the only thing restricting access.
+#
+# The second rule admits the otel-collector to the redis_exporter sidecar only.
+# The exporter holds its own connection to Valkey over localhost, so the
+# collector never reaches 6379.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -28,4 +32,14 @@ spec:
               app.kubernetes.io/name: envoy-ratelimit
       ports:
         - port: 6379
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: otel-collector
+      ports:
+        - port: 9121
           protocol: TCP
