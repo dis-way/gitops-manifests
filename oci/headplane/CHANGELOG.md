@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.4.0...oci-headplane-v1.5.0) (2026-10-05)
+
+
+### Features
+
+* **headplane:** add default-deny network policies layer ([#1778](https://github.com/dis-way/gitops-manifests/issues/1778)) ([e81d796](https://github.com/dis-way/gitops-manifests/commit/e81d7964f48f9af5c118a2a20fe8f9a620e45794))
+
 ## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.3.0...oci-headplane-v1.4.0) (2026-10-05)
 
 
