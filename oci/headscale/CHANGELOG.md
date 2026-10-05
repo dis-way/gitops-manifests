@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.0...oci-headscale-v2.4.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **headscale:** allow the meshed otel collector to scrape metrics ([#1785](https://github.com/dis-way/gitops-manifests/issues/1785)) ([c56887b](https://github.com/dis-way/gitops-manifests/commit/c56887b7d6f589b93c20ba39540a84d6d0d1c932))
+
 ## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.3.0...oci-headscale-v2.4.0) (2026-10-05)
 
 
