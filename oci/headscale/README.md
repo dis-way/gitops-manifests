@@ -21,7 +21,7 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 |------|-------------|
 | `.` | Core resources: namespace, config, storage, deployment, services, gateway, and HTTPRoute |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
-| `policies` | Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headplane, STUN from the internet, Entra ID, the Tailscale DERP map and metrics scraping (ama-metrics, otel collector). Blocks the gRPC admin API (50443) entirely |
+| `policies` | Included by the root kustomization. Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headplane, STUN from the internet, Entra ID, the Tailscale DERP map and metrics scraping (ama-metrics, otel collector). Blocks the gRPC admin API (50443) entirely |
 
 ## Extra DNS Records
 
