@@ -94,6 +94,8 @@ spec:
           protocol: TCP
     # Headscale metrics and linkerd proxy metrics, scraped by Azure Monitor
     # (ama-metrics) or the otel collector (see oci/otel-collector/adminservices).
+    # The otel collector is meshed, so its scrapes arrive on the linkerd inbound
+    # port 4143, not on 9090. ama-metrics is not meshed and connects to 9090.
     - from:
         - namespaceSelector:
             matchLabels:
@@ -117,6 +119,8 @@ spec:
         - port: 9090
           protocol: TCP
         - port: 4191
+          protocol: TCP
+        - port: 4143
           protocol: TCP
     # STUN for the embedded DERP server, reached from the internet through the
     # headscale-derp LoadBalancer (externalTrafficPolicy: Local keeps client IPs).
