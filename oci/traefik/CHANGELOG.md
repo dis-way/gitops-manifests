@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.15.0...oci-traefik-v3.16.0) (2026-10-05)
+
+
+### Features
+
+* **traefik:** add private https-internal entrypoint for adminservices ([#1677](https://github.com/dis-way/gitops-manifests/issues/1677)) ([4259deb](https://github.com/dis-way/gitops-manifests/commit/4259debbe88fa077712e681cd8524615e0920853))
+
 ## [3.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.14.0...oci-traefik-v3.15.0) (2026-09-29)
 
 
