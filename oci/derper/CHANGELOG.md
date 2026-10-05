@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.1.0...oci-derper-v1.1.1) (2026-10-05)
+
+
+### Dependency Updates
+
+* update ghcr.io/dis-way/derper docker tag to v1.104.0 ([#1806](https://github.com/dis-way/gitops-manifests/issues/1806)) ([4bbad42](https://github.com/dis-way/gitops-manifests/commit/4bbad42f45541bfd8655a847a07756770c9ea09a))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.0.1...oci-derper-v1.1.0) (2026-09-29)
 
 
