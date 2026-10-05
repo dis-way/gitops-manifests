@@ -31,7 +31,7 @@ spec:
       containers:
         - name: derper
           # renovate: datasource=docker depName=ghcr.io/dis-way/derper
-          image: altinncr.azurecr.io/ghcr.io/dis-way/derper:v1.102.5
+          image: altinncr.azurecr.io/ghcr.io/dis-way/derper:v1.104.0
           args:
             # Traefik terminates TLS, so derper serves plain HTTP on a non-443 port.
             - -a=:3340
