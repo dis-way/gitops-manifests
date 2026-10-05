@@ -11,3 +11,4 @@ resources:
   - service.yaml
   - gateway.yaml
   - httproute.yaml
+  - policies
