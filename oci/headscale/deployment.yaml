@@ -79,6 +79,9 @@ spec:
             - name: extra-records
               mountPath: /etc/headscale-extra
               readOnly: true
+            - name: derp-map
+              mountPath: /etc/headscale-derp
+              readOnly: true
       volumes:
         - name: config
           secret:
@@ -91,3 +94,6 @@ spec:
         - name: extra-records
           configMap:
             name: headscale-extra-records
+        - name: derp-map
+          configMap:
+            name: headscale-derp-map

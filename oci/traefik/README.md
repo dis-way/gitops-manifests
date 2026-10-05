@@ -2,7 +2,7 @@
 
 Deploys Traefik as the ingress controller for the Altinn platform via Flux HelmRelease (chart v39+).
 
-CRDs (Traefik and Gateway API standard channel) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`.
+Traefik's own CRDs (`traefik.io`, `hub.traefik.io`) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`. Gateway API CRDs are not: chart v41 dropped `crds/gateway-standard-install.yaml`, so they come from the `gateway-api` package instead.
 
 ## Variables
 
@@ -42,12 +42,12 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 
 | Path | Description |
 |------|-------------|
-| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas, dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
-| `platform-aks` | AKS platform overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + correspondence + DIS core/edge IPs + altinn-uptime), trusts the DIS core/edge ranges for `X-Forwarded-For`, Prometheus ServiceMonitor, and HSTS middleware |
-| `apps` | Standard variant; enables Traefik CRD provider, HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
+| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas (PDB `maxUnavailable: 1`, spread across zones, `system-cluster-critical`), dual-stack Load Balancer with `externalTrafficPolicy: Local` (15s `requestAcceptGraceTimeout` on both entrypoints so terminating pods keep serving until the LB health probe marks the node down), Linkerd injection, OTLP telemetry, TLS 1.2+ |
+| `platform-aks` | AKS platform overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + correspondence + DIS core/edge IPs + altinn-uptime), trusts the APIM, correspondence and DIS core/edge ranges for `X-Forwarded-For`, Prometheus ServiceMonitor, and HSTS middleware |
+| `apps` | Standard variant; enables Traefik CRD provider and the Gateway API provider (default GatewayClass `traefik` and Gateway `traefik-gateway`; CRDs from `oci/gateway-api`), HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
 | `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies. Adds a private `https-internal` entrypoint (port 8444, Gateway listeners use `port: 8444`) exposed only on an optional internal dual-stack Load Balancer Service (`TRAEFIK_INTERNAL_*`), for admin UIs that must be reachable only over the VPN |
 | `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. Restricts `loadBalancerSourceRanges` to Cloudflare, altinn-uptime, APIM, and the DIS edge cluster via a ConfigMap (`valuesFrom`), and trusts the APIM and DIS edge ranges (both families) for `X-Forwarded-For`; Cloudflare ranges are updated automatically by the `update-cloudflare-ips` workflow. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
-| `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + DIS core/edge IPs + altinn-uptime), trusts the DIS core/edge ranges for `X-Forwarded-For`, and HSTS middleware |
+| `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + DIS core/edge IPs + altinn-uptime), trusts the APIM and DIS core/edge ranges for `X-Forwarded-For`, and HSTS middleware |
 | `policies` | Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources for kubelet probes and proxy admin in deny-all mesh environments; see [`policies/README.md`](policies/README.md) |
 | `post-deploy` | Manifests applied after the deployment has reconciled |
 | `platform-aks/post-deploy` | Manifests applied after the deployment has reconciled |

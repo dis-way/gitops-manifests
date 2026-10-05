@@ -50,7 +50,6 @@ data:
         "https://grafana.altinn.cloud"
       ],
       "health_check_ipv4": [
-        "https://discore-at23-m22d0r-apim.azure-api.net/dialogporten/health",
         "https://info.at22.altinn.cloud/health",
         "https://info.at23.altinn.cloud/health",
         "https://info.tt02.altinn.no/health",

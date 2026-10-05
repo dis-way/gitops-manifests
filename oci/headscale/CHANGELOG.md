@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.2.0...oci-headscale-v2.3.0) (2026-09-28)
+
+
+### Features
+
+* **headscale:** stop publishing the swagger UI ([#1679](https://github.com/dis-way/gitops-manifests/issues/1679)) ([527bf49](https://github.com/dis-way/gitops-manifests/commit/527bf493c9ffb4ab1f052f062e70f48d8a3e4a96))
+
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.1...oci-headscale-v2.2.0) (2026-09-28)
+
+
+### Features
+
+* **headscale:** add admin-test-aks DERP region ([#1673](https://github.com/dis-way/gitops-manifests/issues/1673)) ([3827b62](https://github.com/dis-way/gitops-manifests/commit/3827b629c606b311aa353491e5398eb2b66c3516))
+
 ## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.0...oci-headscale-v2.1.1) (2026-09-24)
 
 

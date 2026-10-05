@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.2.1...oci-headplane-v1.3.0) (2026-09-28)
+
+
+### Features
+
+* **headplane:** take role from Entra roles claim ([#1676](https://github.com/dis-way/gitops-manifests/issues/1676)) ([ec1094e](https://github.com/dis-way/gitops-manifests/commit/ec1094e4661698514ef6bc2034b61496c835c437))
+
 ## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.2.0...oci-headplane-v1.2.1) (2026-09-12)
 
 

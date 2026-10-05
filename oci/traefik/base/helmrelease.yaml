@@ -13,7 +13,7 @@ spec:
         name: traefik
         namespace: traefik
       # renovate: datasource=helm registryUrl=https://traefik.github.io/charts packageName=traefik
-      version: 41.5.0
+      version: 41.6.0
   interval: 1h
   timeout: 5m
   install:
@@ -38,9 +38,13 @@ spec:
         config.linkerd.io/proxy-memory-limit: 250Mi
         config.linkerd.io/proxy-memory-request: 40Mi
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    # At most one pod down at a time during node drains and upgrades
+    # (minAvailable: 1 allowed 2 of 3 pods to be evicted at once).
     podDisruptionBudget:
       enabled: true
-      minAvailable: 1
+      maxUnavailable: 1
+    # Ingress for the whole cluster: do not preempt or evict before app pods.
+    priorityClassName: system-cluster-critical
     ingressClass:
       enabled: false
     providers:
@@ -65,6 +69,12 @@ spec:
           default: true
         exposedPort: 80
         protocol: TCP
+        # With externalTrafficPolicy: Local the Azure LB only stops sending to a node
+        # once its healthCheckNodePort probe fails. Keep accepting requests after
+        # SIGTERM until then, so terminating pods drain without connection resets.
+        transport:
+          lifeCycle:
+            requestAcceptGraceTimeout: 15s
         http:
           redirections:
             entryPoint:
@@ -82,6 +92,9 @@ spec:
           default: true
         exposedPort: 443
         protocol: TCP
+        transport:
+          lifeCycle:
+            requestAcceptGraceTimeout: 15s
         forwardedHeaders:
           insecure: false
           trustedIPs:
@@ -159,4 +172,15 @@ spec:
                     values:
                       - traefik
               topologyKey: kubernetes.io/hostname
+    # Spread pods across availability zones. ScheduleAnyway: never blocks
+    # scheduling. matchLabelKeys counts only pods of the same ReplicaSet.
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik
+        matchLabelKeys:
+          - pod-template-hash
     extraObjects: []

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.8.0...oci-external-secrets-operator-v1.9.0) (2026-09-30)
+
+
+### Features
+
+* **external-secrets-operator:** add adminservices overlay with dis-system SecretStore ([#1747](https://github.com/dis-way/gitops-manifests/issues/1747)) ([25abcb4](https://github.com/dis-way/gitops-manifests/commit/25abcb4358eb587b315ae08e2755cccddb7828d6))
+
 ## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.7.0...oci-external-secrets-operator-v1.8.0) (2026-09-16)
 
 

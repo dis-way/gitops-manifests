@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: derper-ssl-cert
+  namespace: traefik
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      namespace: derper
+  to:
+    - group: ""
+      kind: Secret
+      name: ssl-cert
