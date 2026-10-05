@@ -28,11 +28,11 @@ Headplane takes the user's role from the `roles` claim at each sign-in (`oidc.ro
 
 Two records are required in the `altinn.cloud` zone:
 
-1. **Service record** — points the hostname at the Traefik load balancer (same IP used by Traefik and headscale):
+1. **Service record** — points the hostname at the private Traefik load balancer (`https-internal` entrypoint, see `oci/traefik`). Headplane is reachable only over the VPN:
 
 ```text
-headplane.altinn.cloud  A     <PUBLIC_IP_V4>
-headplane.altinn.cloud  AAAA  <PUBLIC_IP_V6>
+headplane.altinn.cloud  A     <TRAEFIK_INTERNAL_IP_V4>
+headplane.altinn.cloud  AAAA  <TRAEFIK_INTERNAL_IP_V6>
 ```
 
 2. **ACME delegation** — delegates the DNS-01 challenge to the Azure DNS zone managed by cert-manager:
