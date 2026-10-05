@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.3.0...oci-headscale-v2.4.0) (2026-10-05)
+
+
+### Features
+
+* **headscale:** add default-deny network policies layer ([#1777](https://github.com/dis-way/gitops-manifests/issues/1777)) ([aa8954d](https://github.com/dis-way/gitops-manifests/commit/aa8954d7bff5f2df6a8f262b6b66a583febafde2))
+
 ## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.2.0...oci-headscale-v2.3.0) (2026-09-28)
 
 
