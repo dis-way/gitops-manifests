@@ -1,0 +1,158 @@
+# Default deny for everything in the namespace. The policies below open only the
+# flows headplane needs. Headplane holds a headscale API key, so it must not be
+# able to reach anything in the cluster except headscale.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: headplane
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: headplane
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+# The linkerd-proxy sidecar needs identity (8080), destination (8086) and
+# policy (8090). Without this the proxy never becomes ready and the pod fails.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-linkerd-control-plane
+  namespace: headplane
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: linkerd
+      ports:
+        - port: 8080
+          protocol: TCP
+        - port: 8086
+          protocol: TCP
+        - port: 8090
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: headplane-ingress
+  namespace: headplane
+spec:
+  podSelector:
+    matchLabels:
+      app: headplane
+  policyTypes:
+    - Ingress
+  ingress:
+    # Web UI via Traefik. 4143 is the linkerd inbound port, used for meshed
+    # connections to opaque ports.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+      ports:
+        - port: 3000
+          protocol: TCP
+        - port: 4143
+          protocol: TCP
+    # Linkerd proxy metrics, scraped by Azure Monitor (ama-metrics) or the
+    # otel collector.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              rsName: ama-metrics
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              dsName: ama-metrics-node
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: otel-collector
+      ports:
+        - port: 4191
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: headplane-egress
+  namespace: headplane
+spec:
+  podSelector:
+    matchLabels:
+      app: headplane
+  policyTypes:
+    - Egress
+  egress:
+    # Headscale API. 4143 is the linkerd inbound port, used for meshed
+    # connections to opaque ports.
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: headscale
+          podSelector:
+            matchLabels:
+              app: headscale
+      ports:
+        - port: 8080
+          protocol: TCP
+        - port: 4143
+          protocol: TCP
+    # Entra ID (OIDC) is the only external dependency. Private and link-local
+    # ranges are excluded so a compromised pod cannot reach VNet resources,
+    # private endpoints or IMDS.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 169.254.0.0/16
+              - 100.64.0.0/10
+        - ipBlock:
+            cidr: ::/0
+            except:
+              - fc00::/7
+              - fe80::/10
+      ports:
+        - port: 443
+          protocol: TCP
