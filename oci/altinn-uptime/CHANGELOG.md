@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.16.0...oci-altinn-uptime-v1.17.0) (2026-10-05)
+
+
+### Features
+
+* **altinn-uptime:** add Dialogporten and KI health checks with host+path instance ([#1792](https://github.com/dis-way/gitops-manifests/issues/1792)) ([1ea4bdc](https://github.com/dis-way/gitops-manifests/commit/1ea4bdc812d688686845635d2e3a1c4a105ee2be))
+
 ## [1.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.15.0...oci-altinn-uptime-v1.16.0) (2026-10-02)
 
 
