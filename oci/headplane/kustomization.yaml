@@ -6,3 +6,4 @@ resources:
   - headplane.yaml
   - gateway.yaml
   - httproute.yaml
+  - policies
