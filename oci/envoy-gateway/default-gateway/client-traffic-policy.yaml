@@ -119,6 +119,8 @@ spec:
       # RAISE THIS if you accept large uploads over slow connections - it
       # applies to the request body, and a mobile client on a bad link
       # uploading a photo is indistinguishable from an attack at this layer.
+      # When it fires Envoy answers 408 and increments the per-listener
+      # downstream_rq_timeout counter (exported, see envoy-proxy.yaml).
       requestReceivedTimeout: 30s
       # Connection idle with no active streams: 1 hour -> 1 minute. Safe
       # for SSE, because a stream that is actively held is not idle.
