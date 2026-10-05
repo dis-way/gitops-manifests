@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.3.0...oci-headplane-v1.4.0) (2026-10-05)
+
+
+### Features
+
+* **headplane:** serve Headplane only on the private https-internal entrypoint ([#1678](https://github.com/dis-way/gitops-manifests/issues/1678)) ([c8fea40](https://github.com/dis-way/gitops-manifests/commit/c8fea400f64e37d1e0c138abe1dc50a1151fdf12))
+
 ## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.2.1...oci-headplane-v1.3.0) (2026-09-28)
 
 
