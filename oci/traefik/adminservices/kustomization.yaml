@@ -14,6 +14,48 @@ patches:
         path: /spec/values/ports/https/http/middlewares
         value:
           - traefik-hsts-header@kubernetescrd
+      # Private entrypoint for admin UIs that must be reachable only over the VPN.
+      # Exposed only on the "internal" Service (private dual-stack Azure Load
+      # Balancer), never on the public one. Gateway listeners use port 8444.
+      - op: add
+        path: /spec/values/ports/https-internal
+        value:
+          port: 8444
+          expose:
+            default: false
+            internal: true
+          exposedPort: 443
+          protocol: TCP
+          forwardedHeaders:
+            insecure: false
+            trustedIPs:
+              - "${AKS_VNET_IPV4_CIDR}"
+              - "${AKS_VNET_IPV6_CIDR}"
+          http:
+            tls:
+              enabled: true
+            middlewares:
+              - traefik-hsts-header@kubernetescrd
+      - op: add
+        path: /spec/values/service/additionalServices
+        value:
+          internal:
+            enabled: ${TRAEFIK_INTERNAL_ENABLED:=false}
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+              service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "${TRAEFIK_INTERNAL_SUBNET:=}"
+              service.beta.kubernetes.io/azure-load-balancer-ipv4: "${TRAEFIK_INTERNAL_IP_V4:=}"
+              service.beta.kubernetes.io/azure-load-balancer-ipv6: "${TRAEFIK_INTERNAL_IP_V6:=}"
+            spec:
+              type: LoadBalancer
+              externalTrafficPolicy: Local
+              ipFamilyPolicy: PreferDualStack
+              ipFamilies:
+                - IPv4
+                - IPv6
+      - op: replace
+        path: /spec/values/deployment/podAnnotations/config.linkerd.io~1skip-inbound-ports
+        value: 8000,8443,8444,9100
       - op: add
         path: /spec/values/extraObjects
         value:
