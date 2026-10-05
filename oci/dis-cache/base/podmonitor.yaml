@@ -1,0 +1,34 @@
+apiVersion: azmonitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: dis-cache-operator-caches
+  namespace: dis-cache-operator-system
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  namespaceSelector:
+    any: true
+  selector:
+    matchExpressions:
+      - key: valkey.io/cluster
+        operator: Exists
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+      relabelings:
+        - action: replace
+          sourceLabels:
+            - __meta_kubernetes_pod_label_valkey_io_cluster
+          targetLabel: cache
+        - action: replace
+          sourceLabels:
+            - __meta_kubernetes_pod_name
+          targetLabel: pod
+      metricRelabelings:
+        - action: keep
+          sourceLabels:
+            - __name__
+          regex: redis_(up|connected_clients|blocked_clients|memory_used_bytes|memory_max_bytes|mem_fragmentation_ratio|commands_processed_total|commands_total|commands_duration_seconds_total|keyspace_hits_total|keyspace_misses_total|evicted_keys_total|expired_keys_total|rejected_connections_total|db_keys|db_keys_expiring|cluster_enabled|cluster_slots_assigned|cluster_slots_ok|cluster_slots_fail|cluster_known_nodes|cluster_size|cluster_current_epoch|master_repl_offset|connected_slaves|rdb_last_save_timestamp_seconds|rdb_changes_since_last_save|exporter_last_scrape_error|exporter_scrapes_total)
