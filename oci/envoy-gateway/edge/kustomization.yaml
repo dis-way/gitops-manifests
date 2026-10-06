@@ -54,6 +54,20 @@ patches:
           # is the only signal it happened, which is why envoy-proxy.yaml
           # matches that stat explicitly.
           failClosed: false
+      # Opts the envoy-ratelimit pods into the otel-collector's generic pod
+      # scrape, which picks up their container port named "metrics" (:19001).
+      # Lives here rather than in base because the ratelimit Deployment only
+      # exists once rateLimit is configured. Like every config.envoyGateway
+      # change it needs a controller restart (see the README).
+      - op: add
+        path: /spec/values/config/envoyGateway/provider
+        value:
+          type: Kubernetes
+          kubernetes:
+            rateLimitDeployment:
+              pod:
+                labels:
+                  dis.otel/scrape: "true"
       - op: add
         path: /spec/dependsOn
         value:
