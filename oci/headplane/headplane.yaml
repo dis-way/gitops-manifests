@@ -31,6 +31,21 @@ spec:
           ports:
             - name: http
               containerPort: 3000
+          # /admin/healthz returns 500 whenever headscale's /health fails, so
+          # it only gates readiness. Startup and liveness use a TCP check so a
+          # headscale outage does not restart headplane.
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /admin/healthz
+              port: http
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

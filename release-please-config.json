@@ -28,6 +28,10 @@
       "release-type": "simple",
       "component": "oci-container-runtime-aks-config"
     },
+    "oci/derper": {
+      "release-type": "simple",
+      "component": "oci-derper"
+    },
     "oci/dis-identity": {
       "release-type": "simple",
       "component": "oci-dis-identity"
@@ -85,6 +89,10 @@
     "oci/headscale": {
       "release-type": "simple",
       "component": "oci-headscale"
+    },
+    "oci/http-redirect": {
+      "release-type": "simple",
+      "component": "oci-http-redirect"
     },
     "oci/kro": {
       "release-type": "simple",

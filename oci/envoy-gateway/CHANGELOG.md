@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.5.0...oci-envoy-gateway-v2.6.0) (2026-10-06)
+
+
+### Features
+
+* **envoy-gateway:** close idle upstream connections after 25m ([#1857](https://github.com/dis-way/gitops-manifests/issues/1857)) ([2fb9acf](https://github.com/dis-way/gitops-manifests/commit/2fb9acfd700f27326a03ecd03c3d454f105e2990))
+* **envoy-gateway:** export alert-critical metrics for the edge dashboard ([#1791](https://github.com/dis-way/gitops-manifests/issues/1791)) ([c77cdbb](https://github.com/dis-way/gitops-manifests/commit/c77cdbb0e58ef5ef85e5f31c9ecd062b73c379e6))
+
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.4.0...oci-envoy-gateway-v2.5.0) (2026-10-05)
+
+
+### Features
+
+* **envoy-gateway:** export request and route timeout stats ([#1771](https://github.com/dis-way/gitops-manifests/issues/1771)) ([543f6bf](https://github.com/dis-way/gitops-manifests/commit/543f6bffad7a6d3a26e418e78bd32a1771ac3d25))
+* **envoy-gateway:** raise requestReceivedTimeout to 120s for large uploads ([#1773](https://github.com/dis-way/gitops-manifests/issues/1773)) ([0a2195d](https://github.com/dis-way/gitops-manifests/commit/0a2195d948c6c49591a20180b9ce916857ff7aba))
+
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.1...oci-envoy-gateway-v2.4.0) (2026-10-02)
+
+
+### Features
+
+* increase maxReplicas from 10 to 20 ([#1704](https://github.com/dis-way/gitops-manifests/issues/1704)) ([6aff507](https://github.com/dis-way/gitops-manifests/commit/6aff5070f93e59265e189171363fb689e8a2e654))
+
 ## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.0...oci-envoy-gateway-v2.3.1) (2026-09-17)
 
 

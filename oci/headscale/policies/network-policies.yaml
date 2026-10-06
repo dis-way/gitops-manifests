@@ -1,0 +1,167 @@
+# Default deny for everything in the namespace. The policies below open only the
+# flows headscale needs. The gRPC admin API (50443), which grants full control
+# over the tailnet, is not allowed here and is also bound to loopback only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: headscale
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: headscale
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+# The linkerd-proxy sidecar needs identity (8080), destination (8086) and
+# policy (8090). Without this the proxy never becomes ready and the pod fails.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-linkerd-control-plane
+  namespace: headscale
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: linkerd
+      ports:
+        - port: 8080
+          protocol: TCP
+        - port: 8086
+          protocol: TCP
+        - port: 8090
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: headscale-ingress
+  namespace: headscale
+spec:
+  podSelector:
+    matchLabels:
+      app: headscale
+  policyTypes:
+    - Ingress
+  ingress:
+    # HTTP API, Tailscale control protocol and embedded DERP over HTTPS, via
+    # Traefik (public) and headplane (API key). 4143 is the linkerd inbound port,
+    # used for meshed connections to opaque ports.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: headplane
+          podSelector:
+            matchLabels:
+              app: headplane
+      ports:
+        - port: 8080
+          protocol: TCP
+        - port: 4143
+          protocol: TCP
+    # Headscale metrics and linkerd proxy metrics, scraped by Azure Monitor
+    # (ama-metrics) or the otel collector (see oci/otel-collector/adminservices).
+    # The otel collector is meshed, so its scrapes arrive on the linkerd inbound
+    # port 4143, not on 9090. ama-metrics is not meshed and connects to 9090.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              rsName: ama-metrics
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              dsName: ama-metrics-node
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: otel-collector
+      ports:
+        - port: 9090
+          protocol: TCP
+        - port: 4191
+          protocol: TCP
+        - port: 4143
+          protocol: TCP
+    # STUN for the embedded DERP server, reached from the internet through the
+    # headscale-derp LoadBalancer (externalTrafficPolicy: Local keeps client IPs).
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+        - ipBlock:
+            cidr: ::/0
+      ports:
+        - port: 3478
+          protocol: UDP
+---
+# Entra ID (OIDC) and the Tailscale DERP map (controlplane.tailscale.com) are the
+# only external dependencies. Private and link-local ranges are excluded so a
+# compromised pod cannot reach VNet resources, private endpoints or IMDS.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: headscale-egress-https
+  namespace: headscale
+spec:
+  podSelector:
+    matchLabels:
+      app: headscale
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 169.254.0.0/16
+              - 100.64.0.0/10
+        - ipBlock:
+            cidr: ::/0
+            except:
+              - fc00::/7
+              - fe80::/10
+      ports:
+        - port: 443
+          protocol: TCP

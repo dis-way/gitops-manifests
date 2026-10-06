@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.1...oci-headscale-v2.4.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* **headscale:** harden the pod and bind the gRPC admin API to loopback ([#1830](https://github.com/dis-way/gitops-manifests/issues/1830)) ([ecc3cdf](https://github.com/dis-way/gitops-manifests/commit/ecc3cdfd38291527eda011e23a0abd2418d7fd82))
+
+## [2.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.0...oci-headscale-v2.4.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **headscale:** allow the meshed otel collector to scrape metrics ([#1785](https://github.com/dis-way/gitops-manifests/issues/1785)) ([c56887b](https://github.com/dis-way/gitops-manifests/commit/c56887b7d6f589b93c20ba39540a84d6d0d1c932))
+
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.3.0...oci-headscale-v2.4.0) (2026-10-05)
+
+
+### Features
+
+* **headscale:** add default-deny network policies layer ([#1777](https://github.com/dis-way/gitops-manifests/issues/1777)) ([aa8954d](https://github.com/dis-way/gitops-manifests/commit/aa8954d7bff5f2df6a8f262b6b66a583febafde2))
+
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.2.0...oci-headscale-v2.3.0) (2026-09-28)
+
+
+### Features
+
+* **headscale:** stop publishing the swagger UI ([#1679](https://github.com/dis-way/gitops-manifests/issues/1679)) ([527bf49](https://github.com/dis-way/gitops-manifests/commit/527bf493c9ffb4ab1f052f062e70f48d8a3e4a96))
+
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.1...oci-headscale-v2.2.0) (2026-09-28)
+
+
+### Features
+
+* **headscale:** add admin-test-aks DERP region ([#1673](https://github.com/dis-way/gitops-manifests/issues/1673)) ([3827b62](https://github.com/dis-way/gitops-manifests/commit/3827b629c606b311aa353491e5398eb2b66c3516))
+
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.0...oci-headscale-v2.1.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* **headscale:** upgrade to headscale 0.29.4 ([#1665](https://github.com/dis-way/gitops-manifests/issues/1665)) ([7b255af](https://github.com/dis-way/gitops-manifests/commit/7b255afc519278f9fa6d5e133935db8ce9d39469))
+
 ## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.1...oci-headscale-v2.1.0) (2026-08-21)
 
 

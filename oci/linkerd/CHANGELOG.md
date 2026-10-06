@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.15.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.15.0...oci-linkerd-v2.15.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* **linkerd:** restart only meshed workloads with an outdated proxy ([#1669](https://github.com/dis-way/gitops-manifests/issues/1669)) ([2823630](https://github.com/dis-way/gitops-manifests/commit/28236306d05f2e21b5cf152796874f18d6701626))
+
 ## [2.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.14.0...oci-linkerd-v2.15.0) (2026-09-10)
 
 

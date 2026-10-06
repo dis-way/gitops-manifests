@@ -1,5 +1,54 @@
 # Changelog
 
+## [3.16.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.16.0...oci-traefik-v3.16.1) (2026-10-06)
+
+
+### Dependency Updates
+
+* update helm release traefik to v41.6.1 ([#1803](https://github.com/dis-way/gitops-manifests/issues/1803)) ([60b2e1a](https://github.com/dis-way/gitops-manifests/commit/60b2e1a5779f32896e59ff54b761738e894c27c6))
+
+## [3.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.15.0...oci-traefik-v3.16.0) (2026-10-05)
+
+
+### Features
+
+* **traefik:** add private https-internal entrypoint for adminservices ([#1677](https://github.com/dis-way/gitops-manifests/issues/1677)) ([4259deb](https://github.com/dis-way/gitops-manifests/commit/4259debbe88fa077712e681cd8524615e0920853))
+
+## [3.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.14.0...oci-traefik-v3.15.0) (2026-09-29)
+
+
+### Features
+
+* **traefik:** prepare for externalTrafficPolicy Local ([#1740](https://github.com/dis-way/gitops-manifests/issues/1740)) ([6cec6fa](https://github.com/dis-way/gitops-manifests/commit/6cec6fa61e16663781220a5fadd1d0fa66bdf7e2))
+
+## [3.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.1...oci-traefik-v3.14.0) (2026-09-29)
+
+
+### Features
+
+* **traefik:** improve availability of the ingress pods ([#1720](https://github.com/dis-way/gitops-manifests/issues/1720)) ([46e1662](https://github.com/dis-way/gitops-manifests/commit/46e16628e63cef388677c05a1f0400a0a5d0e12f))
+
+## [3.13.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.0...oci-traefik-v3.13.1) (2026-09-29)
+
+
+### Dependency Updates
+
+* update helm release traefik to v41.6.0 ([#1711](https://github.com/dis-way/gitops-manifests/issues/1711)) ([7b674e4](https://github.com/dis-way/gitops-manifests/commit/7b674e42a906be19eadcde82ed2642bed13dedd1))
+
+## [3.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.12.0...oci-traefik-v3.13.0) (2026-09-28)
+
+
+### Features
+
+* **traefik:** enable Gateway API provider in the apps overlay ([#1692](https://github.com/dis-way/gitops-manifests/issues/1692)) ([9e666d1](https://github.com/dis-way/gitops-manifests/commit/9e666d16379c218a488105bb41ee0e60da10559d))
+
+## [3.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.11.0...oci-traefik-v3.12.0) (2026-09-22)
+
+
+### Features
+
+* update load balancer source ranges and trusted IPs for DIS core and edge clusters ([#1656](https://github.com/dis-way/gitops-manifests/issues/1656)) ([4b4ee84](https://github.com/dis-way/gitops-manifests/commit/4b4ee84ded27c5cd4b4dbe3031a0cd2d448140ae))
+
 ## [3.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.1...oci-traefik-v3.11.0) (2026-09-10)
 
 

@@ -186,6 +186,12 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 | Logs | `filter/logs` (drop below WARN), `transform/servicenamespace`, `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
 | Metrics | `transform/servicenamespace`, `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
 
+### Scraping Pods
+
+The collector also pulls Prometheus metrics from pods that opt in. A pod is scraped when it has the label `dis.otel/scrape: "true"` and a container port named `metrics`. The collector reads `/metrics` on that port every 30 seconds and adds the labels `namespace`, `pod` and `container`. Pods without the label, pods without a port named `metrics`, and init containers are not scraped.
+
+The port name makes the target explicit. Port names are unique inside a pod, so a pod has at most one metrics target and no metric is scraped twice.
+
 ### Envoy Spans
 
 Envoy — and therefore every `envoy-proxy` fronting a Gateway — still tags spans with the pre-1.0 OpenTracing names (`http.method`, `http.url`, `http.status_code`) and sends every one of them as a string ([envoyproxy/envoy#30821](https://github.com/envoyproxy/envoy/issues/30821)). The `azuremonitor` exporter reads only the stable semantic conventions, and needs `http.request.method` before it will treat a span as HTTP at all, so untranslated Envoy spans land in Application Insights as a request literally named `ingress`, with no URL, no client IP and a `resultCode` taken from the span status instead of the HTTP status.

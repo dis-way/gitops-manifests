@@ -15,6 +15,14 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 | `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | Pod network IPv4 CIDR, trusted for forwarded client-IP headers |
 | `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | Pod network IPv6 CIDR, trusted for forwarded client-IP headers |
 
+## Layers
+
+| Path | Description |
+|------|-------------|
+| `.` | Core resources: namespace, config, storage, deployment, services, gateway, and HTTPRoute |
+| `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
+| `policies` | Included by the root kustomization. Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headplane, STUN from the internet, Entra ID, the Tailscale DERP map and metrics scraping (ama-metrics, otel collector). Blocks the gRPC admin API (50443) entirely |
+
 ## Extra DNS Records
 
 Extra DNS records are served to Tailscale clients via headscale. By default, the `headscale-extra-records` ConfigMap contains an empty array. Patch it in your overlay to add static entries:
@@ -34,6 +42,18 @@ data:
 ```
 
 Headscale polls `extra-records.json` via checksum and picks up changes without a restart. Sort the JSON keys and records to produce stable output when generating the file with a script.
+
+## DERP Map
+
+Clients get DERP regions from three sources, merged by headscale:
+
+| Source | Regions |
+|--------|---------|
+| Embedded DERP server (`derp.server`) | 999 (`headscale-server`) |
+| `headscale-derp-map` ConfigMap (`derp.paths`) | 900–998: standalone relays from the `oci/derper` package |
+| `derp.urls` | Tailscale's public DERP servers |
+
+Headscale fails to start if a file in `derp.paths` does not parse, so test changes to `derp.yaml` before release. A pod restart always picks up ConfigMap changes.
 
 ## Prerequisites
 

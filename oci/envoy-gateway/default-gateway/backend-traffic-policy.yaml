@@ -8,6 +8,13 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: eg
+  timeout:
+    http:
+      # Below the AKS LB outbound idle timeout (30m), so Envoy closes idle
+      # upstream connections before the LB resets them. Envoy default: 1h.
+      # Only matters for backends outside the cluster. A route-level
+      # BackendTrafficPolicy replaces this unless it sets mergeType.
+      connectionIdleTimeout: 25m
   rateLimit:
     # `local`, not `global`. The global limiter round-trips to the Valkey
     # rate limit service on every request, which under a flood is both an

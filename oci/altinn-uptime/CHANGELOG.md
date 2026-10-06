@@ -1,5 +1,40 @@
 # Changelog
 
+## [1.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.18.0...oci-altinn-uptime-v1.19.0) (2026-10-06)
+
+
+### Features
+
+* **altinn-uptime:** add ok tt02 maintenance target ([#1858](https://github.com/dis-way/gitops-manifests/issues/1858)) ([af79fc0](https://github.com/dis-way/gitops-manifests/commit/af79fc02c8066547953dda32bf840faad2522e0d))
+
+## [1.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.17.0...oci-altinn-uptime-v1.18.0) (2026-10-06)
+
+
+### Features
+
+* **altinn-uptime:** add eno tt02 maintenance target ([#1836](https://github.com/dis-way/gitops-manifests/issues/1836)) ([e5c8fae](https://github.com/dis-way/gitops-manifests/commit/e5c8faeb36db32d59a370edeec45b3d6e6fe32da))
+
+## [1.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.16.0...oci-altinn-uptime-v1.17.0) (2026-10-05)
+
+
+### Features
+
+* **altinn-uptime:** add Dialogporten and KI health checks with host+path instance ([#1792](https://github.com/dis-way/gitops-manifests/issues/1792)) ([1ea4bdc](https://github.com/dis-way/gitops-manifests/commit/1ea4bdc812d688686845635d2e3a1c4a105ee2be))
+
+## [1.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.15.0...oci-altinn-uptime-v1.16.0) (2026-10-02)
+
+
+### Features
+
+* **altinn-uptime:** add oed maintenance targets ([#1752](https://github.com/dis-way/gitops-manifests/issues/1752)) ([7fc613b](https://github.com/dis-way/gitops-manifests/commit/7fc613bf82c2f3ee923b566ba07ce40a7cb4bd55))
+
+## [1.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.14.0...oci-altinn-uptime-v1.15.0) (2026-09-25)
+
+
+### Features
+
+* Remove deprecated discore health check endpoint ([#1680](https://github.com/dis-way/gitops-manifests/issues/1680)) ([95e27ad](https://github.com/dis-way/gitops-manifests/commit/95e27addd89bfafe776811538fe28f7996d00e0e))
+
 ## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.13.0...oci-altinn-uptime-v1.14.0) (2026-09-06)
 
 

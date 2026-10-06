@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.9.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.9.0...oci-external-secrets-operator-v1.9.1) (2026-10-05)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.11.0 ([#1490](https://github.com/dis-way/gitops-manifests/issues/1490)) ([fa32173](https://github.com/dis-way/gitops-manifests/commit/fa32173c26e6d041f776849b91cd1d8b7fa48375))
+
+## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.8.0...oci-external-secrets-operator-v1.9.0) (2026-09-30)
+
+
+### Features
+
+* **external-secrets-operator:** add adminservices overlay with dis-system SecretStore ([#1747](https://github.com/dis-way/gitops-manifests/issues/1747)) ([25abcb4](https://github.com/dis-way/gitops-manifests/commit/25abcb4358eb587b315ae08e2755cccddb7828d6))
+
 ## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.7.0...oci-external-secrets-operator-v1.8.0) (2026-09-16)
 
 

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dis-secret-sync-sa
+  namespace: flux-system
+  annotations:
+    azure.workload.identity/client-id: "${DIS_SYSTEM_KV_ESO_CLIENT_ID}"
+    azure.workload.identity/tenant-id: "${TENANT_ID}"
+  labels:
+    azure.workload.identity/use: "true"

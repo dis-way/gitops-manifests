@@ -19,7 +19,7 @@ Deploys Linkerd service mesh with High Availability configuration.
 |------|-------------|
 | `base` | HelmRelease with HA values, HelmRepository, cert-manager resources, and namespace |
 | `apps` | Standalone overlay that includes only base |
-| `post-deploy` | Rollout restart job for re-injecting proxies after upgrades |
+| `post-deploy` | Job that restarts meshed workloads whose `linkerd-proxy` differs from the control plane version (re-injects proxies after upgrades; a re-run without an upgrade restarts nothing) |
 | `platform-aks` | AKS platform overlay; sets `podMonitor.labels.release: kube-prometheus-stack` for Prometheus discovery |
 | `eformidling-aks` | eFormidling AKS overlay; disables podMonitor and removes post-renderers |
 | `multitenancy` | Multi-tenant overlay with platform-system namespace patches |

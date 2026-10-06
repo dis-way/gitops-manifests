@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.5.0...oci-headplane-v1.6.0) (2026-10-06)
+
+
+### Features
+
+* **headplane:** add startup, liveness and readiness probes ([#1843](https://github.com/dis-way/gitops-manifests/issues/1843)) ([9eff493](https://github.com/dis-way/gitops-manifests/commit/9eff493495d2afaf704eab35b57e13c64a792d16))
+
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.4.0...oci-headplane-v1.5.0) (2026-10-05)
+
+
+### Features
+
+* **headplane:** add default-deny network policies layer ([#1778](https://github.com/dis-way/gitops-manifests/issues/1778)) ([e81d796](https://github.com/dis-way/gitops-manifests/commit/e81d7964f48f9af5c118a2a20fe8f9a620e45794))
+
+## [1.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.3.0...oci-headplane-v1.4.0) (2026-10-05)
+
+
+### Features
+
+* **headplane:** serve Headplane only on the private https-internal entrypoint ([#1678](https://github.com/dis-way/gitops-manifests/issues/1678)) ([c8fea40](https://github.com/dis-way/gitops-manifests/commit/c8fea400f64e37d1e0c138abe1dc50a1151fdf12))
+
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.2.1...oci-headplane-v1.3.0) (2026-09-28)
+
+
+### Features
+
+* **headplane:** take role from Entra roles claim ([#1676](https://github.com/dis-way/gitops-manifests/issues/1676)) ([ec1094e](https://github.com/dis-way/gitops-manifests/commit/ec1094e4661698514ef6bc2034b61496c835c437))
+
 ## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.2.0...oci-headplane-v1.2.1) (2026-09-12)
 
 

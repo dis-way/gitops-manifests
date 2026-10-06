@@ -43,6 +43,24 @@ patches:
       - op: replace
         path: /spec/values/providers/kubernetesGateway/enabled
         value: true
+      - op: replace
+        path: /spec/values/ports/http/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_VNET_IPV6_CIDR}"
+          - "${LB_SOURCE_RANGE_APIM}"
+          - "${LB_SOURCE_RANGE_APIM_IPV6}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE_IPV6}"
+      - op: replace
+        path: /spec/values/ports/https/forwardedHeaders/trustedIPs
+        value:
+          - "${AKS_VNET_IPV4_CIDR}"
+          - "${AKS_VNET_IPV6_CIDR}"
+          - "${LB_SOURCE_RANGE_APIM}"
+          - "${LB_SOURCE_RANGE_APIM_IPV6}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE_IPV6}"
       - op: add
         path: /spec/values/gateway
         value:
