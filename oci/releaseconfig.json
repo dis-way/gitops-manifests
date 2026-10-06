@@ -27,7 +27,7 @@
     "at_ring1": "0.10.1",
     "at_ring2": "0.10.1",
     "tt_ring1": "0.10.1",
-    "tt_ring2": "0.10.0",
+    "tt_ring2": "0.10.1",
     "prod_ring1": "0.10.1",
     "prod_ring2": "0.10.0"
   },
@@ -35,7 +35,7 @@
     "at_ring1": "2.5.2",
     "at_ring2": "2.5.2",
     "tt_ring1": "2.5.2",
-    "tt_ring2": "2.5.1",
+    "tt_ring2": "2.5.2",
     "prod_ring1": "2.5.2",
     "prod_ring2": "2.5.1"
   },
@@ -104,12 +104,12 @@
     "prod_ring2": "2.20.1"
   },
   "envoy-gateway": {
-    "at_ring1": "2.6.0",
-    "at_ring2": "2.5.0",
-    "tt_ring1": "2.5.0",
-    "tt_ring2": "2.5.0",
-    "prod_ring1": "2.5.0",
-    "prod_ring2": "2.5.0"
+    "at_ring1": "2.7.0",
+    "at_ring2": "2.6.1",
+    "tt_ring1": "2.6.1",
+    "tt_ring2": "2.6.1",
+    "prod_ring1": "2.6.1",
+    "prod_ring2": "2.6.1"
   },
   "envoy-gateway-crds": {
     "at_ring1": "1.0.1",
@@ -200,7 +200,7 @@
     "prod_ring2": "1.4.6"
   },
   "otel-collector": {
-    "at_ring1": "1.4.2",
+    "at_ring1": "1.5.1",
     "at_ring2": "1.4.2",
     "tt_ring1": "1.4.2",
     "tt_ring2": "1.4.2",
@@ -248,12 +248,12 @@
     "prod_ring2": "1.6.0"
   },
   "headscale": {
-    "at_ring1": "2.4.2",
-    "at_ring2": "2.4.2",
-    "tt_ring1": "2.4.2",
-    "tt_ring2": "2.4.2",
-    "prod_ring1": "2.4.2",
-    "prod_ring2": "2.4.2"
+    "at_ring1": "2.6.0",
+    "at_ring2": "2.6.0",
+    "tt_ring1": "2.6.0",
+    "tt_ring2": "2.6.0",
+    "prod_ring1": "2.6.0",
+    "prod_ring2": "2.6.0"
   },
   "http-redirect": {
     "at_ring1": "1.0.0",

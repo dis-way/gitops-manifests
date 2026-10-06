@@ -165,6 +165,10 @@ spec:
   # is slow and browsers ship the list in their binaries. Add it together with
   # that submission, not before.
   headers:
+    # Drop, not reject: Salesforce sends SFDC_STACK_DEPTH and got 400s.
+    # Not Allow - CGI-style backends read X_Forwarded_For as X-Forwarded-For,
+    # which would bypass the remove list below.
+    withUnderscoresAction: DropHeader
     # --- X-Real-IP ------------------------------------------------------
     # Envoy already appends X-Forwarded-For, but many backends and libraries
     # read the nginx-era X-Real-IP instead. Set it here so every upstream

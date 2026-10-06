@@ -17,7 +17,7 @@ flowchart TB
         subgraph col["otel-collector pod"]
             recv["Receivers\nOTLP gRPC :4317\nOTLP HTTP :4318"]
             proc_t["Traces pipeline\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → tail_sampling → batch"]
-            proc_l["Logs pipeline\nfilter/logs → memory_limiter\n→ transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/drop → batch"]
+            proc_l["Logs pipelines\nmemory_limiter → transform/servicenamespace\n→ routing/logs → application or Envoy processing\n→ resourcedetection/aks → k8sattributes\n→ transform/drop → batch"]
             proc_m["Metrics pipeline\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → batch"]
         end
     end
@@ -183,7 +183,9 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 | Pipeline | Key processors | Exporter |
 |----------|---------------|----------|
 | Traces | `transform/servicenamespace` (drop operator-set `service.namespace`), `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
-| Logs | `filter/logs` (drop below WARN), `transform/servicenamespace`, `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
+| Logs input | `memory_limiter`, `transform/servicenamespace` before routing to either log pipeline | `routing/logs` connector |
+| Logs | `filter/logs` (drop below WARN), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
+| Envoy access logs | Routed by the `routing/logs` connector on `dis.otel.logtype=envoy-access`. `transform/envoy-accesslog` (severity), `probabilistic_sampler/logs` (4xx kept at 10%), `k8sattributes` | `azuremonitor` |
 | Metrics | `transform/servicenamespace`, `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
 
 ### Scraping Pods

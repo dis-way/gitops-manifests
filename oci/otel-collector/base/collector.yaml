@@ -12,7 +12,8 @@ spec:
         secretKeyRef:
           name: app-insights-connstring
           key: connectionString
-  image: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.140.1
+  # renovate: datasource=docker depName=ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
+  image: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.161.0
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     linkerd.io/inject: "enabled"
@@ -333,13 +334,15 @@ spec:
               # spans. Split it so the exporter can rebuild the request URL.
               # Note envoy truncates it at 256 characters by default.
               - set(attributes["url.full"], attributes["http.url"]) where attributes["http.url"] != nil
-              - set(attributes["url.scheme"], URL(attributes["http.url"])["url.scheme"]) where attributes["http.url"] != nil
-              - set(attributes["url.path"], URL(attributes["http.url"])["url.path"]) where attributes["http.url"] != nil
-              - set(attributes["url.query"], URL(attributes["http.url"])["url.query"]) where attributes["http.url"] != nil
+              # The `!= nil` on the URL() part matters since 0.161: set() writes nil
+              # instead of skipping it, which shows up as empty properties in App Insights.
+              - set(attributes["url.scheme"], URL(attributes["http.url"])["url.scheme"]) where attributes["http.url"] != nil and URL(attributes["http.url"])["url.scheme"] != nil
+              - set(attributes["url.path"], URL(attributes["http.url"])["url.path"]) where attributes["http.url"] != nil and URL(attributes["http.url"])["url.path"] != nil
+              - set(attributes["url.query"], URL(attributes["http.url"])["url.query"]) where attributes["http.url"] != nil and URL(attributes["http.url"])["url.query"] != nil
               # server.address normally arrives as an envoy tag (see the
               # EnvoyProxy telemetry.tracing.tags block); this covers proxies
               # that do not set it.
-              - set(attributes["server.address"], URL(attributes["http.url"])["url.domain"]) where attributes["http.url"] != nil and attributes["server.address"] == nil
+              - set(attributes["server.address"], URL(attributes["http.url"])["url.domain"]) where attributes["http.url"] != nil and attributes["server.address"] == nil and URL(attributes["http.url"])["url.domain"] != nil
       # Hack to make azure application insights display traces somewhat correctly
       transform/azuremonitor:
         error_mode: ignore
@@ -472,6 +475,34 @@ spec:
             type: latency
             latency:
               threshold_ms: 1000
+      # Envoy access logs (failed requests only, see oci/envoy-gateway) arrive
+      # without a severity and would be dropped by filter/logs. 5xx and
+      # connection failures become ERROR, 4xx WARN and sampled to 10%.
+      transform/envoy-accesslog:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            conditions:
+              - resource.attributes["dis.otel.logtype"] == "envoy-access"
+            statements:
+              - set(severity_number, SEVERITY_NUMBER_ERROR)
+              - set(severity_text, "ERROR")
+              - set(severity_number, SEVERITY_NUMBER_WARN) where Int(attributes["response_code"]) >= 400 and Int(attributes["response_code"]) < 500
+              - set(severity_text, "WARN") where severity_number == SEVERITY_NUMBER_WARN
+              - set(attributes["sampling.priority"], 10) where severity_number == SEVERITY_NUMBER_WARN
+      # Only records carrying sampling.priority are sampled; everything else
+      # is kept. fail_closed: false keeps records without a trace ID.
+      probabilistic_sampler/logs:
+        sampling_percentage: 100
+        sampling_priority: sampling.priority
+        fail_closed: false
+      # Strip the sampling hint and the sampler's own attributes before export.
+      transform/envoy-accesslog-cleanup:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - delete_matching_keys(attributes, "^sampling[.]")
       filter/logs:
         error_mode: ignore
         logs:
@@ -484,13 +515,21 @@ spec:
         limit_percentage: 75
         spike_limit_percentage: 15
 
+    # Envoy access logs get their own pipeline so the sampler never touches
+    # other applications' logs.
+    connectors:
+      routing/logs:
+        default_pipelines: [logs]
+        table:
+          - condition: resource.attributes["dis.otel.logtype"] == "envoy-access"
+            pipelines: [logs/envoy-access]
     exporters:
       azuremonitor: {}
       debug: {}
       prometheusremotewrite:
         endpoint: ${AMW_WRITE_ENDPOINT}
-        resource_to_telemetry_conversion:
-          enabled: false
+        # Keep scope name/version out of the series as otel_scope_* labels.
+        disable_scope_info: true
         auth:
           authenticator: azureauth
 
@@ -505,14 +544,27 @@ spec:
                   prometheus:
                     host: 0.0.0.0
                     port: 8888
+                    # Since 0.152 an explicit host drops units, _total and scope
+                    # info from the collector's own metric names. Keep the old names.
+                    without_type_suffix: false
+                    without_units: false
+                    without_scope_info: false
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
           exporters: [azuremonitor]
-        logs:
+        logs/in:
           receivers: [otlp]
-          processors: [filter/logs, memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/drop, batch]
+          processors: [memory_limiter, transform/servicenamespace]
+          exporters: [routing/logs]
+        logs:
+          receivers: [routing/logs]
+          processors: [filter/logs, resourcedetection/aks, k8sattributes, transform/drop, batch]
+          exporters: [azuremonitor]
+        logs/envoy-access:
+          receivers: [routing/logs]
+          processors: [transform/envoy-accesslog, probabilistic_sampler/logs, transform/envoy-accesslog-cleanup, resourcedetection/aks, k8sattributes, transform/drop, batch]
           exporters: [azuremonitor]
         metrics:
           receivers: [otlp, prometheus/pods]

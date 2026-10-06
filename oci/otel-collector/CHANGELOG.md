@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.5.0...oci-otel-collector-v1.5.1) (2026-10-06)
+
+
+### Dependency Updates
+
+* update opentelemetry-collector-contrib docker tag to v0.161.0 ([#1886](https://github.com/dis-way/gitops-manifests/issues/1886)) ([291fffd](https://github.com/dis-way/gitops-manifests/commit/291fffd159a500e13135d5fe8235f0de8a4e503a))
+
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.2...oci-otel-collector-v1.5.0) (2026-10-06)
+
+
+### Features
+
+* **otel-collector:** route envoy access logs through their own pipeline ([#1871](https://github.com/dis-way/gitops-manifests/issues/1871)) ([50b3736](https://github.com/dis-way/gitops-manifests/commit/50b373673809075f131b3d4c81380f16d4af6cc3))
+* **otel-collector:** scrape pods that opt in with the dis.otel/scrape label ([#1797](https://github.com/dis-way/gitops-manifests/issues/1797)) ([273c79c](https://github.com/dis-way/gitops-manifests/commit/273c79c1b29a67e1a4ea0939e6b3b9eaec965b1b))
+
 ## [1.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.1...oci-otel-collector-v1.4.2) (2026-09-15)
 
 

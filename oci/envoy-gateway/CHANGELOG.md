@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.6.1...oci-envoy-gateway-v2.7.0) (2026-10-06)
+
+
+### Features
+
+* **envoy-gateway:** ship access logs for failed requests to the otel-collector ([#1872](https://github.com/dis-way/gitops-manifests/issues/1872)) ([69cfbd3](https://github.com/dis-way/gitops-manifests/commit/69cfbd378abeba8481dec247aca32f622dffee8f))
+
+## [2.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.6.0...oci-envoy-gateway-v2.6.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** drop headers with underscores instead of rejecting ([#1864](https://github.com/dis-way/gitops-manifests/issues/1864)) ([cdeb343](https://github.com/dis-way/gitops-manifests/commit/cdeb343e6f3b3c1616ceb91f6162e62e024de17f))
+
 ## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.5.0...oci-envoy-gateway-v2.6.0) (2026-10-06)
 
 
