@@ -18,6 +18,10 @@ spec:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
       serviceAccountName: tailscale
+      enableServiceLinks: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       priorityClassName: system-cluster-critical
       tolerations:
         - key: "CriticalAddonsOnly"
@@ -50,6 +54,10 @@ spec:
               value: "false"
             - name: TS_HOSTNAME
               value: "${AKS_NAME}"
+            # Headscale does not collect client logs; without this tailscaled
+            # uploads them to log.tailscale.com.
+            - name: TS_NO_LOGS_NO_SUPPORT
+              value: "true"
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -80,6 +88,9 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           volumeMounts:
             - name: tmp
               mountPath: /tmp
