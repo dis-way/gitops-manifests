@@ -448,6 +448,34 @@ spec:
             type: latency
             latency:
               threshold_ms: 1000
+      # Envoy access logs (failed requests only, see oci/envoy-gateway) arrive
+      # without a severity and would be dropped by filter/logs. 5xx and
+      # connection failures become ERROR, 4xx WARN and sampled to 10%.
+      transform/envoy-accesslog:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            conditions:
+              - resource.attributes["dis.otel.logtype"] == "envoy-access"
+            statements:
+              - set(severity_number, SEVERITY_NUMBER_ERROR)
+              - set(severity_text, "ERROR")
+              - set(severity_number, SEVERITY_NUMBER_WARN) where Int(attributes["response_code"]) >= 400 and Int(attributes["response_code"]) < 500
+              - set(severity_text, "WARN") where severity_number == SEVERITY_NUMBER_WARN
+              - set(attributes["sampling.priority"], 10) where severity_number == SEVERITY_NUMBER_WARN
+      # Only records carrying sampling.priority are sampled; everything else
+      # is kept. fail_closed: false keeps records without a trace ID.
+      probabilistic_sampler/logs:
+        sampling_percentage: 100
+        sampling_priority: sampling.priority
+        fail_closed: false
+      # Strip the sampling hint and the sampler's own attributes before export.
+      transform/envoy-accesslog-cleanup:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - delete_matching_keys(attributes, "^sampling[.]")
       filter/logs:
         error_mode: ignore
         logs:
@@ -460,6 +488,14 @@ spec:
         limit_percentage: 75
         spike_limit_percentage: 15
 
+    # Envoy access logs get their own pipeline so the sampler never touches
+    # other applications' logs.
+    connectors:
+      routing/logs:
+        default_pipelines: [logs]
+        table:
+          - condition: resource.attributes["dis.otel.logtype"] == "envoy-access"
+            pipelines: [logs/envoy-access]
     exporters:
       azuremonitor: {}
       debug: {}
@@ -486,9 +522,17 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
           exporters: [azuremonitor]
-        logs:
+        logs/in:
           receivers: [otlp]
-          processors: [filter/logs, memory_limiter, resourcedetection/aks, k8sattributes, transform/drop, batch]
+          processors: [memory_limiter]
+          exporters: [routing/logs]
+        logs:
+          receivers: [routing/logs]
+          processors: [filter/logs, resourcedetection/aks, k8sattributes, transform/drop, batch]
+          exporters: [azuremonitor]
+        logs/envoy-access:
+          receivers: [routing/logs]
+          processors: [transform/envoy-accesslog, probabilistic_sampler/logs, transform/envoy-accesslog-cleanup, resourcedetection/aks, k8sattributes, transform/drop, batch]
           exporters: [azuremonitor]
         metrics:
           receivers: [otlp, prometheus/pods]

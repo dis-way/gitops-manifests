@@ -125,6 +125,7 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 |----------|---------------|----------|
 | Traces | `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
 | Logs | `filter/logs` (drop below WARN), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
+| Envoy access logs | Routed by the `routing/logs` connector on `dis.otel.logtype=envoy-access`. `transform/envoy-accesslog` (severity), `probabilistic_sampler/logs` (4xx kept at 10%), `k8sattributes` | `azuremonitor` |
 | Metrics | `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
 
 ### Scraping Pods
