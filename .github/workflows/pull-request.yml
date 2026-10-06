@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   kustomize-diff:
-    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@51011f876597bef48c5f5ec9a7a4cf3ed3e63802 # main
+    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@507c0a67d813043c542a97c1c7e05f4c242051ef # main
     with:
       build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices,oci/*/platform-aks,oci/*/edge"
     permissions:
