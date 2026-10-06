@@ -91,6 +91,10 @@ spec:
             capabilities:
               drop:
                 - ALL
+              # tailscaled answers pings to subnet routes by running ping,
+              # which needs raw ICMP sockets.
+              add:
+                - NET_RAW
           volumeMounts:
             - name: tmp
               mountPath: /tmp
