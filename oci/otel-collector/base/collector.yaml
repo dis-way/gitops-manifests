@@ -310,15 +310,17 @@ spec:
               # spans. Split it so the exporter can rebuild the request URL.
               # Note envoy truncates it at 256 characters by default.
               - set(attributes["url.full"], attributes["http.url"]) where attributes["http.url"] != nil
-              # The `!= nil` on the URL() part matters since 0.161: set() writes nil
-              # instead of skipping it, which shows up as empty properties in App Insights.
-              - set(attributes["url.scheme"], URL(attributes["http.url"])["url.scheme"]) where attributes["http.url"] != nil and URL(attributes["http.url"])["url.scheme"] != nil
-              - set(attributes["url.path"], URL(attributes["http.url"])["url.path"]) where attributes["http.url"] != nil and URL(attributes["http.url"])["url.path"] != nil
-              - set(attributes["url.query"], URL(attributes["http.url"])["url.query"]) where attributes["http.url"] != nil and URL(attributes["http.url"])["url.query"] != nil
+              # Parse once into cache. A missing key read from a path (cache) is
+              # nil, while indexing URL() directly errors with "key not found"
+              # for every URL without a query string.
+              - set(cache["url"], URL(attributes["http.url"])) where attributes["http.url"] != nil
+              - set(attributes["url.scheme"], cache["url"]["url.scheme"]) where cache["url"]["url.scheme"] != nil
+              - set(attributes["url.path"], cache["url"]["url.path"]) where cache["url"]["url.path"] != nil
+              - set(attributes["url.query"], cache["url"]["url.query"]) where cache["url"]["url.query"] != nil
               # server.address normally arrives as an envoy tag (see the
               # EnvoyProxy telemetry.tracing.tags block); this covers proxies
               # that do not set it.
-              - set(attributes["server.address"], URL(attributes["http.url"])["url.domain"]) where attributes["http.url"] != nil and attributes["server.address"] == nil and URL(attributes["http.url"])["url.domain"] != nil
+              - set(attributes["server.address"], cache["url"]["url.domain"]) where attributes["server.address"] == nil and cache["url"]["url.domain"] != nil
       # Hack to make azure application insights display traces somewhat correctly
       transform/azuremonitor:
         error_mode: ignore
