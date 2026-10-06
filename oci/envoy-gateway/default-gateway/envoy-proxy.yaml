@@ -364,6 +364,11 @@ spec:
         # Malformed HTTP from clients, including HTTP/2 protocol violations.
         - type: Suffix
           value: downstream_cx_protocol_error
+        # Headers with underscores, per codec (http1./http2./http3.).
+        - type: Suffix
+          value: dropped_headers_with_underscores
+        - type: Suffix
+          value: requests_rejected_with_underscores_in_headers
       sinks:
         - type: OpenTelemetry
           openTelemetry:
