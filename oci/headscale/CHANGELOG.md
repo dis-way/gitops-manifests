@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.1...oci-headscale-v2.4.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* **headscale:** harden the pod and bind the gRPC admin API to loopback ([#1830](https://github.com/dis-way/gitops-manifests/issues/1830)) ([ecc3cdf](https://github.com/dis-way/gitops-manifests/commit/ecc3cdfd38291527eda011e23a0abd2418d7fd82))
+
 ## [2.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.0...oci-headscale-v2.4.1) (2026-10-05)
 
 
