@@ -248,12 +248,12 @@
     "prod_ring2": "1.6.0"
   },
   "headscale": {
-    "at_ring1": "2.4.2",
-    "at_ring2": "2.4.2",
-    "tt_ring1": "2.4.2",
-    "tt_ring2": "2.4.2",
-    "prod_ring1": "2.4.2",
-    "prod_ring2": "2.4.2"
+    "at_ring1": "2.5.0",
+    "at_ring2": "2.5.0",
+    "tt_ring1": "2.5.0",
+    "tt_ring2": "2.5.0",
+    "prod_ring1": "2.5.0",
+    "prod_ring2": "2.5.0"
   },
   "http-redirect": {
     "at_ring1": "1.0.0",
