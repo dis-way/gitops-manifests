@@ -33,8 +33,11 @@ spec:
         memory: "${VALKEY_MEMORY_REQUEST:=1Gi}"
       limits:
         memory: "${VALKEY_MEMORY_REQUEST:=1Gi}"
-    # redis_exporter sidecar on :9121 (container port "metrics"), for the
-    # otel-collector to scrape (see the README). The chart's
+    # Opts the pod into the otel-collector's generic pod scrape, which picks
+    # up the container port named "metrics" - the redis_exporter below.
+    podLabels:
+      dis.otel/scrape: "true"
+    # redis_exporter sidecar on :9121 (container port "metrics"). The chart's
     # ServiceMonitor/PodMonitor stay off: collection follows the OTel path
     # like the rest of this package. global.imageRegistry also rewrites
     # this image, so it is pulled as docker.io/oliver006/redis_exporter
