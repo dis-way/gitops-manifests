@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.1.1...oci-derper-v1.2.0) (2026-10-06)
+
+
+### Features
+
+* **derper:** add default-deny network policies layer ([#1827](https://github.com/dis-way/gitops-manifests/issues/1827)) ([8722b68](https://github.com/dis-way/gitops-manifests/commit/8722b68604efe0382aefdea3dab07f801e13a2bf))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.1.0...oci-derper-v1.1.1) (2026-10-05)
 
 
