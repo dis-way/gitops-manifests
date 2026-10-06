@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.5.0...oci-envoy-gateway-v2.6.0) (2026-10-06)
+
+
+### Features
+
+* **envoy-gateway:** close idle upstream connections after 25m ([#1857](https://github.com/dis-way/gitops-manifests/issues/1857)) ([2fb9acf](https://github.com/dis-way/gitops-manifests/commit/2fb9acfd700f27326a03ecd03c3d454f105e2990))
+* **envoy-gateway:** export alert-critical metrics for the edge dashboard ([#1791](https://github.com/dis-way/gitops-manifests/issues/1791)) ([c77cdbb](https://github.com/dis-way/gitops-manifests/commit/c77cdbb0e58ef5ef85e5f31c9ecd062b73c379e6))
+
 ## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.4.0...oci-envoy-gateway-v2.5.0) (2026-10-05)
 
 
