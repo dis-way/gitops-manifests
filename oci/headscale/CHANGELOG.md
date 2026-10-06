@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.5.0...oci-headscale-v2.6.0) (2026-10-06)
+
+
+### Features
+
+* **headscale:** stop using the public Tailscale DERP servers ([#1876](https://github.com/dis-way/gitops-manifests/issues/1876)) ([16200b1](https://github.com/dis-way/gitops-manifests/commit/16200b1ea81395aa802ebc1379d6c50fb7d1a345))
+
 ## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.2...oci-headscale-v2.5.0) (2026-10-06)
 
 
