@@ -99,6 +99,102 @@ spec:
                 value: 1
                 periodSeconds: 120
   telemetry:
+    accessLog:
+      settings:
+        # Failed requests only, shipped to the otel-collector. Path without
+        # query string. Envoy Gateway ANDs multiple `matches` entries, so
+        # this must stay one expression. Excludes 429, backend 401/403/404
+        # (flags == 0) and client aborts.
+        - matches:
+            - >-
+              response.code >= 500
+              || (response.code >= 400 && !(response.code in [401, 403, 404, 429]))
+              || (response.code in [401, 403, 404] && response.flags != 0)
+              || (response.code == 0 && response.code_details != 'downstream_remote_disconnect')
+          format:
+            type: JSON
+            json:
+              start_time: "%START_TIME%"
+              method: "%REQ(:METHOD)%"
+              path: "%REQ_WITHOUT_QUERY(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              protocol: "%PROTOCOL%"
+              authority: "%REQ(:AUTHORITY)%"
+              requested_server_name: "%REQUESTED_SERVER_NAME%"
+              response_code: "%RESPONSE_CODE%"
+              response_flags: "%RESPONSE_FLAGS%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              connection_termination_details: "%CONNECTION_TERMINATION_DETAILS%"
+              downstream_transport_failure_reason: "%DOWNSTREAM_TRANSPORT_FAILURE_REASON%"
+              upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration: "%DURATION%"
+              upstream_service_time: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              route_name: "%ROUTE_NAME%"
+              client_ip: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+              user_agent: "%REQ(USER-AGENT)%"
+              request_id: "%REQ(X-REQUEST-ID)%"
+              trace_id: "%TRACE_ID%"
+          sinks:
+            - type: OpenTelemetry
+              openTelemetry:
+                backendRefs:
+                  - name: otel-collector
+                    namespace: monitoring
+                    port: 4317
+                # Lets the otel-collector give these logs a severity and
+                # sample 4xx - see transform/envoy-accesslog there.
+                resourceAttributes:
+                  dis.otel.logtype: envoy-access
+        # Failed connections (TLS handshake, Envoy-terminated) that never
+        # became a request.
+        - type: Listener
+          matches:
+            - connection.transport_failure_reason != '' || connection.termination_details != ''
+          format:
+            type: JSON
+            json:
+              start_time: "%START_TIME%"
+              method: "%REQ(:METHOD)%"
+              path: "%REQ_WITHOUT_QUERY(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              protocol: "%PROTOCOL%"
+              authority: "%REQ(:AUTHORITY)%"
+              requested_server_name: "%REQUESTED_SERVER_NAME%"
+              response_code: "%RESPONSE_CODE%"
+              response_flags: "%RESPONSE_FLAGS%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              connection_termination_details: "%CONNECTION_TERMINATION_DETAILS%"
+              downstream_transport_failure_reason: "%DOWNSTREAM_TRANSPORT_FAILURE_REASON%"
+              upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration: "%DURATION%"
+              upstream_service_time: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              route_name: "%ROUTE_NAME%"
+              client_ip: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+              user_agent: "%REQ(USER-AGENT)%"
+              request_id: "%REQ(X-REQUEST-ID)%"
+              trace_id: "%TRACE_ID%"
+          sinks:
+            - type: OpenTelemetry
+              openTelemetry:
+                backendRefs:
+                  - name: otel-collector
+                    namespace: monitoring
+                    port: 4317
+                # Lets the otel-collector give these logs a severity and
+                # sample 4xx - see transform/envoy-accesslog there.
+                resourceAttributes:
+                  dis.otel.logtype: envoy-access
+        # Every request to stdout for kubectl logs. Not collected anywhere.
+        - sinks:
+            - type: File
+              file:
+                path: /dev/stdout
     metrics:
       # Without this Envoy generates every stat it knows about - thousands of
       # series per proxy pod, most of them histogram buckets nothing queries.
