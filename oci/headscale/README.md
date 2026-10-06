@@ -45,13 +45,14 @@ Headscale polls `extra-records.json` via checksum and picks up changes without a
 
 ## DERP Map
 
-Clients get DERP regions from three sources, merged by headscale:
+Clients get DERP regions from two sources, merged by headscale:
 
 | Source | Regions |
 |--------|---------|
 | Embedded DERP server (`derp.server`) | 999 (`headscale-server`) |
 | `headscale-derp-map` ConfigMap (`derp.paths`) | 900–998: standalone relays from the `oci/derper` package |
-| `derp.urls` | Tailscale's public DERP servers |
+
+`derp.urls` is empty: the public Tailscale DERP servers are not used. Keep at least two standalone regions in other clusters, so clients have a relay when the headscale pod restarts.
 
 Headscale fails to start if a file in `derp.paths` does not parse, so test changes to `derp.yaml` before release. A pod restart always picks up ConfigMap changes.
 
