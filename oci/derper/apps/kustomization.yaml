@@ -6,6 +6,7 @@ kind: Kustomization
 # Deploy only this path; do not deploy ../post-deploy.
 resources:
   - ../base
+  - ../policies
   - referencegrant.yaml
 patches:
   - target:
