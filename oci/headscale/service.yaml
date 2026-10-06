@@ -20,10 +20,6 @@ spec:
       port: 9090
       targetPort: metrics
       protocol: TCP
-    - name: grpc
-      port: 50443
-      targetPort: grpc
-      protocol: TCP
 ---
 apiVersion: v1
 kind: Service

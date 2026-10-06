@@ -17,11 +17,14 @@ spec:
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
         runAsGroup: 65532
         fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: headscale
           # renovate: datasource=docker depName=juanfont/headscale registryUrl=https://ghcr.io
@@ -33,9 +36,6 @@ spec:
               protocol: TCP
             - name: metrics
               containerPort: 9090
-              protocol: TCP
-            - name: grpc
-              containerPort: 50443
               protocol: TCP
             - name: derp
               containerPort: 3478
