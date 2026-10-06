@@ -19,6 +19,10 @@ Deploy one Flux `Kustomization` per redirect. `REDIRECT_NAME` names every resour
 | `REDIRECT_TLS_SECRET_NAME` | `<REDIRECT_NAME>-tls` | `reference-grant` only | TLS secret used by the `base` `Gateway` and written by `post-deploy`; set to an existing secret to reuse its certificate |
 | `REDIRECT_TLS_SECRET_NAMESPACE` | `REDIRECT_NAMESPACE` | `reference-grant` only | Namespace of the TLS secret; anything other than `REDIRECT_NAMESPACE` needs the `reference-grant` layer |
 | `REDIRECT_CLUSTER_ISSUER` | `letsencrypt-production` | No | cert-manager `ClusterIssuer` for the `post-deploy` `Certificate`, e.g. `zerossl-dis-tls-cert` or `digicert-dis-tls-cert` |
+| `REDIRECT_SECRET_STORE_NAME` | — | `external-secret` only | Existing `SecretStore`/`ClusterSecretStore` to read the certificate from; a `SecretStore` must be in `REDIRECT_TLS_SECRET_NAMESPACE` |
+| `REDIRECT_SECRET_STORE_KIND` | `SecretStore` | No | `SecretStore` or `ClusterSecretStore` (`external-secret` only) |
+| `REDIRECT_REMOTE_SECRET_NAME_CERT` | — | `external-secret` only | Remote secret holding the PEM certificate chain (e.g. the crt secret `dis-tls-cert` pushes to Key Vault) |
+| `REDIRECT_REMOTE_SECRET_NAME_KEY` | — | `external-secret` only | Remote secret holding the PEM private key |
 | `REDIRECT_PARENT_GATEWAY_NAME` | — | `shared-gateway` only | Existing `Gateway` to attach the `HTTPRoute` to |
 | `REDIRECT_PARENT_GATEWAY_NAMESPACE` | `traefik` | No | Namespace of the existing `Gateway` (`shared-gateway` only) |
 | `REDIRECT_PARENT_GATEWAY_SECTION` | `https` | No | Listener name on the existing `Gateway` (`shared-gateway` only) |
@@ -30,11 +34,14 @@ Deploy one Flux `Kustomization` per redirect. `REDIRECT_NAME` names every resour
 | `base` | Dedicated `Gateway` (class `traefik`, HTTPS listener for `REDIRECT_FROM_FQDN`) and the redirecting `HTTPRoute` |
 | `shared-gateway` | `HTTPRoute` only, attached to an existing `Gateway` that already terminates TLS for the source host — no `post-deploy` needed |
 | `post-deploy` | cert-manager `Certificate` for `REDIRECT_FROM_FQDN`, written to `REDIRECT_TLS_SECRET_NAME` and used by the `base` `Gateway` |
+| `external-secret` | `ExternalSecret` syncing `REDIRECT_TLS_SECRET_NAME` (type `kubernetes.io/tls`) from an existing secret store — an alternative to `post-deploy` |
 | `reference-grant` | `ReferenceGrant` in `REDIRECT_TLS_SECRET_NAMESPACE` letting the `base` `Gateway` use an existing secret from another namespace |
 
 ### Reusing an existing certificate
 
 To use a certificate that already exists, e.g. the cluster wildcard `ssl-cert` (`*.apps.altinn.no`) in `traefik`, deploy `base` with `REDIRECT_TLS_SECRET_NAME` (and `REDIRECT_TLS_SECRET_NAMESPACE` if it differs from `REDIRECT_NAMESPACE`) and skip `post-deploy`. Add `reference-grant` only when the secret lives in another namespace. The certificate must cover `REDIRECT_FROM_FQDN` — a wildcard matches a single label only.
+
+To pull a certificate from a secret store that is already configured, e.g. `dis-tls-cert-store` in `traefik` on clusters running the `traefik/apps` post-deploy layer, deploy `base` + `external-secret` instead of `post-deploy`. Never deploy both: they would fight over the same secret. Until External Secrets has synced it, the listener reports `ResolvedRefs=False` and Traefik serves its default certificate.
 
 If a `Gateway` listener already serves the host, `shared-gateway` is simpler: it reuses that listener and its certificate.
 
