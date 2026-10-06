@@ -21,6 +21,7 @@ The image is built from `tailscale.com/cmd/derper` in [dis-way/adminservices](ht
 | `.` / `base` | Core resources: namespace, deployment, services, gateway, and HTTPRoute (cert-manager TLS, see `post-deploy`) |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
 | `apps` | Apps clusters (no Let's Encrypt issuer): the Gateway uses the cluster wildcard certificate `ssl-cert` from the `traefik` namespace through a ReferenceGrant. `DERP_HOSTNAME` must be a single label under `apps.altinn.no`, and the DNS record must not be proxied by Cloudflare. Do not deploy `post-deploy` |
+| `policies` | Included by `.` and `apps`. Default-deny NetworkPolicies allowing only Traefik, STUN from the internet, public HTTPS egress to headscale (`--verify-client-url`) and linkerd proxy metrics scraping (ama-metrics, otel collector) |
 
 ## Design notes
 
