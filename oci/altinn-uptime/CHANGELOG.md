@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.17.0...oci-altinn-uptime-v1.18.0) (2026-10-06)
+
+
+### Features
+
+* **altinn-uptime:** add eno tt02 maintenance target ([#1836](https://github.com/dis-way/gitops-manifests/issues/1836)) ([e5c8fae](https://github.com/dis-way/gitops-manifests/commit/e5c8faeb36db32d59a370edeec45b3d6e6fe32da))
+
 ## [1.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.16.0...oci-altinn-uptime-v1.17.0) (2026-10-05)
 
 
