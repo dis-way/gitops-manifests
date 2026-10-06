@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.2...oci-headscale-v2.5.0) (2026-10-06)
+
+
+### Features
+
+* **headscale:** add DERP region 901 (ttd-prod-aks) ([#1694](https://github.com/dis-way/gitops-manifests/issues/1694)) ([3fa44a9](https://github.com/dis-way/gitops-manifests/commit/3fa44a97fd9f7c28df59ad1f08b4b408da93db03))
+
 ## [2.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.1...oci-headscale-v2.4.2) (2026-10-06)
 
 
