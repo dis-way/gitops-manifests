@@ -184,7 +184,7 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 |----------|---------------|----------|
 | Traces | `transform/servicenamespace` (drop operator-set `service.namespace`), `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
 | Logs input | `memory_limiter`, `transform/servicenamespace` before routing to either log pipeline | `routing/logs` connector |
-| Logs | `filter/logs` (drop below WARN), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
+| Logs | `filter/logs` (drop below WARN), `transform/empty-body` (message from `error` or a placeholder, App Insights drops empty ones), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
 | Envoy access logs | Routed by the `routing/logs` connector on `dis.otel.logtype=envoy-access`. `transform/envoy-accesslog` (severity), `probabilistic_sampler/logs` (4xx kept at 10%), `k8sattributes` | `azuremonitor` |
 | Metrics | `transform/servicenamespace`, `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
 
