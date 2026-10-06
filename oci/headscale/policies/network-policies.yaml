@@ -1,6 +1,6 @@
 # Default deny for everything in the namespace. The policies below open only the
-# flows headscale needs. Most important effect: nothing can reach the gRPC admin
-# API (50443), which grants full control over the tailnet.
+# flows headscale needs. The gRPC admin API (50443), which grants full control
+# over the tailnet, is not allowed here and is also bound to loopback only.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
