@@ -490,6 +490,10 @@ spec:
               - set(severity_number, SEVERITY_NUMBER_WARN) where Int(attributes["response_code"]) >= 400 and Int(attributes["response_code"]) < 500
               - set(severity_text, "WARN") where severity_number == SEVERITY_NUMBER_WARN
               - set(attributes["sampling.priority"], 10) where severity_number == SEVERITY_NUMBER_WARN
+              # Envoy's JSON access logs have no body, and Application Insights
+              # drops traces without a message. Build a one-line summary.
+              - set(body, Concat([attributes["response_code"], attributes["response_flags"], attributes["method"], attributes["authority"], attributes["path"]], " ")) where attributes["method"] != nil
+              - set(body, Concat(["connection failed", attributes["downstream_transport_failure_reason"], attributes["connection_termination_details"]], " ")) where attributes["method"] == nil
       # Only records carrying sampling.priority are sampled; everything else
       # is kept. fail_closed: false keeps records without a trace ID.
       probabilistic_sampler/logs:
@@ -509,6 +513,15 @@ spec:
           log_record:
           - 'severity_number < SEVERITY_NUMBER_WARN' #Drop all Info, debug, trace and unspecified logs
           - 'attributes["error"] == "secret default/ssl-cert does not exist"' # Remove noisy logs from traefik that is there due to some legacy configuration that does not affect the service
+      # Application Insights drops traces without a message, e.g. Traefik's
+      # `ERR error=...` lines. Use the error, or a placeholder.
+      transform/empty-body:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - set(body, attributes["error"]) where (body == nil or body == "") and attributes["error"] != nil
+              - set(body, "(no message)") where body == nil or body == ""
       # Memory limiter to mitigate out of memory situations
       memory_limiter:
         check_interval: 1s
@@ -560,7 +573,7 @@ spec:
           exporters: [routing/logs]
         logs:
           receivers: [routing/logs]
-          processors: [filter/logs, resourcedetection/aks, k8sattributes, transform/drop, batch]
+          processors: [filter/logs, transform/empty-body, resourcedetection/aks, k8sattributes, transform/drop, batch]
           exporters: [azuremonitor]
         logs/envoy-access:
           receivers: [routing/logs]
