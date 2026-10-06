@@ -192,11 +192,11 @@
     "prod_ring2": "2.15.1"
   },
   "otel-operator": {
-    "at_ring1": "1.4.6",
-    "at_ring2": "1.4.6",
-    "tt_ring1": "1.4.6",
+    "at_ring1": "1.4.7",
+    "at_ring2": "1.4.7",
+    "tt_ring1": "1.4.7",
     "tt_ring2": "1.4.6",
-    "prod_ring1": "1.4.6",
+    "prod_ring1": "1.4.7",
     "prod_ring2": "1.4.6"
   },
   "otel-collector": {
