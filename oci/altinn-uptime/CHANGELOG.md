@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.18.0...oci-altinn-uptime-v1.19.0) (2026-10-06)
+
+
+### Features
+
+* **altinn-uptime:** add ok tt02 maintenance target ([#1858](https://github.com/dis-way/gitops-manifests/issues/1858)) ([af79fc0](https://github.com/dis-way/gitops-manifests/commit/af79fc02c8066547953dda32bf840faad2522e0d))
+
 ## [1.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.17.0...oci-altinn-uptime-v1.18.0) (2026-10-06)
 
 
