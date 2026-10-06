@@ -23,4 +23,4 @@ spec:
     service:
       pipelines:
         metrics:
-          receivers: [otlp, prometheus/headscale]
+          receivers: [otlp, prometheus/pods, prometheus/headscale]

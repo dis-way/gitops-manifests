@@ -38,6 +38,33 @@ spec:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+      prometheus/pods:
+        config:
+          scrape_configs:
+            - job_name: pods
+              scrape_interval: 30s
+              scrape_timeout: 10s
+              kubernetes_sd_configs:
+                - role: pod
+                  selectors:
+                    - role: pod
+                      label: dis.otel/scrape=true
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_pod_container_port_name]
+                  regex: metrics
+                  action: keep
+                - source_labels: [__meta_kubernetes_pod_phase]
+                  regex: Running
+                  action: keep
+                - source_labels: [__meta_kubernetes_pod_container_init]
+                  regex: "true"
+                  action: drop
+                - source_labels: [__meta_kubernetes_namespace]
+                  target_label: namespace
+                - source_labels: [__meta_kubernetes_pod_name]
+                  target_label: pod
+                - source_labels: [__meta_kubernetes_pod_container_name]
+                  target_label: container
     extensions:
       azureauth:
         scopes:
@@ -464,6 +491,6 @@ spec:
           processors: [filter/logs, memory_limiter, resourcedetection/aks, k8sattributes, transform/drop, batch]
           exporters: [azuremonitor]
         metrics:
-          receivers: [otlp]
+          receivers: [otlp, prometheus/pods]
           processors: [memory_limiter, resourcedetection/aks, k8sattributes, transform/metrics, transform/drop, batch]
           exporters: [prometheusremotewrite]
