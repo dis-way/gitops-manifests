@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.5.0...oci-headplane-v1.6.0) (2026-10-06)
+
+
+### Features
+
+* **headplane:** add startup, liveness and readiness probes ([#1843](https://github.com/dis-way/gitops-manifests/issues/1843)) ([9eff493](https://github.com/dis-way/gitops-manifests/commit/9eff493495d2afaf704eab35b57e13c64a792d16))
+
 ## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.4.0...oci-headplane-v1.5.0) (2026-10-05)
 
 
