@@ -13,7 +13,7 @@
   "oci/dis-core-proxies": "0.1.1",
   "oci/dis-pgsql": "0.2.3",
   "oci/dis-vault": "1.3.0",
-  "oci/dis-tls-cert": "2.20.0",
+  "oci/dis-tls-cert": "2.20.1",
   "oci/envoy-gateway": "2.5.0",
   "oci/envoy-gateway-crds": "1.0.1",
   "oci/external-secrets-operator": "1.9.1",
