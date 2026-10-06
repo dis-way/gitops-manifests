@@ -90,6 +90,10 @@
       "release-type": "simple",
       "component": "oci-headscale"
     },
+    "oci/http-redirect": {
+      "release-type": "simple",
+      "component": "oci-http-redirect"
+    },
     "oci/kro": {
       "release-type": "simple",
       "component": "oci-kro"

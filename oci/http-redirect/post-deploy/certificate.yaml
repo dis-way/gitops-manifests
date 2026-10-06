@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ${REDIRECT_NAME}-tls
+  namespace: ${REDIRECT_NAMESPACE:=traefik}
+spec:
+  secretName: ${REDIRECT_TLS_SECRET_NAME:=${REDIRECT_NAME}-tls}
+  issuerRef:
+    name: ${REDIRECT_CLUSTER_ISSUER:=letsencrypt-production}
+    kind: ClusterIssuer
+  dnsNames:
+    - "${REDIRECT_FROM_FQDN}"

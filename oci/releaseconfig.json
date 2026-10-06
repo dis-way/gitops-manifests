@@ -255,6 +255,14 @@
     "prod_ring1": "2.4.2",
     "prod_ring2": "2.4.2"
   },
+  "http-redirect": {
+    "at_ring1": "0.0.0",
+    "at_ring2": "0.0.0",
+    "tt_ring1": "0.0.0",
+    "tt_ring2": "0.0.0",
+    "prod_ring1": "0.0.0",
+    "prod_ring2": "0.0.0"
+  },
   "opencost": {
     "at_ring1": "0.2.15",
     "at_ring2": "0.2.15",
