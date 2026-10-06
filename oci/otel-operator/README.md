@@ -19,8 +19,11 @@ Deploys the OpenTelemetry Operator, which reconciles the `OpenTelemetryCollector
 | `apps` | Alias for `base`; no additional changes |
 | `multitenancy` | `base` + `policies`, with the HelmRelease and HelmRepository in `platform-system` targeting `monitoring` |
 | `policies` | Linkerd authorization policy letting kube-apiserver reach the admission webhook |
+| `edge` | `base` in `platform-system` targeting `monitoring`, with admission webhooks off: one replica, no PDB, no `cert-manager` dependency, no `policies` and no variables. For clusters without cert-manager or Linkerd; pod SDK injection is unavailable |
 
 ## Dependencies
+
+The first two apply to every layer except `edge`, which has no webhooks and so needs neither.
 
 - `cert-manager`, including cainjector, must be running before the operator starts. The webhook serving certificate comes from a chart-managed self-signed `Issuer` and is mounted unconditionally, so until it is issued the operator pod stays in `ContainerCreating` — and the collector, which the operator reconciles, stops being reconciled with it. The HelmRelease therefore `dependsOn` the `cert-manager` HelmRelease (`cert-manager/cert-manager`, or `platform-system/cert-manager` in `multitenancy`), as `azure-service-operator` and `linkerd` do. If that HelmRelease is missing or named differently, helm-controller marks this one `DependencyNotReady` and keeps retrying: a running operator is left alone, but it is never installed or upgraded.
 - The Flux `Kustomization` for the `multitenancy` layer must set `spec.postBuild` and supply `AKS_VNET_IPV4_CIDR` and `AKS_VNET_IPV6_CIDR`. Without `postBuild` no substitution runs at all, so even the defaulted pod CIDRs stay literal; Linkerd then rejects the `NetworkAuthentication`, and nothing in the package applies.
