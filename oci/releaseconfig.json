@@ -108,8 +108,8 @@
     "at_ring2": "2.7.0",
     "tt_ring1": "2.7.0",
     "tt_ring2": "2.7.0",
-    "prod_ring1": "2.6.1",
-    "prod_ring2": "2.6.1"
+    "prod_ring1": "2.7.0",
+    "prod_ring2": "2.7.0"
   },
   "envoy-gateway-crds": {
     "at_ring1": "1.0.1",
