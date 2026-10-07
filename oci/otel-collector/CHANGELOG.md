@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.0.0...oci-otel-collector-v2.1.0) (2026-10-07)
+
+
+### Features
+
+* **otel-collector:** scrape the Valkey pods of every Cache ([#1914](https://github.com/dis-way/gitops-manifests/issues/1914)) ([548558a](https://github.com/dis-way/gitops-manifests/commit/548558a2868e9649501e24732b11fd355211da1c))
+
 ## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.5.1...oci-otel-collector-v2.0.0) (2026-10-07)
 
 
