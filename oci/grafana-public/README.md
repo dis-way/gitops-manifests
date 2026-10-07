@@ -8,14 +8,24 @@ Self-hosted Grafana OSS, managed by grafana-operator, for dashboards shared publ
 |----------|---------|----------|-------------|
 | `GRAFANA_PUBLIC_WI_CLIENT_ID` | - | Yes | Client ID of the user-assigned identity the Azure datasources authenticate as (workload identity) |
 | `GRAFANA_PUBLIC_ENTRA_CLIENT_ID` | - | Yes | Microsoft Entra app registration client ID for sign-in |
-| `GRAFANA_PUBLIC_ENTRA_CLIENT_SECRET` | - | Yes | Microsoft Entra app registration client secret — source from a secret store, not plain substitution |
+| `GRAFANA_PUBLIC_ENTRA_CLIENT_SECRET` | - | Yes | Microsoft Entra app registration client secret |
 | `GRAFANA_PUBLIC_PROMETHEUS_URL` | - | Yes | Query endpoint of the Azure Monitor workspace behind the public dashboards |
+
+All four come from the dis-system Key Vault. The `secrets` layer syncs them into the `grafana-public-vars` Secret in `flux-system`, which the Flux Kustomization for `.` reads with `postBuild.substituteFrom`.
+
+| Key Vault secret | Variable |
+|------------------|----------|
+| `grafana-public-wi-client-id` | `GRAFANA_PUBLIC_WI_CLIENT_ID` |
+| `grafana-public-entra-client-id` | `GRAFANA_PUBLIC_ENTRA_CLIENT_ID` |
+| `grafana-public-entra-client-secret` | `GRAFANA_PUBLIC_ENTRA_CLIENT_SECRET` |
+| `grafana-public-prometheus-url` | `GRAFANA_PUBLIC_PROMETHEUS_URL` |
 
 ## Layers
 
 | Path | Description |
 |------|-------------|
 | `.` | Core resources: namespace, ServiceAccount, Entra secret, `Grafana` CR, Prometheus datasource, gateway and HTTPRoute |
+| `secrets` | `ExternalSecret` in `flux-system` reading the input variables from `dis-system-store` (`oci/external-secrets-operator` `adminservices/post-deploy`). Apply before `.`, which depends on it for `substituteFrom` |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
 | `policies` | Included by the root kustomization. Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, grafana-operator, Entra ID, the Azure Monitor query endpoint and metrics scraping (ama-metrics, otel collector) |
 
