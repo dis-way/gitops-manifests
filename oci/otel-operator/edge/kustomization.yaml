@@ -1,0 +1,53 @@
+---
+# Edge clusters run neither cert-manager nor Linkerd, and no workload there opts
+# into SDK injection. Run the operator as a plain collector reconciler: admission
+# webhooks off, so no serving cert, no cert-manager dependency and no Linkerd
+# policies for kube-apiserver.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      kind: HelmRepository
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+  - target:
+      kind: HelmRelease
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+      - op: replace
+        path: /spec/chart/spec/sourceRef/namespace
+        value: platform-system
+      - op: add
+        path: /spec/targetNamespace
+        value: monitoring
+      - op: add
+        path: /spec/releaseName
+        value: dis-otel-operator
+      - op: remove
+        path: /spec/dependsOn
+      - op: replace
+        path: /spec/values/manager/env/ENABLE_WEBHOOKS
+        value: "false"
+      - op: replace
+        path: /spec/values/admissionWebhooks
+        value:
+          create: false
+          certManager:
+            enabled: false
+          autoGenerateCert:
+            enabled: false
+      # The second replica and the PDB exist to keep the pod webhook available
+      # during syspool drains; without webhooks one replica is enough.
+      - op: replace
+        path: /spec/values/replicaCount
+        value: 1
+      - op: replace
+        path: /spec/values/pdb
+        value:
+          create: false
