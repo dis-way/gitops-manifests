@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.4.7...oci-otel-operator-v2.0.0) (2026-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* OTel SDK auto-instrumentation via operator annotations ([#1664](https://github.com/dis-way/gitops-manifests/issues/1664))
+
+### Features
+
+* OTel SDK auto-instrumentation via operator annotations ([#1664](https://github.com/dis-way/gitops-manifests/issues/1664)) ([d99bfa4](https://github.com/dis-way/gitops-manifests/commit/d99bfa42b69fc6f84ba840bbeb93b6647cfbb484))
+* **otel-operator:** add edge overlay without admission webhooks ([#1897](https://github.com/dis-way/gitops-manifests/issues/1897)) ([b0c8090](https://github.com/dis-way/gitops-manifests/commit/b0c80904b95f7dc30f9ce9126bdf285e396a7d77))
+
 ## [1.4.7](https://github.com/dis-way/gitops-manifests/compare/oci-otel-operator-v1.4.6...oci-otel-operator-v1.4.7) (2026-10-05)
 
 
