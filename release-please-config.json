@@ -78,6 +78,10 @@
       "release-type": "simple",
       "component": "oci-gateway-api"
     },
+    "oci/grafana-dashboards": {
+      "release-type": "simple",
+      "component": "oci-grafana-dashboards"
+    },
     "oci/grafana-operator": {
       "release-type": "simple",
       "component": "oci-grafana-operator"
