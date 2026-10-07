@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.5.1...oci-otel-collector-v2.0.0) (2026-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* OTel SDK auto-instrumentation via operator annotations ([#1664](https://github.com/dis-way/gitops-manifests/issues/1664))
+
+### Features
+
+* OTel SDK auto-instrumentation via operator annotations ([#1664](https://github.com/dis-way/gitops-manifests/issues/1664)) ([d99bfa4](https://github.com/dis-way/gitops-manifests/commit/d99bfa42b69fc6f84ba840bbeb93b6647cfbb484))
+
+
+### Bug Fixes
+
+* **otel-collector:** give log records a message so App Insights keeps them ([#1896](https://github.com/dis-way/gitops-manifests/issues/1896)) ([3fe24bf](https://github.com/dis-way/gitops-manifests/commit/3fe24bfad9a688d3e1ce016cebac6aba51c231da))
+* **otel-collector:** stop key-not-found warnings when splitting envoy URLs ([#1893](https://github.com/dis-way/gitops-manifests/issues/1893)) ([f2b47be](https://github.com/dis-way/gitops-manifests/commit/f2b47be06f8a5e6815ad8336bf866d5cb0b8f4f7))
+
 ## [1.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.5.0...oci-otel-collector-v1.5.1) (2026-10-06)
 
 
