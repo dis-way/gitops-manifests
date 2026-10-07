@@ -82,6 +82,10 @@
       "release-type": "simple",
       "component": "oci-grafana-operator"
     },
+    "oci/grafana-public": {
+      "release-type": "simple",
+      "component": "oci-grafana-public"
+    },
     "oci/headplane": {
       "release-type": "simple",
       "component": "oci-headplane"

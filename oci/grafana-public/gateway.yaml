@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: grafana-public
+  namespace: grafana-public
+spec:
+  gatewayClassName: traefik
+  listeners:
+    # websecure entrypoint on the public Traefik Load Balancer: public
+    # dashboards are for customers, so this is reachable from the internet.
+    - name: https
+      port: 8443
+      protocol: HTTPS
+      hostname: dashboards.altinn.cloud
+      tls:
+        certificateRefs:
+          - name: grafana-public-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
