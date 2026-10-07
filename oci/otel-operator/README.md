@@ -23,11 +23,11 @@ Deploys the OpenTelemetry Operator, which reconciles the `OpenTelemetryCollector
 
 ## Dependencies
 
-The first two apply to every layer except `edge`, which has no webhooks and so needs neither.
+The first two do not apply to `edge`, which has no webhooks and so needs neither. The last applies to every layer, `edge` included, except where it says otherwise.
 
 - `cert-manager`, including cainjector, must be running before the operator starts. The webhook serving certificate comes from a chart-managed self-signed `Issuer` and is mounted unconditionally, so until it is issued the operator pod stays in `ContainerCreating` — and the collector, which the operator reconciles, stops being reconciled with it. The HelmRelease therefore `dependsOn` the `cert-manager` HelmRelease (`cert-manager/cert-manager`, or `platform-system/cert-manager` in `multitenancy`), as `azure-service-operator` and `linkerd` do. If that HelmRelease is missing or named differently, helm-controller marks this one `DependencyNotReady` and keeps retrying: a running operator is left alone, but it is never installed or upgraded.
 - The Flux `Kustomization` for the `multitenancy` layer must set `spec.postBuild` and supply `AKS_VNET_IPV4_CIDR` and `AKS_VNET_IPV6_CIDR`. Without `postBuild` no substitution runs at all, so even the defaulted pod CIDRs stay literal; Linkerd then rejects the `NetworkAuthentication`, and nothing in the package applies.
-- `oci/otel-collector` needs the operator: its CRDs come from here, and its CRs go through the operator's webhooks. For its Flux `Kustomization` to `dependsOn` this one with any effect, this package's `Kustomization` needs `wait: true` (or a health check on the operator Deployment) — otherwise it is Ready as soon as it applies. That orders bootstrap and upgrades; it does not help during an outage (see *CR validation fails closed* below), where the protection is the two replicas and the PDB.
+- `oci/otel-collector` needs the operator: its CRDs come from here. For its Flux `Kustomization` to `dependsOn` this one with any effect, this package's `Kustomization` needs `wait: true` (or a health check on the operator Deployment) — otherwise it is Ready as soon as it applies. That orders bootstrap and upgrades. In layers with webhooks (all but `edge`) its CRs also go through the operator's webhooks, and ordering does not help during an outage (see *CR validation fails closed* below), where the protection is the two replicas and the PDB. In `edge` an outage only pauses reconciliation of the collector.
 
 ## Admission Webhooks
 
