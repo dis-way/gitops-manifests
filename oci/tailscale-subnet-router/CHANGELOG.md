@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.4...oci-tailscale-subnet-router-v1.3.0) (2026-10-07)
+
+
+### Features
+
+* **tailscale-subnet-router:** add network policies and harden pod ([#1878](https://github.com/dis-way/gitops-manifests/issues/1878)) ([15e064e](https://github.com/dis-way/gitops-manifests/commit/15e064e4df7e72ee556bc2616e8a9e9cf3099c25))
+
 ## [1.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.3...oci-tailscale-subnet-router-v1.2.4) (2026-09-29)
 
 
