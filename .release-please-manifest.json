@@ -31,7 +31,7 @@
   "oci/linkerd": "2.15.1",
   "oci/opencost": "0.2.15",
   "oci/otel-collector": "1.5.1",
-  "oci/otel-operator": "1.4.7",
+  "oci/otel-operator": "2.0.0",
   "oci/platform-system": "1.2.1",
   "oci/tailscale-subnet-router": "1.2.4",
   "oci/traefik": "3.16.1",
