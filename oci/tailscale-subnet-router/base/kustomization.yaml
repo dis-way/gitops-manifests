@@ -6,3 +6,4 @@ resources:
   - state-secret.yaml
   - serviceaccount.yaml
   - deployment.yaml
+  - network-policies.yaml

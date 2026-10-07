@@ -14,4 +14,4 @@ Deploys a Tailscale subnet router pod that connects to a Headscale coordination 
 
 | Path | Description |
 |------|-------------|
-| `base` | Namespace, RBAC, and subnet router Deployment |
+| `base` | Namespace, RBAC, subnet router Deployment and NetworkPolicies. All ingress is denied. Egress is allowed to DNS, the API server (CiliumNetworkPolicy, so the package requires Cilium), private ranges on any port for the advertised routes, and public HTTPS and UDP for headscale, DERP, STUN and WireGuard peers |
