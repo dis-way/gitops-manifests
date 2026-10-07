@@ -98,6 +98,37 @@ spec:
         - ipBlock:
             cidr: fc00::/7
 ---
+# Headscale (admin-prod-aks) and the derper DERP relay (admin-test-aks) are
+# published through the Traefik LoadBalancer of the cluster they run in. When the
+# router in that cluster dials the public LoadBalancer IP, Cilium translates it to
+# the Traefik pod, which the ipBlock rules above do not select. Without this rule
+# the router in admin-prod-aks cannot reach Headscale. 8443 is the Traefik
+# container port behind the Service port 443. STUN to the same pods (3478/UDP)
+# stays blocked: the derper and headscale ingress policies only allow STUN from
+# ipBlock, and the router does not need its own cluster's DERP region for STUN.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tailscale-subnet-router-egress-in-cluster-traefik
+  namespace: tailscale-subnet-router
+spec:
+  podSelector:
+    matchLabels:
+      app: tailscale-subnet-router
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+      ports:
+        - port: 8443
+          protocol: TCP
+---
 # Cilium gives the API server the reserved kube-apiserver identity, which ipBlock
 # rules do not select. The pod needs it for its state Secret (TS_KUBE_SECRET),
 # and tailnet users reach the private API server through this router. Without

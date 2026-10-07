@@ -14,4 +14,4 @@ Deploys a Tailscale subnet router pod that connects to a Headscale coordination 
 
 | Path | Description |
 |------|-------------|
-| `base` | Namespace, RBAC, subnet router Deployment and NetworkPolicies. All ingress is denied. Egress is allowed to DNS, the API server (CiliumNetworkPolicy, so the package requires Cilium), private ranges on any port for the advertised routes, and public HTTPS and UDP for headscale, DERP, STUN and WireGuard peers |
+| `base` | Namespace, RBAC, subnet router Deployment and NetworkPolicies. All ingress is denied. Egress is allowed to DNS, the API server (CiliumNetworkPolicy, so the package requires Cilium), private ranges on any port for the advertised routes, public HTTPS and UDP for headscale, DERP, STUN and WireGuard peers, and the in-cluster Traefik pods on 8443 for clusters that host headscale or a DERP relay behind their own Traefik |
