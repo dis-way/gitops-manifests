@@ -37,7 +37,7 @@
     "tt_ring1": "2.5.2",
     "tt_ring2": "2.5.2",
     "prod_ring1": "2.5.2",
-    "prod_ring2": "2.5.1"
+    "prod_ring2": "2.5.2"
   },
   "certm-lets-encrypt-dns-issuer": {
     "at_ring1": "0.4.1",
