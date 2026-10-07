@@ -18,7 +18,7 @@
   "oci/envoy-gateway-crds": "1.0.1",
   "oci/external-secrets-operator": "1.9.1",
   "oci/gateway-api": "1.1.1",
-  "oci/grafana-dashboards": "0.0.0",
+  "oci/grafana-dashboards": "1.0.0",
   "oci/grafana-operator": "2.5.0",
   "oci/headplane": "1.6.0",
   "oci/headscale": "2.6.0",
