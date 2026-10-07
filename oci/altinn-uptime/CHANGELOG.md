@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.20.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.19.0...oci-altinn-uptime-v1.20.0) (2026-10-07)
+
+
+### Features
+
+* **altinn-uptime:** add fd maintenance targets ([#1898](https://github.com/dis-way/gitops-manifests/issues/1898)) ([5461bb0](https://github.com/dis-way/gitops-manifests/commit/5461bb08eab2b1d278ba657c82ec94e3f69959f9))
+
 ## [1.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.18.0...oci-altinn-uptime-v1.19.0) (2026-10-06)
 
 
