@@ -21,7 +21,7 @@
   "oci/gateway-api": "1.1.1",
   "oci/grafana-dashboards": "1.0.0",
   "oci/grafana-operator": "3.0.1",
-  "oci/grafana-public": "1.0.3",
+  "oci/grafana-public": "1.0.4",
   "oci/headplane": "1.6.0",
   "oci/headscale": "2.6.0",
   "oci/http-redirect": "1.0.0",
