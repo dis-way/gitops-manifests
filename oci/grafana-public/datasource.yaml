@@ -4,6 +4,10 @@ metadata:
   name: azure-managed-prometheus
   namespace: grafana-public
 spec:
+  # Grafana runs on ephemeral storage and comes back empty after a restart; the
+  # operator does not notice and only re-adds the datasource on resync (default
+  # 10m). The public dashboards (altinn-dashboards-grafana public/) use 1m too.
+  resyncPeriod: 1m
   instanceSelector:
     matchLabels:
       dashboards: "public-grafana"
