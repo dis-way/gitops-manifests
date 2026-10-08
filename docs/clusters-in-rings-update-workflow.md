@@ -25,7 +25,24 @@ The workflow would:
 
 What it needs:
 
-- **A read-only user-assigned managed identity.** A federated identity credential on the UAMI trusts this repo's workflow, and `azure/login` signs in with the UAMI's client ID. It needs `Reader` on the root management group (or a custom role with only `Microsoft.ContainerService/managedClusters/read` and `Microsoft.KubernetesConfiguration/fluxConfigurations/read`). Resource Graph only returns what the identity can read, and the clusters span many subscriptions. The existing ACR push identity should not be widened for this. The role assignment at management-group level needs tenant-level rights in Azure.
+- **A read-only user-assigned managed identity.** A federated identity credential on the UAMI trusts this repo's workflow, and `azure/login` signs in with the UAMI's client ID. It gets a custom role assigned on the root management group, because Resource Graph only returns what the identity can read and the clusters span many subscriptions. The existing ACR push identity should not be widened for this. Creating the role and assigning it at management-group level needs tenant-level rights in Azure.
+
+  ```json
+  {
+    "Name": "Flux Ring Reader",
+    "Description": "Read AKS clusters and their Flux configurations, for clusters_in_rings.json.",
+    "Actions": [
+      "Microsoft.ContainerService/managedClusters/read",
+      "Microsoft.KubernetesConfiguration/fluxConfigurations/read"
+    ],
+    "NotActions": [],
+    "DataActions": [],
+    "NotDataActions": [],
+    "AssignableScopes": ["/providers/Microsoft.Management/managementGroups/<root-mg-id>"]
+  }
+  ```
+
+  `managedClusters/read` returns cluster properties only. Getting credentials is a separate action (`listClusterUserCredential/action`) that the role does not grant.
 - **A GitHub App with read access to `dis-way/core`** for the dis-edge rings. `GITHUB_TOKEN` cannot read another repo. The workflow exchanges the app's credentials for a short-lived installation token with `actions/create-github-app-token`, scoped to `contents: read` on `core`.
 - **Dropping `verified`**, or changing it only when the content changes. Otherwise every run produces a diff and a PR. Git history records when the file last changed.
 
