@@ -160,12 +160,12 @@
     "prod_ring2": "3.0.1"
   },
   "grafana-public": {
-    "at_ring1": "0.0.0",
-    "at_ring2": "0.0.0",
-    "tt_ring1": "0.0.0",
-    "tt_ring2": "0.0.0",
-    "prod_ring1": "0.0.0",
-    "prod_ring2": "0.0.0"
+    "at_ring1": "1.0.1",
+    "at_ring2": "1.0.1",
+    "tt_ring1": "1.0.1",
+    "tt_ring2": "1.0.1",
+    "prod_ring1": "1.0.1",
+    "prod_ring2": "1.0.1"
   },
   "kro": {
     "at_ring1": "0.2.0",
