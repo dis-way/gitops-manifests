@@ -36,7 +36,11 @@ All four come from the dis-system Key Vault. The `secrets` layer syncs them into
 
 ## Storage
 
-Grafana runs on the operator's default `emptyDir` SQLite database with one replica. Everything that matters is declared as CRs and recreated by the operator after a restart. Set `spec.publicSharing.accessToken` on every public dashboard: without a pinned token, Grafana generates a new one when the dashboard is recreated and customer links break. Sessions and UI edits are lost on restart.
+Grafana runs on the operator's default `emptyDir` SQLite database with one replica. Everything that matters is declared as CRs and recreated by the operator after a restart. Set `spec.publicSharing.accessToken` on every public dashboard: without a pinned token, Grafana generates a new one when the dashboard is recreated and customer links break. Grafana stores the token without dashes, so the public URL is `/public-dashboards/<accessToken without dashes>` (also in the CR's `status.publicSharingPath`). Sessions and UI edits are lost on restart.
+
+## Plugins
+
+Grafana 13 removed Azure authentication from the core Prometheus datasource and does not bundle `grafana-azureprometheus-datasource`, which the datasource here uses. `plugins.preinstall_sync` in `grafana.yaml` installs a pinned version from grafana.com at every start, so the pod needs outbound access to grafana.com when it starts. Renovate tracks the version through the plugin's [GitHub releases](https://github.com/grafana/azure-prometheus-datasource/releases), which are tagged after the grafana.com publish. Renovate does not check the plugin's Grafana compatibility; verify it on grafana.com when bumping either.
 
 ## Identity
 

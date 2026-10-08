@@ -59,6 +59,16 @@ spec:
       managed_identity_enabled: "false"
     public_dashboards:
       enabled: "true"
+    plugins:
+      # Grafana 13 removed Azure auth from core Prometheus and does not bundle
+      # this plugin; without it every azure-managed-prometheus query fails with
+      # "plugin not registered". Installed at startup from grafana.com into the
+      # ephemeral data volume, before plugins load. Renovate follows the GitHub
+      # releases, which are tagged after the grafana.com publish, so it never
+      # proposes a version grafana.com cannot serve. It does not check the
+      # plugin's Grafana compatibility: verify it on grafana.com when bumping.
+      # renovate: datasource=github-releases depName=grafana/azure-prometheus-datasource
+      preinstall_sync: grafana-azureprometheus-datasource@1.0.6
   deployment:
     spec:
       replicas: 1
