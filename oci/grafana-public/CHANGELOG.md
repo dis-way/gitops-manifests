@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.1...oci-grafana-public-v1.0.2) (2026-10-08)
+
+
+### Bug Fixes
+
+* **grafana-public:** install the Azure Monitor Prometheus datasource plugin ([#1966](https://github.com/dis-way/gitops-manifests/issues/1966)) ([6e0a636](https://github.com/dis-way/gitops-manifests/commit/6e0a636fc872c732db2dab47da14103cba9d44cf))
+
 ## [1.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.0...oci-grafana-public-v1.0.1) (2026-10-08)
 
 
