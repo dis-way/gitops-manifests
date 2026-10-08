@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.7.1...oci-whoami-v0.8.0) (2026-10-08)
+
+
+### Features
+
+* **whoami:** add HPA scaling 2-20 pods on CPU ([#1958](https://github.com/dis-way/gitops-manifests/issues/1958)) ([0add24d](https://github.com/dis-way/gitops-manifests/commit/0add24da09fd1d1f606c0c06f041eecf17d677a5))
+
 ## [0.7.1](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.7.0...oci-whoami-v0.7.1) (2026-02-16)
 
 
