@@ -27,6 +27,18 @@
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*DISCACHE_[A-Z_]+_IMAGE:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Grafana plugins installed with plugins.preinstall_sync (<id>@<version>), tracked through their GitHub releases. Release tags carry a v prefix the pinned version does not, so it is stripped here rather than in the image manager above, where v-prefixed tags must be kept",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s*\\n\\s*preinstall_sync:\\s*\\S+?@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "semver"
     }
   ],
   "gitIgnoredAuthors": [
