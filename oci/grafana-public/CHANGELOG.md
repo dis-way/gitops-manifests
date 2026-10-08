@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.2...oci-grafana-public-v1.0.3) (2026-10-08)
+
+
+### Bug Fixes
+
+* **grafana-public:** enable Azure auth for datasources ([#1970](https://github.com/dis-way/gitops-manifests/issues/1970)) ([a087b96](https://github.com/dis-way/gitops-manifests/commit/a087b96ee3c22c0a233be7f9a2a98bb306704c5f))
+
 ## [1.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.1...oci-grafana-public-v1.0.2) (2026-10-08)
 
 
