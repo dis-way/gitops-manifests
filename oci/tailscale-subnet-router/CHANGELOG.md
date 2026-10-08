@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.0...oci-tailscale-subnet-router-v1.3.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow egress to in-cluster Traefik ([#1927](https://github.com/dis-way/gitops-manifests/issues/1927)) ([523be48](https://github.com/dis-way/gitops-manifests/commit/523be484da1181a456f12d4a63c9fa842680d859))
+
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.4...oci-tailscale-subnet-router-v1.3.0) (2026-10-07)
+
+
+### Features
+
+* **tailscale-subnet-router:** add network policies and harden pod ([#1878](https://github.com/dis-way/gitops-manifests/issues/1878)) ([15e064e](https://github.com/dis-way/gitops-manifests/commit/15e064e4df7e72ee556bc2616e8a9e9cf3099c25))
+
 ## [1.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.3...oci-tailscale-subnet-router-v1.2.4) (2026-09-29)
 
 

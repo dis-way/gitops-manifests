@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v3.0.0...oci-grafana-operator-v3.0.1) (2026-10-08)
+
+
+### Dependency Updates
+
+* update helm release grafana-operator to v5.25.0 ([#1199](https://github.com/dis-way/gitops-manifests/issues/1199)) ([c150ddd](https://github.com/dis-way/gitops-manifests/commit/c150ddd2aec749093897b51c0b1b770f01145625))
+
+## [3.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.5.0...oci-grafana-operator-v3.0.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **grafana-operator:** removed layers grafana-manifests, grafana-redirect, fqdn-to-azure-grafana and adminservices/post-deploy (use post-deploy). Consumers must move first:
+    - grafana-content: apply oci://altinncr.azurecr.io/monitoring/grafana
+      directly (adminservices only; the artifact targets dis-grafana-prod).
+    - /monitor and FQDN redirects: use oci/http-redirect.
+    A flux config still pointing at a removed path fails to build and prunes
+    nothing, but do not move a ring to this version until all are migrated.
+
+### Features
+
+* **grafana-operator:** ship only the operator and its Grafana connection ([#1904](https://github.com/dis-way/gitops-manifests/issues/1904)) ([6d7a50c](https://github.com/dis-way/gitops-manifests/commit/6d7a50c1668798e87422aeeb3e5403d179977ff1))
+
 ## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-operator-v2.4.0...oci-grafana-operator-v2.5.0) (2026-08-21)
 
 

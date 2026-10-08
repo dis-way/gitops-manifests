@@ -194,6 +194,8 @@ The collector also pulls Prometheus metrics from pods that opt in. A pod is scra
 
 The port name makes the target explicit. Port names are unique inside a pod, so a pod has at most one metrics target and no metric is scraped twice.
 
+A second job, `caches`, scrapes the Valkey pods of every dis-cache-operator `Cache` the same way, selected by the label `valkey.io/cluster`, and adds the Cache name as the label `cache`. The valkey-operator sets the pod labels itself and passes no label through from the Cache, so these pods cannot opt in with `dis.otel/scrape`. The job goes away once it can.
+
 ### Envoy Spans
 
 Envoy — and therefore every `envoy-proxy` fronting a Gateway — still tags spans with the pre-1.0 OpenTracing names (`http.method`, `http.url`, `http.status_code`) and sends every one of them as a string ([envoyproxy/envoy#30821](https://github.com/envoyproxy/envoy/issues/30821)). The `azuremonitor` exporter reads only the stable semantic conventions, and needs `http.request.method` before it will treat a span as HTTP at all, so untranslated Envoy spans land in Application Insights as a request literally named `ingress`, with no URL, no client IP and a `resultCode` taken from the span status instead of the HTTP status.
