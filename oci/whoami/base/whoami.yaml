@@ -4,7 +4,7 @@ metadata:
   name: whoami
   namespace: whoami
 spec:
-  replicas: 2
+  # replicas is owned by the HPA (hpa.yaml); setting it here would make Flux reset it
   selector:
     matchLabels:
       app: whoami
@@ -30,6 +30,13 @@ spec:
               value: "80"
           securityContext:
             readOnlyRootFilesystem: true
+          # CPU request is required for the HPA's utilization target
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
           livenessProbe:
             httpGet:
               path: /health

@@ -1,0 +1,21 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: whoami
+  namespace: whoami
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: whoami
+  minReplicas: 2
+  maxReplicas: 20
+  # ContainerResource: the injected linkerd-proxy has no CPU request, which breaks pod-level Resource metrics
+  metrics:
+    - type: ContainerResource
+      containerResource:
+        name: cpu
+        container: whoami
+        target:
+          type: Utilization
+          averageUtilization: 70
