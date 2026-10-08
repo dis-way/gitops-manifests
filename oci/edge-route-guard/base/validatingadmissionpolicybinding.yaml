@@ -1,0 +1,7 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: edge-httproute-allowlist
+spec:
+  policyName: edge-httproute-allowlist
+  validationActions: ["Deny"]
