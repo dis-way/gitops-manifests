@@ -1,0 +1,36 @@
+# Only allow HTTPRoutes to use hostnames and path prefixes allowed by annotations
+# on the route's namespace: <hostname>/edge-allowed-paths: "/prefix-a,/prefix-b" ("/" = whole hostname).
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: edge-httproute-allowlist
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: ["gateway.networking.k8s.io"]
+        apiVersions: ["*"]
+        resources: ["httproutes"]
+        operations: ["CREATE", "UPDATE"]
+  variables:
+    - name: ann
+      expression: "has(namespaceObject.metadata.annotations) ? namespaceObject.metadata.annotations : {}"
+    - name: hosts
+      expression: "has(object.spec.hostnames) ? object.spec.hostnames : []"
+  validations:
+    - expression: "size(variables.hosts) > 0"
+      message: "HTTPRoute must set spec.hostnames explicitly"
+    - expression: "variables.hosts.all(h, (h + '/edge-allowed-paths') in variables.ann)"
+      messageExpression: >-
+        'hostname(s) not allowed for namespace ' + namespaceObject.metadata.name + ': ' +
+        variables.hosts.filter(h, !((h + '/edge-allowed-paths') in variables.ann)).join(', ')
+    - expression: >-
+        !has(object.spec.rules) || object.spec.rules.all(r, has(r.matches) && r.matches.all(m,
+          has(m.path) && m.path.type in ['Exact', 'PathPrefix']))
+      message: "every match must have an Exact or PathPrefix path (RegularExpression is not allowed)"
+    - expression: >-
+        !has(object.spec.rules) || object.spec.rules.all(r, !has(r.matches) || r.matches.all(m, !has(m.path) ||
+          variables.hosts.all(h, !((h + '/edge-allowed-paths') in variables.ann) ||
+            variables.ann[h + '/edge-allowed-paths'].split(',').exists(p,
+              p == '/' || m.path.value == p || m.path.value.startsWith(p + '/')))))
+      message: "path is outside the prefixes allowed for this namespace and hostname"

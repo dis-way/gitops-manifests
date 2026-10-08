@@ -62,6 +62,10 @@
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
     },
+    "oci/edge-route-guard": {
+      "release-type": "simple",
+      "component": "oci-edge-route-guard"
+    },
     "oci/envoy-gateway": {
       "release-type": "simple",
       "component": "oci-envoy-gateway"
