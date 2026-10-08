@@ -6,6 +6,7 @@ This repository contains GitOps manifests for deploying DIS resources with Flux.
 
 - `oci/<name>/`: One package per deployable unit; must include a root `kustomization.yaml`. Many packages use `base/`, `apps/`, or `post-deploy/` subfolders for overlays and follow-on resources.
 - `oci/releaseconfig.json`: Maps package release names (folder name without `oci/`) to ring/environment versions.
+- `clusters_in_rings.json`: Maps each ring to the clusters (kube context names) that pull it. See "Checking a Rollout" below.
 - `.github/workflows/`: Automation for building OCI artifacts and running Release Please.
 - `release-please-config.json` and `.release-please-manifest.json`: Package registration and version tracking.
 
@@ -32,6 +33,13 @@ This repository contains GitOps manifests for deploying DIS resources with Flux.
 
 - Commit messages follow Conventional Commits. Recent examples: `feat!: ...`, `docs: ...`, `chore(main): ...`, `release: ...`.
 - PRs should include a concise summary, list affected `oci/<name>` packages, and mention any changes to `oci/releaseconfig.json` or Release Please config files.
+
+## Checking a Rollout
+
+- Promoting a package version to a ring in `oci/releaseconfig.json` reaches the clusters listed under that ring in `clusters_in_rings.json`. Use them as kube contexts.
+- A ring lists every cluster that follows it, not every cluster that runs a given package. Confirm the package is deployed there by looking for its `OCIRepository` (URL ending in `manifests/infra/<name>`).
+- `untracked` clusters pull no `manifests/infra` artifacts.
+- The rings are set in Terraform (`flux_release_tag`) in each cluster's repo, except on dis-edge clusters, where they are set in `dis-way/core` under `flux/clusters/<cluster>/`. `clusters_in_rings.json` is a snapshot taken on the `verified` date. If a cluster seems to be missing or wrong, check its `OCIRepository` `spec.ref.tag`.
 
 ## Adding or Updating OCI Packages
 
