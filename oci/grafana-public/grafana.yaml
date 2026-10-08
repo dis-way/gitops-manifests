@@ -36,6 +36,10 @@ spec:
       # because the operator manages Grafana with the generated admin
       # credentials.
       disable_login_form: "true"
+      # Not a login setting: enables Azure authentication for HTTP-based
+      # datasources. Without it the Azure Prometheus plugin sends queries
+      # without a token and the workspace answers 401.
+      azure_auth_enabled: "true"
     auth.anonymous:
       enabled: "false"
     # Users get their role from the Entra app role (Viewer, Editor, Admin,
