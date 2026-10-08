@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.3...oci-grafana-public-v1.0.4) (2026-10-08)
+
+
+### Bug Fixes
+
+* **grafana-public:** resync the datasource every minute ([#1974](https://github.com/dis-way/gitops-manifests/issues/1974)) ([355c9e7](https://github.com/dis-way/gitops-manifests/commit/355c9e7af7f096d4711f0a8a2d24dd3a17d045dd))
+
 ## [1.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.2...oci-grafana-public-v1.0.3) (2026-10-08)
 
 
