@@ -40,7 +40,7 @@ Grafana runs on the operator's default `emptyDir` SQLite database with one repli
 
 ## Plugins
 
-Grafana 13 removed Azure authentication from the core Prometheus datasource and does not bundle `grafana-azureprometheus-datasource`, which the datasource here uses. `plugins.preinstall_sync` in `grafana.yaml` installs a pinned version from grafana.com at every start, so the pod needs outbound access to grafana.com when it starts. Renovate tracks the version through the plugin's [GitHub releases](https://github.com/grafana/azure-prometheus-datasource/releases), which are tagged after the grafana.com publish. Renovate does not check the plugin's Grafana compatibility; verify it on grafana.com when bumping either.
+Grafana 13 removed Azure authentication from the core Prometheus datasource and does not bundle `grafana-azureprometheus-datasource`, which the datasource here uses. The plugin only attaches Azure tokens with `auth.azure_auth_enabled` and `azure.workload_identity_enabled` both set; without the first, every query fails with 401 "Request does not contain an Authorization Header". `plugins.preinstall_sync` in `grafana.yaml` installs a pinned version from grafana.com at every start, so the pod needs outbound access to grafana.com when it starts. Renovate tracks the version through the plugin's [GitHub releases](https://github.com/grafana/azure-prometheus-datasource/releases), which are tagged after the grafana.com publish. Renovate does not check the plugin's Grafana compatibility; verify it on grafana.com when bumping either.
 
 ## Identity
 
