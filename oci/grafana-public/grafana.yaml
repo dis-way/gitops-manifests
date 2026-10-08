@@ -15,7 +15,7 @@ spec:
   # operator cannot infer the version from it, so defaults it would otherwise
   # apply by version (server.enable_gzip) are set explicitly below.
   # renovate: datasource=docker depName=docker.io/grafana/grafana
-  version: altinncr.azurecr.io/docker.io/grafana/grafana:13.1.3
+  version: altinncr.azurecr.io/docker.io/grafana/grafana:13.2.3
   config:
     server:
       domain: dashboards.altinn.cloud
