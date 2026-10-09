@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-gateway-api-v1.1.1...oci-gateway-api-v1.1.2) (2026-10-09)
+
+
+### Bug Fixes
+
+* **gateway-api:** rename the upstream GitRepository to avoid AKS deleting it ([#1987](https://github.com/dis-way/gitops-manifests/issues/1987)) ([c1055a7](https://github.com/dis-way/gitops-manifests/commit/c1055a71ea66bdb00b3d414626757fd492de69a6))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-gateway-api-v1.1.0...oci-gateway-api-v1.1.1) (2026-09-11)
 
 
