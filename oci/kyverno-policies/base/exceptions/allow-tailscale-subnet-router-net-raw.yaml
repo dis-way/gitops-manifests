@@ -1,0 +1,24 @@
+# tailscaled answers pings to subnet routes by running ping, which needs raw ICMP
+# sockets. The pod drops ALL capabilities and adds back only NET_RAW
+# (oci/tailscale-subnet-router/base/deployment.yaml).
+apiVersion: policies.kyverno.io/v1
+kind: PolicyException
+metadata:
+  name: allow-tailscale-subnet-router-net-raw
+  namespace: kyverno
+spec:
+  policyRefs:
+    - name: disallow-capabilities
+      kind: ValidatingPolicy
+  matchConditions:
+    - name: in-tailscale-subnet-router-namespace
+      expression: >-
+        object.metadata.namespace == 'tailscale-subnet-router'
+    - name: containers-add-only-net-raw
+      expression: >-
+        (has(object.spec.template) ? object.spec.template.spec : object.spec)
+          .?containers.orValue([])
+          .all(c, c.?securityContext.?capabilities.?add.orValue([]).all(cap, cap == 'NET_RAW')) &&
+        (has(object.spec.template) ? object.spec.template.spec : object.spec)
+          .?initContainers.orValue([])
+          .all(c, c.?securityContext.?capabilities.?add.orValue([]).size() == 0)
