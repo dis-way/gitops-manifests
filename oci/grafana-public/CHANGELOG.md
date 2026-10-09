@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.4...oci-grafana-public-v1.1.0) (2026-10-09)
+
+
+### Features
+
+* **grafana-public:** limit time picker presets and auto refresh ([#1978](https://github.com/dis-way/gitops-manifests/issues/1978)) ([ad21123](https://github.com/dis-way/gitops-manifests/commit/ad21123f72c000474d4e38495f5922c65efaef8e))
+
 ## [1.0.4](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.3...oci-grafana-public-v1.0.4) (2026-10-08)
 
 
