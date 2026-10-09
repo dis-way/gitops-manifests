@@ -22,6 +22,10 @@ spec:
     remediation:
       retries: 5
   values:
+    # Chart 3.9 defaults to CEL ValidatingPolicies, which the kyverno.io/v2
+    # PolicyExceptions in ../exceptions do not apply to. Keep the legacy types
+    # until we migrate the exceptions.
+    policyType: ClusterPolicy
     podSecurityStandard: baseline
     podSecuritySeverity: medium
     validationFailureAction: Audit
