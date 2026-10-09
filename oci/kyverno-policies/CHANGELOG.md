@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.4...oci-kyverno-policies-v1.4.5) (2026-10-09)
+
+
+### Bug Fixes
+
+* **kyverno-policies:** allow NET_RAW for tailscale-subnet-router ([#1995](https://github.com/dis-way/gitops-manifests/issues/1995)) ([4e43210](https://github.com/dis-way/gitops-manifests/commit/4e43210dbf5569a7518bedb4770387fe84e2b5ae))
+
 ## [1.4.4](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.3...oci-kyverno-policies-v1.4.4) (2026-10-09)
 
 
