@@ -1,0 +1,81 @@
+# Lets Azure Managed Prometheus scrape the Linkerd proxies in product namespaces.
+#
+# Linkerd runs with defaultInboundPolicy: deny, and its built-in probe authorization only
+# covers /live and /ready on the proxy admin port (4191). Without a Server and an
+# AuthorizationPolicy for that port, the ama-metrics scraper is refused on /metrics and every
+# linkerd-proxy target in a product-* namespace reports up == 0. Platform namespaces such as
+# traefik and whoami ship the same three objects themselves; product namespaces are created
+# by the AKS Flux extension and get nothing, so generate them here.
+#
+# ama-metrics runs as ordinary pods, so the pod network is enough. The NetworkAuthentication
+# is not called "kubelet": some products already ship one with that name for their own probes.
+apiVersion: policies.kyverno.io/v1beta1
+kind: GeneratingPolicy
+metadata:
+  name: product-linkerd-proxy-admin
+spec:
+  evaluation:
+    generateExisting:
+      enabled: true
+    synchronize:
+      enabled: true
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["namespaces"]
+  matchConditions:
+    - name: product-namespace
+      expression: object.metadata.name.startsWith('product-')
+  variables:
+    - name: downstream
+      expression: >-
+        [
+          {
+            "apiVersion": dyn("policy.linkerd.io/v1beta3"),
+            "kind": dyn("Server"),
+            "metadata": dyn({"name": "proxy-admin"}),
+            "spec": dyn({
+              "podSelector": dyn({}),
+              "port": dyn(4191),
+              "proxyProtocol": dyn("HTTP/1")
+            })
+          },
+          {
+            "apiVersion": dyn("policy.linkerd.io/v1alpha1"),
+            "kind": dyn("NetworkAuthentication"),
+            "metadata": dyn({"name": "metrics-scraper"}),
+            "spec": dyn({
+              "networks": dyn([
+                dyn({"cidr": "10.240.0.0/16"}),
+                dyn({"cidr": "fd10:59f0:8c79:240::/64"})
+              ])
+            })
+          },
+          {
+            "apiVersion": dyn("policy.linkerd.io/v1alpha1"),
+            "kind": dyn("AuthorizationPolicy"),
+            "metadata": dyn({"name": "proxy-admin"}),
+            "spec": dyn({
+              "targetRef": dyn({"group": "policy.linkerd.io", "kind": "Server", "name": "proxy-admin"}),
+              "requiredAuthenticationRefs": dyn([
+                dyn({"group": "policy.linkerd.io", "kind": "NetworkAuthentication", "name": "metrics-scraper"})
+              ])
+            })
+          }
+        ]
+  generate:
+    - expression: generator.Apply(object.metadata.name, variables.downstream)
+---
+# The background controller creates the generated resources and needs to manage them.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno:background-controller:linkerd-policy
+  labels:
+    rbac.kyverno.io/aggregate-to-background-controller: "true"
+rules:
+  - apiGroups: ["policy.linkerd.io"]
+    resources: ["servers", "authorizationpolicies", "networkauthentications"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
