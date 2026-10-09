@@ -40,6 +40,13 @@ Grafana runs on the operator's default `emptyDir` SQLite database with one repli
 
 The operator does not notice a restarted, empty Grafana; it re-adds content only on each CR's resync, which defaults to 10 minutes. Every CR targeting this instance therefore sets `resyncPeriod: 1m` (the datasource here, the dashboards and folders in altinn-dashboards-grafana `public/`). With the default, a restart leaves the public dashboards missing or without a datasource for up to 10 minutes.
 
+## Time picker and refresh
+
+Settings for the whole instance, in `grafana.yaml`, so every public dashboard gets them:
+
+- `time_picker.quick_ranges` limits the time picker presets to one calendar month at most, because Azure Monitor Prometheus rejects ranges wider than 32 days. The public dashboards carry no presets of their own, which would override this. Viewers can still type a wider custom range; Grafana has no setting to cap it, so such a range fails with the Azure error.
+- `dashboards.min_refresh_interval: 1h`. Public dashboards offer no refresh intervals (`timepicker.refresh_intervals: []` in their JSON), but Grafana always shows "Auto"; this keeps it from refreshing more than once an hour. This only limits the page: anyone can still call the public query API directly.
+
 ## Plugins
 
 Grafana 13 removed Azure authentication from the core Prometheus datasource and does not bundle `grafana-azureprometheus-datasource`, which the datasource here uses. The plugin only attaches Azure tokens with `auth.azure_auth_enabled` and `azure.workload_identity_enabled` both set; without the first, every query fails with 401 "Request does not contain an Authorization Header". `plugins.preinstall_sync` in `grafana.yaml` installs a pinned version from grafana.com at every start, so the pod needs outbound access to grafana.com when it starts. Renovate tracks the version through the plugin's [GitHub releases](https://github.com/grafana/azure-prometheus-datasource/releases), which are tagged after the grafana.com publish. Renovate does not check the plugin's Grafana compatibility; verify it on grafana.com when bumping either.

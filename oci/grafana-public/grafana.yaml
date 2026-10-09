@@ -63,6 +63,30 @@ spec:
       managed_identity_enabled: "false"
     public_dashboards:
       enabled: "true"
+    dashboards:
+      # Public dashboards refresh manually. Their JSON offers no refresh
+      # intervals, and this keeps the always-present "Auto" option from
+      # refreshing more than once an hour.
+      min_refresh_interval: 1h
+    time_picker:
+      # Instance-wide presets for every dashboard here (public dashboards carry
+      # none of their own). Azure Monitor Prometheus rejects ranges wider than
+      # 32 days, so nothing here is wider than one calendar month. Viewers can
+      # still type a wider custom range; Grafana has no setting to cap it.
+      quick_ranges: >-
+        [
+        {"display": "Last 1 hour", "from": "now-1h", "to": "now"},
+        {"display": "Last 6 hours", "from": "now-6h", "to": "now"},
+        {"display": "Last 24 hours", "from": "now-24h", "to": "now"},
+        {"display": "Last 7 days", "from": "now-7d", "to": "now"},
+        {"display": "Last 30 days", "from": "now-30d", "to": "now"},
+        {"display": "Today so far", "from": "now/d", "to": "now"},
+        {"display": "Yesterday", "from": "now-1d/d", "to": "now-1d/d"},
+        {"display": "This week so far", "from": "now/w", "to": "now"},
+        {"display": "Previous week", "from": "now-1w/w", "to": "now-1w/w"},
+        {"display": "This month so far", "from": "now/M", "to": "now"},
+        {"display": "Previous month", "from": "now-1M/M", "to": "now-1M/M"}
+        ]
     plugins:
       # Grafana 13 removed Azure auth from core Prometheus and does not bundle
       # this plugin; without it every azure-managed-prometheus query fails with
