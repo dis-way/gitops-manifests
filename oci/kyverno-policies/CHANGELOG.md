@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.3...oci-kyverno-policies-v1.4.4) (2026-10-09)
+
+
+### Bug Fixes
+
+* **kyverno-policies:** migrate linkerd exception to CEL and exclude Azure-managed namespaces ([#1981](https://github.com/dis-way/gitops-manifests/issues/1981)) ([a1cee7f](https://github.com/dis-way/gitops-manifests/commit/a1cee7f14c278a632537033bfb8305376da67ff2))
+
 ## [1.4.3](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.2...oci-kyverno-policies-v1.4.3) (2026-10-05)
 
 
