@@ -5,7 +5,7 @@ resources:
 patches:
   - target:
       kind: GitRepository
-      name: gateway-api
+      name: gateway-api-upstream
     patch: |
       - op: replace
         path: /metadata/namespace

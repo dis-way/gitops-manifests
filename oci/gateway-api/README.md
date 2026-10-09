@@ -2,6 +2,8 @@
 
 Deploys the upstream Kubernetes Gateway API standard-channel CRDs from `kubernetes-sigs/gateway-api` via Flux `GitRepository` + `Kustomization`.
 
+The `GitRepository` is named `gateway-api-upstream`, not `gateway-api`. On AKS the flux configuration that deploys this package is named `gateway-api`, and whenever that configuration is updated the Azure `fluxconfig-controller` deletes any `GitRepository` in its namespace with the configuration's name.
+
 ## Variables
 
 | Variable | Default | Required | Description |

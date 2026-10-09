@@ -9,7 +9,7 @@ spec:
   prune: false
   sourceRef:
     kind: GitRepository
-    name: gateway-api
+    name: gateway-api-upstream
     namespace: flux-system
   timeout: 5m
   wait: true
