@@ -4,6 +4,7 @@ metadata:
   name: dis-secret-sync-sa
   namespace: flux-system
   annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
     # Same identity as altinn-kv-eso: dis-system-store reads the Altinn Key Vault
     azure.workload.identity/client-id: "${ALTINN_KV_ESO_CLIENT_ID}"
     azure.workload.identity/tenant-id: "${TENANT_ID}"

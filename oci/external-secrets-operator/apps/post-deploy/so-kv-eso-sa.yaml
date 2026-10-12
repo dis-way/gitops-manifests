@@ -4,6 +4,7 @@ metadata:
   name: so-kv-eso
   namespace: external-secrets
   annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
     azure.workload.identity/client-id: "${SO_KV_ESO_CLIENT_ID}"
     azure.workload.identity/tenant-id: "${TENANT_ID}"
   labels:

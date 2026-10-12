@@ -46,6 +46,11 @@ Azure token using the `azure.workload.identity/client-id` and `azure.workload.id
 These live in `post-deploy` because both the `external-secrets` namespace and the `ClusterSecretStore` CRD are created
 by the operator layer — applying them in the same Kustomization would fail until the chart has installed its CRDs.
 
+Every store and ServiceAccount carries `kustomize.toolkit.fluxcd.io/prune: disabled`. Every `ExternalSecret` on the
+cluster depends on them, including the one behind Traefik's `ssl-cert`, so Flux must never delete them, even when a
+Kustomization is renamed, its path changes, or `prune` is turned on. Removing one from the manifests leaves it
+orphaned in the cluster, so deleting one means doing it by hand.
+
 Every ServiceAccount except the dis-system one is in the `external-secrets` namespace, so each identity needs a federated credential on the
 cluster's OIDC issuer with subject `system:serviceaccount:external-secrets:<serviceaccount-name>`, plus read access
 to the vault it reads — a `Key Vault Secrets User` role assignment on RBAC vaults, or a get/list access policy on
