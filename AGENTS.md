@@ -106,9 +106,26 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
 ```
 
-**When to apply:** Objects that other packages or workloads depend on, where a deletion causes an outage rather than a clean removal. Examples are `SecretStore`/`ClusterSecretStore` resources and the workload identity ServiceAccounts they authenticate as (see `oci/external-secrets-operator` `*/post-deploy`).
+**When to apply:** Objects that other packages or workloads depend on, where a deletion causes an outage rather than a clean removal. Examples:
+
+- `SecretStore`/`ClusterSecretStore` resources and the workload identity ServiceAccounts they authenticate as (see `oci/external-secrets-operator` `*/post-deploy`)
+- `ExternalSecret`s whose Secret live traffic or a Kustomization depends on (e.g. Traefik's `ssl-cert`, `*-vars` Secrets read by `substituteFrom`); with `creationPolicy: Owner`, deleting the ExternalSecret deletes the Secret
+- `Namespace`s that hold more than the package's own resources, and `CustomResourceDefinition`s; deleting either deletes everything in or of it
+
+Add it to new manifests of these kinds. Do not sweep existing packages: the first time you change a package that has unannotated objects of these kinds, suggest annotating them in that PR and let the reviewer decide.
 
 Removing an annotated object from the manifests leaves it orphaned in the cluster. Delete it by hand when it is really no longer needed, and say so in the PR.
+
+## PodDisruptionBudget Unhealthy Pod Eviction
+
+With the default `unhealthyPodEvictionPolicy: IfHealthyBudget`, a pod that is running but not ready counts against the budget and can block a node drain (AKS upgrades, autoscaler scale-down) while it serves no traffic. Set:
+
+```yaml
+spec:
+  unhealthyPodEvictionPolicy: AlwaysAllow
+```
+
+Add it to new `PodDisruptionBudget` manifests (see `oci/whoami/apps/pdb.yaml`). Do not sweep existing packages: the first time you change a package with a PDB that lacks it, whether a manifest or one created by a Helm chart from values, suggest adding it in that PR. For charts, check that the chart exposes the field first.
 
 ## Flux HelmRelease Multitenancy Skill
 
