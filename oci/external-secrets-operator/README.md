@@ -23,9 +23,9 @@ Deploys the External Secrets Operator for syncing secrets from external provider
 |------|-------------|
 | `base` | HelmRelease, HelmRepository, and namespace |
 | `apps` | Standard variant; `base` unchanged |
-| `apps/post-deploy` | Workload identity ServiceAccount + `ClusterSecretStore` for the Altinn and serviceowner Key Vaults, applied after the operator has reconciled |
+| `apps/post-deploy` | Workload identity ServiceAccount + `ClusterSecretStore` for the Altinn and serviceowner Key Vaults, plus the namespaced `dis-system-store` `SecretStore` in `flux-system` over the Altinn Key Vault, applied after the operator has reconciled |
 | `platform-aks` | Platform cluster variant; `base` unchanged |
-| `platform-aks/post-deploy` | Same as `apps/post-deploy` but Altinn Key Vault only — platform clusters have no serviceowner vault |
+| `platform-aks/post-deploy` | Altinn Key Vault `ClusterSecretStore` only — platform clusters have no serviceowner vault and no `dis-system-store` |
 | `adminservices` | Admin cluster variant; `base` unchanged |
 | `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `flux-system` for the dis-system Key Vault |
 | `multitenancy` | Runs the HelmRelease from `platform-system` targeting the `external-secrets` namespace |
@@ -41,6 +41,7 @@ Azure token using the `azure.workload.identity/client-id` and `azure.workload.id
 | Altinn | `altinn-kv-eso` | `altinn-keyvault-store` | `apps`, `platform-aks` |
 | Serviceowner | `so-kv-eso` | `serviceowner-keyvault-store` | `apps` |
 | dis-system | `flux-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `flux-system`) | `adminservices` |
+| Altinn | `flux-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `flux-system`) | `apps` |
 
 These live in `post-deploy` because both the `external-secrets` namespace and the `ClusterSecretStore` CRD are created
 by the operator layer — applying them in the same Kustomization would fail until the chart has installed its CRDs.
@@ -54,6 +55,11 @@ vaults still using the access-policy model. Without the federated credential the
 Secrets from the Kustomization's own namespace. Its federated credential subject is therefore
 `system:serviceaccount:flux-system:dis-secret-sync-sa` (`dis_system_kv_namespace = "flux-system"` on the
 `dis_system_kv` module), and only `ExternalSecret`s in `flux-system` can use the store.
+
+`dis-system-store` is the store name every package's `secrets` layer references, so the same manifests work on every
+cluster. On apps clusters it reads the existing Altinn Key Vault rather than a separate dis-system vault: the
+`flux-system/dis-secret-sync-sa` ServiceAccount carries the `ALTINN_KV_ESO_CLIENT_ID` identity, which needs a second
+federated credential with subject `system:serviceaccount:flux-system:dis-secret-sync-sa`.
 
 Consumers reference a store by name, and because these are cluster-scoped they work from any namespace:
 
