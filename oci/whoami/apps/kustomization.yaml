@@ -2,3 +2,24 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
+  - pdb.yaml
+patches:
+  # Spread replicas across nodes so a single node drain never takes all of them
+  - target:
+      kind: Deployment
+      name: whoami
+    patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: whoami
+      spec:
+        template:
+          spec:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: whoami
