@@ -7,9 +7,6 @@ patches:
       kind: HelmRelease
       name: altinn-traefik
     patch: |
-      - op: replace
-        path: /spec/values/providers/kubernetesGateway/enabled
-        value: true
       - op: add
         path: /spec/values/ports/https/http/middlewares
         value:

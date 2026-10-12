@@ -53,7 +53,23 @@ spec:
       kubernetesIngress:
         enabled: false
       kubernetesGateway:
-        enabled: false
+        enabled: true
+    gateway:
+      enabled: true
+      listeners:
+        web: null
+        http:
+          port: 8000
+          protocol: HTTP
+          namespacePolicy:
+            from: All
+        https:
+          port: 8443
+          protocol: HTTPS
+          namespacePolicy:
+            from: All
+          certificateRefs:
+            - name: ssl-cert
     global:
       checkNewVersion: false
       sendAnonymousUsage: false
