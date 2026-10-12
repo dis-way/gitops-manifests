@@ -96,6 +96,20 @@ metadata:
 
 **When to apply:** Any Deployment, StatefulSet, or DaemonSet whose pod spec includes one or more `emptyDir` volumes, unless the data in those volumes must survive node drain (in which case use a PersistentVolume instead).
 
+## Flux Prune Protection Annotation
+
+Flux deletes objects that disappear from a Kustomization's rendered output when `prune` is on, and the same happens when a Kustomization is renamed or its path changes. For manifests whose deletion would take down other workloads, opt the object out of pruning:
+
+```yaml
+metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+```
+
+**When to apply:** Objects that other packages or workloads depend on, where a deletion causes an outage rather than a clean removal. Examples are `SecretStore`/`ClusterSecretStore` resources and the workload identity ServiceAccounts they authenticate as (see `oci/external-secrets-operator` `*/post-deploy`).
+
+Removing an annotated object from the manifests leaves it orphaned in the cluster. Delete it by hand when it is really no longer needed, and say so in the PR.
+
 ## Flux HelmRelease Multitenancy Skill
 
 When adding `spec.targetNamespace` to a Flux HelmRelease (e.g., in a multitenancy overlay), always also add `spec.releaseName` set to the original HelmRelease `metadata.name`. The Flux API defines `releaseName` as: *"ReleaseName used for the Helm release. Defaults to a composition of '[TargetNamespace-]Name'."* This means that when `targetNamespace` is set without an explicit `releaseName`, Flux composes the release name as `<TargetNamespace>-<Name>`, which causes the Helm chart to produce resources with a double-prefixed name (e.g., ServiceAccount `cert-manager-cert-manager` instead of `cert-manager`).
