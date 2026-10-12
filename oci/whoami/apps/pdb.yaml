@@ -6,6 +6,8 @@ metadata:
 spec:
   # Node drains evict one replica at a time; the HPA keeps at least 2
   maxUnavailable: 1
+  # Pods that are running but not ready never block a drain; they serve nothing anyway
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app: whoami
