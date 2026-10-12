@@ -4,3 +4,4 @@ resources:
   - namespace.yaml
   - whoami.yaml
   - hpa.yaml
+  - httproute.yaml
