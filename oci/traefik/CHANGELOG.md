@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.16.1...oci-traefik-v3.17.0) (2026-10-12)
+
+
+### Features
+
+* **traefik:** enable the Gateway API provider with http/https listeners in base ([#2006](https://github.com/dis-way/gitops-manifests/issues/2006)) ([a3d3375](https://github.com/dis-way/gitops-manifests/commit/a3d33754de8d06aa2e6c2ba67cae6094c6168bf6))
+
 ## [3.16.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.16.0...oci-traefik-v3.16.1) (2026-10-06)
 
 
