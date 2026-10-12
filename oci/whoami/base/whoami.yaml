@@ -73,6 +73,8 @@ spec:
     - port: 80
       targetPort: 80
       protocol: TCP
+      # Lets the client's Linkerd proxy skip outbound protocol detection
+      appProtocol: http
   type: ClusterIP
   selector:
     app: whoami

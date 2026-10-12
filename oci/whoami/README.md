@@ -15,7 +15,7 @@ Deploys the [traefik/whoami](https://github.com/traefik/whoami) test service wit
 
 | Path | Description |
 |------|-------------|
-| `base` | Namespace, Deployment, Service, HPA (2-20 replicas), PodDisruptionBudget (`maxUnavailable: 1`) and a spread of replicas across nodes, so node drains never take every replica, and a Gateway API HTTPRoute on `/whoami` to `traefik/traefik-gateway`. Requests are 5m CPU / 16Mi for whoami and for the Linkerd proxy (proxy limits stay at the cluster defaults). Needs Gateway listeners that accept routes from the `whoami` namespace |
+| `base` | Namespace, Deployment, Service, HPA (2-20 replicas), PodDisruptionBudget (`maxUnavailable: 1`) and a spread of replicas across nodes, so node drains never take every replica, and a Gateway API HTTPRoute on `/whoami` to `traefik/traefik-gateway`. Linkerd skips protocol detection both ways: the Service port has `appProtocol: http` for the client's proxy, and a Linkerd `Server` declares port 80 as `HTTP/1` for whoami's own proxy, with an `AuthorizationPolicy` allowing any meshed client. Requests are 5m CPU / 16Mi for whoami and for the Linkerd proxy (proxy limits stay at the cluster defaults). Needs Gateway listeners that accept routes from the `whoami` namespace |
 | `apps` | `base` unchanged; used as an availability probe target on the apps clusters |
 | `multitenancy` | `base` and `policies` |
 | `policies` | Linkerd authorization policies for mesh traffic and kubelet health checks |

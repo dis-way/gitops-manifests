@@ -6,3 +6,4 @@ resources:
   - hpa.yaml
   - pdb.yaml
   - httproute.yaml
+  - linkerd-server.yaml
