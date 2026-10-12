@@ -20,9 +20,10 @@ spec:
         runAsUser: 65532
         runAsGroup: 65532
       containers:
-        - image: altinncr.azurecr.io/docker.io/traefik/whoami
+        - name: whoami
+          # renovate: datasource=docker depName=traefik/whoami
+          image: altinncr.azurecr.io/docker.io/traefik/whoami:v1.12.0
           imagePullPolicy: IfNotPresent
-          name: whoami
           ports:
             - containerPort: 80
           env:
