@@ -22,6 +22,14 @@ spec:
         runAsNonRoot: true
         runAsUser: 65532
         runAsGroup: 65532
+      # Spread replicas across nodes so a single node drain never takes all of them
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: whoami
       containers:
         - name: whoami
           # renovate: datasource=docker depName=traefik/whoami
