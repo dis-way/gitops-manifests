@@ -7,57 +7,7 @@ patches:
       kind: HelmRelease
       name: altinn-traefik
     patch: |
-      # Gateway API provider, next to the CRD provider, to prepare the move from
-      # Traefik CRDs to Gateway API. The Gateway API CRDs (v1.6.2 standard, incl.
-      # TLSRoute/TCPRoute that Traefik v3.7 watches) come from oci/gateway-api.
-      - op: replace
-        path: /spec/values/providers/kubernetesGateway/enabled
-        value: true
       - op: add
         path: /spec/values/ports/https/http/middlewares
         value:
           - traefik-hsts-header@kubernetescrd
-      - op: add
-        path: /spec/values/extraObjects
-        value:
-          - apiVersion: traefik.io/v1alpha1
-            kind: Middleware
-            metadata:
-              name: hsts-header
-              namespace: traefik
-              annotations:
-                helm.sh/resource-policy: keep
-            spec:
-              headers:
-                stsIncludeSubdomains: true
-                stsSeconds: 63072000
-                stsPreload: true
-          - apiVersion: traefik.io/v1alpha1
-            kind: Middleware
-            metadata:
-              name: hsts-header
-              namespace: default
-              annotations:
-                helm.sh/resource-policy: keep
-            spec:
-              headers:
-                stsIncludeSubdomains: true
-                stsSeconds: 63072000
-                stsPreload: true
-          - apiVersion: traefik.io/v1alpha1
-            kind: IngressRoute
-            metadata:
-              name: root-ingress-route
-              namespace: traefik
-              annotations:
-                helm.sh/resource-policy: keep
-            spec:
-              entryPoints:
-                - http
-                - https
-              routes:
-                - kind: Rule
-                  match: PathPrefix(`/`)
-                  services:
-                    - kind: TraefikService
-                      name: noop@internal

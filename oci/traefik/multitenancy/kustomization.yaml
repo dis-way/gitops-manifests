@@ -41,9 +41,6 @@ patches:
         path: /spec/values/providers/kubernetesCRD/enabled
         value: false
       - op: replace
-        path: /spec/values/providers/kubernetesGateway/enabled
-        value: true
-      - op: replace
         path: /spec/values/ports/http/forwardedHeaders/trustedIPs
         value:
           - "${AKS_VNET_IPV4_CIDR}"
@@ -61,36 +58,36 @@ patches:
           - "${LB_SOURCE_RANGE_APIM_IPV6}"
           - "${LB_SOURCE_RANGE_DIS_EDGE}"
           - "${LB_SOURCE_RANGE_DIS_EDGE_IPV6}"
-      - op: add
-        path: /spec/values/gateway
+      # Replaces the base listeners; web: null keeps the chart default out.
+      - op: replace
+        path: /spec/values/gateway/listeners
         value:
-          enabled: true
-          listeners:
-            http:
-              port: 8000
-              protocol: HTTP
-              hostname: ${DEFAULT_GATEWAY_HOSTNAME}
-              namespacePolicy:
-                from: All
-            http-wildcard:
-              port: 8000
-              protocol: HTTP
-              hostname: "*.${DEFAULT_GATEWAY_HOSTNAME}"
-              namespacePolicy:
-                from: All
-            https:
-              port: 8443
-              protocol: HTTPS
-              hostname: ${DEFAULT_GATEWAY_HOSTNAME}
-              namespacePolicy:
-                from: All
-              certificateRefs:
-                - name: ssl-cert
-            https-wildcard:
-              port: 8443
-              protocol: HTTPS
-              hostname: "*.${DEFAULT_GATEWAY_HOSTNAME}"
-              namespacePolicy:
-                from: All
-              certificateRefs:
-                - name: ssl-cert
+          web: null
+          http:
+            port: 8000
+            protocol: HTTP
+            hostname: ${DEFAULT_GATEWAY_HOSTNAME}
+            namespacePolicy:
+              from: All
+          http-wildcard:
+            port: 8000
+            protocol: HTTP
+            hostname: "*.${DEFAULT_GATEWAY_HOSTNAME}"
+            namespacePolicy:
+              from: All
+          https:
+            port: 8443
+            protocol: HTTPS
+            hostname: ${DEFAULT_GATEWAY_HOSTNAME}
+            namespacePolicy:
+              from: All
+            certificateRefs:
+              - name: ssl-cert
+          https-wildcard:
+            port: 8443
+            protocol: HTTPS
+            hostname: "*.${DEFAULT_GATEWAY_HOSTNAME}"
+            namespacePolicy:
+              from: All
+            certificateRefs:
+              - name: ssl-cert
