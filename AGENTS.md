@@ -108,7 +108,7 @@ metadata:
 
 **When to apply:** Objects that other packages or workloads depend on, where a deletion causes an outage rather than a clean removal. Examples:
 
-- `SecretStore`/`ClusterSecretStore` resources and the workload identity ServiceAccounts they authenticate as (see `oci/external-secrets-operator` `*/post-deploy`)
+- The `dis-system-store` SecretStore and the workload identity ServiceAccount it authenticates as (see `oci/external-secrets-operator` `apps/post-deploy` and `adminservices/post-deploy`)
 - `ExternalSecret`s whose Secret live traffic or a Kustomization depends on (e.g. Traefik's `ssl-cert`, `*-vars` Secrets read by `substituteFrom`); with `creationPolicy: Owner`, deleting the ExternalSecret deletes the Secret
 - `Namespace`s that hold more than the package's own resources, and `CustomResourceDefinition`s; deleting either deletes everything in or of it
 
