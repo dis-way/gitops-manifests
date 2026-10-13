@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.1...oci-blackbox-exporter-v0.10.2) (2026-10-13)
+
+
+### Bug Fixes
+
+* **blackbox-exporter:** match health check status case-insensitively ([#2028](https://github.com/dis-way/gitops-manifests/issues/2028)) ([295cd7c](https://github.com/dis-way/gitops-manifests/commit/295cd7c83953980dd82be97930519ed927771128))
+
 ## [0.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.0...oci-blackbox-exporter-v0.10.1) (2026-10-05)
 
 
