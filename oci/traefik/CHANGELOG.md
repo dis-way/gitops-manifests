@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.17.3](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.2...oci-traefik-v3.17.3) (2026-10-13)
+
+
+### Bug Fixes
+
+* **traefik:** remove extraObjects in platform-aks and eformidling-aks ([#2023](https://github.com/dis-way/gitops-manifests/issues/2023)) ([7bddb52](https://github.com/dis-way/gitops-manifests/commit/7bddb5237f6c6dc0b5de3c783526cc0886469548))
+
 ## [3.17.2](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.1...oci-traefik-v3.17.2) (2026-10-13)
 
 
