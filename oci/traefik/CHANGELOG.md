@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.17.2](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.1...oci-traefik-v3.17.2) (2026-10-13)
+
+
+### Bug Fixes
+
+* **traefik:** remove extraObjects in apps and adminservices ([#2016](https://github.com/dis-way/gitops-manifests/issues/2016)) ([3fc3037](https://github.com/dis-way/gitops-manifests/commit/3fc3037af5b36f382a171694d2cf2b8563bca56c))
+
 ## [3.17.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.0...oci-traefik-v3.17.1) (2026-10-13)
 
 
