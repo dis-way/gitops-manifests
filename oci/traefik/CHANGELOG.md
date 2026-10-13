@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.17.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.0...oci-traefik-v3.17.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* **traefik:** set keep on post-deploy objects before removing extraObjects ([#2010](https://github.com/dis-way/gitops-manifests/issues/2010)) ([13ab67e](https://github.com/dis-way/gitops-manifests/commit/13ab67ea5d29745f7ec7ca6184b67b934eb6171f))
+
 ## [3.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.16.1...oci-traefik-v3.17.0) (2026-10-12)
 
 
