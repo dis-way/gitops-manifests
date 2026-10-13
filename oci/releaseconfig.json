@@ -240,11 +240,11 @@
     "prod_ring2": "1.2.1"
   },
   "traefik": {
-    "at_ring1": "3.17.2",
-    "at_ring2": "3.17.2",
-    "tt_ring1": "3.17.2",
-    "tt_ring2": "3.17.2",
-    "prod_ring1": "3.17.2",
+    "at_ring1": "3.17.3",
+    "at_ring2": "3.17.3",
+    "tt_ring1": "3.17.3",
+    "tt_ring2": "3.17.3",
+    "prod_ring1": "3.17.3",
     "prod_ring2": "3.17.2"
   },
   "valkey-operator": {
