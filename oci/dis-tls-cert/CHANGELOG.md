@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.22.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.21.0...oci-dis-tls-cert-v2.22.0) (2026-10-14)
+
+
+### Features
+
+* add am-ui certificates for at22, at23, at24, yt01 and tt02 ([#2036](https://github.com/dis-way/gitops-manifests/issues/2036)) ([2b06344](https://github.com/dis-way/gitops-manifests/commit/2b06344ad2a710e40d427723976bcd14c25420eb))
+
 ## [2.21.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.20.1...oci-dis-tls-cert-v2.21.0) (2026-10-14)
 
 
