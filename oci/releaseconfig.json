@@ -305,7 +305,8 @@
   },
   "dis-cache": {
     "at_ring1": "0.2.4",
-    "at_ring2": "0.2.4"
+    "at_ring2": "0.2.4",
+    "tt_ring1": "0.2.4"
   },
   "workload-identity-serviceaccount": {
     "at_ring1": "1.0.0",
