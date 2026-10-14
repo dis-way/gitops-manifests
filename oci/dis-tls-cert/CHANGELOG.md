@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.20.1...oci-dis-tls-cert-v2.21.0) (2026-10-14)
+
+
+### Features
+
+* add am-ui-altinn-no certificate and push secret configurations ([#2032](https://github.com/dis-way/gitops-manifests/issues/2032)) ([b7942ac](https://github.com/dis-way/gitops-manifests/commit/b7942ac36d464a71233953559eb2b40a5a309bb1))
+
 ## [2.20.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.20.0...oci-dis-tls-cert-v2.20.1) (2026-10-06)
 
 
