@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.1...oci-tailscale-subnet-router-v1.3.2) (2026-10-14)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow egress to internal Traefik entrypoint ([#2040](https://github.com/dis-way/gitops-manifests/issues/2040)) ([000fbc7](https://github.com/dis-way/gitops-manifests/commit/000fbc7858c71e6c4743f5f3625e4297e7540486))
+
 ## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.0...oci-tailscale-subnet-router-v1.3.1) (2026-10-07)
 
 
