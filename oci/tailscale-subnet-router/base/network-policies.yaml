@@ -103,7 +103,9 @@ spec:
 # router in that cluster dials the public LoadBalancer IP, Cilium translates it to
 # the Traefik pod, which the ipBlock rules above do not select. Without this rule
 # the router in admin-prod-aks cannot reach Headscale. 8443 is the Traefik
-# container port behind the Service port 443. STUN to the same pods (3478/UDP)
+# container port behind the Service port 443. 8444 is the same for the internal
+# LoadBalancer, which serves VPN-only hosts such as Headplane on admin-prod-aks.
+# STUN to the same pods (3478/UDP)
 # stays blocked: the derper and headscale ingress policies only allow STUN from
 # ipBlock, and the router does not need its own cluster's DERP region for STUN.
 apiVersion: networking.k8s.io/v1
@@ -127,6 +129,8 @@ spec:
               app.kubernetes.io/name: traefik
       ports:
         - port: 8443
+          protocol: TCP
+        - port: 8444
           protocol: TCP
 ---
 # Cilium gives the API server the reserved kube-apiserver identity, which ipBlock
