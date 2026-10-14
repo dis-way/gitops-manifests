@@ -6,4 +6,5 @@ metadata:
 spec:
   type: oci
   interval: 1h
-  url: oci://registry.k8s.io/kro/charts
+  provider: azure
+  url: oci://altinncr.azurecr.io/registry.k8s.io/kro/charts
