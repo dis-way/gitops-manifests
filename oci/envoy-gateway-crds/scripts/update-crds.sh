@@ -20,7 +20,7 @@
 set -euo pipefail
 
 # renovate: datasource=github-releases packageName=envoyproxy/gateway extractVersion=^v(?<version>.+)$
-ENVOY_GATEWAY_VERSION="1.9.1"
+ENVOY_GATEWAY_VERSION="1.9.2"
 
 # The asset must contain exactly these 8 CRDs and nothing else.
 EXPECTED_CRD_COUNT=8
