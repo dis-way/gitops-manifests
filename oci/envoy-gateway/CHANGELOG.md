@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.7.0...oci-envoy-gateway-v3.0.0) (2026-10-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **envoy-gateway:** every edge cluster must set STUDIO_HOSTNAME, STUDIO_TLS_CRT_SECRET_NAME and STUDIO_TLS_KEY_SECRET_NAME.
+
+### Features
+
+* **envoy-gateway:** add studio ListenerSet to edge ([d841ba3](https://github.com/dis-way/gitops-manifests/commit/d841ba3f8f5e2691c6ef42cf26c192d80d058682))
+
 ## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.6.1...oci-envoy-gateway-v2.7.0) (2026-10-06)
 
 
