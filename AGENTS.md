@@ -96,6 +96,37 @@ metadata:
 
 **When to apply:** Any Deployment, StatefulSet, or DaemonSet whose pod spec includes one or more `emptyDir` volumes, unless the data in those volumes must survive node drain (in which case use a PersistentVolume instead).
 
+## Flux Prune Protection Annotation
+
+Flux deletes objects that disappear from a Kustomization's rendered output when `prune` is on, and the same happens when a Kustomization is renamed or its path changes. For manifests whose deletion would take down other workloads, opt the object out of pruning:
+
+```yaml
+metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+```
+
+**When to apply:** Objects that other packages or workloads depend on, where a deletion causes an outage rather than a clean removal. Examples:
+
+- The `dis-system-store` SecretStore and the workload identity ServiceAccount it authenticates as (see `oci/external-secrets-operator` `apps/post-deploy` and `adminservices/post-deploy`)
+- `ExternalSecret`s whose Secret live traffic or a Kustomization depends on (e.g. Traefik's `ssl-cert`, `*-vars` Secrets read by `substituteFrom`); with `creationPolicy: Owner`, deleting the ExternalSecret deletes the Secret
+- `Namespace`s that hold more than the package's own resources, and `CustomResourceDefinition`s; deleting either deletes everything in or of it
+
+Add it to new manifests of these kinds. Do not sweep existing packages: the first time you change a package that has unannotated objects of these kinds, suggest annotating them in that PR and let the reviewer decide.
+
+Removing an annotated object from the manifests leaves it orphaned in the cluster. Delete it by hand when it is really no longer needed, and say so in the PR.
+
+## PodDisruptionBudget Unhealthy Pod Eviction
+
+With the default `unhealthyPodEvictionPolicy: IfHealthyBudget`, a pod that is running but not ready counts against the budget and can block a node drain (AKS upgrades, autoscaler scale-down) while it serves no traffic. Set:
+
+```yaml
+spec:
+  unhealthyPodEvictionPolicy: AlwaysAllow
+```
+
+Add it to new `PodDisruptionBudget` manifests (see `oci/whoami/apps/pdb.yaml`). Do not sweep existing packages: the first time you change a package with a PDB that lacks it, whether a manifest or one created by a Helm chart from values, suggest adding it in that PR. For charts, check that the chart exposes the field first.
+
 ## Flux HelmRelease Multitenancy Skill
 
 When adding `spec.targetNamespace` to a Flux HelmRelease (e.g., in a multitenancy overlay), always also add `spec.releaseName` set to the original HelmRelease `metadata.name`. The Flux API defines `releaseName` as: *"ReleaseName used for the Helm release. Defaults to a composition of '[TargetNamespace-]Name'."* This means that when `targetNamespace` is set without an explicit `releaseName`, Flux composes the release name as `<TargetNamespace>-<Name>`, which causes the Helm chart to produce resources with a double-prefixed name (e.g., ServiceAccount `cert-manager-cert-manager` instead of `cert-manager`).
