@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.0...oci-otel-collector-v2.1.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **otel-collector:** stop dropping traces under load ([#2053](https://github.com/dis-way/gitops-manifests/issues/2053)) ([9469706](https://github.com/dis-way/gitops-manifests/commit/94697068b77133c69a1579c7224b6e1328dcfe28))
+
 ## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.0.0...oci-otel-collector-v2.1.0) (2026-10-07)
 
 
