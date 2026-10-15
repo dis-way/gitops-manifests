@@ -15,8 +15,6 @@ Deploys the DIS PostgreSQL Operator for managing PostgreSQL database resources i
 | `DISPG_WORKLOAD_IDENTITY_CLIENT_ID` | - | Yes | Client ID of the Azure Workload Identity used by the operator |
 | `DISPG_CLUSTER_ID` | - | Yes | Identifier of the cluster that runs the operator |
 
-## Variables from Key Vault
-
 A cluster can read the variables from the dis-system Key Vault instead of inline values. The `secrets` layer syncs them into the `dis-pgsql-vars` Secret in `flux-system`. The Flux Kustomization for `.` reads that Secret with `postBuild.substituteFrom`.
 
 | Key Vault secret | Variable |
@@ -34,34 +32,7 @@ A cluster can read the variables from the dis-system Key Vault instead of inline
 
 | Path | Description |
 |------|-------------|
-| `.` | The operator OCIRepository and its Flux Kustomization |
-| `secrets` | `ExternalSecret` in `flux-system` that reads the input variables from `dis-system-store`. The `.` layer depends on it for `substituteFrom`. Apply this layer first. Clusters with inline values do not use this layer. |
-
-## Usage
-
-```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-spec:
-  path: ./
-  postBuild:
-    substitute:
-      DISPG_AZURE_SUBSCRIPTION_ID: "00000000-0000-0000-0000-000000000000"
-      DISPG_AZURE_TENANT_ID: "00000000-0000-0000-0000-000000000000"
-      DISPG_DB_RESOURCE_GROUP: "my-db-resource-group"
-      DISPG_DB_VNET_NAME: "my-db-vnet"
-      DISPG_AKS_VNET_NAME: "my-aks-vnet"
-      DISPG_AKS_RESOURCE_GROUP: "my-aks-resource-group"
-      DISPG_WORKLOAD_IDENTITY_CLIENT_ID: "00000000-0000-0000-0000-000000000000"
-      DISPG_CLUSTER_ID: "my-team-my-env"
-```
-
-With the `secrets` layer, use `substituteFrom` instead:
-
-```yaml
-postBuild:
-  substituteFrom:
-    - kind: Secret
-      name: dis-pgsql-vars
-      optional: false
-```
+| `.` | The operator OCIRepository and its Flux Kustomization, in `flux-system` |
+| `apps` | Same resources as `.` |
+| `multitenancy` | Same resources as `.`, moved to `platform-system` |
+| `secrets` | `ExternalSecret` in `flux-system` that reads the input variables from `dis-system-store` (`oci/external-secrets-operator` `adminservices/post-deploy` or `apps/post-deploy`). The `.` layer depends on it for `substituteFrom`. Apply this layer first. Clusters with inline values do not use this layer. |
