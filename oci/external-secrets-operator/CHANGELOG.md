@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.9.1...oci-external-secrets-operator-v1.10.0) (2026-10-15)
+
+
+### Features
+
+* **external-secrets-operator:** dis-system-store on apps clusters, protect stores from pruning ([#2004](https://github.com/dis-way/gitops-manifests/issues/2004)) ([ad60077](https://github.com/dis-way/gitops-manifests/commit/ad60077e782b2e448b552d81d21376616bbd4ffb))
+
 ## [1.9.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.9.0...oci-external-secrets-operator-v1.9.1) (2026-10-05)
 
 
