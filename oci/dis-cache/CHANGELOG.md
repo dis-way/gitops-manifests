@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.4...oci-dis-cache-v0.2.5) (2026-10-15)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-cache-operator docker tag to v0.4.0 ([#2072](https://github.com/dis-way/gitops-manifests/issues/2072)) ([825161c](https://github.com/dis-way/gitops-manifests/commit/825161c121b16663cabaad2520f13d7a78d43e6e))
+
 ## [0.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.3...oci-dis-cache-v0.2.4) (2026-10-07)
 
 
