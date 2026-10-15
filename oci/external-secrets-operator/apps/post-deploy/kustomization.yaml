@@ -8,3 +8,8 @@ resources:
   - altinn-kv-clustersecretstore.yaml
   - so-kv-eso-sa.yaml
   - so-kv-clustersecretstore.yaml
+  # dis-system-store: the standard SecretStore name every package's secrets layer
+  # references. Namespaced in flux-system, because postBuild.substituteFrom only reads
+  # Secrets from the Kustomization's own namespace. Backed by the Altinn Key Vault.
+  - dis-system-kv-eso-sa.yaml
+  - dis-system-kv-secretstore.yaml
