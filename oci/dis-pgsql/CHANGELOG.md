@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.2.3...oci-dis-pgsql-v0.3.0) (2026-10-15)
+
+
+### Features
+
+* **dis-pgsql:** add a secrets layer for Key Vault variables ([#2070](https://github.com/dis-way/gitops-manifests/issues/2070)) ([00bb97b](https://github.com/dis-way/gitops-manifests/commit/00bb97b1cdbe7f4a475e8933ad660c6b8ee03609))
+
 ## [0.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.2.2...oci-dis-pgsql-v0.2.3) (2026-09-17)
 
 
