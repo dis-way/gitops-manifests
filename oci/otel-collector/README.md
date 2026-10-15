@@ -18,7 +18,7 @@ flowchart TB
             recv["Receivers\nOTLP gRPC :4317\nOTLP HTTP :4318"]
             proc_t["Traces pipeline\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → tail_sampling → batch"]
             proc_l["Logs pipelines\nmemory_limiter → transform/servicenamespace\n→ routing/logs → application or Envoy processing\n→ resourcedetection/aks → k8sattributes\n→ transform/drop → batch"]
-            proc_m["Metrics pipeline\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → batch"]
+            proc_m["Metrics pipeline\nOTLP + pod scrape + own :8888\nmemory_limiter → transform/servicenamespace\n→ resourcedetection/aks → k8sattributes\n→ transform/* → batch"]
         end
     end
 
@@ -185,14 +185,28 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 | Traces | `transform/servicenamespace` (drop operator-set `service.namespace`), `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
 | Logs input | `memory_limiter`, `transform/servicenamespace` before routing to either log pipeline | `routing/logs` connector |
 | Logs | `filter/logs` (drop below WARN), `transform/empty-body` (message from `error` or a placeholder, App Insights drops empty ones), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
-| Envoy access logs | Routed by the `routing/logs` connector on `dis.otel.logtype=envoy-access`. `transform/envoy-accesslog` (severity), `probabilistic_sampler/logs` (4xx kept at 10%), `k8sattributes` | `azuremonitor` |
-| Metrics | `transform/servicenamespace`, `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
+| Envoy access logs | Routed by the `routing/logs` connector on `dis.otel.logtype=envoy-access`. `transform/envoy-accesslog` (severity, `trace_id` attribute → record TraceID so App Insights sets `operation_Id`), `probabilistic_sampler/logs` (4xx kept at 10%), `k8sattributes` | `azuremonitor` |
+| Metrics | Receives OTLP and `prometheus/pods` (opted-in pods, Valkey caches and the collector itself). `transform/servicenamespace`, `k8sattributes`, `transform/metrics` (merge resource attrs into datapoint), `transform/drop` | `prometheusremotewrite` |
 
 ### Scraping Pods
 
 The collector also pulls Prometheus metrics from pods that opt in. A pod is scraped when it has the label `dis.otel/scrape: "true"` and a container port named `metrics`. The collector reads `/metrics` on that port every 30 seconds and adds the labels `namespace`, `pod` and `container`. Pods without the label, pods without a port named `metrics`, and init containers are not scraped.
 
 The port name makes the target explicit. Port names are unique inside a pod, so a pod has at most one metrics target and no metric is scraped twice.
+
+### Collector Metrics
+
+The collector's own telemetry is served on `:8888` at `level: normal`. The `otelcol` job in `prometheus/pods` scrapes it and sends it to the Azure Monitor Workspace with everything else, labelled `job="otelcol"`, `namespace` and `pod`. The operator's `ServiceMonitor` is turned off (`enableMetrics: false`): it is a `monitoring.coreos.com` resource, which AKS managed Prometheus never reads. Because the metrics leave through the collector itself, they stop when the collector or its remote write is down.
+
+The series that show lost data (Azure Monitor Workspace names: counters end in `_total`):
+
+| Metric | Means |
+|--------|-------|
+| `otelcol_processor_tail_sampling_sampling_trace_dropped_too_early_total` | Traces evicted before a sampling decision; `num_traces` is too small |
+| `otelcol_processor_tail_sampling_sampling_traces_on_memory` | Traces waiting for a decision; compare with `num_traces` |
+| `otelcol_receiver_refused_spans_total`, `otelcol_receiver_refused_metric_points_total`, `otelcol_receiver_refused_log_records_total` | Data refused by `memory_limiter` |
+| `otelcol_exporter_send_failed_spans_total`, `otelcol_exporter_send_failed_metric_points_total`, `otelcol_exporter_send_failed_log_records_total` | Data the exporters gave up on |
+| `otelcol_exporter_queue_size` / `otelcol_exporter_queue_capacity` | Exporter backlog |
 
 A second job, `caches`, scrapes the Valkey pods of every dis-cache-operator `Cache` the same way, selected by the label `valkey.io/cluster`, and adds the Cache name as the label `cache`. The valkey-operator sets the pod labels itself and passes no label through from the Cache, so these pods cannot opt in with `dis.otel/scrape`. The job goes away once it can.
 
@@ -217,6 +231,10 @@ Workloads that opt into the operator's SDK injection get `service.namespace` set
 | `heavy-sampling` | Routes matching `/metrics`, `/health`, `/kuberneteswrapper/*` | 0.1% |
 | `always-sample-errors` | Span status is ERROR | 100% |
 | `always-sample-slow-requests` | Span duration ≥ 1000 ms | 100% |
+
+Spans are held for `decision_wait` (10 s) and a decision is made for the whole trace. At most `num_traces` (50 000) traces are held at once. When the buffer is full, the oldest trace is dropped before any policy runs, errors included, so the buffer must exceed new traces per second × 10 s. Memory limit and `GOMEMLIMIT` are sized for it. Sampled decisions are cached, so late spans of a sampled trace are kept. Unsampled decisions are not cached: a late span, such as the root of a request slower than 10 s, is judged on its own by the error and latency policies.
+
+The collector runs as one replica because every span of a trace must reach the same instance. Scaling out needs a trace-ID-routing tier in front.
 
 The sampling hint is propagated via the `dis.otel/sampling` label on the Deployment, read by the `k8sattributes` processor and promoted to a span attribute by `transform/dis`.
 

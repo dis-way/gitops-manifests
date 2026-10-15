@@ -12,6 +12,9 @@ spec:
         secretKeyRef:
           name: app-insights-connstring
           key: connectionString
+    # Lets the GC work harder before memory_limiter starts refusing data.
+    - name: GOMEMLIMIT
+      value: 1600MiB
   # renovate: datasource=docker depName=ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
   image: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.161.0
   podAnnotations:
@@ -20,17 +23,19 @@ spec:
     config.linkerd.io/skip-outbound-ports: "443"
   resources:
     limits:
-      memory: 1000Mi
+      memory: 2Gi
     requests:
       cpu: 500m
-      memory: 256Mi
+      memory: 1Gi
   mode: deployment
   upgradeStrategy: automatic
   serviceAccount: otel-collector
   observability:
     metrics:
       disablePrometheusAnnotations: true
-      enableMetrics: true
+      # The operator's ServiceMonitor is monitoring.coreos.com, which AKS never
+      # reads. The otelcol job in prometheus/pods scrapes :8888 instead.
+      enableMetrics: false
   config:
     receivers:
       otlp:
@@ -90,6 +95,28 @@ spec:
                   target_label: pod
                 - source_labels: [__meta_kubernetes_pod_label_valkey_io_cluster]
                   target_label: cache
+            # The collector's own telemetry (service.telemetry below).
+            - job_name: otelcol
+              scrape_interval: 30s
+              scrape_timeout: 10s
+              kubernetes_sd_configs:
+                - role: pod
+                  namespaces:
+                    names: [monitoring]
+                  selectors:
+                    - role: pod
+                      label: app.kubernetes.io/name=otel-collector
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_pod_container_port_number]
+                  regex: "8888"
+                  action: keep
+                - source_labels: [__meta_kubernetes_pod_phase]
+                  regex: Running
+                  action: keep
+                - source_labels: [__meta_kubernetes_namespace]
+                  target_label: namespace
+                - source_labels: [__meta_kubernetes_pod_name]
+                  target_label: pod
     extensions:
       azureauth:
         scopes:
@@ -418,10 +445,15 @@ spec:
               - delete_key(attributes, "process.command_args")
               - delete_key(attributes, "os.type")
               - delete_key(attributes, "os.description")
-      #Tail based sampling rules. Currently sample all, except http.route in [/metrics, /health] (sample only 0.1%), all spans with error are sampled
+      # num_traces must exceed new traces/s x decision_wait, or traces are evicted
+      # before any policy runs, errors included. 50000 covers ~5000 traces/s.
+      # Only sampled decisions are cached: a late root span of an unsampled trace
+      # is still judged on its own by the error and latency policies.
       tail_sampling:
         decision_wait: 10s
-        num_traces: 1000
+        num_traces: 50000
+        decision_cache:
+          sampled_cache_size: 100000
         policies:
           - name: default
             type: and
@@ -516,6 +548,9 @@ spec:
               - set(severity_number, SEVERITY_NUMBER_WARN) where Int(attributes["response_code"]) >= 400 and Int(attributes["response_code"]) < 500
               - set(severity_text, "WARN") where severity_number == SEVERITY_NUMBER_WARN
               - set(attributes["sampling.priority"], 10) where severity_number == SEVERITY_NUMBER_WARN
+              # Envoy sends %TRACE_ID% as an attribute. On the record it becomes
+              # operation_Id, which joins the line to its request in App Insights.
+              - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil and attributes["trace_id"] != "-" and attributes["trace_id"] != ""
               # Envoy's JSON access logs have no body, and Application Insights
               # drops traces without a message. Build a one-line summary.
               - set(body, Concat([attributes["response_code"], attributes["response_flags"], attributes["method"], attributes["authority"], attributes["path"]], " ")) where attributes["method"] != nil
@@ -576,7 +611,7 @@ spec:
       extensions: [azureauth]
       telemetry:
         metrics:
-          level: basic
+          level: normal
           readers:
             - pull:
                 exporter:
