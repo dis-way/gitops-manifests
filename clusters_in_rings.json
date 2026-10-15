@@ -1,11 +1,10 @@
 {
-  "verified": "2026-10-08",
+  "verified": "2026-10-14",
   "rings": {
     "at_ring1": [
       "admin-test-aks",
       "dis-core-at22-aks",
       "dis-edge-at22-aks",
-      "dis-edge-yt01-aks",
       "platform-at22-01-aks",
       "ttd-at22-aks"
     ],
@@ -19,6 +18,8 @@
       "ttd-at24-aks"
     ],
     "tt_ring1": [
+      "dis-core-yt01-aks",
+      "dis-edge-yt01-aks",
       "platform-yt01-01-aks",
       "ttd-tt02-aks",
       "ttd-yt01-aks"
