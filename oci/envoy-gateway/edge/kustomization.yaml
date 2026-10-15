@@ -4,7 +4,17 @@ resources:
   - ../valkey
   - ../base
   - ../default-gateway
+  - ../studio-gateway
 patches:
+  # Lets edge-route-guard admit studio-http-to-https in this namespace.
+  - target:
+      kind: Namespace
+      name: envoy-gateway-system
+    patch: |
+      - op: add
+        path: /metadata/annotations
+        value:
+          "${STUDIO_HOSTNAME}/edge-allowed-paths": "/"
   - target:
       kind: HelmRepository
       name: envoy-gateway

@@ -1,0 +1,34 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: studio
+  namespace: envoy-gateway-system
+spec:
+  parentRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: eg
+    namespace: envoy-gateway-system
+  # Routes from any namespace may attach, but edge-route-guard only admits a
+  # route for this host from namespaces annotated with
+  # ${STUDIO_HOSTNAME}/edge-allowed-paths. Grant access there, not here.
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: '${STUDIO_HOSTNAME}'
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: studio-tls-cert
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: '${STUDIO_HOSTNAME}'
+      allowedRoutes:
+        namespaces:
+          from: All

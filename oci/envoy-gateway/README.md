@@ -5,7 +5,9 @@ Deploys Envoy Gateway, a Kubernetes Gateway API implementation, via a Flux HelmR
 ## Variables
 
 Most variables are consumed by the `default-gateway` layer; the `VALKEY_*` pair is consumed by
-`valkey`. `base` needs none.
+`valkey` and the `STUDIO_*` variables by `studio-gateway`. `base` needs none. `edge` includes all
+three, so every edge cluster must set the `STUDIO_*` variables. An unset `STUDIO_HOSTNAME` becomes
+an empty listener hostname, which matches every host.
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
@@ -18,6 +20,9 @@ Most variables are consumed by the `default-gateway` layer; the `VALKEY_*` pair 
 | `DIS_TLS_READER_TENANT_ID` | - | Yes | Tenant ID for that workload identity |
 | `DIS_TLS_CRT_SECRET_NAME` | - | Yes | Key Vault secret name holding the certificate, synced to `tls.crt` |
 | `DIS_TLS_KEY_SECRET_NAME` | - | Yes | Key Vault secret name holding the private key, synced to `tls.key` |
+| `STUDIO_HOSTNAME` | - | Yes | Hostname for the `studio` ListenerSet's HTTPS/HTTP listeners |
+| `STUDIO_TLS_CRT_SECRET_NAME` | - | Yes | Key Vault secret name holding the studio certificate, synced to `tls.crt` |
+| `STUDIO_TLS_KEY_SECRET_NAME` | - | Yes | Key Vault secret name holding the studio private key, synced to `tls.key` |
 | `ENVOY_CPU_REQUEST` | `1` | No | CPU request per Envoy data plane pod. No CPU limit is set |
 | `ENVOY_MEMORY_REQUEST` | `512Mi` | No | Memory request per Envoy data plane pod. The memory limit is set to the same value |
 | `VALKEY_CPU_REQUEST` | `1` | No | CPU request for the Valkey pod backing global rate limiting. No CPU limit is set |
@@ -30,7 +35,8 @@ Most variables are consumed by the `default-gateway` layer; the `VALKEY_*` pair 
 | `base` | Control plane only: Namespace (`envoy-gateway-system`), OCI HelmRepository, and HelmRelease installing the `gateway-helm` chart. All images (control plane, certgen, shutdown manager, rate limit, and the Envoy data plane) are mirrored through `altinncr.azurecr.io` via `global.imageRegistry` |
 | `default-gateway` | Data plane: the `eg` EnvoyProxy, the `eg` GatewayClass and Gateway, the External Secrets wiring that syncs the `tls-cert` Secret from Azure Key Vault, a ClientTrafficPolicy and BackendTrafficPolicy covering the whole Gateway, and an HTTPRoute redirecting `:80` to HTTPS. Depends on the namespace from `base` |
 | `valkey` | The Valkey instance backing **global** rate limiting: Namespace (`envoy-valkey`), a NetworkPolicy restricting access to the ratelimit pods, HelmRepository, and HelmRelease installing the `valkey` chart, mirrored through `altinncr.azurecr.io` |
-| `edge` | `valkey` + `base` + `default-gateway`, with every HelmRepository/HelmRelease moved to `platform-system` and each chart deployed into its own namespace via `targetNamespace`/`releaseName`. This layer also adds the `rateLimit` Redis backend to the control plane config and a `dependsOn` from `envoy-gateway` to `valkey`. The full install for a cluster that serves traffic |
+| `studio-gateway` | The `studio` ListenerSet on the `eg` Gateway for `${STUDIO_HOSTNAME}`: HTTPS and HTTP listeners, an ExternalSecret syncing `studio-tls-cert` through the `default-gateway` SecretStore, and an HTTPRoute redirecting `:80` to HTTPS. Depends on `default-gateway` |
+| `edge` | `valkey` + `base` + `default-gateway` + `studio-gateway`, with every HelmRepository/HelmRelease moved to `platform-system` and each chart deployed into its own namespace via `targetNamespace`/`releaseName`. This layer also annotates `envoy-gateway-system` with `${STUDIO_HOSTNAME}/edge-allowed-paths` so `edge-route-guard` admits the studio redirect, and adds the `rateLimit` Redis backend to the control plane config and a `dependsOn` from `envoy-gateway` to `valkey`. The full install for a cluster that serves traffic |
 
 ## Notes
 
@@ -90,3 +96,11 @@ spec:
 - The `:80`→HTTPS redirect is pinned to the Gateway's own `http` listener via `sectionName`, so it does not cover listeners contributed by ListenerSets. A team exposing an HTTP listener needs its own redirect HTTPRoute with a `parentRef` to that ListenerSet.
 - `ListenerSet` is standard channel `gateway.networking.k8s.io/v1` and needs no Envoy Gateway feature flag. The older experimental `XListenerSet` is not used.
 - Gateway API v1.6 still enforces `minItems: 1` on `spec.listeners`, so the `eg` Gateway must keep at least one listener of its own — it cannot delegate everything to ListenerSets.
+
+## Studio listener
+
+`studio-gateway` adds a platform-owned `ListenerSet` named `studio` in `envoy-gateway-system` that serves `${STUDIO_HOSTNAME}` on the `eg` Gateway.
+
+- Routes attach with `parentRefs: [{group: gateway.networking.k8s.io, kind: ListenerSet, name: studio, namespace: envoy-gateway-system}]` and must set `spec.hostnames`.
+- The listeners accept routes from all namespaces. Which namespaces may use the host is decided by `edge-route-guard`: a namespace needs the annotation `${STUDIO_HOSTNAME}/edge-allowed-paths`. Today that is only `product-studio-pdf3`. To add a namespace, annotate it; this package does not change.
+- The Gateway-level ClientTrafficPolicy and BackendTrafficPolicy also apply to these listeners.
