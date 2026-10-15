@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.20.0...oci-altinn-uptime-v1.21.0) (2026-10-15)
+
+
+### Features
+
+* **altinn-uptime:** add am.ui and headscale uptime checks ([#2061](https://github.com/dis-way/gitops-manifests/issues/2061)) ([004c509](https://github.com/dis-way/gitops-manifests/commit/004c50919a2b1d7229754b696c6a2827162b1919))
+
 ## [1.20.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.19.0...oci-altinn-uptime-v1.20.0) (2026-10-07)
 
 
