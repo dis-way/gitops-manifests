@@ -26,6 +26,17 @@ Deploy one Flux `Kustomization` per redirect. `REDIRECT_NAME` names every resour
 | `REDIRECT_PARENT_GATEWAY_NAME` | — | `shared-gateway` only | Existing `Gateway` to attach the `HTTPRoute` to |
 | `REDIRECT_PARENT_GATEWAY_NAMESPACE` | `traefik` | No | Namespace of the existing `Gateway` (`shared-gateway` only) |
 | `REDIRECT_PARENT_GATEWAY_SECTION` | `https` | No | Listener name on the existing `Gateway` (`shared-gateway` only) |
+| `FLUX_CONFIGURATION_NAME` | — | `secrets` only | Flux configuration name; prefixes the Key Vault secret names and names the `<FLUX_CONFIGURATION_NAME>-substitute` Secret |
+
+The `secrets` layer reads `REDIRECT_NAME`, `REDIRECT_FROM_FQDN`, `REDIRECT_FROM_PATH_PREFIX`, `REDIRECT_TO_FQDN` and `REDIRECT_TLS_SECRET_NAME` from Key Vault through `dis-system-store` and writes them to the Secret `<FLUX_CONFIGURATION_NAME>-substitute` in `flux-system`, for `postBuild.substituteFrom` on the `base` Kustomization:
+
+| Key Vault secret | Variable |
+|------------------|----------|
+| `<FLUX_CONFIGURATION_NAME>-redirect-name` | `REDIRECT_NAME` |
+| `<FLUX_CONFIGURATION_NAME>-redirect-from-fqdn` | `REDIRECT_FROM_FQDN` |
+| `<FLUX_CONFIGURATION_NAME>-redirect-from-path-prefix` | `REDIRECT_FROM_PATH_PREFIX` |
+| `<FLUX_CONFIGURATION_NAME>-redirect-to-fqdn` | `REDIRECT_TO_FQDN` |
+| `<FLUX_CONFIGURATION_NAME>-redirect-tls-secret-name` | `REDIRECT_TLS_SECRET_NAME` |
 
 ## Layers
 
@@ -36,6 +47,7 @@ Deploy one Flux `Kustomization` per redirect. `REDIRECT_NAME` names every resour
 | `post-deploy` | cert-manager `Certificate` for `REDIRECT_FROM_FQDN`, written to `REDIRECT_TLS_SECRET_NAME` and used by the `base` `Gateway` |
 | `external-secret` | `ExternalSecret` syncing `REDIRECT_TLS_SECRET_NAME` (type `kubernetes.io/tls`) from an existing secret store — an alternative to `post-deploy` |
 | `reference-grant` | `ReferenceGrant` in `REDIRECT_TLS_SECRET_NAMESPACE` letting the `base` `Gateway` use an existing secret from another namespace |
+| `secrets` | `ExternalSecret` in `flux-system` reading the input variables from `dis-system-store` (`oci/external-secrets-operator` `apps/post-deploy`, `adminservices/post-deploy`). Apply from its own Kustomization that `base` `dependsOn` |
 
 ### Reusing an existing certificate
 
