@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.23.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.22.0...oci-dis-tls-cert-v2.23.0) (2026-10-15)
+
+
+### Features
+
+* add studio platform at22 configuration and push secret ([#2058](https://github.com/dis-way/gitops-manifests/issues/2058)) ([f6b5cd9](https://github.com/dis-way/gitops-manifests/commit/f6b5cd9cbdafd8a2922aa4b3659d013df5ab20fe))
+
 ## [2.22.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.21.0...oci-dis-tls-cert-v2.22.0) (2026-10-14)
 
 
