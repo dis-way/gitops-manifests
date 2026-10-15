@@ -5,3 +5,10 @@ metadata:
 spec:
   policyName: edge-httproute-allowlist
   validationActions: ["Deny"]
+  # Platform-owned namespaces are exempt; RBAC already limits who writes there.
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values: ["envoy-gateway-system"]
