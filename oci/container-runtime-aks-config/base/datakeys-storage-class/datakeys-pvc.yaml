@@ -3,6 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: keys
   namespace: default
+  annotations:
+    # Keep the data-protection keys if the Kustomization is deleted or
+    # recreated (for example by the AKS Flux extension). Pruning leaves the
+    # PVC stuck in Terminating while pods mount it, which blocks new pods.
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   accessModes:
     - ReadWriteMany
