@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.2.0...oci-derper-v1.2.1) (2026-10-15)
+## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.2.0...oci-derper-v1.2.1) (2026-10-16)
 
 
 ### Dependency Updates
