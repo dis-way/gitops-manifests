@@ -47,6 +47,26 @@ This repository contains GitOps manifests for deploying DIS resources with Flux.
 - Register the package in `release-please-config.json` and `.release-please-manifest.json`.
 - Add or update the package entry in `oci/releaseconfig.json` to control ring/environment versions.
 
+## Secrets Layer for Package Variables
+
+Values passed through `postBuild.substitute` end up in plain text in the Kustomization spec and in Terraform state. Packages instead read their input variables from Key Vault through a `secrets` layer. That layer holds an `ExternalSecret` in `flux-system` that writes a Secret, and the Kustomization reads the Secret with `postBuild.substituteFrom`. References: `oci/grafana-public`, `oci/tailscale-subnet-router`, `oci/dis-pgsql`; for reusable packages, `oci/http-redirect`.
+
+**When to apply:** Add a `secrets` layer to every new package that has variables. The first time you change an existing package that still takes its variables only through `substitute`, suggest adding one in that PR and let the reviewer decide. Do not sweep other packages.
+
+### Checklist
+
+1. List every `${VAR}` and `${VAR:=default}` in the package. Map **all** of them, not only the sensitive ones: the goal is that a deploy gets every input from the ExternalSecret and needs no `substitute`. If an optional or possibly empty variable seems awkward to store in Key Vault, ask whether it should be required instead of leaving it out.
+2. Add `oci/<name>/secrets/externalsecret.yaml`:
+   - `metadata.name` and `spec.target.name`: `<name>-vars`, in namespace `flux-system`. `substituteFrom` only reads Secrets from the Kustomization's own namespace, and `dis-system-store` is a namespaced `SecretStore` there.
+   - `secretStoreRef: {kind: SecretStore, name: dis-system-store}`, `refreshInterval: 1h`, `creationPolicy: Owner`.
+   - The `kustomize.toolkit.fluxcd.io/prune: disabled` annotation (see "Flux Prune Protection Annotation").
+   - One `data` entry for each variable, with `secretKey: <VAR_NAME>` and `remoteRef.key: <name>-<var-name-in-kebab-case>`. Key Vault secret names allow only alphanumerics and dashes.
+   - **Reusable packages** (deployed more than once on the same cluster, like `oci/http-redirect`): a fixed `<name>` prefix would make every instance share one Secret and one set of Key Vault secrets. Use `${FLUX_CONFIGURATION_NAME}` instead of `<name>` in the ExternalSecret name, the target Secret name and every `remoteRef.key`. `FLUX_CONFIGURATION_NAME` is the one variable that stays in `postBuild.substitute`, on the `secrets` kustomization: it names the Secret, so it cannot come from it. Document it in the README Variables table as required for `secrets` only.
+3. Add `oci/<name>/secrets/kustomization.yaml` listing only `externalsecret.yaml`. Do not include it from the root kustomization: it is applied by its own Flux Kustomization, which the consuming one `dependsOn`.
+4. Run `kustomize build oci/<name>/secrets` and `kustomize build oci/<name>`.
+5. In the README, add a table mapping each Key Vault secret to its variable, and a `secrets` row under Layers. Say that every Key Vault secret must exist or the ExternalSecret fails to sync.
+6. In the PR, list the follow-up work in the cluster repos: write the Key Vault secrets in Terraform, add a kustomization for `./secrets`, add `dependsOn` and `postBuild.substituteFrom` (`kind: Secret`, `name: <name>-vars`, or the `FLUX_CONFIGURATION_NAME`-prefixed name for reusable packages) to the consuming kustomization, and remove the moved variables from `substitute`.
+
 ## OCI Package README Format
 
 When creating or updating a README for an `oci/<name>/` package, use this format:
