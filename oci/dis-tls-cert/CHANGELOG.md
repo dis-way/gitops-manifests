@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.24.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.23.0...oci-dis-tls-cert-v2.24.0) (2026-10-16)
+
+
+### Features
+
+* **dis-tls-cert:** add studio.platform certificates for at23, yt01, tt02 and prod ([#2106](https://github.com/dis-way/gitops-manifests/issues/2106)) ([1859f1e](https://github.com/dis-way/gitops-manifests/commit/1859f1eec1d63100d5064fecc8e01b3933308de6))
+
 ## [2.23.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.22.0...oci-dis-tls-cert-v2.23.0) (2026-10-15)
 
 
