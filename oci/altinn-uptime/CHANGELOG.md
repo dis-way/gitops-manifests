@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.21.0...oci-altinn-uptime-v1.22.0) (2026-10-16)
+
+
+### Features
+
+* **altinn-uptime:** add dfo tt02 maintenance target ([#2095](https://github.com/dis-way/gitops-manifests/issues/2095)) ([52d061c](https://github.com/dis-way/gitops-manifests/commit/52d061c3191521dd3e3039523801f8a5bebb05de))
+
 ## [1.21.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.20.0...oci-altinn-uptime-v1.21.0) (2026-10-15)
 
 
