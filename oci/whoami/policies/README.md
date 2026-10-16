@@ -2,6 +2,8 @@
 
 Authorization policies for securing the whoami service when using restrictive Linkerd inbound policies.
 
+The `whoami-http` Server, the `any-meshed-pod` MeshTLSAuthentication and the `whoami-http` AuthorizationPolicy (any meshed client, whole Server) are in `base`, so every layer declares port 80 as HTTP/1 and Linkerd skips protocol detection. This layer adds the routes and kubelet authorization a restrictive default inbound policy needs, and must be used together with `base`.
+
 ## Overview
 
 When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` or `deny`), these policies explicitly allow:
@@ -51,13 +53,13 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 | Resource | Type | Purpose |
 |----------|------|---------|
 | `kubelet` | NetworkAuthentication | Allows traffic from pod and VNET CIDRs (for health probes) |
-| `any-meshed-pod` | MeshTLSAuthentication | Allows any pod with valid mesh identity |
+| `any-meshed-pod` | MeshTLSAuthentication | Allows any pod with valid mesh identity (in `base`) |
 
 ### Servers
 
 | Server | Port | Protocol | Purpose |
 |--------|------|----------|---------|
-| `whoami-http` | 80 | HTTP/1 | Main application traffic |
+| `whoami-http` | 80 | HTTP/1 | Main application traffic (in `base`) |
 | `whoami-proxy-admin` | linkerd-admin | HTTP/1 | Proxy health checks |
 
 ### HTTPRoutes
@@ -71,6 +73,7 @@ When using a restrictive `DEFAULT_INBOUND_POLICY` (like `cluster-authenticated` 
 
 | Policy | Target | Authentication | Purpose |
 |--------|--------|----------------|---------|
+| `whoami-http` | Server `whoami-http` | MeshTLSAuthentication | Allow meshed traffic to the whole Server (in `base`) |
 | `whoami-http-mesh` | HTTPRoute `whoami-mesh` | MeshTLSAuthentication | Allow meshed traffic to all paths |
 | `whoami-health-kubelet` | HTTPRoute `whoami-health` | NetworkAuthentication | Allow kubelet health probes to `/health` |
 | `whoami-proxy-admin` | Server `whoami-proxy-admin` | NetworkAuthentication | Allow kubelet proxy admin health probes |

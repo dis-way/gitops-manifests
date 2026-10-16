@@ -13,29 +13,7 @@ spec:
     - cidr: ${AKS_VNET_IPV4_CIDR}
     - cidr: ${AKS_VNET_IPV6_CIDR}
 ---
-# Mesh authentication for any meshed pod
-apiVersion: policy.linkerd.io/v1alpha1
-kind: MeshTLSAuthentication
-metadata:
-  name: any-meshed-pod
-  namespace: whoami
-spec:
-  identities:
-    - "*"
----
-# Server for whoami HTTP port
-apiVersion: policy.linkerd.io/v1beta3
-kind: Server
-metadata:
-  name: whoami-http
-  namespace: whoami
-spec:
-  podSelector:
-    matchLabels:
-      app: whoami
-  port: 80
-  proxyProtocol: HTTP/1
----
+# The whoami-http Server and the any-meshed-pod MeshTLSAuthentication are in base.
 # Server for proxy admin port (health checks)
 apiVersion: policy.linkerd.io/v1beta3
 kind: Server
