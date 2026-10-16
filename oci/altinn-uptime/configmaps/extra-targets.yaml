@@ -20,31 +20,35 @@ data:
         "https://am.ui.at24.altinn.cloud/health",
         "https://am.ui.yt01.altinn.cloud/health",
         "https://altinn.studio",
-        "https://grafana.altinn.cloud/whoami",
         "https://headscale.altinn.cloud/health",
-        "https://info.altinn.no",
-        "https://prod.admin.altinn.cloud/whoami",
-        "https://at22.dis-core.altinn.cloud/whoami",
-        "https://at23.dis-core.altinn.cloud/whoami",
-        "https://tt02.dis-core.altinn.cloud/whoami",
-        "https://prod.dis-core.altinn.cloud/whoami"
+        "https://info.altinn.no"
       ],
       "ipv6": [
         "https://altinncdn.no/orgs/altinn-orgs.json",
-        "https://grafana.altinn.cloud/whoami",
         "https://headscale.altinn.cloud/health",
-        "https://info.altinn.no",
-        "https://prod.admin.altinn.cloud/whoami",
-        "https://at22.dis-core.altinn.cloud/whoami",
-        "https://at23.dis-core.altinn.cloud/whoami",
-        "https://tt02.dis-core.altinn.cloud/whoami",
-        "https://prod.dis-core.altinn.cloud/whoami"
+        "https://info.altinn.no"
       ],
       "kuberneteswrapper_ipv4": [
         "https://platform.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://platform.altinn.no/kuberneteswrapper/api/v1/deployments"
       ],
       "kuberneteswrapper_ipv6": [],
+      "whoami_ipv4": [
+        "https://grafana.altinn.cloud/whoami",
+        "https://prod.admin.altinn.cloud/whoami",
+        "https://at22.dis-core.altinn.cloud/whoami",
+        "https://at23.dis-core.altinn.cloud/whoami",
+        "https://tt02.dis-core.altinn.cloud/whoami",
+        "https://prod.dis-core.altinn.cloud/whoami"
+      ],
+      "whoami_ipv6": [
+        "https://grafana.altinn.cloud/whoami",
+        "https://prod.admin.altinn.cloud/whoami",
+        "https://at22.dis-core.altinn.cloud/whoami",
+        "https://at23.dis-core.altinn.cloud/whoami",
+        "https://tt02.dis-core.altinn.cloud/whoami",
+        "https://prod.dis-core.altinn.cloud/whoami"
+      ],
       "tls_ipv4": [
         "https://altinn.no",
         "https://grafana.altinn.cloud"
@@ -71,13 +75,14 @@ data:
       "metadata": {
         "description": "Extra targets for Altinn monitoring that are not auto-generated from organizations",
         "maintained_by": "Altinn Platform Team",
-        "last_updated": "2026-10-15",
-        "version": "1.4",
+        "last_updated": "2026-10-16",
+        "version": "1.5",
         "notes": [
           "These targets are manually maintained and will be preserved during automatic updates",
           "Organization targets are auto-generated and should not be added here",
           "IPv4 and IPv6 arrays contain targets for regular blackbox jobs",
           "kuberneteswrapper_ipv4 and kuberneteswrapper_ipv6 arrays contain targets for kuberneteswrapper jobs",
+          "whoami_ipv4 and whoami_ipv6 arrays contain traefik/whoami endpoints that must return 2xx with a body from a whoami pod",
           "tls_ipv4 and tls_ipv6 arrays contain targets that require TLS verification, but not 2xx",
           "health_check_ipv4 and health_check_ipv6 arrays contain targets that must return 200 with a JSON body reporting status Healthy",
           "Targets are monitored using blackbox HTTP probes"
