@@ -1103,7 +1103,7 @@ spec:
   labelValueLengthLimit: 1023
   endpoints:
   - honorTimestamps: true
-    interval: 15s
+    interval: 60s
     scrapeTimeout: 15s
     metricRelabelings:
     - action: replace
@@ -1175,7 +1175,7 @@ spec:
   labelValueLengthLimit: 1023
   endpoints:
   - honorTimestamps: true
-    interval: 15s
+    interval: 60s
     scrapeTimeout: 15s
     metricRelabelings:
     - action: replace
