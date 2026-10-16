@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.23.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.22.0...oci-altinn-uptime-v1.23.0) (2026-10-16)
+
+
+### Features
+
+* **altinn-uptime:** probe whoami endpoints with dedicated blackbox modules ([#2113](https://github.com/dis-way/gitops-manifests/issues/2113)) ([50c7f3d](https://github.com/dis-way/gitops-manifests/commit/50c7f3dbff32d4ae61bf79443d9b8043668a6f1b))
+
+
+### Bug Fixes
+
+* **altinn-uptime:** probe health-check endpoints every 60s instead of 15s ([#2102](https://github.com/dis-way/gitops-manifests/issues/2102)) ([046d78e](https://github.com/dis-way/gitops-manifests/commit/046d78ef6a53857b0580d4ba1571e0f54b1af2d1))
+* **altinn-uptime:** re-apply all ServiceMonitors on every sync ([#2114](https://github.com/dis-way/gitops-manifests/issues/2114)) ([e2609d5](https://github.com/dis-way/gitops-manifests/commit/e2609d5d654d71d851719e1a1bc8200838f5d762))
+
 ## [1.22.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.21.0...oci-altinn-uptime-v1.22.0) (2026-10-16)
 
 
