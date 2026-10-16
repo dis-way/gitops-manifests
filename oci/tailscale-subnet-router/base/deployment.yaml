@@ -43,7 +43,7 @@ spec:
             - name: TS_EXTRA_ARGS
               value: "--login-server=https://headscale.altinn.cloud"
             - name: TS_ROUTES
-              value: "${TS_ADVERTISE_ROUTES:=}"
+              value: "${TS_ADVERTISE_ROUTES}"
             - name: TS_USERSPACE
               value: "true"
             - name: TS_KUBE_SECRET
