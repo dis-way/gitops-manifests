@@ -24,7 +24,7 @@
   "oci/grafana-public": "1.1.0",
   "oci/headplane": "1.6.0",
   "oci/headscale": "2.6.0",
-  "oci/http-redirect": "1.0.0",
+  "oci/http-redirect": "1.1.0",
   "oci/kro": "0.2.0",
   "oci/kube-state-metrics": "1.2.7",
   "oci/kyverno-policies": "1.4.5",
