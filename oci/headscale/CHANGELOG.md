@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.6.0...oci-headscale-v2.6.1) (2026-10-17)
+
+
+### Dependency Updates
+
+* update juanfont/headscale docker tag to v0.29.5 ([#2046](https://github.com/dis-way/gitops-manifests/issues/2046)) ([c2fe330](https://github.com/dis-way/gitops-manifests/commit/c2fe330a891026ab36e97f3168331e603243e9f8))
+
 ## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.5.0...oci-headscale-v2.6.0) (2026-10-06)
 
 
