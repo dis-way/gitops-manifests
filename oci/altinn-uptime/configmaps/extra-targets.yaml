@@ -49,6 +49,16 @@ data:
         "https://tt02.dis-core.altinn.cloud/whoami",
         "https://prod.dis-core.altinn.cloud/whoami"
       ],
+      "derp_ipv4": [
+        "https://headscale.altinn.cloud/derp",
+        "https://derp-altinn-900.altinn.cloud/derp",
+        "https://derp-altinn-901.apps.altinn.no/derp"
+      ],
+      "derp_ipv6": [
+        "https://headscale.altinn.cloud/derp",
+        "https://derp-altinn-900.altinn.cloud/derp",
+        "https://derp-altinn-901.apps.altinn.no/derp"
+      ],
       "tls_ipv4": [
         "https://altinn.no",
         "https://grafana.altinn.cloud"
@@ -75,14 +85,15 @@ data:
       "metadata": {
         "description": "Extra targets for Altinn monitoring that are not auto-generated from organizations",
         "maintained_by": "Altinn Platform Team",
-        "last_updated": "2026-10-16",
-        "version": "1.5",
+        "last_updated": "2026-10-17",
+        "version": "1.6",
         "notes": [
           "These targets are manually maintained and will be preserved during automatic updates",
           "Organization targets are auto-generated and should not be added here",
           "IPv4 and IPv6 arrays contain targets for regular blackbox jobs",
           "kuberneteswrapper_ipv4 and kuberneteswrapper_ipv6 arrays contain targets for kuberneteswrapper jobs",
           "whoami_ipv4 and whoami_ipv6 arrays contain traefik/whoami endpoints that must return 2xx with a body from a whoami pod",
+          "derp_ipv4 and derp_ipv6 arrays contain DERP relay /derp endpoints (the embedded relay in headscale and the standalone derper regions in oci/headscale derp-map-configmap.yaml) that must answer 426 DERP requires connection upgrade",
           "tls_ipv4 and tls_ipv6 arrays contain targets that require TLS verification, but not 2xx",
           "health_check_ipv4 and health_check_ipv6 arrays contain targets that must return 200 with a JSON body reporting status Healthy",
           "Targets are monitored using blackbox HTTP probes"
