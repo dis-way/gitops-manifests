@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.2...oci-blackbox-exporter-v0.11.0) (2026-10-17)
+
+
+### Features
+
+* **altinn-uptime:** probe whoami endpoints with dedicated blackbox modules ([#2113](https://github.com/dis-way/gitops-manifests/issues/2113)) ([50c7f3d](https://github.com/dis-way/gitops-manifests/commit/50c7f3dbff32d4ae61bf79443d9b8043668a6f1b))
+
 ## [0.10.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.1...oci-blackbox-exporter-v0.10.2) (2026-10-13)
 
 
