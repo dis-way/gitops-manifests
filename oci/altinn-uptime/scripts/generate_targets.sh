@@ -1136,7 +1136,8 @@ EOF
             fi
         done
 
-        # DERP IPv4 extra targets
+        # DERP IPv4 extra targets. Probed every 4m: a 5m interval would equal the Prometheus
+        # lookback window, so instant queries in dashboards and alerts would sometimes find no sample.
         DERP_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.derp_ipv4[]?' 2>/dev/null)
         for target in $DERP_IPV4_TARGETS; do
             if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
@@ -1170,7 +1171,7 @@ spec:
   labelValueLengthLimit: 1023
   endpoints:
   - honorTimestamps: true
-    interval: 60s
+    interval: 240s
     scrapeTimeout: 15s
     metricRelabelings:
     - action: replace
@@ -1208,7 +1209,7 @@ EOF
             fi
         done
 
-        # DERP IPv6 extra targets
+        # DERP IPv6 extra targets. Probed every 4m, like IPv4.
         DERP_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.derp_ipv6[]?' 2>/dev/null)
         for target in $DERP_IPV6_TARGETS; do
             if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
@@ -1242,7 +1243,7 @@ spec:
   labelValueLengthLimit: 1023
   endpoints:
   - honorTimestamps: true
-    interval: 60s
+    interval: 240s
     scrapeTimeout: 15s
     metricRelabelings:
     - action: replace
