@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.2...oci-tailscale-subnet-router-v2.0.0) (2026-10-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tailscale-subnet-router:** TS_ADVERTISE_ROUTES is now required and has no default. A subnet router without advertised routes has no purpose.
+
+### Features
+
+* **tailscale-subnet-router:** add secrets layer for input variables ([#2100](https://github.com/dis-way/gitops-manifests/issues/2100)) ([3a56643](https://github.com/dis-way/gitops-manifests/commit/3a56643746577062972a2db01e228bdbc338e046))
+
 ## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.1...oci-tailscale-subnet-router-v1.3.2) (2026-10-14)
 
 
