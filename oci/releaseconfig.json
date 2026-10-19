@@ -113,10 +113,10 @@
   },
   "envoy-gateway": {
     "at_ring1": "3.1.0",
-    "at_ring2": "3.0.0",
-    "tt_ring1": "3.0.0",
-    "tt_ring2": "3.0.0",
-    "prod_ring1": "3.0.0",
+    "at_ring2": "3.1.0",
+    "tt_ring1": "3.1.0",
+    "tt_ring2": "3.1.0",
+    "prod_ring1": "3.1.0",
     "prod_ring2": "3.0.0"
   },
   "envoy-gateway-crds": {
