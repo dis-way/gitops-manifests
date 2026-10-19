@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.0.0...oci-envoy-gateway-v3.1.0) (2026-10-19)
+
+
+### Features
+
+* **envoy-gateway:** enable hybrid post-quantum key exchange (X25519MLKEM768) ([#2103](https://github.com/dis-way/gitops-manifests/issues/2103)) ([6c94df1](https://github.com/dis-way/gitops-manifests/commit/6c94df1ccc319aa5d51715484586aca3e5a2d092))
+
 ## [3.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.7.0...oci-envoy-gateway-v3.0.0) (2026-10-15)
 
 
