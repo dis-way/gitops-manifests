@@ -30,6 +30,17 @@
     },
     {
       "customType": "regex",
+      "description": "Container images on a floating tag pinned by digest, such as chainguard/kubectl:latest-dev, including those pulled through the altinncr.azurecr.io mirror",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>[a-z][a-z-]*)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "description": "Grafana plugins installed with plugins.preinstall_sync (<id>@<version>), tracked through their GitHub releases. Release tags carry a v prefix the pinned version does not, so it is stripped here rather than in the image manager above, where v-prefixed tags must be kept",
       "managerFilePatterns": [
         "/^oci\\/.+\\.ya?ml$/"
