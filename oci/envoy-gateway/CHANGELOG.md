@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.1.0...oci-envoy-gateway-v3.2.0) (2026-10-19)
+
+
+### Features
+
+* **envoy-gateway:** raise requestReceivedTimeout to 300s for large uploads ([#2133](https://github.com/dis-way/gitops-manifests/issues/2133)) ([d6ce8e9](https://github.com/dis-way/gitops-manifests/commit/d6ce8e94703768b025ae6a407aeda7f64c455c42))
+
 ## [3.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.0.0...oci-envoy-gateway-v3.1.0) (2026-10-19)
 
 
