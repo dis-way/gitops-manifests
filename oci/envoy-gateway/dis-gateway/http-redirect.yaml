@@ -1,0 +1,23 @@
+# :80 -> HTTPS for the dis listener. The Gateway's own redirect is pinned to
+# its http listener and does not cover ListenerSets. See
+# default-gateway/http-redirect.yaml for why 308 and no port.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: dis-http-to-https
+  namespace: envoy-gateway-system
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: ListenerSet
+      name: dis
+      # Without sectionName the route also attaches to :443 and loops.
+      sectionName: http
+  hostnames:
+    - '*.${ENVIRONMENT}.dis.altinn.cloud'
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 308
