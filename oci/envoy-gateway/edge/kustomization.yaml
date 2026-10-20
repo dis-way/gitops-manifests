@@ -5,6 +5,7 @@ resources:
   - ../base
   - ../default-gateway
   - ../studio-gateway
+  - ../dis-gateway
 patches:
   # Lets edge-route-guard admit studio-http-to-https in this namespace.
   - target:
@@ -14,7 +15,7 @@ patches:
       - op: add
         path: /metadata/annotations
         value:
-          "${STUDIO_HOSTNAME}/edge-allowed-paths": "/"
+          "studio.platform.${ENVIRONMENT}.altinn.cloud/edge-allowed-paths": "/"
   - target:
       kind: HelmRepository
       name: envoy-gateway

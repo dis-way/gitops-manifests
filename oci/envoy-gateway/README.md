@@ -5,9 +5,10 @@ Deploys Envoy Gateway, a Kubernetes Gateway API implementation, via a Flux HelmR
 ## Variables
 
 Most variables are consumed by the `default-gateway` layer; the `VALKEY_*` pair is consumed by
-`valkey` and the `STUDIO_*` variables by `studio-gateway`. `base` needs none. `edge` includes all
-three, so every edge cluster must set the `STUDIO_*` variables. An unset `STUDIO_HOSTNAME` becomes
-an empty listener hostname, which matches every host.
+`valkey` and `ENVIRONMENT` by `studio-gateway` and `dis-gateway`. `base` needs none. `edge` includes
+all of them, so every edge cluster must set `ENVIRONMENT`. Both listener hostnames and their Key
+Vault secret names are derived from it, so the certificates in `oci/dis-tls-cert` must exist for
+that environment.
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
@@ -20,9 +21,7 @@ an empty listener hostname, which matches every host.
 | `DIS_TLS_READER_TENANT_ID` | - | Yes | Tenant ID for that workload identity |
 | `DIS_TLS_CRT_SECRET_NAME` | - | Yes | Key Vault secret name holding the certificate, synced to `tls.crt` |
 | `DIS_TLS_KEY_SECRET_NAME` | - | Yes | Key Vault secret name holding the private key, synced to `tls.key` |
-| `STUDIO_HOSTNAME` | - | Yes | Hostname for the `studio` ListenerSet's HTTPS/HTTP listeners |
-| `STUDIO_TLS_CRT_SECRET_NAME` | - | Yes | Key Vault secret name holding the studio certificate, synced to `tls.crt` |
-| `STUDIO_TLS_KEY_SECRET_NAME` | - | Yes | Key Vault secret name holding the studio private key, synced to `tls.key` |
+| `ENVIRONMENT` | - | Yes | Environment name (`at22`, `at23`, `yt01`, `tt02`, `prod`). Sets the hostnames `studio.platform.<env>.altinn.cloud` and `*.<env>.dis.altinn.cloud` and their Key Vault secrets `studio-platform-<env>-altinn-cloud-{crt,key}` and `star-<env>-dis-altinn-cloud-{crt,key}` |
 | `ENVOY_CPU_REQUEST` | `1` | No | CPU request per Envoy data plane pod. No CPU limit is set |
 | `ENVOY_MEMORY_REQUEST` | `512Mi` | No | Memory request per Envoy data plane pod. The memory limit is set to the same value |
 | `VALKEY_CPU_REQUEST` | `1` | No | CPU request for the Valkey pod backing global rate limiting. No CPU limit is set |
@@ -35,8 +34,9 @@ an empty listener hostname, which matches every host.
 | `base` | Control plane only: Namespace (`envoy-gateway-system`), OCI HelmRepository, and HelmRelease installing the `gateway-helm` chart. All images (control plane, certgen, shutdown manager, rate limit, and the Envoy data plane) are mirrored through `altinncr.azurecr.io` via `global.imageRegistry` |
 | `default-gateway` | Data plane: the `eg` EnvoyProxy, the `eg` GatewayClass and Gateway, the External Secrets wiring that syncs the `tls-cert` Secret from Azure Key Vault, a ClientTrafficPolicy and BackendTrafficPolicy covering the whole Gateway, and an HTTPRoute redirecting `:80` to HTTPS. Depends on the namespace from `base` |
 | `valkey` | The Valkey instance backing **global** rate limiting: Namespace (`envoy-valkey`), a NetworkPolicy restricting access to the ratelimit pods, HelmRepository, and HelmRelease installing the `valkey` chart, mirrored through `altinncr.azurecr.io` |
-| `studio-gateway` | The `studio` ListenerSet on the `eg` Gateway for `${STUDIO_HOSTNAME}`: HTTPS and HTTP listeners, an ExternalSecret syncing `studio-tls-cert` through the `default-gateway` SecretStore, and an HTTPRoute redirecting `:80` to HTTPS. Depends on `default-gateway` |
-| `edge` | `valkey` + `base` + `default-gateway` + `studio-gateway`, with every HelmRepository/HelmRelease moved to `platform-system` and each chart deployed into its own namespace via `targetNamespace`/`releaseName`. This layer also annotates `envoy-gateway-system` with `${STUDIO_HOSTNAME}/edge-allowed-paths` so `edge-route-guard` admits the studio redirect, and adds the `rateLimit` Redis backend to the control plane config and a `dependsOn` from `envoy-gateway` to `valkey`. The full install for a cluster that serves traffic |
+| `studio-gateway` | The `studio` ListenerSet on the `eg` Gateway for `studio.platform.${ENVIRONMENT}.altinn.cloud`: HTTPS and HTTP listeners, an ExternalSecret syncing `studio-tls-cert` through the `default-gateway` SecretStore, and an HTTPRoute redirecting `:80` to HTTPS. Depends on `default-gateway` |
+| `dis-gateway` | The `dis` ListenerSet on the `eg` Gateway for `*.${ENVIRONMENT}.dis.altinn.cloud`: HTTPS and HTTP listeners, an ExternalSecret syncing `dis-wildcard-tls-cert` through the `default-gateway` SecretStore, and an HTTPRoute redirecting `:80` to HTTPS. Depends on `default-gateway` |
+| `edge` | `valkey` + `base` + `default-gateway` + `studio-gateway` + `dis-gateway`, with every HelmRepository/HelmRelease moved to `platform-system` and each chart deployed into its own namespace via `targetNamespace`/`releaseName`. This layer also annotates `envoy-gateway-system` with `studio.platform.${ENVIRONMENT}.altinn.cloud/edge-allowed-paths` so `edge-route-guard` admits the studio redirect, and adds the `rateLimit` Redis backend to the control plane config and a `dependsOn` from `envoy-gateway` to `valkey`. The full install for a cluster that serves traffic |
 
 ## Notes
 
@@ -99,8 +99,17 @@ spec:
 
 ## Studio listener
 
-`studio-gateway` adds a platform-owned `ListenerSet` named `studio` in `envoy-gateway-system` that serves `${STUDIO_HOSTNAME}` on the `eg` Gateway.
+`studio-gateway` adds a platform-owned `ListenerSet` named `studio` in `envoy-gateway-system` that serves `studio.platform.${ENVIRONMENT}.altinn.cloud` on the `eg` Gateway.
 
 - Routes attach with `parentRefs: [{group: gateway.networking.k8s.io, kind: ListenerSet, name: studio, namespace: envoy-gateway-system}]` and must set `spec.hostnames`.
-- The listeners accept routes from all namespaces. Which namespaces may use the host is decided by `edge-route-guard`: a namespace needs the annotation `${STUDIO_HOSTNAME}/edge-allowed-paths`. Today that is only `product-studio-pdf3`. To add a namespace, annotate it; this package does not change.
+- The listeners accept routes from all namespaces. Which namespaces may use the host is decided by `edge-route-guard`: a namespace needs the annotation `studio.platform.${ENVIRONMENT}.altinn.cloud/edge-allowed-paths`. Today that is only `product-studio-pdf3`. To add a namespace, annotate it; this package does not change.
+- The Gateway-level ClientTrafficPolicy and BackendTrafficPolicy also apply to these listeners.
+
+## Dis listener
+
+`dis-gateway` adds a platform-owned `ListenerSet` named `dis` in `envoy-gateway-system` that serves `*.${ENVIRONMENT}.dis.altinn.cloud` on the `eg` Gateway, with the wildcard certificate from `oci/dis-tls-cert`.
+
+- Routes attach with `parentRefs: [{group: gateway.networking.k8s.io, kind: ListenerSet, name: dis, namespace: envoy-gateway-system}]` and must set a concrete hostname, e.g. `app.at23.dis.altinn.cloud`. The wildcard matches exactly one label, so `a.b.at23.dis.altinn.cloud` is not served.
+- A namespace needs the `edge-route-guard` annotation `<hostname>/edge-allowed-paths` for each hostname it uses. A wildcard cannot be granted: `*` is not valid in an annotation key.
+- The `:80` redirect covers the whole wildcard. It lives in `envoy-gateway-system`, which `edge-route-guard` exempts, so it needs no annotation.
 - The Gateway-level ClientTrafficPolicy and BackendTrafficPolicy also apply to these listeners.

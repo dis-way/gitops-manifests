@@ -15,7 +15,7 @@ spec:
       sectionName: http
   # edge-route-guard rejects routes without hostnames.
   hostnames:
-    - '${STUDIO_HOSTNAME}'
+    - 'studio.platform.${ENVIRONMENT}.altinn.cloud'
   rules:
     - filters:
         - type: RequestRedirect
