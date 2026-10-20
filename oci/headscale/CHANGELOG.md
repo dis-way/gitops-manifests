@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.6.1...oci-headscale-v2.7.0) (2026-10-20)
+
+
+### Features
+
+* **headscale:** add acl-sync layer that applies the ACL policy from Git ([#2128](https://github.com/dis-way/gitops-manifests/issues/2128)) ([dae3abd](https://github.com/dis-way/gitops-manifests/commit/dae3abd039cb11bf6cb61e67aededf84b870be3d))
+
 ## [2.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.6.0...oci-headscale-v2.6.1) (2026-10-17)
 
 
