@@ -22,6 +22,26 @@ Self-hosted Tailscale control server providing WireGuard-based VPN mesh networki
 | `.` | Core resources: namespace, config, storage, deployment, services, gateway, and HTTPRoute |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
 | `policies` | Included by the root kustomization. Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headplane, STUN from the internet, Entra ID, the Tailscale DERP map and metrics scraping (ama-metrics, otel collector). Blocks the gRPC admin API (50443) entirely |
+| `acl-sync` | Optional. Applies the ACL policy from Git, see [ACL policy](#acl-policy). Requires External Secrets Operator with the `dis-system-store` SecretStore in `flux-system` (`oci/external-secrets-operator` `adminservices/post-deploy`) |
+
+## ACL policy
+
+The ACL policy (`policy.mode: database`) comes from Git: `tf/adminservices-prod/headscale-access` in [dis-way/adminservices](https://github.com/dis-way/adminservices) renders it into the Key Vault secret `headscale-acl` in the dis-system Key Vault ([RFC 0020](https://github.com/Altinn/altinn-platform/pull/4233)).
+
+| Resource | Namespace | Description |
+|----------|-----------|-------------|
+| ExternalSecret `headscale-acl` | `flux-system` | Syncs the Key Vault secret to the Secret `headscale-acl` every 5 minutes |
+| CronJob `headscale-acl-apply` | `headscale` | Every 5 minutes: compares the Secret with `headscale policy get`. If they differ, logs the diff, runs `headscale policy check` against the live users and nodes, then `headscale policy set` |
+
+The CronJob runs the `headscale` CLI in the Headscale pod with `kubectl exec` over the unix socket, so it needs no API key and the gRPC API stays on loopback. Its Role allows `pods/exec` in `headscale` and `get` on only the `headscale-acl` Secret in `flux-system`. Its only egress is DNS and the API server.
+
+Git wins: an edit made in Headplane or with the CLI lasts until the next run, at most 5 minutes, and the job log shows what was overwritten. An invalid policy fails the run and leaves the live policy unchanged.
+
+```sh
+# Run now, for example after an emergency edit of the Key Vault secret
+kubectl annotate externalsecret headscale-acl -n flux-system force-sync=$(date +%s) --overwrite
+kubectl create job -n headscale --from=cronjob/headscale-acl-apply headscale-acl-apply-manual
+```
 
 ## Extra DNS Records
 
@@ -94,6 +114,21 @@ metadata:
   name: headscale-post-deploy
 spec:
   path: ./post-deploy
+  wait: false
+  dependsOn:
+    - name: headscale
+```
+
+To apply the ACL policy from Git, add a third Kustomization for `acl-sync/`. It sets `wait: false` so a failing ExternalSecret does not block the others.
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: headscale-acl-sync
+spec:
+  path: ./acl-sync
+  prune: true
   wait: false
   dependsOn:
     - name: headscale

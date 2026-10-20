@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: headscale-acl-apply
+  namespace: headscale
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 240
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: headscale-acl-apply
+          annotations:
+            # Talks only to the API server.
+            linkerd.io/inject: disabled
+            cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        spec:
+          serviceAccountName: headscale-acl-apply
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: apply
+              # renovate: datasource=docker depName=chainguard/kubectl
+              image: altinncr.azurecr.io/docker.io/chainguard/kubectl:latest-dev@sha256:63e7072e580dad3a8b9740e76594bb19156f81173f525d6b3765db58eb629704
+              command: ["/bin/sh", "/scripts/apply-acl.sh"]
+              env:
+                - name: HOME
+                  value: /tmp
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 65532
+                runAsGroup: 65532
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
+                limits:
+                  memory: 128Mi
+              volumeMounts:
+                - name: script
+                  mountPath: /scripts
+                  readOnly: true
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: script
+              configMap:
+                name: headscale-acl-apply
+            - name: tmp
+              emptyDir: {}
