@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.2.0...oci-envoy-gateway-v4.0.0) (2026-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **envoy-gateway:** STUDIO_HOSTNAME, STUDIO_TLS_CRT_SECRET_NAME and STUDIO_TLS_KEY_SECRET_NAME are replaced by ENVIRONMENT, which now sets both listener hostnames and their Key Vault secret names.
+
+### Features
+
+* **envoy-gateway:** add dis wildcard ListenerSet and derive hostnames from ENVIRONMENT ([#2142](https://github.com/dis-way/gitops-manifests/issues/2142)) ([6ca5f4a](https://github.com/dis-way/gitops-manifests/commit/6ca5f4a43c33aee52bb967d331e538bce18498c0))
+
 ## [3.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.1.0...oci-envoy-gateway-v3.2.0) (2026-10-19)
 
 
