@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.25.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.24.0...oci-dis-tls-cert-v2.25.0) (2026-10-20)
+
+
+### Features
+
+* **dis-tls-cert:** add *.&lt;env&gt;.dis.altinn.cloud wildcard certificates ([#2143](https://github.com/dis-way/gitops-manifests/issues/2143)) ([8f78ab9](https://github.com/dis-way/gitops-manifests/commit/8f78ab90fd6dbeb27b5a34092721e82ce631cf68))
+
 ## [2.24.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.23.0...oci-dis-tls-cert-v2.24.0) (2026-10-16)
 
 
