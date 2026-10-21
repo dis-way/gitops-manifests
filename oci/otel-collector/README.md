@@ -64,7 +64,7 @@ flowchart LR
             s1["default routes → 1%"]
             s2["dis.otel/sampling=all → 100%"]
             s3["/health · /metrics · /kuberneteswrapper/* → 0.1%"]
-            s4["ERROR status → 100%"]
+            s4["ERROR status → 100%\nenvoy 4xx → 10%"]
             s5["latency ≥ 1s → 100%"]
         end
 
@@ -159,7 +159,7 @@ metadata:
     dis.otel/sampling: all   # sample 100% of non-health/metrics traces
 ```
 
-Without the label the default rate is **1%**. Errors and slow requests (≥ 1 s) are always sampled regardless of the label.
+Without the label the default rate is **1%**. Errors and slow requests (≥ 1 s) are always sampled regardless of the label. Envoy 4xx do not count as errors: traces with one are kept at 10%.
 
 ## How It Works
 
@@ -182,7 +182,7 @@ The `monitoring` namespace has `linkerd.io/inject: enabled`, so collector pods a
 
 | Pipeline | Key processors | Exporter |
 |----------|---------------|----------|
-| Traces | `transform/servicenamespace` (drop operator-set `service.namespace`), `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
+| Traces | `transform/servicenamespace` (drop operator-set `service.namespace`), `k8sattributes`, `transform/envoy` (legacy Envoy tags → OTel attrs), `transform/azuremonitor` (OTel → legacy attrs), `transform/envoy-dedupe` (drop the legacy duplicates again on Envoy spans), `transform/dis` (sampling hint), `tail_sampling` | `azuremonitor` |
 | Logs input | `memory_limiter`, `transform/servicenamespace` before routing to either log pipeline | `routing/logs` connector |
 | Logs | `filter/logs` (drop below WARN), `transform/empty-body` (message from `error` or a placeholder, App Insights drops empty ones), `k8sattributes`, `transform/drop` (strip noisy attrs) | `azuremonitor` |
 | Envoy access logs | Routed by the `routing/logs` connector on `dis.otel.logtype=envoy-access`. `transform/envoy-accesslog` (severity, `trace_id` attribute → record TraceID so App Insights sets `operation_Id`), `probabilistic_sampler/logs` (4xx kept at 10%), `k8sattributes` | `azuremonitor` |
@@ -229,7 +229,8 @@ Workloads that opt into the operator's SDK injection get `service.namespace` set
 | `default` | Normal routes, no `dis.otel/sampling: all` label | 1% |
 | `sample-all` | Deployment has label `dis.otel/sampling: all` | 100% |
 | `heavy-sampling` | Routes matching `/metrics`, `/health`, `/kuberneteswrapper/*` | 0.1% |
-| `always-sample-errors` | Span status is ERROR | 100% |
+| `always-sample-errors` | Span status is ERROR, except Envoy spans with a 4xx | 100% |
+| `sample-envoy-4xx` | Envoy span with a 4xx (Envoy marks them ERROR) | 10% |
 | `always-sample-slow-requests` | Span duration ≥ 1000 ms | 100% |
 
 Spans are held for `decision_wait` (10 s) and a decision is made for the whole trace. At most `num_traces` (50 000) traces are held at once. When the buffer is full, the oldest trace is dropped before any policy runs, errors included, so the buffer must exceed new traces per second × 10 s. Memory limit and `GOMEMLIMIT` are sized for it. Sampled decisions are cached, so late spans of a sampled trace are kept. Unsampled decisions are not cached: a late span, such as the root of a request slower than 10 s, is judged on its own by the error and latency policies.

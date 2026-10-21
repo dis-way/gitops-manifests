@@ -433,6 +433,32 @@ spec:
             - set(attributes["http.host"], resource.attributes["service.name"]) where resource.attributes["linkerd.io/proxy-deployment"] != nil
             - set(attributes["http.target"], resource.attributes["service.name"]) where resource.attributes["linkerd.io/proxy-deployment"] != nil
             - set(attributes["server.address"], resource.attributes["service.name"]) where resource.attributes["linkerd.io/proxy-deployment"] != nil
+      # Envoy spans end up with every HTTP attribute twice: envoy's own
+      # OpenTracing tags, the stable names transform/envoy copies them to, and
+      # the legacy names transform/azuremonitor derives back. The exporter
+      # (v0.161) builds Url, Name, ResultCode, Success and ClientIP from the
+      # stable names only and copies the rest into custom dimensions, so the
+      # legacy copies are just bytes. Runs after transform/azuremonitor.
+      transform/envoy-dedupe:
+        error_mode: ignore
+        trace_statements:
+          - context: span
+            conditions:
+              - attributes["component"] == "proxy"
+            statements:
+              - delete_key(attributes, "http.url")
+              - delete_key(attributes, "http.target")
+              - delete_key(attributes, "http.host")
+              - delete_key(attributes, "http.client_ip")
+              - delete_key(attributes, "http.method")
+              - delete_key(attributes, "http.status_code")
+              - delete_key(attributes, "http.scheme")
+              # Copied to user_agent.original by transform/envoy.
+              - delete_key(attributes, "user_agent")
+              # Envoy's node id is the pod name, already in k8s.pod.name.
+              - delete_key(attributes, "node_id")
+              - delete_key(attributes, "k8s.pod.uid")
+              - delete_key(resource.attributes, "k8s.pod.uid")
       # map metric attributes and remove a set of attributes
       transform/metrics:
         metric_statements:
@@ -520,15 +546,38 @@ spec:
                   type: probabilistic
                   probabilistic:
                     sampling_percentage: 0.1
+          # Envoy sets ERROR on every 4xx span (ingress and egress), so a single
+          # 400/404 would keep a whole fan-out trace of hundreds of spans. Envoy
+          # 4xx are sampled by sample-envoy-4xx instead; every other ERROR span,
+          # including Envoy 5xx, still keeps its trace.
           - name: always-sample-errors
+            type: ottl_condition
+            ottl_condition:
+              error_mode: ignore
+              span:
+                - >-
+                  status.code == STATUS_CODE_ERROR and not (attributes["component"] == "proxy"
+                  and attributes["http.response.status_code"] >= 400
+                  and attributes["http.response.status_code"] < 500)
+          # 10% of traces with an Envoy 4xx, the same rate the access logs keep.
+          # http.response.status_code is an int, set by transform/envoy.
+          - name: sample-envoy-4xx
             type: and
             and:
               and_sub_policy:
-                - name: trace-status-policy
-                  type: status_code
-                  status_code:
-                    status_codes:
-                      - ERROR
+                - name: envoy-4xx-policy
+                  type: ottl_condition
+                  ottl_condition:
+                    error_mode: ignore
+                    span:
+                      - >-
+                        attributes["component"] == "proxy"
+                        and attributes["http.response.status_code"] >= 400
+                        and attributes["http.response.status_code"] < 500
+                - name: probabilistic-policy
+                  type: probabilistic
+                  probabilistic:
+                    sampling_percentage: 10
           - name: always-sample-slow-requests
             type: latency
             latency:
@@ -553,8 +602,9 @@ spec:
               - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil and attributes["trace_id"] != "-" and attributes["trace_id"] != ""
               # Envoy's JSON access logs have no body, and Application Insights
               # drops traces without a message. Build a one-line summary.
-              - set(body, Concat([attributes["response_code"], attributes["response_flags"], attributes["method"], attributes["authority"], attributes["path"]], " ")) where attributes["method"] != nil
-              - set(body, Concat(["connection failed", attributes["downstream_transport_failure_reason"], attributes["connection_termination_details"]], " ")) where attributes["method"] == nil
+              # Listener records have no request; Envoy sends method as "-".
+              - set(body, Concat([attributes["response_code"], attributes["response_flags"], attributes["method"], attributes["authority"], attributes["path"]], " ")) where attributes["method"] != nil and attributes["method"] != "-"
+              - set(body, Concat(["connection failed", attributes["downstream_transport_failure_reason"], attributes["connection_termination_details"]], " ")) where attributes["method"] == nil or attributes["method"] == "-"
       # Only records carrying sampling.priority are sampled; everything else
       # is kept. fail_closed: false keeps records without a trace ID.
       probabilistic_sampler/logs:
@@ -626,7 +676,7 @@ spec:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/dis, tail_sampling, batch]
+          processors: [memory_limiter, transform/servicenamespace, resourcedetection/aks, k8sattributes, transform/envoy, transform/azuremonitor, transform/drop, transform/envoy-dedupe, transform/dis, tail_sampling, batch]
           exporters: [azuremonitor]
         logs/in:
           receivers: [otlp]
