@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.23.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.23.0...oci-altinn-uptime-v1.23.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** add mna maintenance targets ([42fe83b](https://github.com/dis-way/gitops-manifests/commit/42fe83b516788888e3c7b7c27177c6c4534efba7))
+
 ## [1.23.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.22.0...oci-altinn-uptime-v1.23.0) (2026-10-16)
 
 
