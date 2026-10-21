@@ -156,14 +156,13 @@ spec:
         # Failed connections (TLS handshake, Envoy-terminated) that never
         # became a request. Excludes clients that drop the connection with a
         # TCP reset instead of a TLS close_notify: Envoy reports that as a
-        # transport failure, but it is normal client behaviour and was ~99% of
-        # these records.
+        # transport failure, but it is normal client behaviour.
         - type: Listener
           matches:
             - >-
               (connection.transport_failure_reason != '' || connection.termination_details != '')
-              && !connection.transport_failure_reason.contains('Connection_reset_by_peer')
-              && !connection.transport_failure_reason.contains('Broken_pipe')
+              && !(has(connection.transport_failure_reason) && connection.transport_failure_reason.contains('Connection_reset_by_peer'))
+              && !(has(connection.transport_failure_reason) && connection.transport_failure_reason.contains('Broken_pipe'))
           format:
             type: JSON
             json:
