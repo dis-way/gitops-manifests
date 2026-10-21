@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.2.1...oci-derper-v1.2.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow STUN to headscale and derper in the same cluster ([#2158](https://github.com/dis-way/gitops-manifests/issues/2158)) ([bb1744b](https://github.com/dis-way/gitops-manifests/commit/bb1744b74a49e9f6f52bf25a8e8778856dcbb0c9))
+
 ## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-derper-v1.2.0...oci-derper-v1.2.1) (2026-10-16)
 
 
