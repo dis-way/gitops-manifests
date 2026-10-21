@@ -18,7 +18,7 @@ jobs:
   kustomize-diff:
     uses: dis-way/actions/.github/workflows/kustomize-diff.yml@fb99a38f8177b38ff22ed45377418c4c84c7075d # main
     with:
-      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices,oci/*/platform-aks,oci/*/edge"
+      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/multitenancy-flux-webhook,oci/*/adminservices,oci/*/platform-aks,oci/*/edge"
     permissions:
       contents: read
       pull-requests: write
