@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.0...oci-envoy-gateway-v4.0.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** stop logging client resets and filter stdout access logs ([#2170](https://github.com/dis-way/gitops-manifests/issues/2170)) ([f35950e](https://github.com/dis-way/gitops-manifests/commit/f35950efdb947abe5508d3bebcf3d549ff2905a3))
+
 ## [4.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.2.0...oci-envoy-gateway-v4.0.0) (2026-10-20)
 
 
