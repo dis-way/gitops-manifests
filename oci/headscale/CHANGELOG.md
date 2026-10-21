@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.0...oci-headscale-v2.7.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow STUN to headscale and derper in the same cluster ([#2158](https://github.com/dis-way/gitops-manifests/issues/2158)) ([bb1744b](https://github.com/dis-way/gitops-manifests/commit/bb1744b74a49e9f6f52bf25a8e8778856dcbb0c9))
+
 ## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.6.1...oci-headscale-v2.7.0) (2026-10-20)
 
 
