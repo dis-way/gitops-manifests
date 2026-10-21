@@ -105,9 +105,9 @@ spec:
 # the router in admin-prod-aks cannot reach Headscale. 8443 is the Traefik
 # container port behind the Service port 443. 8444 is the same for the internal
 # LoadBalancer, which serves VPN-only hosts such as Headplane on admin-prod-aks.
-# STUN to the same pods (3478/UDP)
-# stays blocked: the derper and headscale ingress policies only allow STUN from
-# ipBlock, and the router does not need its own cluster's DERP region for STUN.
+# STUN (3478/UDP) uses separate LoadBalancers that go straight to the headscale
+# and derper pods, so it needs its own rule. Without it the router cannot use
+# the DERP region in its own cluster, and Cilium drops each STUN probe.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -132,6 +132,22 @@ spec:
           protocol: TCP
         - port: 8444
           protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: headscale
+          podSelector:
+            matchLabels:
+              app: headscale
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: derper
+          podSelector:
+            matchLabels:
+              app: derper
+      ports:
+        - port: 3478
+          protocol: UDP
 ---
 # Cilium gives the API server the reserved kube-apiserver identity, which ipBlock
 # rules do not select. The pod needs it for its state Secret (TS_KUBE_SECRET),
