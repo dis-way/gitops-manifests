@@ -16,7 +16,7 @@ spec:
     - name: GOMEMLIMIT
       value: 1600MiB
   # renovate: datasource=docker depName=ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
-  image: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.161.0
+  image: altinncr.azurecr.io/ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.163.2
   podAnnotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     linkerd.io/inject: "enabled"
