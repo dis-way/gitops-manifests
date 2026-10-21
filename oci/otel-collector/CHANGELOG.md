@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.1...oci-otel-collector-v2.1.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* **otel-collector:** sample envoy 4xx traces and drop duplicate span attributes ([#2171](https://github.com/dis-way/gitops-manifests/issues/2171)) ([71b9419](https://github.com/dis-way/gitops-manifests/commit/71b94194880c2b2b2f25c1cbbebc487534cd035e))
+
 ## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.0...oci-otel-collector-v2.1.1) (2026-10-15)
 
 
