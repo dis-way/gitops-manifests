@@ -132,6 +132,19 @@ spec:
       ports:
         - port: 3478
           protocol: UDP
+    # STUN from the subnet router in the same cluster. It dials the public
+    # LoadBalancer IP, but Cilium gives the traffic the router's pod identity,
+    # which the ipBlock rule above does not match.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale-subnet-router
+          podSelector:
+            matchLabels:
+              app: tailscale-subnet-router
+      ports:
+        - port: 3478
+          protocol: UDP
 ---
 # Entra ID (OIDC) and the Tailscale DERP map (controlplane.tailscale.com) are the
 # only external dependencies. Private and link-local ranges are excluded so a
