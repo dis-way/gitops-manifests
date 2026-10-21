@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.3...oci-traefik-v3.18.0) (2026-10-21)
+
+
+### Features
+
+* **traefik:** add the multitenancy-flux-webhook layer ([#2138](https://github.com/dis-way/gitops-manifests/issues/2138)) ([4f64722](https://github.com/dis-way/gitops-manifests/commit/4f64722373fea183463cb666857b6b2574762b18))
+
 ## [3.17.3](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.2...oci-traefik-v3.17.3) (2026-10-13)
 
 
