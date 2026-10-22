@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.7.0...oci-container-runtime-aks-config-v0.7.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* **oci/container-runtime-aks-config:** disable prune on the keys PVC and ExternalSecrets ([#1999](https://github.com/dis-way/gitops-manifests/issues/1999)) ([9b04ccc](https://github.com/dis-way/gitops-manifests/commit/9b04cccb080b4cb5700209afab765713432ed915))
+
 ## [0.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-container-runtime-aks-config-v0.6.0...oci-container-runtime-aks-config-v0.7.0) (2026-09-14)
 
 
