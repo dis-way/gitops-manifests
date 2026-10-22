@@ -5,7 +5,7 @@
   "oci/blackbox-exporter": "0.10.2",
   "oci/cert-manager": "2.5.2",
   "oci/certm-lets-encrypt-dns-issuer": "0.4.1",
-  "oci/container-runtime-aks-config": "0.7.0",
+  "oci/container-runtime-aks-config": "0.7.1",
   "oci/derper": "1.2.2",
   "oci/dis-identity": "0.4.0",
   "oci/dis-apim": "0.3.0",
