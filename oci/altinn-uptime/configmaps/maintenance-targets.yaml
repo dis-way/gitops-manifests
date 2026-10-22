@@ -10,6 +10,8 @@ data:
   maintenance-targets.json: |
     {
       "ipv4": [
+        "https://hi.apps.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://hi.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://mna.apps.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://mna.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://dfo.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
@@ -36,6 +38,8 @@ data:
         "https://k1103.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments"
       ],
       "ipv6": [
+        "https://hi.apps.altinn.no/kuberneteswrapper/api/v1/deployments",
+        "https://hi.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://mna.apps.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://mna.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
         "https://dfo.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments",
