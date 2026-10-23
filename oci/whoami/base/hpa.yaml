@@ -10,7 +10,7 @@ spec:
     name: whoami
   minReplicas: 2
   maxReplicas: 20
-  # ContainerResource: the injected linkerd-proxy has no CPU request, which breaks pod-level Resource metrics
+  # ContainerResource: scale on the whoami container alone, not on the injected linkerd-proxy
   metrics:
     - type: ContainerResource
       containerResource:
