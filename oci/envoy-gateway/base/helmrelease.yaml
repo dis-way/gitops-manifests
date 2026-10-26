@@ -12,7 +12,7 @@ spec:
         name: envoy-gateway
         namespace: envoy-gateway-system
       # renovate: datasource=docker depName=docker.io/envoyproxy/gateway-helm versioning=semver
-      version: v1.9.1
+      version: v1.9.2
   interval: 1h
   timeout: 5m
   install:
