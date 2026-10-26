@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.2...oci-otel-collector-v2.1.3) (2026-10-26)
+
+
+### Dependency Updates
+
+* update ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib docker tag to v0.163.2 ([#1890](https://github.com/dis-way/gitops-manifests/issues/1890)) ([9e13218](https://github.com/dis-way/gitops-manifests/commit/9e1321890d267565525963cc9086ba6d0464c287))
+
 ## [2.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.1...oci-otel-collector-v2.1.2) (2026-10-21)
 
 
