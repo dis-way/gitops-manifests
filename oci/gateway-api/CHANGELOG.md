@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-gateway-api-v1.1.2...oci-gateway-api-v1.1.3) (2026-10-26)
+
+
+### Dependency Updates
+
+* update dependency kubernetes-sigs/gateway-api to v1.6.3 ([#2000](https://github.com/dis-way/gitops-manifests/issues/2000)) ([5367ff7](https://github.com/dis-way/gitops-manifests/commit/5367ff769d58da984e76b01ab690083cdfe9aff4))
+
 ## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-gateway-api-v1.1.1...oci-gateway-api-v1.1.2) (2026-10-09)
 
 
