@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.5...oci-lakmus-v1.1.6) (2026-10-26)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/lakmus docker tag to v1.1.8 ([#2235](https://github.com/dis-way/gitops-manifests/issues/2235)) ([ade7808](https://github.com/dis-way/gitops-manifests/commit/ade78083b70f2c64b82f66aa9abcf08e8dc374e7))
+
 ## [1.1.5](https://github.com/dis-way/gitops-manifests/compare/oci-lakmus-v1.1.4...oci-lakmus-v1.1.5) (2026-07-10)
 
 
