@@ -8,7 +8,7 @@
   "oci/container-runtime-aks-config": "0.7.1",
   "oci/derper": "1.2.2",
   "oci/dis-identity": "0.4.0",
-  "oci/dis-apim": "0.3.0",
+  "oci/dis-apim": "0.3.1",
   "oci/dis-cache": "0.2.6",
   "oci/dis-core-proxies": "0.1.1",
   "oci/dis-pgsql": "0.3.1",
