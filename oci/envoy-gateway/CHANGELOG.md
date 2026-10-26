@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.1...oci-envoy-gateway-v4.0.2) (2026-10-26)
+
+
+### Dependency Updates
+
+* **envoy-gateway:** update envoy-gateway chart version to v1.9.2 ([#2211](https://github.com/dis-way/gitops-manifests/issues/2211)) ([01c34ba](https://github.com/dis-way/gitops-manifests/commit/01c34ba169f9481c9011a86ac5cff5fb3872e3a8))
+
 ## [4.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.0...oci-envoy-gateway-v4.0.1) (2026-10-21)
 
 
