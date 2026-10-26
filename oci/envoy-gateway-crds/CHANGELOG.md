@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-crds-v1.0.1...oci-envoy-gateway-crds-v1.0.2) (2026-10-26)
+
+
+### Dependency Updates
+
+* update dependency envoyproxy/gateway to v1.9.2 ([#1800](https://github.com/dis-way/gitops-manifests/issues/1800)) ([1764891](https://github.com/dis-way/gitops-manifests/commit/1764891b2e2f1b1bfebcc21bceb004a921e6c8a4))
+
 ## [1.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-crds-v1.0.0...oci-envoy-gateway-crds-v1.0.1) (2026-09-10)
 
 
