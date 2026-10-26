@@ -41,6 +41,17 @@
     },
     {
       "customType": "regex",
+      "description": "OCI Helm chart versions in HelmReleases, tracked through the docker datasource. The shared preset only matches datasource=helm, and the image manager above expects a repo:tag value",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>\\S+?)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*version:\\s*['\"]?(?<currentValue>v?\\d+\\.\\d+\\.\\d+)['\"]?\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
       "description": "Grafana plugins installed with plugins.preinstall_sync (<id>@<version>), tracked through their GitHub releases. Release tags carry a v prefix the pinned version does not, so it is stripped here rather than in the image manager above, where v-prefixed tags must be kept",
       "managerFilePatterns": [
         "/^oci\\/.+\\.ya?ml$/"
