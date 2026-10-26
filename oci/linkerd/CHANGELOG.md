@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.15.1...oci-linkerd-v2.16.0) (2026-10-26)
+
+
+### Features
+
+* **linkerd:** update linkerd core charts to 2026.8.4 ([#2199](https://github.com/dis-way/gitops-manifests/issues/2199)) ([6cc1164](https://github.com/dis-way/gitops-manifests/commit/6cc116498ffcefadd09e96a78229303840784ad1))
+
 ## [2.15.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.15.0...oci-linkerd-v2.15.1) (2026-09-24)
 
 
