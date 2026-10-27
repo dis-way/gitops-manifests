@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flux-webhook
+  annotations:
+    # edge-route-guard admits routes in this namespace only on this path.
+    "${BASE_HOSTNAME}/edge-allowed-paths": "/flux-webhook"
+  labels:
+    app.kubernetes.io/name: flux-webhook
+    app.kubernetes.io/part-of: platform

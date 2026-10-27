@@ -1,0 +1,13 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: flux-webhook-core-tls
+  namespace: flux-webhook
+spec:
+  targetRefs:
+    - group: gateway.envoyproxy.io
+      kind: Backend
+      name: flux-webhook-core
+  validation:
+    wellKnownCACertificates: System
+    hostname: flux-webhook.${DIS_CORE_GATEWAY_HOSTNAME}
