@@ -78,6 +78,10 @@
       "release-type": "simple",
       "component": "oci-external-secrets-operator"
     },
+    "oci/flux-webhook-receiver": {
+      "release-type": "simple",
+      "component": "oci-flux-webhook-receiver"
+    },
     "oci/gateway-api": {
       "release-type": "simple",
       "component": "oci-gateway-api"

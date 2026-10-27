@@ -1,0 +1,28 @@
+# In product namespaces, admit only Receivers that verify a GitHub Actions OIDC
+# token. The flux-webhook route exposes every Receiver in the cluster, and types
+# such as generic and acr do no authentication. A fixed issuer also stops a
+# product from making the notification-controller call an address it selects.
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: flux-webhook-receiver-types
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      # Not receivers/status: the notification-controller must always be able
+      # to write the status.
+      - apiGroups: ["notification.toolkit.fluxcd.io"]
+        apiVersions: ["*"]
+        resources: ["receivers"]
+        operations: ["CREATE", "UPDATE"]
+  matchConditions:
+    - name: product-namespace
+      expression: "request.namespace.startsWith('product-')"
+  validations:
+    - expression: "object.spec.type == 'generic-oidc'"
+      message: "In a product namespace, a Receiver must have the type generic-oidc."
+    - expression: >-
+        has(object.spec.oidcProviders) && size(object.spec.oidcProviders) > 0 &&
+        object.spec.oidcProviders.all(p, p.issuerURL == 'https://token.actions.githubusercontent.com')
+      message: "In a product namespace, every OIDC provider of a Receiver must have the issuerURL https://token.actions.githubusercontent.com."
