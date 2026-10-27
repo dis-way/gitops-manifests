@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-flux-webhook-receiver-v1.1.0...oci-flux-webhook-receiver-v1.1.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* **flux-webhook-receiver:** remove the network policy that the Flux extension overrides ([#2272](https://github.com/dis-way/gitops-manifests/issues/2272)) ([544c5a5](https://github.com/dis-way/gitops-manifests/commit/544c5a510ef59f0f7522ccb505decdf3e04083a8))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-flux-webhook-receiver-v1.0.0...oci-flux-webhook-receiver-v1.1.0) (2026-10-27)
 
 
