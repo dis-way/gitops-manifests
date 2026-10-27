@@ -1,0 +1,44 @@
+# Admits only a valid GitHub Actions OIDC token for this endpoint from the
+# Altinn organization. A missing or invalid token gets 401, another
+# organization 403. The Receiver in the core cluster checks the repository and
+# the branch.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: flux-webhook-github-oidc
+  namespace: flux-webhook
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: flux-webhook
+  jwt:
+    providers:
+      - name: github-actions
+        issuer: https://token.actions.githubusercontent.com
+        audiences:
+          - https://${BASE_HOSTNAME}/flux-webhook
+        remoteJWKS:
+          uri: https://token.actions.githubusercontent.com/.well-known/jwks
+        # Only the Authorization header. Without extractFrom, Envoy also reads
+        # the access_token query parameter, which can end up in logs.
+        extractFrom:
+          headers:
+            - name: Authorization
+              valuePrefix: "Bearer "
+        # For the repository rate limit.
+        claimToHeaders:
+          - claim: repository_id
+            header: x-flux-webhook-repository-id
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: altinn-only
+        action: Allow
+        principal:
+          jwt:
+            provider: github-actions
+            claims:
+              # The numeric id of the Altinn GitHub organization.
+              - name: repository_owner_id
+                values: ["5949420"]

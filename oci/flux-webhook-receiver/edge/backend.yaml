@@ -1,0 +1,13 @@
+# The dedicated flux-webhook listener of the DIS core cluster. The wildcard DNS
+# record resolves this name to the cluster's shared public addresses. Port 9443
+# admits only the outbound ranges of this edge cluster.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: flux-webhook-core
+  namespace: flux-webhook
+spec:
+  endpoints:
+    - fqdn:
+        hostname: flux-webhook.${DIS_CORE_GATEWAY_HOSTNAME}
+        port: 9443
