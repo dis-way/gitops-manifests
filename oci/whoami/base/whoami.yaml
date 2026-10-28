@@ -12,6 +12,9 @@ spec:
     metadata:
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        # The proxy idles at ~1m CPU / ~3Mi; limits stay at the cluster's Linkerd defaults
+        config.linkerd.io/proxy-cpu-request: "5m"
+        config.linkerd.io/proxy-memory-request: "16Mi"
       labels:
         app: whoami
     spec:
@@ -19,10 +22,19 @@ spec:
         runAsNonRoot: true
         runAsUser: 65532
         runAsGroup: 65532
+      # Spread replicas across nodes so a single node drain never takes all of them
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: whoami
       containers:
-        - image: altinncr.azurecr.io/docker.io/traefik/whoami
+        - name: whoami
+          # renovate: datasource=docker depName=traefik/whoami
+          image: altinncr.azurecr.io/docker.io/traefik/whoami:v1.12.0
           imagePullPolicy: IfNotPresent
-          name: whoami
           ports:
             - containerPort: 80
           env:
@@ -30,13 +42,14 @@ spec:
               value: "80"
           securityContext:
             readOnlyRootFilesystem: true
-          # CPU request is required for the HPA's utilization target
+          # CPU request is required for the HPA's utilization target. Requests are kept
+          # small; the memory limit leaves room for performance testing.
           resources:
             requests:
-              cpu: 50m
-              memory: 32Mi
+              cpu: 5m
+              memory: 16Mi
             limits:
-              memory: 128Mi
+              memory: 256Mi
           livenessProbe:
             httpGet:
               path: /health
@@ -60,36 +73,8 @@ spec:
     - port: 80
       targetPort: 80
       protocol: TCP
+      # Lets the client's Linkerd proxy skip outbound protocol detection
+      appProtocol: http
   type: ClusterIP
   selector:
     app: whoami
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: l5d-header-middleware
-  namespace: whoami
-spec:
-  headers:
-    customRequestHeaders:
-      l5d-dst-override: whoami.whoami.svc.cluster.local:80
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: whoami
-  namespace: whoami
-spec:
-  entryPoints:
-    - http
-    - https
-  routes:
-    - kind: Rule
-      match: HostRegexp(`^.*\.?altinn\.(no|cloud)$`) && (PathPrefix(`/whoami/`) || Path(`/whoami`))
-      middlewares:
-        - name: l5d-header-middleware
-          namespace: whoami
-      services:
-        - name: whoami
-          namespace: whoami
-          port: 80
