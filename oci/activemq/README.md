@@ -1,6 +1,6 @@
 # ActiveMQ
 
-Deploys ActiveMQ Classic (`activemq-eformidling`) as an external message broker for eFormidling, with a persistent volume for broker data.
+Deploys ActiveMQ Classic (`activemq-eformidling`) as an external message broker for eFormidling, with a persistent volume for broker data. The broker runs as non-root, and the web console (8161) only accepts loopback clients, so reach it with `kubectl port-forward`.
 
 ## Variables
 
