@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.2...oci-blackbox-exporter-v0.11.0) (2026-10-28)
+
+
+### Features
+
+* **altinn-uptime:** probe whoami endpoints with dedicated blackbox modules ([#2113](https://github.com/dis-way/gitops-manifests/issues/2113)) ([50c7f3d](https://github.com/dis-way/gitops-manifests/commit/50c7f3dbff32d4ae61bf79443d9b8043668a6f1b))
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.20.2 ([#2001](https://github.com/dis-way/gitops-manifests/issues/2001)) ([e74fb9f](https://github.com/dis-way/gitops-manifests/commit/e74fb9f80d6b49ca078c44e397c0de229bb6791c))
+
 ## [0.10.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.1...oci-blackbox-exporter-v0.10.2) (2026-10-13)
 
 
