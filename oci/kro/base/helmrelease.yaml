@@ -12,7 +12,7 @@ spec:
         name: kro
         namespace: kro-system
       # renovate: datasource=docker depName=registry.k8s.io/kro/charts/kro versioning=semver
-      version: 0.9.1
+      version: 0.9.4
   interval: 1h
   timeout: 5m
   install:
