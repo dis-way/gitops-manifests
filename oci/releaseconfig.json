@@ -73,8 +73,8 @@
   },
   "dis-identity": {
     "at_ring1": "0.4.1",
-    "at_ring2": "0.4.0",
-    "tt_ring1": "0.4.0",
+    "at_ring2": "0.4.1",
+    "tt_ring1": "0.4.1",
     "tt_ring2": "0.4.0",
     "prod_ring1": "0.4.0",
     "prod_ring2": "0.4.0"
