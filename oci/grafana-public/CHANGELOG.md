@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.1.0...oci-grafana-public-v1.1.1) (2026-10-28)
+
+
+### Dependency Updates
+
+* update dependency grafana/azure-prometheus-datasource to v1.0.8 ([#2209](https://github.com/dis-way/gitops-manifests/issues/2209)) ([d9da6d8](https://github.com/dis-way/gitops-manifests/commit/d9da6d8e33e425e736a07bb162c8ab20b9c5f216))
+
 ## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.0.4...oci-grafana-public-v1.1.0) (2026-10-09)
 
 
