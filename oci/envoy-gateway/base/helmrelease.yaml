@@ -53,5 +53,8 @@ spec:
         # Normally this is untagged so the chart's eg.envoyProxy.image helper fills
         # in the Envoy version matching the chart. Left pinned, the proxy would
         # stay on 1.39.6 while the chart moves on.
+        # The chart writes this into Envoy Gateway's default EnvoyProxy spec; it
+        # reaches the data plane only because the `eg` EnvoyProxy sets
+        # mergeType: StrategicMerge.
         envoyProxy:
           image: docker.io/envoyproxy/envoy:distroless-v1.39.6

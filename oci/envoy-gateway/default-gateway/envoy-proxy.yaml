@@ -4,6 +4,12 @@ metadata:
   name: eg
   namespace: envoy-gateway-system
 spec:
+  # Load-bearing: the data plane image (tag from the chart, registry from
+  # global.imageRegistry, so it is pulled through the cache) is set by the chart
+  # in Envoy Gateway's default EnvoyProxy spec. Unset, this EnvoyProxy replaces
+  # that spec and the image silently falls back to the Envoy Gateway release's
+  # built-in default, from docker.io. Do not remove without setting the image here.
+  mergeType: StrategicMerge
   routingType: Endpoint
   ipFamily: DualStack
   # Envoy flushes its whole stats set to every metrics sink every 5s by
