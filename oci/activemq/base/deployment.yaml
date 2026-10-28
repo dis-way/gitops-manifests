@@ -20,14 +20,28 @@ spec:
       annotations:
         linkerd.io/inject: enabled
     spec:
+      # Image runs as non-root user activemq (999); numeric IDs let kubelet
+      # verify runAsNonRoot, fsGroup gives it write access to the PVC
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: activemq
-          # renovate: datasource=docker depName=apache/activemq-classic
-          image: altinncr.azurecr.io/docker.io/apache/activemq-classic:6.2.0
+          # renovate: datasource=docker depName=apache/activemq
+          image: altinncr.azurecr.io/docker.io/apache/activemq:6.3.3
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
+          env:
+            # Image default is -Xmx1G; scale heap with limits.memory instead
+            - name: ACTIVEMQ_OPTS_MEMORY
+              value: "-XX:MaxRAMPercentage=50"
           ports:
             - name: openwire
               containerPort: 61616
@@ -54,7 +68,7 @@ spec:
               memory: 1Gi
           volumeMounts:
             - name: data
-              mountPath: /opt/activemq/data
+              mountPath: /opt/apache-activemq/data
       volumes:
         - name: data
           persistentVolumeClaim:
