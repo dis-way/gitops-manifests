@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.2...oci-envoy-gateway-v4.0.3) (2026-10-28)
+
+
+### Bug Fixes
+
+* **renovate:** track OCI Helm chart versions in envoy-gateway ([#2231](https://github.com/dis-way/gitops-manifests/issues/2231)) ([c6be40a](https://github.com/dis-way/gitops-manifests/commit/c6be40aedfec4039da2982121ebba24410e1a198))
+
+
+### Dependency Updates
+
+* update envoy gateway to v1.9.3 ([#2280](https://github.com/dis-way/gitops-manifests/issues/2280)) ([50bd043](https://github.com/dis-way/gitops-manifests/commit/50bd0430ef5bdb36df7a1ea76ef297d07c6c266c))
+
 ## [4.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.1...oci-envoy-gateway-v4.0.2) (2026-10-26)
 
 
