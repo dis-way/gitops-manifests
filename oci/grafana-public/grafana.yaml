@@ -96,7 +96,7 @@ spec:
       # proposes a version grafana.com cannot serve. It does not check the
       # plugin's Grafana compatibility: verify it on grafana.com when bumping.
       # renovate: datasource=github-releases depName=grafana/azure-prometheus-datasource
-      preinstall_sync: grafana-azureprometheus-datasource@1.0.6
+      preinstall_sync: grafana-azureprometheus-datasource@1.0.8
   deployment:
     spec:
       replicas: 1
