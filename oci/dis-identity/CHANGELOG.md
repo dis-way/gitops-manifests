@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-identity-v0.4.0...oci-dis-identity-v0.4.1) (2026-10-28)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-identity-operator docker tag to v0.4.3 ([#2281](https://github.com/dis-way/gitops-manifests/issues/2281)) ([84ec136](https://github.com/dis-way/gitops-manifests/commit/84ec136ff9692f1603a3befaff216fbe7bb6c298))
+
 ## [0.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-identity-v0.3.0...oci-dis-identity-v0.4.0) (2026-07-03)
 
 
