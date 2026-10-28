@@ -1,6 +1,6 @@
-# Envoy Gateway CRDs v1.9.2
+# Envoy Gateway CRDs v1.9.3
 # Generated file - do not edit.
-# Source: https://github.com/envoyproxy/gateway/releases/download/v1.9.2/envoy-gateway-crds.yaml
+# Source: https://github.com/envoyproxy/gateway/releases/download/v1.9.3/envoy-gateway-crds.yaml
 # Digest: sha256:b339119f8f3a4046688fc96837b4129553f42c9998976913ef9dff25694d85cc (verified against the GitHub release asset API)
 # Refresh with: oci/envoy-gateway-crds/scripts/update-crds.sh
 ---
