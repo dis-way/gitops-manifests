@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.2](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.6.1...oci-headplane-v1.6.2) (2026-10-28)
+
+
+### Dependency Updates
+
+* update tale/headplane docker tag to v0.8.2 ([#2310](https://github.com/dis-way/gitops-manifests/issues/2310)) ([0743a3e](https://github.com/dis-way/gitops-manifests/commit/0743a3e8b61bd914611753a1e91d6286032ef924))
+
 ## [1.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-headplane-v1.6.0...oci-headplane-v1.6.1) (2026-10-17)
 
 
