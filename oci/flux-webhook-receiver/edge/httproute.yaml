@@ -5,14 +5,17 @@ metadata:
   namespace: flux-webhook
 spec:
   hostnames:
-    - ${BASE_HOSTNAME}
+    - ops.${ENVIRONMENT}.dis.altinn.cloud
   parentRefs:
-    - name: eg
+    # The HTTPS listener of the dis ListenerSet, which serves
+    # *.<environment>.dis.altinn.cloud with a wildcard certificate.
+    - group: gateway.networking.k8s.io
+      kind: ListenerSet
+      name: dis
       namespace: envoy-gateway-system
       sectionName: https
   rules:
-    # Only POST /flux-webhook/hook/<digest>. Other requests to the platform host
-    # name keep their existing route.
+    # Only POST /flux-webhook/hook/<digest>.
     - matches:
         - method: POST
           path:

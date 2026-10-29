@@ -17,7 +17,7 @@ spec:
       - name: github-actions
         issuer: https://token.actions.githubusercontent.com
         audiences:
-          - https://${BASE_HOSTNAME}/flux-webhook
+          - https://ops.${ENVIRONMENT}.dis.altinn.cloud/flux-webhook
         remoteJWKS:
           uri: https://token.actions.githubusercontent.com/.well-known/jwks
         # Only the Authorization header. Without extractFrom, Envoy also reads
