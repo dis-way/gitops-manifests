@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.6](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.3.5...oci-kyverno-v1.3.6) (2026-10-29)
+
+
+### Bug Fixes
+
+* **kyverno:** run the admission controller with 3 replicas ([#2332](https://github.com/dis-way/gitops-manifests/issues/2332)) ([117e865](https://github.com/dis-way/gitops-manifests/commit/117e865155058a3b6f53a133c796bc178ffccdd3))
+
+
+### Dependency Updates
+
+* update kyverno helm charts to v3.9.2 ([#2299](https://github.com/dis-way/gitops-manifests/issues/2299)) ([1ccc466](https://github.com/dis-way/gitops-manifests/commit/1ccc4664293e99e950a99bdfbc3e1023a536ccc9))
+
 ## [1.3.5](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-v1.3.4...oci-kyverno-v1.3.5) (2026-10-05)
 
 
