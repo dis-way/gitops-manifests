@@ -27,7 +27,7 @@ Deploys the External Secrets Operator for syncing secrets from external provider
 | `platform-aks` | Platform cluster variant; `base` unchanged |
 | `platform-aks/post-deploy` | Altinn Key Vault `ClusterSecretStore` only — platform clusters have no serviceowner vault and no `dis-system-store` |
 | `adminservices` | Admin cluster variant; `base` unchanged |
-| `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `platform-system` for the dis-system Key Vault |
+| `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `flux-system` for the dis-system Key Vault |
 | `multitenancy` | Runs the HelmRelease from `platform-system` targeting the `external-secrets` namespace |
 | `multitenancy/post-deploy` | Workload identity ServiceAccount + namespaced `dis-system-store` `SecretStore` in `platform-system` for the dis-system Key Vault |
 
