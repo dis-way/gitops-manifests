@@ -121,11 +121,11 @@
   },
   "envoy-gateway-crds": {
     "at_ring1": "1.0.3",
-    "at_ring2": "1.0.2",
-    "tt_ring1": "1.0.2",
-    "tt_ring2": "1.0.2",
-    "prod_ring1": "1.0.2",
-    "prod_ring2": "1.0.2"
+    "at_ring2": "1.0.3",
+    "tt_ring1": "1.0.3",
+    "tt_ring2": "1.0.3",
+    "prod_ring1": "1.0.3",
+    "prod_ring2": "1.0.3"
   },
   "external-secrets-operator": {
     "at_ring1": "1.10.1",
