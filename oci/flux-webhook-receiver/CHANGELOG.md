@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-flux-webhook-receiver-v1.1.1...oci-flux-webhook-receiver-v2.0.0) (2026-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **flux-webhook-receiver:** serve the edge route on ops.<env>.dis.altinn.cloud ([#2330](https://github.com/dis-way/gitops-manifests/issues/2330))
+
+### Features
+
+* **flux-webhook-receiver:** serve the edge route on ops.&lt;env&gt;.dis.altinn.cloud ([#2330](https://github.com/dis-way/gitops-manifests/issues/2330)) ([2a091ad](https://github.com/dis-way/gitops-manifests/commit/2a091ad0f82fba66747be621cfb15ed9ee07e8d0))
+
 ## [1.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-flux-webhook-receiver-v1.1.0...oci-flux-webhook-receiver-v1.1.1) (2026-10-27)
 
 
