@@ -24,7 +24,7 @@
     "prod_ring2": "1.4.4"
   },
   "blackbox-exporter": {
-    "at_ring1": "0.10.2",
+    "at_ring1": "0.11.0",
     "at_ring2": "0.10.2",
     "tt_ring1": "0.10.2",
     "tt_ring2": "0.10.2",
