@@ -8,11 +8,11 @@ Deploys the External Secrets Operator for syncing secrets from external provider
 |----------|---------|----------|-------------|
 | `ALTINN_KV_ESO_CLIENT_ID` | — | apps + platform-aks post-deploy | Client ID of the user-assigned identity ESO uses against the Altinn Key Vault |
 | `ALTINN_KV_URL` | — | apps + platform-aks post-deploy | Vault URI of the Altinn Key Vault, e.g. `https://<name>.vault.azure.net/` |
-| `DIS_SYSTEM_KV_ESO_CLIENT_ID` | — | adminservices post-deploy | Client ID of the dis-system Key Vault reader identity (`dis_system_kv_reader_client_id` output of the `dis_system_kv` module) |
-| `DIS_SYSTEM_KV_URL` | — | adminservices post-deploy | Vault URI of the dis-system Key Vault (`dis_system_kv_uri` output of the `dis_system_kv` module) |
+| `DIS_SYSTEM_KV_ESO_CLIENT_ID` | — | adminservices + multitenancy post-deploy | Client ID of the dis-system Key Vault reader identity (`dis_system_kv_reader_client_id` output of the `dis_system_kv` module) |
+| `DIS_SYSTEM_KV_URL` | — | adminservices + multitenancy post-deploy | Vault URI of the dis-system Key Vault (`dis_system_kv_uri` output of the `dis_system_kv` module) |
 | `SO_KV_ESO_CLIENT_ID` | — | apps post-deploy | Client ID of the user-assigned identity ESO uses against the serviceowner Key Vault |
 | `SO_KV_URL` | — | apps post-deploy | Vault URI of the serviceowner Key Vault |
-| `TENANT_ID` | — | apps, platform-aks + adminservices post-deploy | Azure tenant ID for the workload identities |
+| `TENANT_ID` | — | apps, platform-aks, adminservices + multitenancy post-deploy | Azure tenant ID for the workload identities |
 
 `base`, `apps`, `platform-aks`, `adminservices`, and `multitenancy` use no variables — substitution only applies to the
 `post-deploy` layers.
@@ -27,8 +27,9 @@ Deploys the External Secrets Operator for syncing secrets from external provider
 | `platform-aks` | Platform cluster variant; `base` unchanged |
 | `platform-aks/post-deploy` | Altinn Key Vault `ClusterSecretStore` only — platform clusters have no serviceowner vault and no `dis-system-store` |
 | `adminservices` | Admin cluster variant; `base` unchanged |
-| `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `flux-system` for the dis-system Key Vault |
+| `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `platform-system` for the dis-system Key Vault |
 | `multitenancy` | Runs the HelmRelease from `platform-system` targeting the `external-secrets` namespace |
+| `multitenancy/post-deploy` | Workload identity ServiceAccount + namespaced `dis-system-store` `SecretStore` in `platform-system` for the dis-system Key Vault |
 
 ## Key Vault access
 
@@ -41,6 +42,7 @@ Azure token using the `azure.workload.identity/client-id` and `azure.workload.id
 | Altinn | `altinn-kv-eso` | `altinn-keyvault-store` | `apps`, `platform-aks` |
 | Serviceowner | `so-kv-eso` | `serviceowner-keyvault-store` | `apps` |
 | dis-system | `flux-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `flux-system`) | `adminservices` |
+| dis-system | `platform-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `platform-system`) | `multitenancy` |
 | Altinn | `flux-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `flux-system`) | `apps` |
 
 These live in `post-deploy` because both the `external-secrets` namespace and the `ClusterSecretStore` CRD are created
@@ -61,7 +63,11 @@ vaults still using the access-policy model. Without the federated credential the
 `flux-system` instead: admin clusters run every Flux Kustomization there, and `postBuild.substituteFrom` only reads
 Secrets from the Kustomization's own namespace. Its federated credential subject is therefore
 `system:serviceaccount:flux-system:dis-secret-sync-sa` (`dis_system_kv_namespace = "flux-system"` on the
-`dis_system_kv` module), and only `ExternalSecret`s in `flux-system` can use the store.
+`dis_system_kv` module), and only `ExternalSecret`s in `flux-system` can use the store. DIS core (multitenancy)
+clusters run their Flux Kustomizations in `platform-system`, so there the ServiceAccount and store are in
+`platform-system` and the federated credential subject is
+`system:serviceaccount:platform-system:dis-secret-sync-sa`. A package's `secrets` layer must then create its
+`ExternalSecret` in `platform-system`; the existing layers hardcode `flux-system` and need a multitenancy overlay.
 
 `dis-system-store` is the store name every package's `secrets` layer references, so the same manifests work on every
 cluster. On apps clusters it reads the existing Altinn Key Vault rather than a separate dis-system vault: the
