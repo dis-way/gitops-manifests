@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.1.2...oci-grafana-public-v1.1.3) (2026-10-30)
+
+
+### Dependency Updates
+
+* update docker.io/grafana/grafana docker tag to v13.3.0 ([#2363](https://github.com/dis-way/gitops-manifests/issues/2363)) ([959e61d](https://github.com/dis-way/gitops-manifests/commit/959e61d26052a5dcb7a77dc380d513f0f317aa27))
+
 ## [1.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-grafana-public-v1.1.1...oci-grafana-public-v1.1.2) (2026-10-30)
 
 
