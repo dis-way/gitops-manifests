@@ -17,7 +17,7 @@
   "oci/edge-route-guard": "1.0.1",
   "oci/envoy-gateway": "4.0.3",
   "oci/envoy-gateway-crds": "1.0.3",
-  "oci/external-secrets-operator": "1.11.0",
+  "oci/external-secrets-operator": "1.12.0",
   "oci/flux-webhook-receiver": "2.0.0",
   "oci/gateway-api": "1.1.3",
   "oci/grafana-dashboards": "1.0.0",
