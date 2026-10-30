@@ -60,8 +60,8 @@
     "at_ring2": "1.2.3",
     "tt_ring1": "1.2.3",
     "tt_ring2": "1.2.3",
-    "prod_ring1": "1.2.2",
-    "prod_ring2": "1.2.2"
+    "prod_ring1": "1.2.3",
+    "prod_ring2": "1.2.3"
   },
   "dis-apim": {
     "at_ring1": "0.3.1",
