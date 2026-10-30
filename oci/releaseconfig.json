@@ -179,9 +179,9 @@
     "at_ring1": "1.2.8",
     "at_ring2": "1.2.8",
     "tt_ring1": "1.2.8",
-    "tt_ring2": "1.2.7",
-    "prod_ring1": "1.2.7",
-    "prod_ring2": "1.2.7"
+    "tt_ring2": "1.2.8",
+    "prod_ring1": "1.2.8",
+    "prod_ring2": "1.2.8"
   },
   "kyverno": {
     "at_ring1": "1.3.6",
