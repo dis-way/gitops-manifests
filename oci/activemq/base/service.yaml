@@ -11,10 +11,6 @@ spec:
       port: 61616
       protocol: TCP
       targetPort: 61616
-    - name: webconsole
-      port: 8161
-      protocol: TCP
-      targetPort: 8161
   selector:
     app: activemq-eformidling
   type: ClusterIP
