@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.8](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.7...oci-kube-state-metrics-v1.2.8) (2026-10-30)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v8.7.1 ([#2348](https://github.com/dis-way/gitops-manifests/issues/2348)) ([b0a3476](https://github.com/dis-way/gitops-manifests/commit/b0a34765d810b58c67c7b3855901a44bfc7da894))
+
 ## [1.2.7](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.6...oci-kube-state-metrics-v1.2.7) (2026-09-29)
 
 
