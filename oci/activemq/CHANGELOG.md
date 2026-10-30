@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-activemq-v1.3.0...oci-activemq-v1.3.1) (2026-10-30)
+
+
+### Dependency Updates
+
+* update apache/activemq-classic docker tag to v6 ([#1425](https://github.com/dis-way/gitops-manifests/issues/1425)) ([690a515](https://github.com/dis-way/gitops-manifests/commit/690a5159bc8d9da7553d9ddacc5bf0bf04ba0a6f))
+
 ## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-activemq-v1.2.0...oci-activemq-v1.3.0) (2026-04-23)
 
 
