@@ -1,0 +1,14 @@
+# The Azure identity central-accesstoken-store authenticates as. dis-identity-operator
+# creates a ServiceAccount with the same name in platform-system and the federated
+# credential for it. Read access to the Key Vault is granted to this identity outside
+# the cluster, once it exists.
+apiVersion: application.dis.altinn.cloud/v1alpha1
+kind: ApplicationIdentity
+metadata:
+  name: central-accesstoken-eso
+  namespace: platform-system
+  annotations:
+    # Deleting it deletes the managed identity, and a recreated one is a new principal
+    # without the Key Vault grant. Removing it is a manual step.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec: {}
