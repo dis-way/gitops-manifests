@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.6](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.5...oci-kyverno-policies-v1.4.6) (2026-10-30)
+
+
+### Dependency Updates
+
+* update kyverno helm charts to v3.9.2 ([#2299](https://github.com/dis-way/gitops-manifests/issues/2299)) ([1ccc466](https://github.com/dis-way/gitops-manifests/commit/1ccc4664293e99e950a99bdfbc3e1023a536ccc9))
+
 ## [1.4.5](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.4...oci-kyverno-policies-v1.4.5) (2026-10-09)
 
 
