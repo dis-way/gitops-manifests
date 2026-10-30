@@ -128,7 +128,7 @@
     "prod_ring2": "1.0.3"
   },
   "external-secrets-operator": {
-    "at_ring1": "1.10.1",
+    "at_ring1": "1.11.0",
     "at_ring2": "1.10.1",
     "tt_ring1": "1.10.1",
     "tt_ring2": "1.10.1",
