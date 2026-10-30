@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.10.1...oci-external-secrets-operator-v1.11.0) (2026-10-30)
+
+
+### Features
+
+* **external-secrets-operator:** add dis-system-store to multitenancy ([#2343](https://github.com/dis-way/gitops-manifests/issues/2343)) ([f371298](https://github.com/dis-way/gitops-manifests/commit/f371298317c542f0536cb706758f334cd6463842))
+
 ## [1.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.10.0...oci-external-secrets-operator-v1.10.1) (2026-10-26)
 
 
