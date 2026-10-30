@@ -296,8 +296,8 @@
     "prod_ring2": "0.2.16"
   },
   "tailscale-subnet-router": {
-    "at_ring1": "2.0.2",
-    "at_ring2": "2.0.2",
+    "at_ring1": "2.0.3",
+    "at_ring2": "2.0.3",
     "tt_ring1": "2.0.2",
     "tt_ring2": "2.0.2",
     "prod_ring1": "2.0.1",
