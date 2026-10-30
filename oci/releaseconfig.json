@@ -326,6 +326,8 @@
   },
   "flux-webhook-receiver": {
     "at_ring1": "2.0.0",
-    "at_ring2": "2.0.0"
+    "at_ring2": "2.0.0",
+    "tt_ring1": "2.0.0",
+    "tt_ring2": "2.0.0"
   }
 }
