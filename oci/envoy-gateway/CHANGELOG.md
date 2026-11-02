@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.4](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.3...oci-envoy-gateway-v4.0.4) (2026-11-02)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** pin Envoy to distroless-v1.39.6 for the patched CA bundle ([#2288](https://github.com/dis-way/gitops-manifests/issues/2288)) ([42301c5](https://github.com/dis-way/gitops-manifests/commit/42301c5ac477312262dd7aaa7767e489712c4a27))
+
 ## [4.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.2...oci-envoy-gateway-v4.0.3) (2026-10-28)
 
 
