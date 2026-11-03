@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.12.0...oci-external-secrets-operator-v1.13.0) (2026-11-03)
+
+
+### Features
+
+* add central access token ClusterSecretStore for multitenancy ([#2362](https://github.com/dis-way/gitops-manifests/issues/2362)) ([175509d](https://github.com/dis-way/gitops-manifests/commit/175509d5bd7716889301605db0f029257ec2013a))
+
 ## [1.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.11.0...oci-external-secrets-operator-v1.12.0) (2026-10-30)
 
 
