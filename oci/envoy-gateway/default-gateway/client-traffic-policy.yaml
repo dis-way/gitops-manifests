@@ -127,9 +127,11 @@ spec:
       # a valid lever: large uploads will fail with 408 while it is in place,
       # an accepted failure mode during an attack. Restore 300s afterwards.
       requestReceivedTimeout: 300s
-      # Connection idle with no active streams: 1 hour -> 1 minute. Safe
-      # for SSE, because a stream that is actively held is not idle.
-      idleTimeout: 60s
+      # Connection idle with no active streams (Envoy default 1h). Must stay
+      # above client pool idle limits: .NET reuses connections idle up to
+      # ~75s, and a request landing in Envoy's drain/close window fails.
+      # Safe for SSE: an active stream is not idle.
+      idleTimeout: 90s
       # Per-stream idle timeout. THIS one does bound SSE: a stream with no
       # events for longer than this is reset. Kept at Envoy's 5m default
       # rather than tightened, which means SSE endpoints must emit a
