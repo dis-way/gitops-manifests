@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.5](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.4...oci-envoy-gateway-v4.0.5) (2026-11-03)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** raise downstream http idleTimeout to 90s ([#2396](https://github.com/dis-way/gitops-manifests/issues/2396)) ([10cc148](https://github.com/dis-way/gitops-manifests/commit/10cc14802cbd5e01b3bd82948653604ecba96a2b))
+
 ## [4.0.4](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.3...oci-envoy-gateway-v4.0.4) (2026-11-02)
 
 

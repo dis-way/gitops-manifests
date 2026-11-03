@@ -15,7 +15,7 @@
   "oci/dis-vault": "1.3.1",
   "oci/dis-tls-cert": "2.25.0",
   "oci/edge-route-guard": "1.0.1",
-  "oci/envoy-gateway": "4.0.4",
+  "oci/envoy-gateway": "4.0.5",
   "oci/envoy-gateway-crds": "1.0.3",
   "oci/external-secrets-operator": "1.13.1",
   "oci/flux-webhook-receiver": "2.0.0",
