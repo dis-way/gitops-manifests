@@ -46,7 +46,7 @@ spec:
     #   annotations on every ASO object it reconciles.
     # - generic-garbage-collector: the Kubernetes garbage collector, part of
     #   kube-controller-manager. When an operator deletes a DIS custom resource,
-    #   this identity deletes the ASO objects that have an owner reference to it.
+    #   this identity deletes the ASO objects owned by it.
     # - namespace-controller: part of kube-controller-manager. It deletes all
     #   objects in a namespace that is deleted.
     # - system:kube-controller-manager: the single user that all controllers use
