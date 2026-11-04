@@ -40,10 +40,18 @@ spec:
          'system:serviceaccount:dis-messaging-operator-system:dis-messaging-operator-controller-manager',
          'system:serviceaccount:dis-pgsql-operator-system:dis-pgsql-operator-controller-manager',
          'system:serviceaccount:dis-vault-operator-system:dis-vault-operator-controller-manager']
-    # ASO writes finalizers and annotations on its objects. The kube-system
-    # controllers delete dependents and the objects of a deleted namespace.
-    # AKS runs them with their own service accounts. The kube-controller-manager
-    # user covers a control plane that does not.
+    # Built-in identities that must also pass. Without them, a Deny binding
+    # would refuse cascading deletes and leave orphaned ASO objects.
+    # - azureserviceoperator-system: ASO itself. It writes finalizers and
+    #   annotations on every ASO object it reconciles.
+    # - generic-garbage-collector: the Kubernetes garbage collector, part of
+    #   kube-controller-manager. When an operator deletes a DIS custom resource,
+    #   this identity deletes the ASO objects that have an owner reference to it.
+    # - namespace-controller: part of kube-controller-manager. It deletes all
+    #   objects in a namespace that is deleted.
+    # - system:kube-controller-manager: the single user that all controllers use
+    #   when the control plane runs without per-controller service accounts.
+    #   AKS is expected to use the two service accounts above. This is a fallback.
     - name: controllers
       expression: |-
         ['system:serviceaccount:azureserviceoperator-system:azureserviceoperator-system',
