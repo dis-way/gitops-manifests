@@ -1,0 +1,66 @@
+# In product namespaces, only the DIS platform operators may create, update or
+# delete an Azure Service Operator (ASO) object. ASO itself, the kube-system
+# controllers that delete dependents, and cluster admins are also admitted.
+# ASO runs with one Azure identity for all products. Azure ABAC limits the roles
+# that this identity can assign, but not the scope or the principal. A
+# RoleAssignment from a product's own manifests could grant access to a shared
+# Azure resource. Product teams use the DIS custom resources (Queue, Database,
+# Vault, ApplicationIdentity) instead.
+# Keep the API groups in sync with CRD_PATTERN (aso_crd_pattern in
+# terraform-azurerm-dis-modules). Keep the service accounts in sync with the
+# operators that create ASO objects.
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: aso-product-writes
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      # Not the status subresource: ASO must always be able to write the status.
+      - apiGroups:
+          - authorization.azure.com
+          - dbforpostgresql.azure.com
+          - insights.azure.com
+          - keyvault.azure.com
+          - managedidentity.azure.com
+          - network.azure.com
+          - servicebus.azure.com
+        apiVersions: ["*"]
+        resources: ["*"]
+        operations: ["CREATE", "UPDATE", "DELETE"]
+  matchConditions:
+    - name: product-namespace
+      expression: "request.namespace.startsWith('product-')"
+  variables:
+    # DIS platform operators that create ASO objects for products.
+    - name: operators
+      expression: |-
+        ['system:serviceaccount:dis-identity-operator-system:dis-identity-operator-controller-manager',
+         'system:serviceaccount:dis-messaging-operator-system:dis-messaging-operator-controller-manager',
+         'system:serviceaccount:dis-pgsql-operator-system:dis-pgsql-operator-controller-manager',
+         'system:serviceaccount:dis-vault-operator-system:dis-vault-operator-controller-manager']
+    # ASO writes finalizers and annotations on its objects. The kube-system
+    # controllers delete dependents and the objects of a deleted namespace.
+    # AKS runs them with their own service accounts. The kube-controller-manager
+    # user covers a control plane that does not.
+    - name: controllers
+      expression: |-
+        ['system:serviceaccount:azureserviceoperator-system:azureserviceoperator-system',
+         'system:serviceaccount:kube-system:generic-garbage-collector',
+         'system:serviceaccount:kube-system:namespace-controller',
+         'system:kube-controller-manager']
+    # Break-glass. A subject that may delete this policy's binding is a cluster
+    # admin. The policy cannot stop a cluster admin, so it admits them. A product
+    # namespace admin cannot delete a cluster-scoped binding and stays denied.
+    - name: clusterAdmin
+      expression: |-
+        authorizer.group('admissionregistration.k8s.io').resource('validatingadmissionpolicybindings')
+          .name('aso-product-writes').check('delete').allowed()
+  validations:
+    - expression: |-
+        request.userInfo.username in variables.operators ||
+        request.userInfo.username in variables.controllers ||
+        variables.clusterAdmin
+      messageExpression: >-
+        'Only the DIS platform operators may create, update or delete Azure Service Operator objects in product namespaces. Use the DIS custom resources instead. Request by ' + request.userInfo.username + '.'
