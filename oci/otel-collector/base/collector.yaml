@@ -490,8 +490,8 @@ spec:
                   string_attribute:
                     key: http.route
                     values: 
-                      - "^/metrics"
-                      - "^/health"
+                      - "^/metrics(/.*)?$"
+                      - "^/health(/.*)?$"
                       - "^/kuberneteswrapper/.*"
                     invert_match: true
                     enabled_regex_matching: true
@@ -514,8 +514,8 @@ spec:
                   string_attribute:
                     key: http.route
                     values: 
-                      - "^/metrics"
-                      - "^/health"
+                      - "^/metrics(/.*)?$"
+                      - "^/health(/.*)?$"
                       - "^/kuberneteswrapper/.*"
                     invert_match: true
                     enabled_regex_matching: true
@@ -537,8 +537,8 @@ spec:
                   string_attribute:
                     key: http.route
                     values: 
-                      - "^/metrics"
-                      - "^/health"
+                      - "^/metrics(/.*)?$"
+                      - "^/health(/.*)?$"
                       - "^/kuberneteswrapper/.*"
                     enabled_regex_matching: true
                   # apply probabilistic sampling
