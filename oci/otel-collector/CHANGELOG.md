@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.2.0...oci-otel-collector-v2.2.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* **otel-collector:** read the flux-system connection string via a ClusterSecretStore ([#2421](https://github.com/dis-way/gitops-manifests/issues/2421)) ([839ea72](https://github.com/dis-way/gitops-manifests/commit/839ea7283ba92b759d623051f581bfb46af7dc94))
+
 ## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.3...oci-otel-collector-v2.2.0) (2026-11-05)
 
 
