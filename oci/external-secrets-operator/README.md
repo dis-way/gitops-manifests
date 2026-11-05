@@ -103,8 +103,8 @@ ID passes through Flux. On the first deploy the store reports `NotReady`: the ma
 operator has reconciled, and it then needs read access to the vault. Grant it that access outside the cluster, and the
 store becomes ready on its next refresh.
 
-The vault is shared, and the namespace label is the only limit in the cluster: a labeled namespace can read every
-secret the identity can read. Grant the identity `Key Vault Secrets User` on the access token secret alone, not on the
+The vault is shared, and the `^product-` namespace regex is the only limit in the cluster: a matching namespace can
+read every secret the identity can read. Grant the identity `Key Vault Secrets User` on the access token secret alone, not on the
 vault. Vaults that still use access policies cannot limit access to one secret.
 
 On DIS core clusters the Flux Kustomizations depend on each other in this order: `multitenancy` →
