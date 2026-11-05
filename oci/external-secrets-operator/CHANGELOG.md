@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.13.1...oci-external-secrets-operator-v1.14.0) (2026-11-05)
+
+
+### Features
+
+* **external-secrets-operator:** allow central-accesstoken-store in product- namespaces  ([#2425](https://github.com/dis-way/gitops-manifests/issues/2425)) ([288c6c0](https://github.com/dis-way/gitops-manifests/commit/288c6c065b5b1407d53ad8142eeb20be7b2453e3))
+
 ## [1.13.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.13.0...oci-external-secrets-operator-v1.13.1) (2026-11-03)
 
 
