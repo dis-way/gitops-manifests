@@ -159,7 +159,7 @@ metadata:
     dis.otel/sampling: all   # sample 100% of non-health/metrics traces
 ```
 
-Without the label the default rate is **1%**. Errors and slow requests (≥ 1 s) are always sampled regardless of the label. Envoy 4xx do not count as errors: traces with one are kept at 10%.
+Without the label the default rate is **0.1%**. Errors and slow requests (≥ 1 s) are always sampled regardless of the label. Envoy 4xx do not count as errors: traces with one are kept at 10%.
 
 ## How It Works
 
@@ -226,9 +226,9 @@ Workloads that opt into the operator's SDK injection get `service.namespace` set
 
 | Policy | Condition | Rate |
 |--------|-----------|------|
-| `default` | Normal routes, no `dis.otel/sampling: all` label | 1% |
+| `default` | Normal routes, no `dis.otel/sampling: all` label | 0.1% |
 | `sample-all` | Deployment has label `dis.otel/sampling: all` | 100% |
-| `heavy-sampling` | Routes matching `/metrics`, `/health`, `/kuberneteswrapper/*` | 0.1% |
+| `heavy-sampling` | Routes `/metrics`, `/health` (and their sub-paths), `/kuberneteswrapper/*` | 0.01% |
 | `always-sample-errors` | Span status is ERROR, except Envoy spans with a 4xx | 100% |
 | `sample-envoy-4xx` | Envoy span with a 4xx (Envoy marks them ERROR) | 10% |
 | `always-sample-slow-requests` | Span duration ≥ 1000 ms | 100% |

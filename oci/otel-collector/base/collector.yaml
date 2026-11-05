@@ -490,8 +490,8 @@ spec:
                   string_attribute:
                     key: http.route
                     values: 
-                      - "^/metrics"
-                      - "^/health"
+                      - "^/metrics(/.*)?$"
+                      - "^/health(/.*)?$"
                       - "^/kuberneteswrapper/.*"
                     invert_match: true
                     enabled_regex_matching: true
@@ -504,7 +504,7 @@ spec:
                 - name: probabilistic-policy
                   type: probabilistic
                   probabilistic:
-                    sampling_percentage: 1
+                    sampling_percentage: 0.1
           - name: sample-all
             type: and
             and:
@@ -514,8 +514,8 @@ spec:
                   string_attribute:
                     key: http.route
                     values: 
-                      - "^/metrics"
-                      - "^/health"
+                      - "^/metrics(/.*)?$"
+                      - "^/health(/.*)?$"
                       - "^/kuberneteswrapper/.*"
                     invert_match: true
                     enabled_regex_matching: true
@@ -537,15 +537,15 @@ spec:
                   string_attribute:
                     key: http.route
                     values: 
-                      - "^/metrics"
-                      - "^/health"
+                      - "^/metrics(/.*)?$"
+                      - "^/health(/.*)?$"
                       - "^/kuberneteswrapper/.*"
                     enabled_regex_matching: true
                   # apply probabilistic sampling
                 - name: probabilistic-policy
                   type: probabilistic
                   probabilistic:
-                    sampling_percentage: 0.1
+                    sampling_percentage: 0.01
           # Envoy sets ERROR on every 4xx span (ingress and egress), so a single
           # 400/404 would keep a whole fan-out trace of hundreds of spans. Envoy
           # 4xx are sampled by sample-envoy-4xx instead; every other ERROR span,
