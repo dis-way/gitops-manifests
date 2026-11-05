@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.3...oci-otel-collector-v2.2.0) (2026-11-05)
+
+
+### Features
+
+* **otel-collector:** lower default trace sampling ([#2416](https://github.com/dis-way/gitops-manifests/issues/2416)) ([94ef7ab](https://github.com/dis-way/gitops-manifests/commit/94ef7ab787832718406a76afae097848eea20d45))
+* **otel-collector:** sync the App Insights connection string into flux-system ([#2417](https://github.com/dis-way/gitops-manifests/issues/2417)) ([83c5efc](https://github.com/dis-way/gitops-manifests/commit/83c5efca35de72d874d23abc3f842c5c2dc3b1a5))
+
 ## [2.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.2...oci-otel-collector-v2.1.3) (2026-10-26)
 
 
