@@ -43,7 +43,7 @@ themselves, so they cannot read their own variables through it.
 | `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `flux-system` for the dis-system Key Vault |
 | `multitenancy` | Runs the HelmRelease from `platform-system` targeting the `external-secrets` namespace |
 | `multitenancy/post-deploy` | Workload identity ServiceAccount + namespaced `dis-system-store` `SecretStore` in `platform-system` for the dis-system Key Vault |
-| `multitenancy/central-accesstoken` | `ApplicationIdentity` + `central-accesstoken-store` `ClusterSecretStore` for the central access token, limited to namespaces labeled `accesstoken.dis.altinn.cloud/enabled: "true"`. Depends on `multitenancy/secrets` |
+| `multitenancy/central-accesstoken` | `ApplicationIdentity` + `central-accesstoken-store` `ClusterSecretStore` for the central access token, limited to namespaces prefixed `product-`. Depends on `multitenancy/secrets` |
 | `multitenancy/secrets` | `ExternalSecret` in `platform-system` that writes the `external-secrets-operator-vars` Secret for `multitenancy/central-accesstoken` from `dis-system-store`. Depends on `multitenancy/post-deploy` |
 
 ## Key Vault access
@@ -92,10 +92,9 @@ federated credential with subject `system:serviceaccount:flux-system:dis-secret-
 
 ### Central access token
 
-Some products sign their requests with a central access token. `central-accesstoken-store` serves it only to
-namespaces with the label `accesstoken.dis.altinn.cloud/enabled: "true"`. Namespaces without the label cannot use the
-store, so products that do not need the token get no Secret. A team asks the platform team for access, the platform
-team adds the label to the product namespace, and the team then deploys an `ExternalSecret` that references the store.
+Some products sign their requests with a central access token. `central-accesstoken-store` serves it to every
+namespace whose name starts with `product-`. Other namespaces cannot use the store. A product team that needs the
+token deploys an `ExternalSecret` that references the store; teams that do not need it get no Secret.
 
 The store does not create its own ServiceAccount. `multitenancy/central-accesstoken` creates the
 `platform-system/central-accesstoken-eso` `ApplicationIdentity`, and dis-identity-operator creates the managed identity,
@@ -104,8 +103,8 @@ ID passes through Flux. On the first deploy the store reports `NotReady`: the ma
 operator has reconciled, and it then needs read access to the vault. Grant it that access outside the cluster, and the
 store becomes ready on its next refresh.
 
-The vault is shared, and the namespace label is the only limit in the cluster: a labeled namespace can read every
-secret the identity can read. Grant the identity `Key Vault Secrets User` on the access token secret alone, not on the
+The vault is shared, and the `^product-` namespace regex is the only limit in the cluster: a matching namespace can
+read every secret the identity can read. Grant the identity `Key Vault Secrets User` on the access token secret alone, not on the
 vault. Vaults that still use access policies cannot limit access to one secret.
 
 On DIS core clusters the Flux Kustomizations depend on each other in this order: `multitenancy` →
