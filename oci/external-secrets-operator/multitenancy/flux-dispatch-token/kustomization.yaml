@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # One mapping: a GitHub token for one repository, renewed in platform-system and copied
+  # to one Secret in one product namespace. Applied once per mapping. Reads its variables
+  # from the secrets layer and needs multitenancy/flux-dispatch-app.
+  - generator.yaml
+  - token.yaml
+  - serviceaccount.yaml
+  - secretstore.yaml
+  - pushsecret.yaml
+  # The only objects in the product namespace: the destination Secret and the right to
+  # update it.
+  - destination-secret.yaml
+  - destination-rbac.yaml

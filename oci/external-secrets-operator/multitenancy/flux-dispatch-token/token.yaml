@@ -1,0 +1,19 @@
+# Generates a new token every 30 minutes. GitHub installation tokens expire after an hour,
+# so a failed renewal leaves at least 30 minutes to fix it. A failed renewal keeps the
+# last token in the Secret.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: flux-dispatch-${FLUX_DISPATCH_NAME}-token
+  namespace: platform-system
+spec:
+  refreshInterval: 30m
+  target:
+    name: flux-dispatch-${FLUX_DISPATCH_NAME}-token
+    creationPolicy: Owner
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: GithubAccessToken
+          name: flux-dispatch-${FLUX_DISPATCH_NAME}
