@@ -50,6 +50,11 @@
       "component": "oci-dis-core-proxies",
       "initial-version": "0.1.0"
     },
+    "oci/dis-messaging": {
+      "release-type": "simple",
+      "component": "oci-dis-messaging",
+      "initial-version": "0.1.0"
+    },
     "oci/dis-pgsql": {
       "release-type": "simple",
       "component": "oci-dis-pgsql"
