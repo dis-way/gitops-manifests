@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.5...oci-azure-service-operator-v1.5.0) (2026-11-06)
+
+
+### Features
+
+* **azure-service-operator:** restrict ASO writes in product namespaces to the platform operators ([#2414](https://github.com/dis-way/gitops-manifests/issues/2414)) ([6a989fa](https://github.com/dis-way/gitops-manifests/commit/6a989fa3cfb00f02c4fc81e0e2ddd1d054ec117c))
+
 ## [1.4.5](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.4...oci-azure-service-operator-v1.4.5) (2026-10-05)
 
 
