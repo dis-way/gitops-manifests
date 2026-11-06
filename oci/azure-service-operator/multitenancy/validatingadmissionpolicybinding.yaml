@@ -1,0 +1,9 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: aso-product-writes
+spec:
+  policyName: aso-product-writes
+  # Audit and Warn first. Switch to Deny when the audit log shows no failure
+  # from an operator or a controller.
+  validationActions: ["Audit", "Warn"]
