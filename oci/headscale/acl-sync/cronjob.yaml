@@ -32,7 +32,7 @@ spec:
           containers:
             - name: apply
               # renovate: datasource=docker depName=chainguard/kubectl
-              image: altinncr.azurecr.io/docker.io/chainguard/kubectl:latest-dev@sha256:ee760c803cc3856d99f13dfd989bce461d2b324ae49e70b72c717f3bfaba9cbb
+              image: altinncr.azurecr.io/docker.io/chainguard/kubectl:latest-dev@sha256:e7b74ede6f83d26535db843705b94432c7e3f648b18960659797600cbc7fc85c
               command: ["/bin/sh", "/scripts/apply-acl.sh"]
               env:
                 - name: HOME
