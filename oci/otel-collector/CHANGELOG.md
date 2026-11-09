@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.2.1...oci-otel-collector-v2.3.0) (2026-11-09)
+
+
+### Features
+
+* **otel-collector:** forward Traefik traces to Altinn Studio in apps clusters ([#2444](https://github.com/dis-way/gitops-manifests/issues/2444)) ([e5a2900](https://github.com/dis-way/gitops-manifests/commit/e5a2900cfc777b39b350041e373358294fc39343))
+
 ## [2.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.2.0...oci-otel-collector-v2.2.1) (2026-11-05)
 
 
