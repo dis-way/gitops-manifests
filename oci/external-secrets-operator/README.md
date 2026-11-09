@@ -19,8 +19,9 @@ Deploys the External Secrets Operator for syncing secrets from external provider
 | `TOKEN_NAMESPACE` | — | multitenancy flux-dispatch-token | Product namespace that receives the token. Read from the `flux-dispatch-token/secrets` layer |
 | `TOKEN_SECRET_NAME` | — | multitenancy flux-dispatch-token | Secret in `TOKEN_NAMESPACE` that the product's Flux Provider reads. Read from the `flux-dispatch-token/secrets` layer |
 
-`base`, `apps`, `platform-aks`, `adminservices`, and `multitenancy` use no variables — substitution only applies to the
-`post-deploy` layers.
+`base`, `apps`, `platform-aks`, `adminservices`, and `multitenancy` use no variables. Substitution applies to the
+`post-deploy` layers, `multitenancy/central-accesstoken`, and `multitenancy/flux-dispatch-token` with its `secrets`
+layer.
 
 `multitenancy/central-accesstoken` reads its variables from the `multitenancy/secrets` layer, through
 `postBuild.substituteFrom` on the `external-secrets-operator-vars` Secret. The ExternalSecret and the Secret are in
@@ -166,3 +167,9 @@ On DIS core clusters the Flux Kustomizations depend on each other in this order:
 `multitenancy/flux-dispatch-token`. Apply `flux-dispatch-token` with `wait = false`, because its `ExternalSecret` is not
 ready until the private key is in the vault. Apply it with `prune` on, so that removing a mapping stops distribution
 and deletes the destination Secret. To offboard a repository, also remove it from the App installation.
+
+Give each mapping its own destination Secret: two mappings that write the same Secret overwrite each other's token
+every minute. Do not change a mapping's repository and namespace at the same time. The copy moves to the new namespace
+within a minute, but the token is renewed for the new repository only at the next refresh, up to 30 minutes later, so
+until then the new namespace gets a token for the old repository. Add a mapping with a new name instead, then remove the
+old one.
