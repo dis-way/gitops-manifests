@@ -128,8 +128,8 @@
     "prod_ring2": "1.0.3"
   },
   "external-secrets-operator": {
-    "at_ring1": "1.14.0",
-    "at_ring2": "1.14.0",
+    "at_ring1": "1.15.0",
+    "at_ring2": "1.15.0",
     "tt_ring1": "1.14.0",
     "tt_ring2": "1.14.0",
     "prod_ring1": "1.14.0",
