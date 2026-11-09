@@ -3,3 +3,8 @@ kind: Kustomization
 resources:
   - ../base
   - external-secrets.yaml
+patches:
+  - path: collector-patch.yaml
+    target:
+      kind: OpenTelemetryCollector
+      name: otel
