@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.14.0...oci-external-secrets-operator-v1.15.0) (2026-11-09)
+
+
+### Features
+
+* **external-secrets-operator:** add repository-scoped GitHub tokens for Flux dispatch ([#2424](https://github.com/dis-way/gitops-manifests/issues/2424)) ([94dbe4a](https://github.com/dis-way/gitops-manifests/commit/94dbe4a2a4c3e290339f1ca4884a6f970d93e222))
+
 ## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.13.1...oci-external-secrets-operator-v1.14.0) (2026-11-05)
 
 
