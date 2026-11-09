@@ -222,6 +222,18 @@ Workloads that opt into the operator's SDK injection get `service.namespace` set
 
 `transform/servicenamespace` drops `service.namespace` when it equals `k8s.namespace.name`. It runs before `k8sattributes`, so that `k8s.namespace.name` can only have come from the SDK itself — in practice from the operator. Services that set their own `service.namespace` keep it, unless the value is their own namespace and the SDK also sends `k8s.namespace.name`, as every opted-in workload's does.
 
+### Studio Trace Forwarding
+
+Only in the `apps` overlay. Altinn Studio's runtime sends its telemetry to its own collector (`otel-router` in `runtime-obs`), so without Traefik's spans its traces stop at the gateway. The `traces/studio` pipeline receives the same OTLP traffic as `traces`, keeps only spans with `service.name=traefik` (`filter/studio-traefik`) and exports them to `otel-router.runtime-obs.svc.cluster.local:4317` (`otlp/studio`).
+
+| Step | Why |
+|------|-----|
+| Before `tail_sampling` and `transform/*` | Studio samples whole traces itself and needs the original attributes |
+| `resourcedetection/aks`, `k8sattributes` | `k8s.cluster.name` and `k8s.pod.uid`; `otel-router` receives the spans through Linkerd and cannot tell which pod they came from |
+| `batch`, then `otlp/studio` with a 20 000-span queue | A slow or unavailable `otel-router` does not hold up the `otlp` receiver or the Application Insights pipeline. Failed exports are retried for up to 60 s; once the queue is full, new spans for Studio are dropped |
+
+Studio allows the `monitoring` namespace through the NetworkPolicy on `otel-router`. Dropped and failed spans show up as `otelcol_exporter_enqueue_failed_spans_total` and `otelcol_exporter_send_failed_spans_total` with `exporter="otlp/studio"`.
+
 ### Tail Sampling Strategy
 
 | Policy | Condition | Rate |
@@ -254,6 +266,6 @@ The sampling hint is propagated via the `dis.otel/sampling` label on the Deploym
 |------|-------------|
 | `base` | Core resources: namespace, `OpenTelemetryCollector` CR, `Instrumentation` CR, ServiceAccount, ClusterRole/Binding, ExternalSecret |
 | `multitenancy` | Includes `base` + `policies`; entry point for Flux multitenancy deployments |
-| `apps` | Alias for `base`; no additional changes |
+| `apps` | Extends `base` with the `traces/studio` pipeline forwarding Traefik spans to Altinn Studio (see *Studio Trace Forwarding*), and syncs the App Insights connection string into `flux-system` |
 | `policies` | Linkerd `Server` resources opening OTLP ports 4317 and 4318 to cluster-wide traffic |
 | `adminservices` | Overlay that extends the collector with a `prometheus/headscale` receiver scraping Headscale metrics |

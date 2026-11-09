@@ -1,0 +1,43 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel
+  namespace: monitoring
+spec:
+  config:
+    processors:
+      # Keep only Traefik's spans for Altinn Studio.
+      filter/studio-traefik:
+        error_mode: ignore
+        traces:
+          span:
+            - resource.attributes["service.name"] != "traefik"
+    exporters:
+      # Altinn Studio's collector in runtime-obs. A slow or unavailable
+      # otel-router must not hold up the otlp receiver: the batch processor in
+      # front of this exporter accepts spans without waiting for the export, and
+      # the queue drops spans instead of blocking once it is full. The queue is
+      # counted in spans and kept small, so an outage costs little memory.
+      otlp/studio:
+        endpoint: otel-router.runtime-obs.svc.cluster.local:4317
+        tls:
+          insecure: true # in-cluster, meshed by Linkerd on both ends
+        timeout: 5s
+        sending_queue:
+          enabled: true
+          sizer: items
+          queue_size: 20000
+          block_on_overflow: false
+        retry_on_failure:
+          enabled: true
+          max_elapsed_time: 60s
+    service:
+      pipelines:
+        # Gets the spans as received, before tail_sampling and
+        # transform/azuremonitor: Studio samples whole traces itself and needs
+        # the original attributes. k8sattributes adds k8s.pod.uid, which
+        # otel-router cannot tell from a connection that comes through Linkerd.
+        traces/studio:
+          receivers: [otlp]
+          processors: [memory_limiter, filter/studio-traefik, resourcedetection/aks, k8sattributes, batch]
+          exporters: [otlp/studio]
