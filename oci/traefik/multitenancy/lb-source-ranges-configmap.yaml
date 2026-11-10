@@ -43,3 +43,6 @@ data:
           - ${LB_SOURCE_RANGE_APIM_IPV6}
           - ${LB_SOURCE_RANGE_DIS_EDGE}
           - ${LB_SOURCE_RANGE_DIS_EDGE_IPV6}
+          # Two ranges per environment, IPv4 only; the loopback default admits nothing.
+          - ${LB_SOURCE_RANGE_LEGACY_PLATFORM_01:=127.0.0.1/32}
+          - ${LB_SOURCE_RANGE_LEGACY_PLATFORM_02:=127.0.0.1/32}
