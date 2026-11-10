@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.6](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.5...oci-headscale-v2.7.6) (2026-11-10)
+
+
+### Dependency Updates
+
+* update chainguard/kubectl:latest-dev docker digest to 945cf7b ([#2398](https://github.com/dis-way/gitops-manifests/issues/2398)) ([131e9fd](https://github.com/dis-way/gitops-manifests/commit/131e9fd5926a7d04445ba0ce343ff9fb76aaf5b2))
+
 ## [2.7.5](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.4...oci-headscale-v2.7.5) (2026-11-09)
 
 
