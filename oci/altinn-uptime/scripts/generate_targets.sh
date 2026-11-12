@@ -385,9 +385,9 @@ spec:
       hostname:
       - ${org}.apps.tt02.altinn.no
       module:
-      - http_2xx_ipv4_kuberneteswrapper
+      - http_health_check_ipv4
       target:
-      - https://${org}.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments
+      - https://${org}.apps.tt02.altinn.no/runtime/gateway/api/v1/health
     path: /probe
     port: http
     scheme: http
@@ -447,9 +447,9 @@ spec:
       hostname:
       - ${org}.apps.tt02.altinn.no
       module:
-      - http_2xx_ipv6_kuberneteswrapper
+      - http_health_check_ipv6
       target:
-      - https://${org}.apps.tt02.altinn.no/kuberneteswrapper/api/v1/deployments
+      - https://${org}.apps.tt02.altinn.no/runtime/gateway/api/v1/health
     path: /probe
     port: http
     scheme: http
@@ -512,9 +512,9 @@ spec:
       hostname:
       - ${org}.apps.altinn.no
       module:
-      - http_2xx_ipv4_kuberneteswrapper
+      - http_health_check_ipv4
       target:
-      - https://${org}.apps.altinn.no/kuberneteswrapper/api/v1/deployments
+      - https://${org}.apps.altinn.no/runtime/gateway/api/v1/health
     path: /probe
     port: http
     scheme: http
@@ -574,9 +574,9 @@ spec:
       hostname:
       - ${org}.apps.altinn.no
       module:
-      - http_2xx_ipv6_kuberneteswrapper
+      - http_health_check_ipv6
       target:
-      - https://${org}.apps.altinn.no/kuberneteswrapper/api/v1/deployments
+      - https://${org}.apps.altinn.no/runtime/gateway/api/v1/health
     path: /probe
     port: http
     scheme: http
