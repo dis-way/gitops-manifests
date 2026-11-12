@@ -1,0 +1,173 @@
+# Changelog
+
+## [4.0.5](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.4...oci-envoy-gateway-v4.0.5) (2026-11-03)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** raise downstream http idleTimeout to 90s ([#2396](https://github.com/dis-way/gitops-manifests/issues/2396)) ([10cc148](https://github.com/dis-way/gitops-manifests/commit/10cc14802cbd5e01b3bd82948653604ecba96a2b))
+
+## [4.0.4](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.3...oci-envoy-gateway-v4.0.4) (2026-11-02)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** pin Envoy to distroless-v1.39.6 for the patched CA bundle ([#2288](https://github.com/dis-way/gitops-manifests/issues/2288)) ([42301c5](https://github.com/dis-way/gitops-manifests/commit/42301c5ac477312262dd7aaa7767e489712c4a27))
+
+## [4.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.2...oci-envoy-gateway-v4.0.3) (2026-10-28)
+
+
+### Bug Fixes
+
+* **renovate:** track OCI Helm chart versions in envoy-gateway ([#2231](https://github.com/dis-way/gitops-manifests/issues/2231)) ([c6be40a](https://github.com/dis-way/gitops-manifests/commit/c6be40aedfec4039da2982121ebba24410e1a198))
+
+
+### Dependency Updates
+
+* update envoy gateway to v1.9.3 ([#2280](https://github.com/dis-way/gitops-manifests/issues/2280)) ([50bd043](https://github.com/dis-way/gitops-manifests/commit/50bd0430ef5bdb36df7a1ea76ef297d07c6c266c))
+
+## [4.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.1...oci-envoy-gateway-v4.0.2) (2026-10-26)
+
+
+### Dependency Updates
+
+* **envoy-gateway:** update envoy-gateway chart version to v1.9.2 ([#2211](https://github.com/dis-way/gitops-manifests/issues/2211)) ([01c34ba](https://github.com/dis-way/gitops-manifests/commit/01c34ba169f9481c9011a86ac5cff5fb3872e3a8))
+
+## [4.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.0...oci-envoy-gateway-v4.0.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** stop logging client resets and filter stdout access logs ([#2170](https://github.com/dis-way/gitops-manifests/issues/2170)) ([f35950e](https://github.com/dis-way/gitops-manifests/commit/f35950efdb947abe5508d3bebcf3d549ff2905a3))
+
+## [4.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.2.0...oci-envoy-gateway-v4.0.0) (2026-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **envoy-gateway:** STUDIO_HOSTNAME, STUDIO_TLS_CRT_SECRET_NAME and STUDIO_TLS_KEY_SECRET_NAME are replaced by ENVIRONMENT, which now sets both listener hostnames and their Key Vault secret names.
+
+### Features
+
+* **envoy-gateway:** add dis wildcard ListenerSet and derive hostnames from ENVIRONMENT ([#2142](https://github.com/dis-way/gitops-manifests/issues/2142)) ([6ca5f4a](https://github.com/dis-way/gitops-manifests/commit/6ca5f4a43c33aee52bb967d331e538bce18498c0))
+
+## [3.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.1.0...oci-envoy-gateway-v3.2.0) (2026-10-19)
+
+
+### Features
+
+* **envoy-gateway:** raise requestReceivedTimeout to 300s for large uploads ([#2133](https://github.com/dis-way/gitops-manifests/issues/2133)) ([d6ce8e9](https://github.com/dis-way/gitops-manifests/commit/d6ce8e94703768b025ae6a407aeda7f64c455c42))
+
+## [3.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v3.0.0...oci-envoy-gateway-v3.1.0) (2026-10-19)
+
+
+### Features
+
+* **envoy-gateway:** enable hybrid post-quantum key exchange (X25519MLKEM768) ([#2103](https://github.com/dis-way/gitops-manifests/issues/2103)) ([6c94df1](https://github.com/dis-way/gitops-manifests/commit/6c94df1ccc319aa5d51715484586aca3e5a2d092))
+
+## [3.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.7.0...oci-envoy-gateway-v3.0.0) (2026-10-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **envoy-gateway:** every edge cluster must set STUDIO_HOSTNAME, STUDIO_TLS_CRT_SECRET_NAME and STUDIO_TLS_KEY_SECRET_NAME.
+
+### Features
+
+* **envoy-gateway:** add studio ListenerSet to edge ([d841ba3](https://github.com/dis-way/gitops-manifests/commit/d841ba3f8f5e2691c6ef42cf26c192d80d058682))
+
+## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.6.1...oci-envoy-gateway-v2.7.0) (2026-10-06)
+
+
+### Features
+
+* **envoy-gateway:** ship access logs for failed requests to the otel-collector ([#1872](https://github.com/dis-way/gitops-manifests/issues/1872)) ([69cfbd3](https://github.com/dis-way/gitops-manifests/commit/69cfbd378abeba8481dec247aca32f622dffee8f))
+
+## [2.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.6.0...oci-envoy-gateway-v2.6.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** drop headers with underscores instead of rejecting ([#1864](https://github.com/dis-way/gitops-manifests/issues/1864)) ([cdeb343](https://github.com/dis-way/gitops-manifests/commit/cdeb343e6f3b3c1616ceb91f6162e62e024de17f))
+
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.5.0...oci-envoy-gateway-v2.6.0) (2026-10-06)
+
+
+### Features
+
+* **envoy-gateway:** close idle upstream connections after 25m ([#1857](https://github.com/dis-way/gitops-manifests/issues/1857)) ([2fb9acf](https://github.com/dis-way/gitops-manifests/commit/2fb9acfd700f27326a03ecd03c3d454f105e2990))
+* **envoy-gateway:** export alert-critical metrics for the edge dashboard ([#1791](https://github.com/dis-way/gitops-manifests/issues/1791)) ([c77cdbb](https://github.com/dis-way/gitops-manifests/commit/c77cdbb0e58ef5ef85e5f31c9ecd062b73c379e6))
+
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.4.0...oci-envoy-gateway-v2.5.0) (2026-10-05)
+
+
+### Features
+
+* **envoy-gateway:** export request and route timeout stats ([#1771](https://github.com/dis-way/gitops-manifests/issues/1771)) ([543f6bf](https://github.com/dis-way/gitops-manifests/commit/543f6bffad7a6d3a26e418e78bd32a1771ac3d25))
+* **envoy-gateway:** raise requestReceivedTimeout to 120s for large uploads ([#1773](https://github.com/dis-way/gitops-manifests/issues/1773)) ([0a2195d](https://github.com/dis-way/gitops-manifests/commit/0a2195d948c6c49591a20180b9ce916857ff7aba))
+
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.1...oci-envoy-gateway-v2.4.0) (2026-10-02)
+
+
+### Features
+
+* increase maxReplicas from 10 to 20 ([#1704](https://github.com/dis-way/gitops-manifests/issues/1704)) ([6aff507](https://github.com/dis-way/gitops-manifests/commit/6aff5070f93e59265e189171363fb689e8a2e654))
+
+## [2.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.3.0...oci-envoy-gateway-v2.3.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **envoy-proxy:** enhance metrics collection and update rate limit configurations ([#1619](https://github.com/dis-way/gitops-manifests/issues/1619)) ([c48d7c8](https://github.com/dis-way/gitops-manifests/commit/c48d7c85bab0081ebc8f04583a5b7d329bd06519))
+
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.2.0...oci-envoy-gateway-v2.3.0) (2026-09-16)
+
+
+### Features
+
+* **envoy-gateway:** back global rate limiting with Valkey ([#1590](https://github.com/dis-way/gitops-manifests/issues/1590)) ([d462036](https://github.com/dis-way/gitops-manifests/commit/d462036f00693c04f35281f73d454db81c4609a3))
+
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.1.1...oci-envoy-gateway-v2.2.0) (2026-09-15)
+
+
+### Features
+
+* drop more headers in edge proxy ([#1578](https://github.com/dis-way/gitops-manifests/issues/1578)) ([d71a753](https://github.com/dis-way/gitops-manifests/commit/d71a75381d0470097dba1c480681fa3b1786a79a))
+* **envoy-gateway:** make the cpu and memory request/limit configurable with default ([#1581](https://github.com/dis-way/gitops-manifests/issues/1581)) ([f48574b](https://github.com/dis-way/gitops-manifests/commit/f48574bdd30908c77a122b7f3a91dbd9b964da4d))
+
+
+### Bug Fixes
+
+* **envoy-gateway:** add tags to otel traces to improve visualization ([#1583](https://github.com/dis-way/gitops-manifests/issues/1583)) ([6af93dd](https://github.com/dis-way/gitops-manifests/commit/6af93dd6a376b16b19b39c5e47e08e8a02237b1e))
+
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.1.0...oci-envoy-gateway-v2.1.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* set resources request and limit explicitly ([#1565](https://github.com/dis-way/gitops-manifests/issues/1565)) ([2e83cb4](https://github.com/dis-way/gitops-manifests/commit/2e83cb43bccc97180094b674e82dfb4860aa41a5))
+
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v2.0.0...oci-envoy-gateway-v2.1.0) (2026-09-12)
+
+
+### Features
+
+* **envoy-gateway:** set X-Real-IP and strip inbound X-Forwarded-For ([#1531](https://github.com/dis-way/gitops-manifests/issues/1531)) ([b32ae15](https://github.com/dis-way/gitops-manifests/commit/b32ae15a5bcec5574f0f8f445d014b29501f45a2))
+
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v1.0.0...oci-envoy-gateway-v2.0.0) (2026-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **envoy-gateway:** the multitenancy layer is removed; use edge instead.
+
+### Features
+
+* **envoy-gateway:** add default gateway and split into layers  ([#1526](https://github.com/dis-way/gitops-manifests/issues/1526)) ([d1e57e7](https://github.com/dis-way/gitops-manifests/commit/d1e57e73c39d9be3b803c7175641bd63e1918961))
+
+## 1.0.0 (2026-09-10)
+
+
+### Features
+
+* **envoy-gateway:** add Envoy Gateway with initial configuration ([#1502](https://github.com/dis-way/gitops-manifests/issues/1502)) ([1f49b98](https://github.com/dis-way/gitops-manifests/commit/1f49b98d25687e8b9e3a1399675b85e987e1ecfb))

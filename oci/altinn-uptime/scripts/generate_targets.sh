@@ -137,27 +137,48 @@ get_organizations() {
     fi
 }
 
-# Function to apply a ServiceMonitor to Kubernetes
+# Function to derive the instance label of a health check target: host and path without the
+# trailing /health, so several services behind one host (API Management) get their own series.
+# https://info.altinn.no/health -> info.altinn.no
+# https://platform.altinn.no/dialogporten/health -> platform.altinn.no/dialogporten
+health_check_instance() {
+    echo "$1" | sed -E -e 's|^https?://||' -e 's|/+$||' -e 's|/health$||'
+}
+
+# Function to add a ServiceMonitor to the batch that apply_servicemonitor_batch applies
 apply_servicemonitor() {
     local yaml_content="$1"
     local name="$2"
 
-    echo "$yaml_content" > "$TEMP_DIR/servicemonitor.yaml"
-
     if [ "$DRY_RUN" = "true" ]; then
         echo "[DRY RUN] Would apply ServiceMonitor: $name"
-        echo "$name" >> "$TEMP_DIR/applied_names"
+    fi
+
+    echo "$yaml_content" >> "$TEMP_DIR/servicemonitors.yaml"
+    echo "$name" >> "$TEMP_DIR/applied_names"
+}
+
+# Function to apply all batched ServiceMonitors with one kubectl call. kubectl apply leaves
+# ServiceMonitors that already match unchanged and updates the ones that differ.
+apply_servicemonitor_batch() {
+    if [ "$DRY_RUN" = "true" ]; then
         return 0
     fi
 
-    if kubectl apply -f "$TEMP_DIR/servicemonitor.yaml" -n "$NAMESPACE" &> /dev/null; then
-        echo "Applied ServiceMonitor: $name"
-        echo "$name" >> "$TEMP_DIR/applied_names"
+    if [ ! -s "$TEMP_DIR/servicemonitors.yaml" ]; then
+        echo "No ServiceMonitors to apply"
         return 0
-    else
-        echo "Failed to apply ServiceMonitor: $name"
-        return 1
     fi
+
+    echo "Applying $(grep -c . "$TEMP_DIR/applied_names") ServiceMonitors..."
+    if ! kubectl apply -f "$TEMP_DIR/servicemonitors.yaml" -n "$NAMESPACE" > "$TEMP_DIR/apply.log" 2>&1; then
+        echo "Failed to apply some ServiceMonitors"
+    fi
+
+    # Log created and configured ServiceMonitors and any errors, not the unchanged ones
+    grep -v ' unchanged$' "$TEMP_DIR/apply.log"
+    echo "Created: $(grep -c ' created$' "$TEMP_DIR/apply.log"), configured: $(grep -c ' configured$' "$TEMP_DIR/apply.log"), unchanged: $(grep -c ' unchanged$' "$TEMP_DIR/apply.log")"
+    grep -E ' (created|configured|unchanged)$' "$TEMP_DIR/apply.log" > "$TEMP_DIR/applied_names"
 }
 
 # Function to delete a ServiceMonitor from Kubernetes
@@ -183,8 +204,9 @@ download_organizations
 load_configuration
 get_organizations
 
-# Initialize applied names file
+# Initialize applied names and ServiceMonitor batch files
 : > "$TEMP_DIR/applied_names"
+: > "$TEMP_DIR/servicemonitors.yaml"
 
 # Safety check to prevent deleting all ServiceMonitors if data is missing
 if [ -z "$ORGANIZATIONS_JSON" ]; then
@@ -269,6 +291,36 @@ generate_expected_names() {
             fi
         done
 
+        # Process whoami IPv4 extra targets
+        WHOAMI_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.whoami_ipv4[]?' 2>/dev/null)
+        for target in $WHOAMI_IPV4_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-whoami-ipv4"
+            fi
+        done
+
+        # Process whoami IPv6 extra targets
+        WHOAMI_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.whoami_ipv6[]?' 2>/dev/null)
+        for target in $WHOAMI_IPV6_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-whoami-ipv6"
+            fi
+        done
+
         # Process TLS IPv4 extra targets
         TLS_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.tls_ipv4[]?' 2>/dev/null)
         for target in $TLS_IPV4_TARGETS; do
@@ -296,6 +348,36 @@ generate_expected_names() {
                     name="${name:0:$max_name_len}"
                 fi
                 expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-tls-ipv6"
+            fi
+        done
+
+        # Process health check IPv4 extra targets
+        HEALTH_CHECK_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv4[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV4_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv4"
+            fi
+        done
+
+        # Process health check IPv6 extra targets
+        HEALTH_CHECK_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv6[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV6_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                expected_names="$expected_names blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv6"
             fi
         done
     fi
@@ -335,15 +417,15 @@ delete_count=$(echo "$to_delete" | grep -c . || echo "0")
 
 echo "Found $add_count ServiceMonitors to add and $delete_count ServiceMonitors to delete"
 
-# Add new ServiceMonitors
-if [ -n "$to_add" ]; then
-    echo "Adding new ServiceMonitors..."
+# Function to generate every expected ServiceMonitor. All of them are applied on each run,
+# not only the missing ones, so template changes also reach existing ServiceMonitors.
+generate_servicemonitors() {
+    echo "Generating ServiceMonitors..."
 
     # Generate and apply ServiceMonitors for organizations with tt02 environment
     for org in $ORGS_WITH_TT02; do
-        # Check if we need to add IPv4 ServiceMonitor for tt02
-        if echo "$to_add" | grep -q "^blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv4$"; then
-            cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+        # IPv4 ServiceMonitor for tt02
+        cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
 ---
 apiVersion: azmonitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -400,12 +482,10 @@ spec:
       app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
-            apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv4"
-        fi
+        apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv4"
 
-        # Check if we need to add IPv6 ServiceMonitor for tt02
-        if echo "$to_add" | grep -q "^blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv6$"; then
-            cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+        # IPv6 ServiceMonitor for tt02
+        cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
 ---
 apiVersion: azmonitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -462,15 +542,13 @@ spec:
       app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
-            apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv6"
-        fi
+        apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-tt02-ipv6"
     done
 
     # Generate and apply ServiceMonitors for organizations with production environment
     for org in $ORGS_WITH_PROD; do
-        # Check if we need to add IPv4 ServiceMonitor for production
-        if echo "$to_add" | grep -q "^blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv4$"; then
-            cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+        # IPv4 ServiceMonitor for production
+        cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
 ---
 apiVersion: azmonitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -527,12 +605,10 @@ spec:
       app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
-            apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv4"
-        fi
+        apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv4"
 
-        # Check if we need to add IPv6 ServiceMonitor for production
-        if echo "$to_add" | grep -q "^blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv6$"; then
-            cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+        # IPv6 ServiceMonitor for production
+        cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
 ---
 apiVersion: azmonitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -589,8 +665,7 @@ spec:
       app.kubernetes.io/instance: prometheus-blackbox-exporter
       app.kubernetes.io/name: prometheus-blackbox-exporter
 EOF
-            apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv6"
-        fi
+        apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "blackbox-exporter-${UNIQUE_ID}-${org}-prod-ipv6"
     done
 
     # Process extra targets
@@ -887,6 +962,150 @@ EOF
             fi
         done
 
+        # Whoami IPv4 extra targets
+        WHOAMI_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.whoami_ipv4[]?' 2>/dev/null)
+        for target in $WHOAMI_IPV4_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                sm_name="blackbox-exporter-${UNIQUE_ID}-extra-${name}-whoami-ipv4"
+
+                cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+---
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $sm_name
+  namespace: $NAMESPACE
+  labels:
+    app: prometheus-blackbox-exporter
+    release: monitor
+    app.kubernetes.io/name: altinn-uptime
+    app.kubernetes.io/managed-by: altinn-uptime-sync
+    app.kubernetes.io/component: monitoring
+    altinn.no/environment: extra
+    altinn.no/organization: extra
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  endpoints:
+  - honorTimestamps: true
+    interval: 15s
+    scrapeTimeout: 15s
+    metricRelabelings:
+    - action: replace
+      replacement: blackbox-http-ipv4-whoami
+      targetLabel: job
+    - action: replace
+      replacement: $hostname
+      targetLabel: instance
+    - action: replace
+      replacement: extra-${name}-whoami
+      sourceLabels:
+      - target
+      targetLabel: target
+    - action: replace
+      replacement: v4
+      targetLabel: ip_family
+    params:
+      module:
+      - http_2xx_ipv4_whoami
+      target:
+      - $target
+    path: /probe
+    port: http
+    scheme: http
+  jobLabel: blackbox-http-ipv4-whoami
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+EOF
+                apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
+            fi
+        done
+
+        # Whoami IPv6 extra targets
+        WHOAMI_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.whoami_ipv6[]?' 2>/dev/null)
+        for target in $WHOAMI_IPV6_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
+                hostname=$(echo "$target" | sed -E 's|https?://([^/]+).*|\1|')
+                name=$(echo "$hostname" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 40))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                sm_name="blackbox-exporter-${UNIQUE_ID}-extra-${name}-whoami-ipv6"
+
+                cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+---
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $sm_name
+  namespace: $NAMESPACE
+  labels:
+    app: prometheus-blackbox-exporter
+    release: monitor
+    app.kubernetes.io/name: altinn-uptime
+    app.kubernetes.io/managed-by: altinn-uptime-sync
+    app.kubernetes.io/component: monitoring
+    altinn.no/environment: extra
+    altinn.no/organization: extra
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  endpoints:
+  - honorTimestamps: true
+    interval: 15s
+    scrapeTimeout: 15s
+    metricRelabelings:
+    - action: replace
+      replacement: blackbox-http-ipv6-whoami
+      targetLabel: job
+    - action: replace
+      replacement: $hostname
+      targetLabel: instance
+    - action: replace
+      replacement: extra-${name}-whoami
+      sourceLabels:
+      - target
+      targetLabel: target
+    - action: replace
+      replacement: v6
+      targetLabel: ip_family
+    params:
+      module:
+      - http_2xx_ipv6_whoami
+      target:
+      - $target
+    path: /probe
+    port: http
+    scheme: http
+  jobLabel: blackbox-http-ipv6-whoami
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+EOF
+                apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
+            fi
+        done
+
         # TLS IPv4 extra targets
         TLS_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.tls_ipv4[]?' 2>/dev/null)
         for target in $TLS_IPV4_TARGETS; do
@@ -1030,8 +1249,155 @@ EOF
                 apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
             fi
         done
+
+        # Health check IPv4 extra targets
+        HEALTH_CHECK_IPV4_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv4[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV4_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV4" | grep -q "^$target$"; then
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                sm_name="blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv4"
+
+                cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+---
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $sm_name
+  namespace: $NAMESPACE
+  labels:
+    app: prometheus-blackbox-exporter
+    release: monitor
+    app.kubernetes.io/name: altinn-uptime
+    app.kubernetes.io/managed-by: altinn-uptime-sync
+    app.kubernetes.io/component: monitoring
+    altinn.no/environment: extra
+    altinn.no/organization: extra
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  endpoints:
+  - honorTimestamps: true
+    interval: 60s
+    scrapeTimeout: 15s
+    metricRelabelings:
+    - action: replace
+      replacement: blackbox-http-ipv4-health-check
+      targetLabel: job
+    - action: replace
+      replacement: $instance
+      targetLabel: instance
+    - action: replace
+      replacement: extra-${name}-health-check
+      sourceLabels:
+      - target
+      targetLabel: target
+    - action: replace
+      replacement: v4
+      targetLabel: ip_family
+    params:
+      module:
+      - http_health_check_ipv4
+      target:
+      - $target
+    path: /probe
+    port: http
+    scheme: http
+  jobLabel: blackbox-http-ipv4-health-check
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+EOF
+                apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
+            fi
+        done
+
+        # Health check IPv6 extra targets
+        HEALTH_CHECK_IPV6_TARGETS=$(echo "$EXTRA_TARGETS_JSON" | jq -r '.health_check_ipv6[]?' 2>/dev/null)
+        for target in $HEALTH_CHECK_IPV6_TARGETS; do
+            if ! echo "$MAINTENANCE_IPV6" | grep -q "^$target$"; then
+                instance=$(health_check_instance "$target")
+                name=$(echo "$instance" | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')
+                # Ensure name doesn't exceed k8s limits (253 chars total)
+                max_name_len=$((253 - ${#UNIQUE_ID} - 43))  # Reserve space for prefix/suffix
+                if [ ${#name} -gt $max_name_len ]; then
+                    name="${name:0:$max_name_len}"
+                fi
+                sm_name="blackbox-exporter-${UNIQUE_ID}-extra-${name}-health-check-ipv6"
+
+                cat > "$TEMP_DIR/servicemonitor.yaml" << EOF
+---
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: $sm_name
+  namespace: $NAMESPACE
+  labels:
+    app: prometheus-blackbox-exporter
+    release: monitor
+    app.kubernetes.io/name: altinn-uptime
+    app.kubernetes.io/managed-by: altinn-uptime-sync
+    app.kubernetes.io/component: monitoring
+    altinn.no/environment: extra
+    altinn.no/organization: extra
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  endpoints:
+  - honorTimestamps: true
+    interval: 60s
+    scrapeTimeout: 15s
+    metricRelabelings:
+    - action: replace
+      replacement: blackbox-http-ipv6-health-check
+      targetLabel: job
+    - action: replace
+      replacement: $instance
+      targetLabel: instance
+    - action: replace
+      replacement: extra-${name}-health-check
+      sourceLabels:
+      - target
+      targetLabel: target
+    - action: replace
+      replacement: v6
+      targetLabel: ip_family
+    params:
+      module:
+      - http_health_check_ipv6
+      target:
+      - $target
+    path: /probe
+    port: http
+    scheme: http
+  jobLabel: blackbox-http-ipv6-health-check
+  namespaceSelector:
+    matchNames:
+    - $NAMESPACE
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-blackbox-exporter
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+EOF
+                apply_servicemonitor "$(cat "$TEMP_DIR/servicemonitor.yaml")" "$sm_name"
+            fi
+        done
     fi
-fi
+}
+
+generate_servicemonitors
+apply_servicemonitor_batch
 
 # Delete obsolete ServiceMonitors
 if [ -n "$to_delete" ]; then

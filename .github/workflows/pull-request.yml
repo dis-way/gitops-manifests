@@ -3,6 +3,12 @@ name: Pull Request
 on:
   pull_request:
     branches: [main]
+    # Skip release PRs (CHANGELOG/manifest/releaseconfig bumps) that never change rendered manifests
+    paths:
+      - "oci/**"
+      - "!oci/releaseconfig.json"
+      - "!oci/**/*.md"
+      - ".github/workflows/pull-request.yml"
 
 concurrency:
   group: pull-request-${{ github.event.pull_request.number }}
@@ -10,9 +16,9 @@ concurrency:
 
 jobs:
   kustomize-diff:
-    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@22c5df1f11f27332501a9073f63b6febdada279e # main
+    uses: dis-way/actions/.github/workflows/kustomize-diff.yml@fb99a38f8177b38ff22ed45377418c4c84c7075d # main
     with:
-      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/adminservices,oci/*/platform-aks"
+      build-paths: "oci/*,oci/*/apps,oci/*/multitenancy,oci/*/multitenancy-flux-webhook,oci/*/adminservices,oci/*/platform-aks,oci/*/edge,oci/external-secrets-operator/multitenancy/central-accesstoken,oci/external-secrets-operator/multitenancy/secrets,oci/external-secrets-operator/multitenancy/flux-dispatch-app,oci/external-secrets-operator/multitenancy/flux-dispatch-token,oci/external-secrets-operator/multitenancy/flux-dispatch-token/secrets"
     permissions:
       contents: read
       pull-requests: write

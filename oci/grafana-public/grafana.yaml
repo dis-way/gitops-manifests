@@ -1,0 +1,124 @@
+# Self-hosted Grafana OSS for dashboards shared publicly with customers, which
+# Azure Managed Grafana does not support. Storage is the operator's default
+# emptyDir SQLite: dashboards, folders, datasources and public sharing (with a
+# pinned accessToken) all come from CRs, so a restarted pod is rebuilt by the
+# operator. Requires grafana-operator >= 5.25.0 for spec.publicSharing.
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana-public
+  namespace: grafana-public
+  labels:
+    dashboards: "public-grafana"
+spec:
+  # Full image reference so the image is pulled through the ACR mirror. The
+  # operator cannot infer the version from it, so defaults it would otherwise
+  # apply by version (server.enable_gzip) are set explicitly below.
+  # renovate: datasource=docker depName=docker.io/grafana/grafana
+  version: altinncr.azurecr.io/docker.io/grafana/grafana:13.3.0
+  config:
+    server:
+      domain: dashboards.altinn.cloud
+      root_url: https://dashboards.altinn.cloud
+      # OOM with gzip on Grafana >= 13: https://github.com/grafana/grafana/issues/123017
+      enable_gzip: "false"
+    security:
+      cookie_secure: "true"
+      disable_gravatar: "true"
+    analytics:
+      reporting_enabled: "false"
+      check_for_updates: "false"
+      check_for_plugin_updates: "false"
+    users:
+      allow_sign_up: "false"
+    auth:
+      # Entra ID is the only interactive login. Basic auth stays enabled
+      # because the operator manages Grafana with the generated admin
+      # credentials.
+      disable_login_form: "true"
+      # Not a login setting: enables Azure authentication for HTTP-based
+      # datasources. Without it the Azure Prometheus plugin sends queries
+      # without a token and the workspace answers 401.
+      azure_auth_enabled: "true"
+    auth.anonymous:
+      enabled: "false"
+    # Users get their role from the Entra app role (Viewer, Editor, Admin,
+    # GrafanaAdmin) on the app registration. role_attribute_strict denies
+    # everyone without one, so other tenant users cannot sign in.
+    auth.azuread:
+      name: Microsoft Entra ID
+      enabled: "true"
+      client_id: "${GRAFANA_PUBLIC_ENTRA_CLIENT_ID}"
+      scopes: openid email profile
+      auth_url: https://login.microsoftonline.com/cd0026d8-283b-4a55-9bfa-d0ef4a8ba21c/oauth2/v2.0/authorize
+      token_url: https://login.microsoftonline.com/cd0026d8-283b-4a55-9bfa-d0ef4a8ba21c/oauth2/v2.0/token
+      allow_sign_up: "true"
+      auto_login: "false"
+      use_pkce: "true"
+      role_attribute_strict: "true"
+      allow_assign_grafana_admin: "true"
+    azure:
+      workload_identity_enabled: "true"
+      # Managed identity on AKS is the node's kubelet identity via IMDS.
+      managed_identity_enabled: "false"
+    public_dashboards:
+      enabled: "true"
+    dashboards:
+      # Public dashboards refresh manually. Their JSON offers no refresh
+      # intervals, and this keeps the always-present "Auto" option from
+      # refreshing more than once an hour.
+      min_refresh_interval: 1h
+    time_picker:
+      # Instance-wide presets for every dashboard here (public dashboards carry
+      # none of their own). Azure Monitor Prometheus rejects ranges wider than
+      # 32 days, so nothing here is wider than one calendar month. Viewers can
+      # still type a wider custom range; Grafana has no setting to cap it.
+      quick_ranges: >-
+        [
+        {"display": "Last 1 hour", "from": "now-1h", "to": "now"},
+        {"display": "Last 6 hours", "from": "now-6h", "to": "now"},
+        {"display": "Last 24 hours", "from": "now-24h", "to": "now"},
+        {"display": "Last 7 days", "from": "now-7d", "to": "now"},
+        {"display": "Last 30 days", "from": "now-30d", "to": "now"},
+        {"display": "Today so far", "from": "now/d", "to": "now"},
+        {"display": "Yesterday", "from": "now-1d/d", "to": "now-1d/d"},
+        {"display": "This week so far", "from": "now/w", "to": "now"},
+        {"display": "Previous week", "from": "now-1w/w", "to": "now-1w/w"},
+        {"display": "This month so far", "from": "now/M", "to": "now"},
+        {"display": "Previous month", "from": "now-1M/M", "to": "now-1M/M"}
+        ]
+    plugins:
+      # Grafana 13 removed Azure auth from core Prometheus and does not bundle
+      # this plugin; without it every azure-managed-prometheus query fails with
+      # "plugin not registered". Installed at startup from grafana.com into the
+      # ephemeral data volume, before plugins load. Renovate follows the GitHub
+      # releases, which are tagged after the grafana.com publish, so it never
+      # proposes a version grafana.com cannot serve. It does not check the
+      # plugin's Grafana compatibility: verify it on grafana.com when bumping.
+      # renovate: datasource=github-releases depName=grafana/azure-prometheus-datasource
+      preinstall_sync: grafana-azureprometheus-datasource@1.0.10
+  deployment:
+    spec:
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            azure.workload.identity/use: "true"
+          annotations:
+            cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        spec:
+          serviceAccountName: grafana-public
+          containers:
+            - name: grafana
+              env:
+                - name: GF_AUTH_AZUREAD_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-public-entra
+                      key: client-secret
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  memory: 1Gi

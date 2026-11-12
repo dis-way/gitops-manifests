@@ -1,0 +1,30 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ${REDIRECT_NAME}
+  namespace: ${REDIRECT_NAMESPACE:=traefik}
+spec:
+  parentRefs:
+    - name: ${REDIRECT_NAME}
+      sectionName: https
+  hostnames:
+    - "${REDIRECT_FROM_FQDN}"
+  rules:
+    # A rule with only filters and no backendRefs is the standard redirect
+    # shape - Traefik answers directly, nothing is proxied upstream.
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "${REDIRECT_FROM_PATH_PREFIX:=/}"
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            hostname: "${REDIRECT_TO_FQDN}"
+            # Swaps the matched prefix and keeps the rest of the path and the
+            # query string. With both prefixes at "/" the path is unchanged.
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: "${REDIRECT_TO_PATH_PREFIX:=/}"
+            # Only 301 and 302 are Core support in Gateway API.
+            statusCode: ${REDIRECT_STATUS_CODE:=301}

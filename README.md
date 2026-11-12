@@ -6,6 +6,17 @@ Repository for GitOps manifests to deploy DIS resources.
 
 Each folder under `oci/<name>/` is treated as a **Flux OCI artifact** (built from the folder contents and pushed/tagged by GitHub workflows).
 
+## Rings and clusters (`clusters_in_rings.json`)
+
+`clusters_in_rings.json` lists the clusters (kube context names) that follow each ring. Promoting a package to a ring in `oci/releaseconfig.json` can update any cluster in that ring that deploys the package.
+
+A cluster's ring is set in one of two places:
+
+- Most clusters: `flux_release_tag` in the cluster's Terraform repo, which becomes the tag on its AKS Flux configurations.
+- dis-edge clusters: the manifests in `dis-way/core` under `flux/clusters/<cluster>/`. These clusters use flux-operator ResourceSets, not AKS Flux configurations.
+
+When a ring changes, update this file and the `verified` date. `untracked` lists AKS clusters that pull no `manifests/infra` artifacts.
+
 ## Adding a new OCI package (`oci/<name>`)
 
 - **1) Create the package folder**

@@ -1,0 +1,73 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# multitenancy plus a flux-webhook entrypoint (9443) on a dedicated Load Balancer
+# Service for Flux reconcile requests from the DIS edge gateway (RFC 0017).
+resources:
+  - ../multitenancy
+patches:
+  - target:
+      kind: HelmRelease
+      name: altinn-traefik
+    patch: |
+      # Exposed only on the flux-webhook Service, never on the shared one.
+      # No forwardedHeaders.trustedIPs: the shared ports trust the APIM ranges,
+      # which are 0.0.0.0/0 and ::/0 on the test clusters.
+      - op: add
+        path: /spec/values/ports/flux-webhook
+        value:
+          port: 9443
+          exposedPort: 9443
+          protocol: TCP
+          expose:
+            default: false
+            flux-webhook: true
+          http:
+            tls:
+              enabled: true
+          transport:
+            lifeCycle:
+              requestAcceptGraceTimeout: 15s
+      # Same public addresses as the shared Service, on port 9443. Only the DIS
+      # edge egress ranges may connect. Never set the
+      # azure-deny-all-except-load-balancer-source-ranges annotation: AKS applies
+      # that deny-all rule to the whole shared address, so it would also change
+      # the rules of the shared Service. Neither base nor multitenancy sets
+      # additionalServices, so this add replaces nothing.
+      - op: add
+        path: /spec/values/service/additionalServices
+        value:
+          flux-webhook:
+            enabled: true
+            single: true
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-resource-group: "${AKS_NODE_RG}"
+              service.beta.kubernetes.io/azure-load-balancer-ipv4: "${PUBLIC_IP_V4}"
+              service.beta.kubernetes.io/azure-load-balancer-ipv6: "${PUBLIC_IP_V6}"
+            spec:
+              type: LoadBalancer
+              externalTrafficPolicy: Local
+              ipFamilyPolicy: RequireDualStack
+              ipFamilies:
+                - IPv4
+                - IPv6
+              loadBalancerSourceRanges:
+                - "${LB_SOURCE_RANGE_DIS_EDGE}"
+                - "${LB_SOURCE_RANGE_DIS_EDGE_IPV6}"
+      # Routes only from flux-system; the listener port selects the entrypoint.
+      - op: add
+        path: /spec/values/gateway/listeners/flux-webhook
+        value:
+          port: 9443
+          protocol: HTTPS
+          hostname: "flux-webhook.${DEFAULT_GATEWAY_HOSTNAME}"
+          namespacePolicy:
+            from: Selector
+            selector:
+              matchLabels:
+                kubernetes.io/metadata.name: flux-system
+          certificateRefs:
+            - name: ssl-cert
+      # Traefik terminates TLS on 9443, as on 8443; keep Linkerd out of the path.
+      - op: replace
+        path: /spec/values/deployment/podAnnotations/config.linkerd.io~1skip-inbound-ports
+        value: 8000,8443,9100,9443

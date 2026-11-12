@@ -1,0 +1,531 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: eg
+  namespace: envoy-gateway-system
+spec:
+  # Load-bearing: the data plane image (tag from the chart, registry from
+  # global.imageRegistry, so it is pulled through the cache) is set by the chart
+  # in Envoy Gateway's default EnvoyProxy spec. Unset, this EnvoyProxy replaces
+  # that spec and the image silently falls back to the Envoy Gateway release's
+  # built-in default, from docker.io. Do not remove without setting the image here.
+  mergeType: StrategicMerge
+  routingType: Endpoint
+  ipFamily: DualStack
+  # Envoy flushes its whole stats set to every metrics sink every 5s by
+  # default. That is far more than this cluster needs, so stretch it to
+  # the interval the Prometheus scrape used to run at.
+  bootstrap:
+    type: Merge
+    value: |
+      stats_flush_interval: 15s
+  shutdown:
+    drainTimeout: 60s
+    minDrainDuration: 30s
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        # Load-bearing for the ClientTrafficPolicy's clientIPDetection, not a
+        # tuning knob. Azure Load Balancer does not SNAT inbound flows, so the
+        # real client IP survives all the way to the node - kube-proxy is what
+        # destroys it. With "Cluster" every request arrives from a node address
+        # and geo rules, CIDR denies and rate limit buckets all collapse into
+        # one bucket per node.
+        #
+        # Envoy Gateway already defaults this to Local. It is written out
+        # because directSourceIP is only correct while it holds, and a default
+        # can change under a version bump without anyone reading this file.
+        externalTrafficPolicy: Local
+        annotations:
+          service.beta.kubernetes.io/azure-pip-name: ${AKS_LB_PIP4_NAME}
+          service.beta.kubernetes.io/azure-pip-name-ipv6: ${AKS_LB_PIP6_NAME}
+      envoyDeployment:
+        container:
+          # The memory limit is deliberately pinned to the memory request, so
+          # the proxy is Guaranteed on memory and cannot grow into a node's
+          # spare capacity before being OOM-killed on an unrelated node event.
+          # Raise ENVOY_MEMORY_REQUEST to give it more headroom - there is no
+          # separate limit knob. There is deliberately NO cpu limit: throttling
+          # the data plane shows up as latency on every route at once.
+          resources:
+            requests:
+              cpu: "${ENVOY_CPU_REQUEST:=1}"
+              memory: "${ENVOY_MEMORY_REQUEST:=512Mi}"
+            limits:
+              memory: "${ENVOY_MEMORY_REQUEST:=512Mi}"
+        pod:
+          # externalTrafficPolicy: Local drops traffic on nodes with no local
+          # Envoy pod, so replicas sharing a node means the Azure LB health
+          # probe keeps only that one node in rotation. Spread them.
+          #
+          # ScheduleAnyway, not DoNotSchedule: a hard constraint would cap the
+          # HPA at the node count instead of merely degrading the spread.
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: envoy
+                  app.kubernetes.io/component: proxy
+                  app.kubernetes.io/managed-by: envoy-gateway
+                  gateway.envoyproxy.io/owning-gateway-name: eg
+                  gateway.envoyproxy.io/owning-gateway-namespace: envoy-gateway-system
+      envoyPDB:
+        maxUnavailable: 1
+      envoyHpa:
+        # Not 1: with externalTrafficPolicy: Local a single replica means a
+        # single node carries all ingress, and one node event is an outage.
+        # Three is the floor, not a load-test result - see maxReplicas.
+        minReplicas: 3
+        maxReplicas: 20
+        metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 50
+        behavior:
+          scaleUp:
+            stabilizationWindowSeconds: 0
+            selectPolicy: Max
+            policies:
+              - type: Percent
+                value: 100
+                periodSeconds: 15
+              - type: Pods
+                value: 2
+                periodSeconds: 15
+          scaleDown:
+            stabilizationWindowSeconds: 900
+            policies:
+              - type: Pods
+                value: 1
+                periodSeconds: 120
+  telemetry:
+    accessLog:
+      settings:
+        # Failed requests only, shipped to the otel-collector and written to
+        # stdout. Successful requests are not access-logged anywhere. Path without
+        # query string. Envoy Gateway ANDs multiple `matches` entries, so
+        # this must stay one expression. Excludes 429, backend 401/403/404
+        # (flags == 0) and client aborts.
+        - matches:
+            - >-
+              response.code >= 500
+              || (response.code >= 400 && !(response.code in [401, 403, 404, 429]))
+              || (response.code in [401, 403, 404] && response.flags != 0)
+              || (response.code == 0 && response.code_details != 'downstream_remote_disconnect')
+          format:
+            type: JSON
+            json:
+              start_time: "%START_TIME%"
+              method: "%REQ(:METHOD)%"
+              path: "%REQ_WITHOUT_QUERY(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              protocol: "%PROTOCOL%"
+              authority: "%REQ(:AUTHORITY)%"
+              requested_server_name: "%REQUESTED_SERVER_NAME%"
+              response_code: "%RESPONSE_CODE%"
+              response_flags: "%RESPONSE_FLAGS%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              connection_termination_details: "%CONNECTION_TERMINATION_DETAILS%"
+              downstream_transport_failure_reason: "%DOWNSTREAM_TRANSPORT_FAILURE_REASON%"
+              upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration: "%DURATION%"
+              upstream_service_time: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              route_name: "%ROUTE_NAME%"
+              client_ip: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+              user_agent: "%REQ(USER-AGENT)%"
+              request_id: "%REQ(X-REQUEST-ID)%"
+              trace_id: "%TRACE_ID%"
+          sinks:
+            - type: OpenTelemetry
+              openTelemetry:
+                backendRefs:
+                  - name: otel-collector
+                    namespace: monitoring
+                    port: 4317
+                # Lets the otel-collector give these logs a severity and
+                # sample 4xx - see transform/envoy-accesslog there.
+                resourceAttributes:
+                  dis.otel.logtype: envoy-access
+            # Same records, unsampled, for kubectl logs.
+            - type: File
+              file:
+                path: /dev/stdout
+        # Failed connections (TLS handshake, Envoy-terminated) that never
+        # became a request. Excludes clients that drop the connection with a
+        # TCP reset instead of a TLS close_notify: Envoy reports that as a
+        # transport failure, but it is normal client behaviour.
+        - type: Listener
+          matches:
+            - >-
+              (connection.transport_failure_reason != '' || connection.termination_details != '')
+              && !(has(connection.transport_failure_reason) && connection.transport_failure_reason.contains('Connection_reset_by_peer'))
+              && !(has(connection.transport_failure_reason) && connection.transport_failure_reason.contains('Broken_pipe'))
+          format:
+            type: JSON
+            json:
+              start_time: "%START_TIME%"
+              method: "%REQ(:METHOD)%"
+              path: "%REQ_WITHOUT_QUERY(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              protocol: "%PROTOCOL%"
+              authority: "%REQ(:AUTHORITY)%"
+              requested_server_name: "%REQUESTED_SERVER_NAME%"
+              response_code: "%RESPONSE_CODE%"
+              response_flags: "%RESPONSE_FLAGS%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              connection_termination_details: "%CONNECTION_TERMINATION_DETAILS%"
+              downstream_transport_failure_reason: "%DOWNSTREAM_TRANSPORT_FAILURE_REASON%"
+              upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration: "%DURATION%"
+              upstream_service_time: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              route_name: "%ROUTE_NAME%"
+              client_ip: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
+              user_agent: "%REQ(USER-AGENT)%"
+              request_id: "%REQ(X-REQUEST-ID)%"
+              trace_id: "%TRACE_ID%"
+          sinks:
+            - type: OpenTelemetry
+              openTelemetry:
+                backendRefs:
+                  - name: otel-collector
+                    namespace: monitoring
+                    port: 4317
+                # Lets the otel-collector give these logs a severity and
+                # sample 4xx - see transform/envoy-accesslog there.
+                resourceAttributes:
+                  dis.otel.logtype: envoy-access
+            # Same records, unsampled, for kubectl logs.
+            - type: File
+              file:
+                path: /dev/stdout
+    metrics:
+      # Without this Envoy generates every stat it knows about - thousands of
+      # series per proxy pod, most of them histogram buckets nothing queries.
+      # An inclusion list keeps the golden signals and drops the rest, which
+      # also saves Envoy's own CPU and memory. Anything not matched here stops
+      # existing, so add to the list rather than trimming it if a dashboard
+      # goes blank.
+      matches:
+        # Cluster health. Envoy Gateway explicitly warns against dropping
+        # these - warming_clusters and the membership gauges are load-bearing
+        # for the control plane, not just dashboards.
+        - type: Exact
+          value: cluster_manager.warming_clusters
+        - type: Suffix
+          value: membership_total
+        - type: Suffix
+          value: membership_healthy
+        - type: Suffix
+          value: membership_degraded
+        # Endpoints excluded from load balancing (failed active health checks,
+        # outlier-ejected). membership_healthy alone cannot distinguish "no
+        # endpoints" from "all endpoints ejected".
+        - type: Suffix
+          value: membership_excluded
+        # Upstream (per cluster) request and connection signals.
+        - type: Suffix
+          value: upstream_rq_total
+        - type: Suffix
+          value: upstream_rq_time
+        - type: Suffix
+          value: upstream_rq_2xx
+        - type: Suffix
+          value: upstream_rq_4xx
+        - type: Suffix
+          value: upstream_rq_5xx
+        - type: Suffix
+          value: upstream_rq_pending_overflow
+        - type: Suffix
+          value: upstream_cx_active
+        - type: Suffix
+          value: upstream_cx_connect_fail
+        # Connections opened over time, not just the active gauge - a cluster
+        # churning connections and one holding them steady look identical on
+        # upstream_cx_active alone.
+        - type: Suffix
+          value: upstream_cx_total
+        # Upstream throughput. tx is here as the pair of rx: bytes in without
+        # bytes out cannot answer "is this route slow or just large".
+        - type: Suffix
+          value: upstream_cx_rx_bytes_total
+        - type: Suffix
+          value: upstream_cx_tx_bytes_total
+        # Downstream (per listener / HTTP connection manager) signals.
+        - type: Suffix
+          value: downstream_rq_total
+        - type: Suffix
+          value: downstream_rq_time
+        - type: Suffix
+          value: downstream_rq_2xx
+        - type: Suffix
+          value: downstream_rq_3xx
+        - type: Suffix
+          value: downstream_rq_4xx
+        - type: Suffix
+          value: downstream_rq_5xx
+        - type: Suffix
+          value: downstream_cx_active
+        # Also matches the TCP proxy's tcp.<stat_prefix>.downstream_cx_total.
+        # Envoy namespaces the HTTP connection manager's counters under
+        # http.<stat_prefix>. and the TCP proxy's under tcp.<stat_prefix>.,
+        # and these names are identical after the namespace - so one suffix
+        # covers both and TCP listeners need no entries of their own.
+        - type: Suffix
+          value: downstream_cx_total
+        # Downstream throughput, likewise both http.* and tcp.*.
+        - type: Suffix
+          value: downstream_cx_rx_bytes_total
+        - type: Suffix
+          value: downstream_cx_tx_bytes_total
+        # Proxy process health - uptime, memory, concurrency. Low cardinality.
+        - type: Prefix
+          value: server.
+
+        # Connection limit enforcement — page-worthy
+        - type: Suffix
+          value: downstream_cx_overflow
+        - type: Suffix
+          value: downstream_cx_destroy_remote_active_rq
+        # Local rate limit and the silent-failure signal.
+        #
+        # Suffix, not Prefix: Envoy namespaces these as
+        # <stat_prefix>.http_local_rate_limit.*, so the stat name does not
+        # start with the filter name and a Prefix match never fires. The
+        # Prefix entry is kept because it costs nothing and does match if a
+        # future version emits these unprefixed.
+        - type: Prefix
+          value: http_local_rate_limit
+        - type: Suffix
+          value: http_local_rate_limit.enabled
+        - type: Suffix
+          value: http_local_rate_limit.enforced
+        - type: Suffix
+          value: http_local_rate_limit.rate_limited
+        # Global rate limit. failure_mode_allowed is THE fail-open detector:
+        # the limiter is configured failClosed: false (see the README note),
+        # so when the ratelimit service or Valkey is unreachable every request
+        # is allowed and nothing else in this list moves. That counter is the
+        # only signal that it happened - alert on it being non-zero.
+        #
+        # These were a `Prefix: ratelimit.` match, which produced nothing.
+        # Envoy emits the rate limit filter's stats as
+        # cluster.<target cluster>.ratelimit.*, so the name starts with
+        # "cluster." and the prefix never matched - and because `matches` is
+        # an inclusion list, the detector was filtered out by the very list
+        # meant to collect it. Match on the suffix instead.
+        - type: Suffix
+          value: ratelimit.failure_mode_allowed
+        - type: Suffix
+          value: ratelimit.error
+        - type: Suffix
+          value: ratelimit.over_limit
+        - type: Suffix
+          value: ratelimit.ok
+        # JWT enforcement and JWKS health
+        - type: Prefix
+          value: jwt_authn.
+        # Overload manager
+        - type: Prefix
+          value: overload.
+        # TLS handshake rate: the real capacity number per test
+        - type: Suffix
+          value: ssl.handshake
+        - type: Suffix
+          value: ssl.connection_error
+        # Certificate expiry as an absolute timestamp, per listener and per
+        # certificate. The cert name sits in the middle of the stat name
+        # (listener.<addr>.ssl.certificate.<name>.expiration_unix_time_seconds),
+        # so match the tail rather than a prefix. Alert on
+        # (value - now) dropping below the External Secrets refresh window,
+        # which catches a stalled Key Vault sync before the cert actually
+        # expires. server.days_until_first_cert_expiring is already covered by
+        # the server. prefix above, but it collapses every cert into one
+        # number and cannot say which one is expiring.
+        - type: Suffix
+          value: expiration_unix_time_seconds
+        - type: Suffix
+          value: downstream_pre_cx_timeout
+        # HTTP/2 abuse — rx_reset is the Rapid Reset signal
+        - type: Suffix
+          value: http2.rx_reset
+        - type: Suffix
+          value: http2.streams_active
+        # Passive health checking: how many endpoints are currently ejected.
+        # Only produced once something configures outlier detection - a
+        # BackendTrafficPolicy healthCheck.passive - which nothing in this
+        # package does; it is here for the policies teams add.
+        - type: Suffix
+          value: outlier_detection.ejections_active
+        # Circuit breakers and retry amplification
+        - type: Suffix
+          value: circuit_breakers.default.cx_open
+        - type: Suffix
+          value: circuit_breakers.default.rq_pending_open
+        - type: Suffix
+          value: upstream_rq_retry
+        - type: Suffix
+          value: upstream_rq_retry_overflow
+        # Request and route timeouts. Each counter belongs to exactly one
+        # timeout setting, so a spike says which limit clients ran into.
+        #
+        # Route timeout: Envoy's 15s default, since no HTTPRoute sets
+        # timeouts.request. It runs until the upstream response is fully
+        # processed, so long downloads end here. Per cluster, i.e. per route
+        # rule. The client sees a 504 with flag UT, or a reset if the
+        # response headers were already sent.
+        - type: Suffix
+          value: upstream_rq_timeout
+        # Per-try timeout, set by HTTPRoute timeouts.backendRequest when
+        # retries are configured. Per cluster. A timed-out try is retried;
+        # once retries run out the client sees a 504 UT.
+        - type: Suffix
+          value: upstream_rq_per_try_timeout
+        # The downstream_* counters below are per listener
+        # (http.<stat_prefix>.*), not per route - the access log is needed to
+        # find which route a timeout hit.
+        #
+        # ClientTrafficPolicy requestReceivedTimeout (300s): the whole request,
+        # body included, must arrive in time. Slow uploads end here with a 408.
+        - type: Suffix
+          value: downstream_rq_timeout
+        # ClientTrafficPolicy requestHeadersReceivedTimeout (10s): the slowloris
+        # defence. Clients dribbling out headers end here with a 408.
+        - type: Suffix
+          value: downstream_rq_header_timeout
+        # ClientTrafficPolicy streamIdleTimeout (5m): a stream with no activity
+        # is reset (a 408 if no response has started). Stalled streams and SSE
+        # endpoints without heartbeats end here.
+        - type: Suffix
+          value: downstream_rq_idle_timeout
+
+        # xDS health, seen from the proxy. Without these a proxy that lost the
+        # control plane, or rejected the config it was sent, keeps serving
+        # its last good config and nothing else in this list moves.
+        #
+        # connected_state is 1 while the xDS stream to envoy-gateway is up.
+        - type: Exact
+          value: control_plane.connected_state
+        # One suffix covers every xDS type: cluster_manager.cds.update_rejected,
+        # listener_manager.lds.update_rejected and the per route config
+        # http.<stat_prefix>.rds.<route_config>.update_rejected. Any increase
+        # means envoy-gateway produced config Envoy refused (the controller
+        # side of the same event is xds_nack_total).
+        - type: Suffix
+          value: update_rejected
+
+        # Envoy-generated failures. Envoy does not export response flags as
+        # stats, so these counters are how a 5xx Envoy produced itself is told
+        # apart from a 5xx the backend returned. The flag each one maps to is
+        # what the access log would show.
+        #
+        # UH: no healthy endpoint - every endpoint failed health checks or was
+        # ejected, or the Service has no ready pods. Per cluster.
+        - type: Suffix
+          value: upstream_cx_none_healthy
+        # UF: the TCP connect to the backend timed out (connect_fail above
+        # covers refused connections).
+        - type: Suffix
+          value: upstream_cx_connect_timeout
+        # UO: the connection circuit breaker rejected a new connection.
+        - type: Suffix
+          value: upstream_cx_overflow
+        # URX: retries ran out - the client got the last failed attempt.
+        - type: Suffix
+          value: upstream_rq_retry_limit_exceeded
+        # UC: the backend closed a connection with a request still in
+        # flight, usually a keepalive timeout on the backend that is shorter
+        # than Envoy's.
+        - type: Suffix
+          value: upstream_cx_destroy_remote_with_active_rq
+        # The rest of the circuit breaker set started above.
+        - type: Suffix
+          value: circuit_breakers.default.rq_open
+        - type: Suffix
+          value: circuit_breakers.default.rq_retry_open
+
+        # Downstream saturation and rejection.
+        #
+        # The bootstrap's global_downstream_max_connections (50000 per proxy
+        # pod) is enforced separately from the ClientTrafficPolicy
+        # connectionLimit, and downstream_cx_overflow above does not count it.
+        - type: Suffix
+          value: downstream_global_cx_overflow
+        # Overload manager acting: connections refused and requests closed
+        # under memory or connection pressure.
+        - type: Suffix
+          value: downstream_cx_overload_reject
+        - type: Suffix
+          value: downstream_rq_overload_close
+        # A TLS client offered an SNI that no listener or ListenerSet serves -
+        # a typo in a hostname, or a ListenerSet that was not accepted.
+        - type: Suffix
+          value: no_filter_chain_match
+        # Malformed HTTP from clients, including HTTP/2 protocol violations.
+        - type: Suffix
+          value: downstream_cx_protocol_error
+        # Headers with underscores, per codec (http1./http2./http3.).
+        - type: Suffix
+          value: dropped_headers_with_underscores
+        - type: Suffix
+          value: requests_rejected_with_underscores_in_headers
+      sinks:
+        - type: OpenTelemetry
+          openTelemetry:
+            host: otel-collector.monitoring.svc.cluster.local
+            port: 4317
+    tracing:
+      # sample 100% of requests in envoy and let otel-collectors tailsampler decide if it should be sampled. Lower if overwhelmed with requests
+      samplingRate: 100
+      provider:
+        backendRefs:
+        - name: otel-collector
+          namespace: monitoring
+          port: 4317
+        type: OpenTelemetry
+      # `tags` values are Envoy access-log format strings, and unlike
+      # `customTags` they are applied to both the downstream (ingress) span and
+      # the upstream (egress) span. That matters because envoy only sets
+      # http.url on the ingress span, so without these the egress span has no
+      # request context at all and Application Insights records it as an
+      # untyped dependency with no name.
+      #
+      # These are the current semantic convention names on purpose: the
+      # azuremonitor exporter reads only those, and envoy's own tags are the
+      # pre-1.0 OpenTracing ones. The otel-collector translates the rest (see
+      # transform/envoy in oci/otel-collector) - it cannot do these two because
+      # the information is not on the egress span to begin with.
+      tags:
+        http.request.method: "%REQ(:METHOD)%"
+        server.address: "%REQ(:AUTHORITY)%"
+        # Application Insights names the request "{method} {http.route}". The
+        # raw path is what traefik's spans end up with too; the collector cuts
+        # both down to the first two segments so the operation list stays small.
+        http.route: "%PATH(NQ)%"
+      customTags:
+        # This is an example of using a literal as a tag value
+        source:
+          type: Literal
+          literal:
+            value: "${AKS_NAME}"
+        "k8s.pod.name":
+          type: Environment
+          environment:
+            name: ENVOY_POD_NAME
+            defaultValue: "-"
+        "k8s.namespace.name":
+          type: Environment
+          environment:
+            name: ENVOY_POD_NAMESPACE
+            defaultValue: "envoy-gateway-system"

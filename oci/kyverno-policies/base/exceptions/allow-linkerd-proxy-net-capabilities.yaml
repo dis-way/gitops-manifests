@@ -1,43 +1,27 @@
-apiVersion: kyverno.io/v2
+# linkerd-init needs NET_ADMIN and NET_RAW to set up the iptables redirect to the proxy.
+# A CEL PolicyException skips the whole resource, so it only matches when linkerd-init
+# is the only container that adds capabilities, and it adds nothing else.
+apiVersion: policies.kyverno.io/v1
 kind: PolicyException
 metadata:
   name: allow-linkerd-proxy-net-capabilities
   namespace: kyverno
 spec:
-  exceptions:
-  - policyName: disallow-capabilities
-    ruleNames:
-    - adding-capabilities
-    - autogen-adding-capabilities
-  match:
-    any:
-    - resources:
-        kinds:
-        - Pod
-        - Deployment
-        - ReplicaSet
-        annotations:
-          linkerd.io/inject: enabled
-    - resources:
-        kinds:
-        - Pod
-        - Deployment
-        - ReplicaSet
-        namespaceSelector:
-          matchLabels:
-            linkerd.io/inject: enabled
-    - resources:
-        kinds:
-        - Pod
-        - Deployment
-        - ReplicaSet
-        namespaces:
-          - linkerd
-  podSecurity:
-    - controlName: Capabilities
-      images:
-        - '*/linkerd/proxy*'
-      restrictedField: spec.initContainers[*].securityContext.capabilities.add
-      values:
-        - NET_ADMIN
-        - NET_RAW
+  policyRefs:
+    - name: disallow-capabilities
+      kind: ValidatingPolicy
+  matchConditions:
+    - name: linkerd-init-adds-only-net-admin-and-net-raw
+      expression: >-
+        (has(object.spec.template) ? object.spec.template.spec : object.spec)
+          .?initContainers.orValue([])
+          .exists(c, c.name == 'linkerd-init' && c.image.matches('/linkerd/proxy[:@]') &&
+            c.?securityContext.?capabilities.?add.orValue([]).all(cap, cap in ['NET_ADMIN', 'NET_RAW']))
+    - name: no-other-container-adds-capabilities
+      expression: >-
+        (has(object.spec.template) ? object.spec.template.spec : object.spec)
+          .?initContainers.orValue([])
+          .all(c, c.name == 'linkerd-init' || c.?securityContext.?capabilities.?add.orValue([]).size() == 0) &&
+        (has(object.spec.template) ? object.spec.template.spec : object.spec)
+          .?containers.orValue([])
+          .all(c, c.?securityContext.?capabilities.?add.orValue([]).size() == 0)

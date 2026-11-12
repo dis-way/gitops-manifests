@@ -13,7 +13,7 @@ spec:
         name: traefik
         namespace: traefik
       # renovate: datasource=helm registryUrl=https://traefik.github.io/charts packageName=traefik
-      version: 39.0.8
+      version: 41.6.1
   interval: 1h
   timeout: 5m
   install:
@@ -38,9 +38,13 @@ spec:
         config.linkerd.io/proxy-memory-limit: 250Mi
         config.linkerd.io/proxy-memory-request: 40Mi
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    # At most one pod down at a time during node drains and upgrades
+    # (minAvailable: 1 allowed 2 of 3 pods to be evicted at once).
     podDisruptionBudget:
       enabled: true
-      minAvailable: 1
+      maxUnavailable: 1
+    # Ingress for the whole cluster: do not preempt or evict before app pods.
+    priorityClassName: system-cluster-critical
     ingressClass:
       enabled: false
     providers:
@@ -49,7 +53,23 @@ spec:
       kubernetesIngress:
         enabled: false
       kubernetesGateway:
-        enabled: false
+        enabled: true
+    gateway:
+      enabled: true
+      listeners:
+        web: null
+        http:
+          port: 8000
+          protocol: HTTP
+          namespacePolicy:
+            from: All
+        https:
+          port: 8443
+          protocol: HTTPS
+          namespacePolicy:
+            from: All
+          certificateRefs:
+            - name: ssl-cert
     global:
       checkNewVersion: false
       sendAnonymousUsage: false
@@ -65,6 +85,12 @@ spec:
           default: true
         exposedPort: 80
         protocol: TCP
+        # With externalTrafficPolicy: Local the Azure LB only stops sending to a node
+        # once its healthCheckNodePort probe fails. Keep accepting requests after
+        # SIGTERM until then, so terminating pods drain without connection resets.
+        transport:
+          lifeCycle:
+            requestAcceptGraceTimeout: 15s
         http:
           redirections:
             entryPoint:
@@ -82,6 +108,9 @@ spec:
           default: true
         exposedPort: 443
         protocol: TCP
+        transport:
+          lifeCycle:
+            requestAcceptGraceTimeout: 15s
         forwardedHeaders:
           insecure: false
           trustedIPs:
@@ -113,10 +142,10 @@ spec:
         service.beta.kubernetes.io/azure-load-balancer-ipv6: "${PUBLIC_IP_V6}"
       spec:
         externalTrafficPolicy: "${EXTERNAL_TRAFFIC_POLICY:=Local}"
-      ipFamilyPolicy: PreferDualStack
-      ipFamilies:
-        - IPv4
-        - IPv6
+        ipFamilyPolicy: PreferDualStack
+        ipFamilies:
+          - IPv4
+          - IPv6
     resources:
       requests:
         cpu: "100m"
@@ -139,15 +168,14 @@ spec:
           enabled: true
           endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
           insecure: true
-    logs:
-      general:
-        level: "ERROR"
-        otlp:
+    log:
+      level: "ERROR"
+      otlp:
+        enabled: true
+        grpc:
           enabled: true
-          grpc:
-            enabled: true
-            endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
-            insecure: true
+          endpoint: "${OTEL_ENDPOINT:=otel-collector.monitoring.svc.cluster.local:4317}"
+          insecure: true
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -160,4 +188,15 @@ spec:
                     values:
                       - traefik
               topologyKey: kubernetes.io/hostname
+    # Spread pods across availability zones. ScheduleAnyway: never blocks
+    # scheduling. matchLabelKeys counts only pods of the same ReplicaSet.
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: traefik
+        matchLabelKeys:
+          - pod-template-hash
     extraObjects: []

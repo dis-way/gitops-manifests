@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-apim-v0.3.0...oci-dis-apim-v0.3.1) (2026-10-26)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-apim-operator docker tag to v1.0.6 ([#1179](https://github.com/dis-way/gitops-manifests/issues/1179)) ([55362af](https://github.com/dis-way/gitops-manifests/commit/55362af1f4bbf69e6a0d6bb5f6aab3c89f7a20b8))
+
 ## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-apim-v0.2.1...oci-dis-apim-v0.3.0) (2026-03-23)
 
 

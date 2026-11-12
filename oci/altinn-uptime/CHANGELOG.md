@@ -1,5 +1,130 @@
 # Changelog
 
+## [1.24.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.23.1...oci-altinn-uptime-v1.24.0) (2026-10-22)
+
+
+### Features
+
+* **altinn-uptime:** add hi maintenance targets ([#2185](https://github.com/dis-way/gitops-manifests/issues/2185)) ([37e1835](https://github.com/dis-way/gitops-manifests/commit/37e1835c8e6da63006c3b01e52966c9363965aee))
+
+## [1.23.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.23.0...oci-altinn-uptime-v1.23.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** add mna maintenance targets ([42fe83b](https://github.com/dis-way/gitops-manifests/commit/42fe83b516788888e3c7b7c27177c6c4534efba7))
+
+## [1.23.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.22.0...oci-altinn-uptime-v1.23.0) (2026-10-16)
+
+
+### Features
+
+* **altinn-uptime:** probe whoami endpoints with dedicated blackbox modules ([#2113](https://github.com/dis-way/gitops-manifests/issues/2113)) ([50c7f3d](https://github.com/dis-way/gitops-manifests/commit/50c7f3dbff32d4ae61bf79443d9b8043668a6f1b))
+
+
+### Bug Fixes
+
+* **altinn-uptime:** probe health-check endpoints every 60s instead of 15s ([#2102](https://github.com/dis-way/gitops-manifests/issues/2102)) ([046d78e](https://github.com/dis-way/gitops-manifests/commit/046d78ef6a53857b0580d4ba1571e0f54b1af2d1))
+* **altinn-uptime:** re-apply all ServiceMonitors on every sync ([#2114](https://github.com/dis-way/gitops-manifests/issues/2114)) ([e2609d5](https://github.com/dis-way/gitops-manifests/commit/e2609d5d654d71d851719e1a1bc8200838f5d762))
+
+## [1.22.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.21.0...oci-altinn-uptime-v1.22.0) (2026-10-16)
+
+
+### Features
+
+* **altinn-uptime:** add dfo tt02 maintenance target ([#2095](https://github.com/dis-way/gitops-manifests/issues/2095)) ([52d061c](https://github.com/dis-way/gitops-manifests/commit/52d061c3191521dd3e3039523801f8a5bebb05de))
+
+## [1.21.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.20.0...oci-altinn-uptime-v1.21.0) (2026-10-15)
+
+
+### Features
+
+* **altinn-uptime:** add am.ui and headscale uptime checks ([#2061](https://github.com/dis-way/gitops-manifests/issues/2061)) ([004c509](https://github.com/dis-way/gitops-manifests/commit/004c50919a2b1d7229754b696c6a2827162b1919))
+
+## [1.20.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.19.0...oci-altinn-uptime-v1.20.0) (2026-10-07)
+
+
+### Features
+
+* **altinn-uptime:** add fd maintenance targets ([#1898](https://github.com/dis-way/gitops-manifests/issues/1898)) ([5461bb0](https://github.com/dis-way/gitops-manifests/commit/5461bb08eab2b1d278ba657c82ec94e3f69959f9))
+
+## [1.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.18.0...oci-altinn-uptime-v1.19.0) (2026-10-06)
+
+
+### Features
+
+* **altinn-uptime:** add ok tt02 maintenance target ([#1858](https://github.com/dis-way/gitops-manifests/issues/1858)) ([af79fc0](https://github.com/dis-way/gitops-manifests/commit/af79fc02c8066547953dda32bf840faad2522e0d))
+
+## [1.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.17.0...oci-altinn-uptime-v1.18.0) (2026-10-06)
+
+
+### Features
+
+* **altinn-uptime:** add eno tt02 maintenance target ([#1836](https://github.com/dis-way/gitops-manifests/issues/1836)) ([e5c8fae](https://github.com/dis-way/gitops-manifests/commit/e5c8faeb36db32d59a370edeec45b3d6e6fe32da))
+
+## [1.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.16.0...oci-altinn-uptime-v1.17.0) (2026-10-05)
+
+
+### Features
+
+* **altinn-uptime:** add Dialogporten and KI health checks with host+path instance ([#1792](https://github.com/dis-way/gitops-manifests/issues/1792)) ([1ea4bdc](https://github.com/dis-way/gitops-manifests/commit/1ea4bdc812d688686845635d2e3a1c4a105ee2be))
+
+## [1.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.15.0...oci-altinn-uptime-v1.16.0) (2026-10-02)
+
+
+### Features
+
+* **altinn-uptime:** add oed maintenance targets ([#1752](https://github.com/dis-way/gitops-manifests/issues/1752)) ([7fc613b](https://github.com/dis-way/gitops-manifests/commit/7fc613bf82c2f3ee923b566ba07ce40a7cb4bd55))
+
+## [1.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.14.0...oci-altinn-uptime-v1.15.0) (2026-09-25)
+
+
+### Features
+
+* Remove deprecated discore health check endpoint ([#1680](https://github.com/dis-way/gitops-manifests/issues/1680)) ([95e27ad](https://github.com/dis-way/gitops-manifests/commit/95e27addd89bfafe776811538fe28f7996d00e0e))
+
+## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.13.0...oci-altinn-uptime-v1.14.0) (2026-09-06)
+
+
+### Features
+
+* **altinn-uptime:** add ki.norge.no and ki.test.norge.no uptime probes ([#1453](https://github.com/dis-way/gitops-manifests/issues/1453)) ([588573d](https://github.com/dis-way/gitops-manifests/commit/588573deec9a67288c61b1f88670a5ef936ef457))
+
+## [1.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.12.0...oci-altinn-uptime-v1.13.0) (2026-08-31)
+
+
+### Features
+
+* **altinn-uptime:** add at23 and tt02 info-portal health-check probes ([#1442](https://github.com/dis-way/gitops-manifests/issues/1442)) ([aae3d0e](https://github.com/dis-way/gitops-manifests/commit/aae3d0e18b17c7cd6ab871638f039ce2e317c26d))
+
+## [1.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.11.1...oci-altinn-uptime-v1.12.0) (2026-07-30)
+
+
+### Features
+
+* **altinn-uptime:** add info.altinn.no/health deep health-check probe ([#1349](https://github.com/dis-way/gitops-manifests/issues/1349)) ([c544f91](https://github.com/dis-way/gitops-manifests/commit/c544f91dda16a7ac7ee72911af673fbd5dddd005))
+
+## [1.11.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.11.0...oci-altinn-uptime-v1.11.1) (2026-07-28)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** raise sync CronJob memory limit to prevent OOMKill ([#1343](https://github.com/dis-way/gitops-manifests/issues/1343)) ([f9a6d7b](https://github.com/dis-way/gitops-manifests/commit/f9a6d7b539f4c67d9e6de32621fde1eb1fe1b796))
+
+## [1.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.10.0...oci-altinn-uptime-v1.11.0) (2026-07-28)
+
+
+### Features
+
+* **altinn-uptime:** add health check probes for dialogporten and info.at22 ([#1258](https://github.com/dis-way/gitops-manifests/issues/1258)) ([583d1b4](https://github.com/dis-way/gitops-manifests/commit/583d1b4f0c4a17c7659ea2f9173c22887de0df49))
+
+## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.9.0...oci-altinn-uptime-v1.10.0) (2026-06-19)
+
+
+### Features
+
+* **altinn-uptime:** Add KYV maintenance targets ([#1218](https://github.com/dis-way/gitops-manifests/issues/1218)) ([babe003](https://github.com/dis-way/gitops-manifests/commit/babe003dffcedf6fc1178fa40fa288887e9b2552))
+
 ## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.8.0...oci-altinn-uptime-v1.9.0) (2026-06-02)
 
 

@@ -6,8 +6,10 @@ metadata:
 spec:
   gatewayClassName: traefik
   listeners:
+    # https-internal entrypoint: only on the private Traefik Load Balancer,
+    # so Headplane is reachable only over the VPN.
     - name: https
-      port: 8443
+      port: 8444
       protocol: HTTPS
       hostname: headplane.altinn.cloud
       tls:

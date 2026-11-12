@@ -1,5 +1,75 @@
 # Changelog
 
+## [0.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.3.1...oci-dis-pgsql-v0.3.2) (2026-11-11)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-pgsql-operator docker tag to v0.15.0 ([#2470](https://github.com/dis-way/gitops-manifests/issues/2470)) ([32e84db](https://github.com/dis-way/gitops-manifests/commit/32e84dbcd6b41188112c51d3dcf9334118f4f804))
+
+## [0.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.3.0...oci-dis-pgsql-v0.3.1) (2026-10-26)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-pgsql-operator docker tag to v0.14.0 ([#2227](https://github.com/dis-way/gitops-manifests/issues/2227)) ([eb20eaf](https://github.com/dis-way/gitops-manifests/commit/eb20eaf5c030988171283771a9ac26a02d28bd77))
+
+## [0.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.2.3...oci-dis-pgsql-v0.3.0) (2026-10-15)
+
+
+### Features
+
+* **dis-pgsql:** add a secrets layer for Key Vault variables ([#2070](https://github.com/dis-way/gitops-manifests/issues/2070)) ([00bb97b](https://github.com/dis-way/gitops-manifests/commit/00bb97b1cdbe7f4a475e8933ad660c6b8ee03609))
+
+## [0.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.2.2...oci-dis-pgsql-v0.2.3) (2026-09-17)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-pgsql-operator docker tag to v0.13.0 ([#1629](https://github.com/dis-way/gitops-manifests/issues/1629)) ([23d150e](https://github.com/dis-way/gitops-manifests/commit/23d150e00e601b22f2925f97cd92058eb25d78ce))
+
+## [0.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.2.1...oci-dis-pgsql-v0.2.2) (2026-07-08)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-pgsql-operator docker tag to v0.12.2 ([#1278](https://github.com/dis-way/gitops-manifests/issues/1278)) ([35031bb](https://github.com/dis-way/gitops-manifests/commit/35031bbfe5a6c276a07fbb6319dd85cc72d02f98))
+
+## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.2.0...oci-dis-pgsql-v0.2.1) (2026-07-03)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-pgsql-operator docker tag to v0.12.1 ([#1273](https://github.com/dis-way/gitops-manifests/issues/1273)) ([11c6cc6](https://github.com/dis-way/gitops-manifests/commit/11c6cc68ddb881c5af1e701bffd50d6f1e3c6866))
+
+## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.15...oci-dis-pgsql-v0.2.0) (2026-07-03)
+
+
+### Features
+
+* update dis operators to latest versions ([#1259](https://github.com/dis-way/gitops-manifests/issues/1259)) ([161a17f](https://github.com/dis-way/gitops-manifests/commit/161a17fe8616fef16a85b0d35eb0bfc4efb13108))
+
+## [0.1.15](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.14...oci-dis-pgsql-v0.1.15) (2026-06-29)
+
+
+### Dependency Updates
+
+* update dis pgsql image tags to v0.11.1 ([#1249](https://github.com/dis-way/gitops-manifests/issues/1249)) ([616b9e5](https://github.com/dis-way/gitops-manifests/commit/616b9e50abd60fb7b2d0bdd09e8af356fce877dd))
+
+## [0.1.14](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.13...oci-dis-pgsql-v0.1.14) (2026-06-29)
+
+
+### Bug Fixes
+
+* **dis-pgsql:** forward DISPG_CLUSTER_ID to operator env ([#1245](https://github.com/dis-way/gitops-manifests/issues/1245)) ([6452bbf](https://github.com/dis-way/gitops-manifests/commit/6452bbf69dedb41f665f10743d0bbd99dc227653))
+
+## [0.1.13](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.12...oci-dis-pgsql-v0.1.13) (2026-06-29)
+
+
+### Dependency Updates
+
+* update dis pgsql image tags to v0.11.0 ([#1241](https://github.com/dis-way/gitops-manifests/issues/1241)) ([55c7192](https://github.com/dis-way/gitops-manifests/commit/55c71922e83dd174f993a8191c8d8c9e1e708d30))
+
 ## [0.1.12](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.1.11...oci-dis-pgsql-v0.1.12) (2026-06-11)
 
 

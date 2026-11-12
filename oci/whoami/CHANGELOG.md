@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.8.0...oci-whoami-v0.9.0) (2026-10-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **whoami:** base, the root kustomization and apps no longer create the Traefik IngressRoute and l5d-header-middleware Middleware. They need traefik-gateway listeners that accept routes from the whoami namespace; on apps and adminservices Traefik the gateway only has the default web listener (from: Same) until those listeners are added to the traefik package. Promote this release to those rings only after that.
+
+### Features
+
+* **whoami:** HTTPRoute as standard, lower requests, PDB and node spread ([#2003](https://github.com/dis-way/gitops-manifests/issues/2003)) ([5c88a19](https://github.com/dis-way/gitops-manifests/commit/5c88a19400c7ccc496ddc469eb46c9d532c5ffb3))
+
+## [0.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.7.1...oci-whoami-v0.8.0) (2026-10-08)
+
+
+### Features
+
+* **whoami:** add HPA scaling 2-20 pods on CPU ([#1958](https://github.com/dis-way/gitops-manifests/issues/1958)) ([0add24d](https://github.com/dis-way/gitops-manifests/commit/0add24da09fd1d1f606c0c06f041eecf17d677a5))
+
 ## [0.7.1](https://github.com/dis-way/gitops-manifests/compare/oci-whoami-v0.7.0...oci-whoami-v0.7.1) (2026-02-16)
 
 

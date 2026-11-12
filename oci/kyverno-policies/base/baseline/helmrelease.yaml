@@ -12,7 +12,7 @@ spec:
         name: kyverno
         namespace: kyverno
       # renovate: datasource=helm registryUrl=https://kyverno.github.io/kyverno/ packageName=kyverno-policies
-      version: 3.8.0
+      version: 3.9.2
   interval: 1h
   timeout: 5m
   install:
@@ -26,3 +26,9 @@ spec:
     podSecuritySeverity: medium
     validationFailureAction: Audit
     background: true
+    # Azure-managed: AKS system components and the AKS Flux extension.
+    # Kyverno's webhook already skips these; this also keeps them out of background scans.
+    vpolExclude:
+      excludeNamespaces:
+        - kube-system
+        - flux-system

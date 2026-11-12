@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.4.5](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.4...oci-kyverno-policies-v1.4.5) (2026-10-09)
+
+
+### Bug Fixes
+
+* **kyverno-policies:** allow NET_RAW for tailscale-subnet-router ([#1995](https://github.com/dis-way/gitops-manifests/issues/1995)) ([4e43210](https://github.com/dis-way/gitops-manifests/commit/4e43210dbf5569a7518bedb4770387fe84e2b5ae))
+
+## [1.4.4](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.3...oci-kyverno-policies-v1.4.4) (2026-10-09)
+
+
+### Bug Fixes
+
+* **kyverno-policies:** migrate linkerd exception to CEL and exclude Azure-managed namespaces ([#1981](https://github.com/dis-way/gitops-manifests/issues/1981)) ([a1cee7f](https://github.com/dis-way/gitops-manifests/commit/a1cee7f14c278a632537033bfb8305376da67ff2))
+
+## [1.4.3](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.2...oci-kyverno-policies-v1.4.3) (2026-10-05)
+
+
+### Dependency Updates
+
+* update kyverno helm charts to v3.9.1 ([#1261](https://github.com/dis-way/gitops-manifests/issues/1261)) ([53d6802](https://github.com/dis-way/gitops-manifests/commit/53d6802962ac53154882f78dcb4cdf92377f3842))
+
 ## [1.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-kyverno-policies-v1.4.1...oci-kyverno-policies-v1.4.2) (2026-05-22)
 
 

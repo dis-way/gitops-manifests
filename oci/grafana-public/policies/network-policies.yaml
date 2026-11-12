@@ -1,0 +1,153 @@
+# Default deny for everything in the namespace. The policies below open only the
+# flows Grafana needs. Grafana is internet-facing and its datasource identity can
+# read monitoring data, so it must not be able to reach anything in the cluster.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: grafana-public
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: grafana-public
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+# The linkerd-proxy sidecar needs identity (8080), destination (8086) and
+# policy (8090). Without this the proxy never becomes ready and the pod fails.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-linkerd-control-plane
+  namespace: grafana-public
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: linkerd
+      ports:
+        - port: 8080
+          protocol: TCP
+        - port: 8086
+          protocol: TCP
+        - port: 8090
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grafana-public-ingress
+  namespace: grafana-public
+spec:
+  podSelector:
+    matchLabels:
+      app: grafana-public
+  policyTypes:
+    - Ingress
+  ingress:
+    # Web UI and public dashboards via Traefik, and the grafana-operator
+    # managing dashboards, folders and datasources through the API. 4143 is the
+    # linkerd inbound port, used for meshed connections to opaque ports.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: grafana
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: grafana-operator
+      ports:
+        - port: 3000
+          protocol: TCP
+        - port: 4143
+          protocol: TCP
+    # Linkerd proxy metrics, scraped by Azure Monitor (ama-metrics) or the
+    # otel collector.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              rsName: ama-metrics
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              dsName: ama-metrics-node
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: otel-collector
+      ports:
+        - port: 4191
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grafana-public-egress
+  namespace: grafana-public
+spec:
+  podSelector:
+    matchLabels:
+      app: grafana-public
+  policyTypes:
+    - Egress
+  egress:
+    # Entra ID (sign-in and workload identity token exchange) and the Azure
+    # Monitor workspace query endpoint, both public. Private and link-local
+    # ranges are excluded so a compromised pod cannot reach VNet resources,
+    # private endpoints or IMDS. A datasource behind a private endpoint needs
+    # its own rule.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 169.254.0.0/16
+              - 100.64.0.0/10
+        - ipBlock:
+            cidr: ::/0
+            except:
+              - fc00::/7
+              - fe80::/10
+      ports:
+        - port: 443
+          protocol: TCP

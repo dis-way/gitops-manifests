@@ -12,10 +12,13 @@ metadata:
 rules:
   - apiGroups: ["apps"]
     resources: ["deployments", "statefulsets", "daemonsets"]
-    verbs: ["list", "patch"]
+    verbs: ["get", "list", "watch", "patch"]
   - apiGroups: [""]
     resources: ["namespaces"]
     verbs: ["get", "list", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -36,6 +39,11 @@ metadata:
   name: rollout-restart-job
   namespace: linkerd
 spec:
+  # The TTL removes the Job after it finishes, so Flux creates it again on every
+  # reconcile of this Kustomization: on a new artifact revision, and also every time
+  # kustomize-controller restarts. The script is idempotent for that reason: it only
+  # restarts workloads whose pods run a linkerd-proxy that is not the control plane's
+  # version, so a re-run without a Linkerd upgrade restarts nothing.
   ttlSecondsAfterFinished: 60
   backoffLimit: 3
   completions: 1
@@ -71,21 +79,59 @@ spec:
               fi
               # Define excluded namespaces
               EXCLUDED_NAMESPACES="cert-manager flux-system kube-node-lease kube-public kube-system linkerd"
-              # Get all namespaces and filter out excluded ones
-              ALL_NAMESPACES=$(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}')
-              # Restart workloads in all namespaces except excluded ones
-              for ns in $ALL_NAMESPACES; do
-                skip=false
-                for excluded in $EXCLUDED_NAMESPACES; do
-                  if [ "$ns" = "$excluded" ]; then
-                    echo "Skipping excluded namespace: $ns"
-                    skip=true
-                    break
-                  fi
-                done
-                if [ "$skip" = false ]; then
-                  echo "Restarting workloads in namespace: $ns"
-                  kubectl -n "$ns" rollout restart deployments,statefulsets,daemonsets 2>/dev/null || echo "No workloads to restart in namespace: $ns"
+              # Wait until the control plane has rolled out, so the injector serves the new proxy version
+              for d in linkerd-identity linkerd-destination linkerd-proxy-injector; do
+                kubectl -n linkerd rollout status "deployment/$d" --timeout=10m || exit 1
+              done
+              # The control plane's own proxy is rendered by the chart, so its tag is the version
+              # the injector puts into new pods
+              TARGET=$(kubectl -n linkerd get deployment linkerd-identity -o jsonpath='{.spec.template.spec.containers[?(@.name=="linkerd-proxy")].image}{.spec.template.spec.initContainers[?(@.name=="linkerd-proxy")].image}')
+              TARGET_TAG="${TARGET##*:}"
+              if [ -z "$TARGET_TAG" ]; then
+                echo "Could not read the linkerd-proxy version from deployment/linkerd-identity"
+                exit 1
+              fi
+              echo "Control plane proxy version: $TARGET_TAG"
+              # Namespaces that pin a proxy version with config.linkerd.io/proxy-version, as "ns=version" words
+              NS_PINS=$(kubectl get namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"="}{.metadata.annotations.config\.linkerd\.io/proxy-version}{" "}{end}') || exit 1
+              # List meshed pods whose proxy is not the version they should run, as the workload that owns them.
+              # Fields are separated by '|' so that empty fields do not shift the columns.
+              # The proxy is a native sidecar (initContainers) or a normal container, so check both.
+              # Kept in variables because the root filesystem is read-only
+              PODS=$(kubectl get pods -A -o jsonpath='{range .items[*]}{.metadata.namespace}{"|"}{.spec.containers[?(@.name=="linkerd-proxy")].image}{.spec.initContainers[?(@.name=="linkerd-proxy")].image}{"|"}{.metadata.annotations.config\.linkerd\.io/proxy-version}{"|"}{.metadata.ownerReferences[0].kind}{"|"}{.metadata.ownerReferences[0].name}{"\n"}{end}') || exit 1
+              OUTDATED=$(echo "$PODS" | while IFS='|' read -r ns image pin kind owner; do
+                [ -n "$image" ] || continue
+                # A pod or namespace that pins a proxy version must be compared with that version,
+                # or it would be restarted on every run
+                if [ -z "$pin" ]; then
+                  for p in $NS_PINS; do
+                    case "$p" in "$ns="?*) pin="${p#*=}" ;; esac
+                  done
                 fi
+                expected="${pin:-$TARGET_TAG}"
+                [ "${image##*:}" = "$expected" ] && continue
+                case " $EXCLUDED_NAMESPACES " in *" $ns "*) continue ;; esac
+                case "$kind" in
+                  # A Deployment's ReplicaSet is named <deployment>-<pod-template-hash>
+                  ReplicaSet) echo "$ns deployment/${owner%-*}" ;;
+                  StatefulSet) echo "$ns statefulset/$owner" ;;
+                  DaemonSet) echo "$ns daemonset/$owner" ;;
+                  *) echo "Skipping pod in $ns owned by ${kind:-nothing}/$owner (proxy ${image##*:})" >&2 ;;
+                esac
+              done | sort -u)
+              if [ -z "$OUTDATED" ]; then
+                echo "All meshed workloads run proxy $TARGET_TAG, nothing to restart"
+                exit 0
+              fi
+              echo "$OUTDATED" | while read -r ns workload; do
+                # A rollout that is still running replaces the old pods anyway. Restarting it again
+                # (for example when this Job runs twice in a short time) only causes more churn.
+                case "$(kubectl -n "$ns" rollout status "$workload" --watch=false 2>&1)" in
+                  *"successfully rolled out"*|*"roll out complete"*|*"rolling update complete"*) ;;
+                  *"only available for RollingUpdate"*) echo "Skipping $workload in namespace $ns: OnDelete update strategy, restart its pods manually"; continue ;;
+                  *) echo "Skipping $workload in namespace $ns: its rollout is still in progress"; continue ;;
+                esac
+                echo "Restarting $workload in namespace $ns"
+                kubectl -n "$ns" rollout restart "$workload" || echo "Could not restart $workload in namespace $ns"
               done
       restartPolicy: Never

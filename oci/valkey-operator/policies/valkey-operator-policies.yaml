@@ -1,0 +1,103 @@
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: cluster-pods
+  namespace: valkey-operator-system
+spec:
+  networks:
+    - cidr: ${AKS_POD_IPV4_CIDR:=10.240.0.0/16}
+    - cidr: ${AKS_POD_IPV6_CIDR:=fd10:59f0:8c79:240::/64}
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: NetworkAuthentication
+metadata:
+  name: kubelet
+  namespace: valkey-operator-system
+spec:
+  networks:
+    - cidr: ${AKS_VNET_IPV4_CIDR}
+    - cidr: ${AKS_VNET_IPV6_CIDR}
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: valkey-operator-metrics
+  namespace: valkey-operator-system
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: valkey-operator
+      control-plane: controller-manager
+  port: metrics
+  proxyProtocol: TLS
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: valkey-operator-health
+  namespace: valkey-operator-system
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: valkey-operator
+      control-plane: controller-manager
+  port: health
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta3
+kind: Server
+metadata:
+  name: valkey-operator-proxy-admin
+  namespace: valkey-operator-system
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: valkey-operator
+      control-plane: controller-manager
+  port: linkerd-admin
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: valkey-operator-metrics
+  namespace: valkey-operator-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: valkey-operator-metrics
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: cluster-pods
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: valkey-operator-health
+  namespace: valkey-operator-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: valkey-operator-health
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: valkey-operator-proxy-admin
+  namespace: valkey-operator-system
+spec:
+  targetRef:
+    group: policy.linkerd.io
+    kind: Server
+    name: valkey-operator-proxy-admin
+  requiredAuthenticationRefs:
+    - group: policy.linkerd.io
+      kind: NetworkAuthentication
+      name: kubelet

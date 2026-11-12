@@ -1,0 +1,103 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../valkey
+  - ../base
+  - ../default-gateway
+  - ../studio-gateway
+  - ../dis-gateway
+patches:
+  # Lets edge-route-guard admit studio-http-to-https in this namespace.
+  - target:
+      kind: Namespace
+      name: envoy-gateway-system
+    patch: |
+      - op: add
+        path: /metadata/annotations
+        value:
+          "studio.platform.${ENVIRONMENT}.altinn.cloud/edge-allowed-paths": "/"
+  - target:
+      kind: HelmRepository
+      name: envoy-gateway
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+  - target:
+      kind: HelmRelease
+      name: envoy-gateway
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+      - op: replace
+        path: /spec/chart/spec/sourceRef/namespace
+        value: platform-system
+      - op: add
+        path: /spec/targetNamespace
+        value: envoy-gateway-system
+      - op: add
+        path: /spec/releaseName
+        value: envoy-gateway
+      - op: add
+        path: /spec/values/config/envoyGateway/rateLimit
+        value:
+          backend:
+            type: Redis
+            redis:
+              url: valkey.envoy-valkey.svc.cluster.local:6379
+          # Written out although false is already the upstream default, for
+          # the same reason externalTrafficPolicy is written out in
+          # envoy-proxy.yaml: a default that flips under a version bump would
+          # change this cluster's behaviour with nobody reading the file.
+          #
+          # false = fail OPEN. When the ratelimit service cannot answer -
+          # pod rolling, Valkey restarted or slow, NetworkPolicy blocking the
+          # path, or the 20ms call timeout overrun - the request is allowed.
+          # This is deliberate: Valkey here is a single replica on an emptyDir
+          # with no PDB, so fail-closed would turn every Valkey restart into
+          # cluster-wide 500s, and the in-process local limit in
+          # backend-traffic-policy.yaml keeps a survival ceiling in place
+          # meanwhile. See the README note before changing it - flipping this
+          # to true without making Valkey survivable first is an outage.
+          #
+          # Fail-open is silent: cluster.<cluster>.ratelimit.failure_mode_allowed
+          # is the only signal it happened, which is why envoy-proxy.yaml
+          # matches that stat explicitly.
+          failClosed: false
+      # Opts the envoy-ratelimit pods into the otel-collector's generic pod
+      # scrape, which picks up their container port named "metrics" (:19001).
+      # Lives here rather than in base because the ratelimit Deployment only
+      # exists once rateLimit is configured. Like every config.envoyGateway
+      # change it needs a controller restart (see the README).
+      - op: add
+        path: /spec/values/config/envoyGateway/provider
+        value:
+          type: Kubernetes
+          kubernetes:
+            rateLimitDeployment:
+              pod:
+                labels:
+                  dis.otel/scrape: "true"
+      - op: add
+        path: /spec/dependsOn
+        value:
+          - name: valkey
+            namespace: platform-system
+  - target:
+      kind: HelmRepository
+      name: valkey
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+  - target:
+      kind: HelmRelease
+      name: valkey
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-system
+      - op: replace
+        path: /spec/chart/spec/sourceRef/namespace
+        value: platform-system

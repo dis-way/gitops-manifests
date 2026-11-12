@@ -1,0 +1,20 @@
+# The CronJob reaches Headscale only through the API server (kubectl exec).
+# DNS is opened by allow-dns in policies/; everything else stays denied by
+# default-deny. Cilium gives the API server the reserved kube-apiserver
+# identity, which ipBlock rules do not select.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: headscale-acl-apply-egress-apiserver
+  namespace: headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      app: headscale-acl-apply
+  egress:
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP

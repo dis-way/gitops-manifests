@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ddlabs-apps-tt02-altinn-no
+  namespace: dis-tls-cert
+spec:
+  secretName: ddlabs-apps-tt02-altinn-no
+  issuerRef:
+    name: zerossl-dis-tls-cert
+    kind: ClusterIssuer
+  dnsNames:
+    - ddlabs.apps.tt02.altinn.no

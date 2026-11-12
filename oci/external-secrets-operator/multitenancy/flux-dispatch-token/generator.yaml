@@ -1,0 +1,24 @@
+# Generates installation tokens for one repository. The App installation limits which
+# repositories the App can reach. repositories and permissions limit each token further.
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: GithubAccessToken
+metadata:
+  name: flux-dispatch-${FLUX_DISPATCH_NAME}
+  namespace: platform-system
+spec:
+  appIDRef:
+    name: flux-dispatch-github-app
+    key: app-id
+  installIDRef:
+    name: flux-dispatch-github-app
+    key: installation-id
+  repositories:
+    - "${GITHUB_REPOSITORY_NAME}"
+  # repository_dispatch needs contents: write
+  permissions:
+    contents: write
+  auth:
+    privateKey:
+      secretRef:
+        name: flux-dispatch-github-app
+        key: private-key

@@ -12,7 +12,7 @@ spec:
         name: kyverno
         namespace: kyverno
       # renovate: datasource=helm registryUrl=https://kyverno.github.io/kyverno/ packageName=kyverno
-      version: 3.8.1
+      version: 3.9.2
   interval: 1h
   timeout: 5m
   install:
@@ -43,6 +43,10 @@ spec:
         port: ${OTEL_PORT:=4317}
         collector: "${OTEL_URL:=otel-collector.monitoring.svc.cluster.local}"
     admissionController:
+      # The resource webhooks fail closed, so with a single replica no pod can be created while it
+      # restarts or moves (node drain, upgrade). 3 replicas also turn on the chart's
+      # PodDisruptionBudget (minAvailable 1).
+      replicas: 3
       metering:
         config: grpc
         port: ${OTEL_PORT:=4317}

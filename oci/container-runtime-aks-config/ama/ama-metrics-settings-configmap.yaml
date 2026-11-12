@@ -19,7 +19,7 @@ data:
       windowsexporter = false
       windowskubeproxy = false
       kappiebasic = true
-      networkobservabilityRetina = true
+      networkobservabilityRetina = false
       networkobservabilityHubble = true
       networkobservabilityCilium = true
       acstor-capacity-provisioner = true

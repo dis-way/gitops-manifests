@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-platform-system-v1.2.0...oci-platform-system-v1.2.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **platform-system:** grant dis-console-reader the DIS and apps groups ([#1336](https://github.com/dis-way/gitops-manifests/issues/1336)) ([16907ce](https://github.com/dis-way/gitops-manifests/commit/16907cea9c819b4484be8e739703d04fd73f619d))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-platform-system-v1.1.0...oci-platform-system-v1.2.0) (2026-06-05)
 
 

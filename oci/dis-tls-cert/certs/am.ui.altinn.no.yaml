@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: am-ui-altinn-no
+  namespace: dis-tls-cert
+spec:
+  secretName: am-ui-altinn-no
+  issuerRef:
+    name: digicert-dis-tls-cert
+    kind: ClusterIssuer
+  dnsNames:
+    - am.ui.altinn.no

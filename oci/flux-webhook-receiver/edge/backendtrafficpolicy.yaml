@@ -1,0 +1,31 @@
+# Global rate limits, counted in Valkey by the rate limit service of the edge
+# cluster. The limiter fails open, and a Valkey restart resets the counters.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: flux-webhook-rate-limit
+  namespace: flux-webhook
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: flux-webhook
+  # Without mergeType, this policy replaces the Gateway policy eg-local-ratelimit,
+  # and the route loses its limit and timeouts.
+  mergeType: StrategicMerge
+  rateLimit:
+    global:
+      rules:
+        # One counter for each publishing repository, from the repository_id claim.
+        - clientSelectors:
+            - headers:
+                - name: x-flux-webhook-repository-id
+                  type: Distinct
+          limit:
+            requests: ${FLUX_WEBHOOK_REPOSITORY_LIMIT:=10}
+            unit: Minute
+        # One counter for all requests. Each admitted request makes the
+        # notification-controller send two requests to GitHub.
+        - limit:
+            requests: ${FLUX_WEBHOOK_ENVIRONMENT_LIMIT:=60}
+            unit: Minute

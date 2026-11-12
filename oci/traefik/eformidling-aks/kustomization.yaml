@@ -12,57 +12,39 @@ patches:
         value:
           - traefik-hsts-header@kubernetescrd
       - op: add
-        path: /spec/values/service/loadBalancerSourceRanges
+        path: /spec/values/service/spec/loadBalancerSourceRanges
         value:
           - "${LB_SOURCE_RANGE_APIM}"
+          - "${LB_SOURCE_RANGE_DIS_CORE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
+          # altinn-uptime TLS probes (admin-test-aks egress)
+          - "20.251.123.48/28"
+          # altinn-uptime TLS probes (admin-prod-aks egress)
+          - "4.220.48.112/28"
       - op: replace
-        path: /spec/values/service/ipFamilyPolicy
+        path: /spec/values/service/spec/ipFamilyPolicy
         value: SingleStack
       - op: replace
-        path: /spec/values/service/ipFamilies
+        path: /spec/values/service/spec/ipFamilies
         value:
           - IPv4
       - op: remove
         path: /spec/values/service/annotations/service.beta.kubernetes.io~1azure-load-balancer-ipv6
+      # With externalTrafficPolicy: Local the client source IP is preserved,
+      # so upstream proxies must be trusted explicitly to keep their X-Forwarded-For.
       - op: replace
         path: /spec/values/ports/http/forwardedHeaders/trustedIPs
         value:
           - "${AKS_SYSTEM_SUBNET_CIDR}"
           - "${AKS_WORK_SUBNET_CIDR}"
+          - "${LB_SOURCE_RANGE_APIM}"
+          - "${LB_SOURCE_RANGE_DIS_CORE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"
       - op: replace
         path: /spec/values/ports/https/forwardedHeaders/trustedIPs
         value:
           - "${AKS_SYSTEM_SUBNET_CIDR}"
           - "${AKS_WORK_SUBNET_CIDR}"
-      - op: add
-        path: /spec/values/extraObjects
-        value:
-          - apiVersion: traefik.io/v1alpha1
-            kind: Middleware
-            metadata:
-              name: hsts-header
-              namespace: traefik
-              annotations:
-                helm.sh/resource-policy: keep
-            spec:
-              headers:
-                stsIncludeSubdomains: true
-                stsSeconds: 63072000
-                stsPreload: true
-          - apiVersion: traefik.io/v1alpha1
-            kind: IngressRoute
-            metadata:
-              name: root-ingress-route
-              namespace: traefik
-              annotations:
-                helm.sh/resource-policy: keep
-            spec:
-              entryPoints:
-                - http
-                - https
-              routes:
-                - kind: Rule
-                  match: PathPrefix(`/`)
-                  services:
-                    - kind: TraefikService
-                      name: noop@internal
+          - "${LB_SOURCE_RANGE_APIM}"
+          - "${LB_SOURCE_RANGE_DIS_CORE}"
+          - "${LB_SOURCE_RANGE_DIS_EDGE}"

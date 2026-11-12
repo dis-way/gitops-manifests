@@ -17,6 +17,11 @@ Web UI for managing the headscale control server, authenticated via Microsoft En
 |------|-------------|
 | `.` | Core resources: namespace, secret, deployment, service, gateway, and HTTPRoute |
 | `post-deploy` | cert-manager Certificate for Let's Encrypt TLS |
+| `policies` | Included by the root kustomization. Default-deny NetworkPolicies (enforced by Cilium) allowing only Traefik, headscale, Entra ID and metrics scraping (ama-metrics, otel collector) |
+
+## Roles
+
+Headplane takes the user's role from the `roles` claim at each sign-in (`oidc.role_claim`). Define Entra app roles on the Headplane app registration with values that match Headplane role names (for example `admin`) and assign them to groups. Users without a matching role get `default_role` (`member`, no access). The first user in an empty Headplane database becomes `owner`.
 
 ## Prerequisites
 
@@ -24,11 +29,11 @@ Web UI for managing the headscale control server, authenticated via Microsoft En
 
 Two records are required in the `altinn.cloud` zone:
 
-1. **Service record** — points the hostname at the Traefik load balancer (same IP used by Traefik and headscale):
+1. **Service record** — points the hostname at the private Traefik load balancer (`https-internal` entrypoint, see `oci/traefik`). Headplane is reachable only over the VPN:
 
 ```text
-headplane.altinn.cloud  A     <PUBLIC_IP_V4>
-headplane.altinn.cloud  AAAA  <PUBLIC_IP_V6>
+headplane.altinn.cloud  A     <TRAEFIK_INTERNAL_IP_V4>
+headplane.altinn.cloud  AAAA  <TRAEFIK_INTERNAL_IP_V6>
 ```
 
 2. **ACME delegation** — delegates the DNS-01 challenge to the Azure DNS zone managed by cert-manager:

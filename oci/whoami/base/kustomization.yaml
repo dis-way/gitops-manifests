@@ -3,3 +3,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - whoami.yaml
+  - hpa.yaml
+  - pdb.yaml
+  - httproute.yaml
+  - linkerd-server.yaml

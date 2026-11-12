@@ -2,7 +2,7 @@
 
 Deploys Traefik as the ingress controller for the Altinn platform via Flux HelmRelease (chart v39+).
 
-CRDs (Traefik and Gateway API standard channel) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`.
+Traefik's own CRDs (`traefik.io`, `hub.traefik.io`) are managed directly by the HelmRelease via `install/upgrade.crds: CreateReplace`. Gateway API CRDs are not: chart v41 dropped `crds/gateway-standard-install.yaml`, so they come from the `gateway-api` package instead.
 
 ## Variables
 
@@ -16,9 +16,18 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `AKS_SYSTEM_SUBNET_CIDR` | — | platform-aks / eformidling-aks | AKS system node subnet CIDR; trusted for `X-Forwarded-For` |
 | `AKS_WORK_SUBNET_CIDR` | — | platform-aks / eformidling-aks | AKS work node subnet CIDR; trusted for `X-Forwarded-For` |
 | `AKS_FILESCAN_SUBNET_CIDR` | — | platform-aks only | AKS filescan node subnet CIDR; trusted for `X-Forwarded-For` |
-| `LB_SOURCE_RANGE_APIM` | `127.0.0.1/32` | platform-aks / eformidling-aks / multitenancy | Load Balancer source range CIDR for API Management IPv4 (e.g. `1.2.3.4/32`); defaults to loopback when APIM has no IPv4 |
-| `LB_SOURCE_RANGE_APIM_IPV6` | `::1/128` | multitenancy | Load Balancer source range CIDR for API Management IPv6; defaults to loopback when APIM has no IPv6 |
+| `LB_SOURCE_RANGE_APIM` | `127.0.0.1/32` | platform-aks / eformidling-aks / multitenancy | Load Balancer source range CIDR for API Management IPv4 (e.g. `1.2.3.4/32`); defaults to loopback when APIM has no IPv4; on multitenancy also trusted for `X-Forwarded-For` |
+| `LB_SOURCE_RANGE_APIM_IPV6` | `::1/128` | multitenancy | Load Balancer source range CIDR for API Management IPv6; defaults to loopback when APIM has no IPv6; also trusted for `X-Forwarded-For` |
 | `LB_SOURCE_RANGE_CORRESPONDENCE` | — | platform-aks only | Load Balancer source range CIDR for correspondence outbound IP |
+| `LB_SOURCE_RANGE_DIS_CORE` | — | platform-aks / eformidling-aks | Load Balancer source range CIDR for DIS core cluster egress IPv4; also trusted for `X-Forwarded-For` |
+| `LB_SOURCE_RANGE_DIS_EDGE` | — | platform-aks / eformidling-aks / multitenancy | Load Balancer source range CIDR for DIS edge cluster egress IPv4; also trusted for `X-Forwarded-For`; on `multitenancy-flux-webhook` also the only IPv4 source range of the `flux-webhook` Service |
+| `LB_SOURCE_RANGE_DIS_EDGE_IPV6` | — | multitenancy only | Load Balancer source range CIDR for DIS edge cluster egress IPv6; also trusted for `X-Forwarded-For`; on `multitenancy-flux-webhook` also the only IPv6 source range of the `flux-webhook` Service |
+| `LB_SOURCE_RANGE_LEGACY_PLATFORM_01` | `127.0.0.1/32` | No (multitenancy only) | First Load Balancer source range CIDR for legacy-platform cluster egress IPv4 (no IPv6 counterpart); admitted on the shared Service only, not on the `flux-webhook` Service; defaults to loopback, which admits nothing |
+| `LB_SOURCE_RANGE_LEGACY_PLATFORM_02` | `127.0.0.1/32` | No (multitenancy only) | Second legacy-platform IPv4 range; same as `LB_SOURCE_RANGE_LEGACY_PLATFORM_01` |
+| `TRAEFIK_INTERNAL_ENABLED` | `false` | No (adminservices only) | Create the private `internal` Load Balancer Service for the `https-internal` entrypoint |
+| `TRAEFIK_INTERNAL_SUBNET` | `""` | When internal is enabled | AKS VNet subnet name for the internal Load Balancer frontend |
+| `TRAEFIK_INTERNAL_IP_V4` | `""` | When internal is enabled | Static private IPv4 address for the internal Load Balancer |
+| `TRAEFIK_INTERNAL_IP_V6` | `""` | When internal is enabled | Static private IPv6 address for the internal Load Balancer |
 | `EXTERNAL_TRAFFIC_POLICY` | `Local` | No | Service `externalTrafficPolicy` |
 | `OTEL_ENDPOINT` | `otel-collector.monitoring.svc.cluster.local:4317` | No | OTLP gRPC endpoint for logs, metrics, and traces |
 | `DEFAULT_GATEWAY_HOSTNAME` | — | multitenancy only | Hostname for the default Gateway listeners |
@@ -26,21 +35,26 @@ CRDs (Traefik and Gateway API standard channel) are managed directly by the Helm
 | `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No (policies only) | AKS pod network IPv6 CIDR for Linkerd NetworkAuthentication |
 | `UAMI_CERT_MANAGER_CLIENT_ID` | — | platform-aks / eformidling-aks post-deploy | Managed identity client ID for cert-manager DNS-01 solver |
 | `CERT_DNS_NAME` | — | platform-aks / eformidling-aks post-deploy | Full DNS name for the TLS certificate (e.g. `internal.platform.prod.altinn.cloud`) |
+| `KV_SECRET_NAME_CERT` | — | apps post-deploy | Key Vault secret name holding the TLS certificate, pulled into `tls.crt` of the `ssl-cert` secret |
+| `KV_SECRET_NAME_KEY` | — | apps post-deploy | Key Vault secret name holding the TLS private key, pulled into `tls.key` of the `ssl-cert` secret |
+| `CERT_KV_UAMI_CLIENT_ID` | — | apps post-deploy | Managed identity client ID (federated to the `dis-tls-cert-kv-uami` SA in `traefik`) with read access to the `dis-tls-cert` Key Vault |
+| `CERT_KV_TENANT_ID` | `cd0026d8-283b-4a55-9bfa-d0ef4a8ba21c` | No | Azure tenant ID for the `dis-tls-cert-kv-uami` workload identity |
 
 ## Layers
 
 | Path | Description |
 |------|-------------|
-| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas, dual-stack Load Balancer, Linkerd injection, OTLP telemetry, TLS 1.2+ |
-| `platform-aks` | AKS platform overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + correspondence IPs), Prometheus ServiceMonitor, and HSTS middleware |
-| `apps` | Standard variant; enables Traefik CRD provider, HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
-| `adminservices` | Gateway API variant (CRD provider also enabled); same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies |
-| `multitenancy` | Gateway API variant; Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard), Linkerd policies included. Restricts `loadBalancerSourceRanges` to Cloudflare, altinn-uptime, and APIM via a ConfigMap (`valuesFrom`); Cloudflare ranges are updated automatically by the `update-cloudflare-ips` workflow. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
-| `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM IP), and HSTS middleware |
+| `base` | HelmRelease, HelmRepository, and `traefik` namespace; 3 replicas (PDB `maxUnavailable: 1`, spread across zones, `system-cluster-critical`), dual-stack Load Balancer with `externalTrafficPolicy: Local` (15s `requestAcceptGraceTimeout` on both entrypoints so terminating pods keep serving until the LB health probe marks the node down), Linkerd injection, OTLP telemetry, TLS 1.2+. Traefik CRD and Gateway API providers enabled (Gateway API CRDs from `oci/gateway-api`, which must be deployed first); default GatewayClass `traefik` and Gateway `traefik-gateway` with `http` (8000) and `https` (8443, `ssl-cert`) listeners without hostname, open to routes from all namespaces |
+| `platform-aks` | AKS platform overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + correspondence + DIS core/edge IPs + altinn-uptime), trusts the APIM, correspondence and DIS core/edge ranges for `X-Forwarded-For`, Prometheus ServiceMonitor, and HSTS middleware |
+| `apps` | Standard variant; HSTS applied at entrypoint level via `hsts-header` middleware (`traefik` and `default` namespaces), root catch-all `IngressRoute` returns 418 for unmatched paths |
+| `adminservices` | Same HSTS and catch-all setup as `apps`, stays in `traefik` namespace, no Linkerd policies. Adds a private `https-internal` entrypoint (port 8444, Gateway listeners use `port: 8444`) exposed only on an optional internal dual-stack Load Balancer Service (`TRAEFIK_INTERNAL_*`), for admin UIs that must be reachable only over the VPN |
+| `multitenancy` | Flux resources in `platform-system`, `kubernetesCRD` disabled, four Gateway listeners (http/https + wildcard, bound to `DEFAULT_GATEWAY_HOSTNAME`; replace the base listeners), Linkerd policies included. Restricts `loadBalancerSourceRanges` to Cloudflare, altinn-uptime, APIM, the DIS edge cluster, and the two legacy-platform ranges (IPv4 only) via a ConfigMap (`valuesFrom`), and trusts the APIM and DIS edge ranges (both families) for `X-Forwarded-For`; Cloudflare ranges are updated automatically by the `update-cloudflare-ips` workflow. **No central HSTS** — `kubernetesCRD` is disabled so `Middleware` CRDs cannot be resolved; HSTS must be applied via `ResponseHeaderModifier` filters on individual `HTTPRoute` resources in downstream apps |
+| `multitenancy-flux-webhook` | Optional variant of `multitenancy` for Flux reconcile requests from the DIS edge gateway ([RFC 0017](https://github.com/Altinn/altinn-platform/blob/main/rfcs/0017-on-demand-flux-reconcile.md)). A DIS core cluster selects it instead of `multitenancy` through a flag in the `dis_aks_resources_multitenancy` module (`terraform-azurerm-dis-modules`); `multitenancy/post-deploy` still applies. Adds a `flux-webhook` entrypoint (9443, TLS) and Gateway listener (`flux-webhook.<DEFAULT_GATEWAY_HOSTNAME>`, `ssl-cert`, routes only from `flux-system`), exposed only on a second Load Balancer Service, `altinn-traefik-flux-webhook`. That Service uses the shared public addresses (`PUBLIC_IP_V4`, `PUBLIC_IP_V6`) on port 9443 and admits only `LB_SOURCE_RANGE_DIS_EDGE` and `LB_SOURCE_RANGE_DIS_EDGE_IPV6`; the entrypoint trusts no `X-Forwarded-For` ranges. The shared Service must not expose 9443, and no other Service on these addresses may use it. **No deny-all annotation** — never set `service.beta.kubernetes.io/azure-deny-all-except-load-balancer-source-ranges` on either Service: AKS applies that deny-all rule to the whole shared address, so it also changes the network rules of the shared Service. A source range that is not a valid address range has the same effect. Adds 9443 to the Linkerd `skip-inbound-ports` |
+| `eformidling-aks` | eFormidling AKS overlay; IPv4 single-stack, adds `loadBalancerSourceRanges` (APIM + DIS core/edge IPs + altinn-uptime), trusts the APIM and DIS core/edge ranges for `X-Forwarded-For`, and HSTS middleware |
 | `policies` | Linkerd `Server`, `NetworkAuthentication`, and `AuthorizationPolicy` resources for kubelet probes and proxy admin in deny-all mesh environments; see [`policies/README.md`](policies/README.md) |
-| `post-deploy` | Shared post-deploy layer; HSTS `Middleware` and root catch-all `IngressRoute` (Traefik CRD resources applied after HelmRelease) |
-| `platform-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
-| `eformidling-aks/post-deploy` | Extends `post-deploy`; adds cert-manager `ClusterIssuer` (Let's Encrypt DNS-01 via Azure DNS) and `Certificate` for TLS |
-| `apps/post-deploy` | Extends `post-deploy`; adds `hsts-header` Middleware in the `default` namespace |
-| `adminservices/post-deploy` | Extends `post-deploy` |
-| `multitenancy/post-deploy` | Empty placeholder |
+| `post-deploy` | Manifests applied after the deployment has reconciled |
+| `platform-aks/post-deploy` | Manifests applied after the deployment has reconciled |
+| `eformidling-aks/post-deploy` | Manifests applied after the deployment has reconciled |
+| `apps/post-deploy` | Manifests applied after the deployment has reconciled |
+| `adminservices/post-deploy` | Manifests applied after the deployment has reconciled |
+| `multitenancy/post-deploy` | Manifests applied after the deployment has reconciled |

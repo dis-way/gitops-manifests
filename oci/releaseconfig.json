@@ -8,36 +8,36 @@
     "prod_ring2": "1.3.0"
   },
   "altinn-uptime": {
-    "at_ring1": "1.9.0",
-    "at_ring2": "1.9.0",
-    "tt_ring1": "1.9.0",
-    "tt_ring2": "1.9.0",
-    "prod_ring1": "1.9.0",
-    "prod_ring2": "1.9.0"
+    "at_ring1": "1.24.0",
+    "at_ring2": "1.24.0",
+    "tt_ring1": "1.24.0",
+    "tt_ring2": "1.24.0",
+    "prod_ring1": "1.24.0",
+    "prod_ring2": "1.24.0"
   },
   "azure-service-operator": {
-    "at_ring1": "1.4.3",
-    "at_ring2": "1.4.3",
-    "tt_ring1": "1.4.3",
-    "tt_ring2": "1.4.3",
-    "prod_ring1": "1.4.3",
-    "prod_ring2": "1.4.3"
+    "at_ring1": "1.4.4",
+    "at_ring2": "1.4.4",
+    "tt_ring1": "1.4.4",
+    "tt_ring2": "1.4.4",
+    "prod_ring1": "1.4.4",
+    "prod_ring2": "1.4.4"
   },
   "blackbox-exporter": {
-    "at_ring1": "0.8.1",
-    "at_ring2": "0.8.1",
-    "tt_ring1": "0.8.1",
-    "tt_ring2": "0.8.1",
-    "prod_ring1": "0.8.1",
-    "prod_ring2": "0.8.1"
+    "at_ring1": "0.11.0",
+    "at_ring2": "0.11.0",
+    "tt_ring1": "0.11.0",
+    "tt_ring2": "0.11.0",
+    "prod_ring1": "0.11.0",
+    "prod_ring2": "0.11.0"
   },
   "cert-manager": {
-    "at_ring1": "2.5.0",
-    "at_ring2": "2.5.0",
-    "tt_ring1": "2.5.0",
-    "tt_ring2": "2.5.0",
-    "prod_ring1": "2.5.0",
-    "prod_ring2": "2.5.0"
+    "at_ring1": "2.5.3",
+    "at_ring2": "2.5.3",
+    "tt_ring1": "2.5.3",
+    "tt_ring2": "2.5.3",
+    "prod_ring1": "2.5.3",
+    "prod_ring2": "2.5.3"
   },
   "certm-lets-encrypt-dns-issuer": {
     "at_ring1": "0.4.1",
@@ -48,68 +48,124 @@
     "prod_ring2": "0.4.1"
   },
   "container-runtime-aks-config": {
-    "at_ring1": "0.4.0",
-    "at_ring2": "0.4.0",
-    "tt_ring1": "0.4.0",
-    "tt_ring2": "0.4.0",
-    "prod_ring1": "0.4.0",
-    "prod_ring2": "0.4.0"
+    "at_ring1": "0.7.1",
+    "at_ring2": "0.7.1",
+    "tt_ring1": "0.7.1",
+    "tt_ring2": "0.7.1",
+    "prod_ring1": "0.7.1",
+    "prod_ring2": "0.7.1"
+  },
+  "derper": {
+    "at_ring1": "1.2.4",
+    "at_ring2": "1.2.4",
+    "tt_ring1": "1.2.4",
+    "tt_ring2": "1.2.4",
+    "prod_ring1": "1.2.4",
+    "prod_ring2": "1.2.4"
   },
   "dis-apim": {
-    "at_ring1": "0.3.0",
-    "at_ring2": "0.1.0",
-    "tt_ring1": "0.1.0",
-    "tt_ring2": "0.1.0",
-    "prod_ring1": "0.1.0",
-    "prod_ring2": "0.1.0"
+    "at_ring1": "0.3.1",
+    "at_ring2": "0.3.1",
+    "tt_ring1": "0.3.1",
+    "tt_ring2": "0.3.1",
+    "prod_ring1": "0.3.1",
+    "prod_ring2": "0.3.1"
   },
   "dis-identity": {
-    "at_ring1": "0.3.0",
-    "at_ring2": "0.3.0",
-    "tt_ring1": "0.3.0",
-    "tt_ring2": "0.3.0",
-    "prod_ring1": "0.3.0",
-    "prod_ring2": "0.3.0"
+    "at_ring1": "0.4.1",
+    "at_ring2": "0.4.1",
+    "tt_ring1": "0.4.1",
+    "tt_ring2": "0.4.1",
+    "prod_ring1": "0.4.1",
+    "prod_ring2": "0.4.1"
   },
   "dis-pgsql": {
-    "at_ring1": "0.1.12",
-    "at_ring2": "0.1.12",
-    "tt_ring1": "0.1.12",
-    "tt_ring2": "0.1.12",
-    "prod_ring1": "0.1.12",
-    "prod_ring2": "0.1.12"
+    "at_ring1": "0.3.2",
+    "at_ring2": "0.3.1",
+    "tt_ring1": "0.3.1",
+    "tt_ring2": "0.3.1",
+    "prod_ring1": "0.3.1",
+    "prod_ring2": "0.3.1"
   },
   "dis-vault": {
-    "at_ring1": "1.2.9",
-    "at_ring2": "1.2.9",
-    "tt_ring1": "1.2.9",
-    "tt_ring2": "1.2.9",
-    "prod_ring1": "1.2.9",
-    "prod_ring2": "1.2.9"
+    "at_ring1": "1.3.1",
+    "at_ring2": "1.3.1",
+    "tt_ring1": "1.3.1",
+    "tt_ring2": "1.3.1",
+    "prod_ring1": "1.3.1",
+    "prod_ring2": "1.3.1"
   },
   "dis-tls-cert": {
-    "at_ring1": "2.10.1",
-    "at_ring2": "2.10.1",
-    "tt_ring1": "2.10.1",
-    "tt_ring2": "2.10.1",
-    "prod_ring1": "2.10.1",
-    "prod_ring2": "2.10.1"
+    "at_ring1": "2.25.0",
+    "at_ring2": "2.25.0",
+    "tt_ring1": "2.25.0",
+    "tt_ring2": "2.25.0",
+    "prod_ring1": "2.25.0",
+    "prod_ring2": "2.25.0"
+  },
+  "edge-route-guard": {
+    "at_ring1": "1.0.1",
+    "at_ring2": "1.0.1",
+    "tt_ring1": "1.0.1",
+    "tt_ring2": "1.0.1",
+    "prod_ring1": "1.0.1",
+    "prod_ring2": "1.0.1"
+  },
+  "envoy-gateway": {
+    "at_ring1": "4.0.5",
+    "at_ring2": "4.0.5",
+    "tt_ring1": "4.0.5",
+    "tt_ring2": "4.0.5",
+    "prod_ring1": "4.0.5",
+    "prod_ring2": "4.0.5"
+  },
+  "envoy-gateway-crds": {
+    "at_ring1": "1.0.3",
+    "at_ring2": "1.0.3",
+    "tt_ring1": "1.0.3",
+    "tt_ring2": "1.0.3",
+    "prod_ring1": "1.0.3",
+    "prod_ring2": "1.0.3"
   },
   "external-secrets-operator": {
-    "at_ring1": "1.6.7",
-    "at_ring2": "1.6.7",
-    "tt_ring1": "1.6.7",
-    "tt_ring2": "1.6.7",
-    "prod_ring1": "1.6.7",
-    "prod_ring2": "1.6.7"
+    "at_ring1": "1.15.0",
+    "at_ring2": "1.15.0",
+    "tt_ring1": "1.14.0",
+    "tt_ring2": "1.14.0",
+    "prod_ring1": "1.14.0",
+    "prod_ring2": "1.14.0"
+  },
+  "gateway-api": {
+    "at_ring1": "1.1.3",
+    "at_ring2": "1.1.3",
+    "tt_ring1": "1.1.3",
+    "tt_ring2": "1.1.3",
+    "prod_ring1": "1.1.3",
+    "prod_ring2": "1.1.3"
+  },
+  "grafana-dashboards": {
+    "at_ring1": "1.0.0",
+    "at_ring2": "1.0.0",
+    "tt_ring1": "1.0.0",
+    "tt_ring2": "1.0.0",
+    "prod_ring1": "1.0.0",
+    "prod_ring2": "1.0.0"
   },
   "grafana-operator": {
-    "at_ring1": "2.2.0",
-    "at_ring2": "2.2.0",
-    "tt_ring1": "2.2.0",
-    "tt_ring2": "2.2.0",
-    "prod_ring1": "2.3.0",
-    "prod_ring2": "2.2.0"
+    "at_ring1": "3.0.1",
+    "at_ring2": "3.0.1",
+    "tt_ring1": "3.0.1",
+    "tt_ring2": "3.0.1",
+    "prod_ring1": "3.0.1",
+    "prod_ring2": "3.0.1"
+  },
+  "grafana-public": {
+    "at_ring1": "1.1.4",
+    "at_ring2": "1.1.4",
+    "tt_ring1": "1.1.4",
+    "tt_ring2": "1.1.4",
+    "prod_ring1": "1.1.4",
+    "prod_ring2": "1.1.4"
   },
   "kro": {
     "at_ring1": "0.2.0",
@@ -120,86 +176,110 @@
     "prod_ring2": "0.2.0"
   },
   "kube-state-metrics": {
-    "at_ring1": "1.2.0",
-    "at_ring2": "1.2.0",
-    "tt_ring1": "1.2.0",
-    "tt_ring2": "1.2.0",
-    "prod_ring1": "1.2.0",
-    "prod_ring2": "1.2.0"
+    "at_ring1": "1.2.8",
+    "at_ring2": "1.2.8",
+    "tt_ring1": "1.2.8",
+    "tt_ring2": "1.2.8",
+    "prod_ring1": "1.2.8",
+    "prod_ring2": "1.2.8"
   },
   "kyverno": {
-    "at_ring1": "1.3.4",
-    "at_ring2": "1.3.4",
-    "tt_ring1": "1.3.4",
-    "tt_ring2": "1.3.4",
-    "prod_ring1": "1.3.4",
-    "prod_ring2": "1.3.4"
+    "at_ring1": "1.3.6",
+    "at_ring2": "1.3.6",
+    "tt_ring1": "1.3.6",
+    "tt_ring2": "1.3.6",
+    "prod_ring1": "1.3.6",
+    "prod_ring2": "1.3.6"
   },
   "kyverno-policies": {
-    "at_ring1": "1.4.2",
-    "at_ring2": "1.4.2",
-    "tt_ring1": "1.4.2",
-    "tt_ring2": "1.4.2",
-    "prod_ring1": "1.4.2",
-    "prod_ring2": "1.4.2"
+    "at_ring1": "1.4.5",
+    "at_ring2": "1.4.5",
+    "tt_ring1": "1.4.5",
+    "tt_ring2": "1.4.5",
+    "prod_ring1": "1.4.5",
+    "prod_ring2": "1.4.5"
   },
   "lakmus": {
-    "at_ring1": "1.1.4",
-    "at_ring2": "1.1.4",
-    "tt_ring1": "1.1.4",
-    "tt_ring2": "1.1.4",
-    "prod_ring1": "1.1.4",
-    "prod_ring2": "1.1.4"
+    "at_ring1": "1.1.6",
+    "at_ring2": "1.1.6",
+    "tt_ring1": "1.1.6",
+    "tt_ring2": "1.1.6",
+    "prod_ring1": "1.1.6",
+    "prod_ring2": "1.1.6"
   },
   "linkerd": {
-    "at_ring1": "2.14.0",
-    "at_ring2": "2.14.0",
-    "tt_ring1": "2.14.0",
-    "tt_ring2": "2.14.0",
-    "prod_ring1": "2.14.0",
-    "prod_ring2": "2.13.0"
+    "at_ring1": "2.16.0",
+    "at_ring2": "2.16.0",
+    "tt_ring1": "2.16.0",
+    "tt_ring2": "2.16.0",
+    "prod_ring1": "2.16.0",
+    "prod_ring2": "2.16.0"
   },
   "otel-operator": {
-    "at_ring1": "1.4.3",
-    "at_ring2": "1.4.3",
-    "tt_ring1": "1.4.3",
-    "tt_ring2": "1.4.3",
-    "prod_ring1": "1.4.3",
-    "prod_ring2": "1.4.3"
+    "at_ring1": "2.0.0",
+    "at_ring2": "2.0.0",
+    "tt_ring1": "2.0.0",
+    "tt_ring2": "2.0.0",
+    "prod_ring1": "2.0.0",
+    "prod_ring2": "2.0.0"
   },
   "otel-collector": {
-    "at_ring1": "1.4.1",
-    "at_ring2": "1.4.1",
-    "tt_ring1": "1.4.1",
-    "tt_ring2": "1.4.1",
-    "prod_ring1": "1.4.1",
-    "prod_ring2": "1.4.1"
+    "at_ring1": "2.3.0",
+    "at_ring2": "2.3.0",
+    "tt_ring1": "2.3.0",
+    "tt_ring2": "2.3.0",
+    "prod_ring1": "2.3.0",
+    "prod_ring2": "2.3.0"
   },
   "platform-system": {
-    "at_ring1": "1.2.0",
-    "at_ring2": "1.2.0",
-    "tt_ring1": "1.1.0",
-    "tt_ring2": "1.1.0",
-    "prod_ring1": "1.1.0",
-    "prod_ring2": "1.1.0"
+    "at_ring1": "1.2.1",
+    "at_ring2": "1.2.1",
+    "tt_ring1": "1.2.1",
+    "tt_ring2": "1.2.1",
+    "prod_ring1": "1.2.1",
+    "prod_ring2": "1.2.1"
   },
   "traefik": {
-    "at_ring1": "3.8.0",
-    "at_ring2": "3.8.0",
-    "tt_ring1": "3.8.0",
-    "tt_ring2": "3.8.0",
-    "prod_ring1": "3.8.0",
-    "prod_ring2": "3.8.0"
+    "at_ring1": "3.18.0",
+    "at_ring2": "3.18.0",
+    "tt_ring1": "3.18.0",
+    "tt_ring2": "3.18.0",
+    "prod_ring1": "3.18.0",
+    "prod_ring2": "3.18.0"
+  },
+  "valkey-operator": {
+    "at_ring1": "0.3.0",
+    "at_ring2": "0.3.0",
+    "tt_ring1": "0.3.0",
+    "tt_ring2": "0.2.0",
+    "prod_ring1": "0.2.0",
+    "prod_ring2": "0.2.0"
   },
   "whoami": {
-    "at_ring1": "0.7.1",
-    "at_ring2": "0.7.1",
-    "tt_ring1": "0.7.1",
-    "tt_ring2": "0.7.1",
-    "prod_ring1": "0.7.1",
-    "prod_ring2": "0.7.1"
+    "at_ring1": "0.9.0",
+    "at_ring2": "0.9.0",
+    "tt_ring1": "0.9.0",
+    "tt_ring2": "0.9.0",
+    "prod_ring1": "0.9.0",
+    "prod_ring2": "0.9.0"
   },
   "headplane": {
+    "at_ring1": "1.6.2",
+    "at_ring2": "1.6.2",
+    "tt_ring1": "1.6.2",
+    "tt_ring2": "1.6.2",
+    "prod_ring1": "1.6.2",
+    "prod_ring2": "1.6.2"
+  },
+  "headscale": {
+    "at_ring1": "2.7.5",
+    "at_ring2": "2.7.5",
+    "tt_ring1": "2.7.5",
+    "tt_ring2": "2.7.5",
+    "prod_ring1": "2.7.5",
+    "prod_ring2": "2.7.5"
+  },
+  "http-redirect": {
     "at_ring1": "1.1.0",
     "at_ring2": "1.1.0",
     "tt_ring1": "1.1.0",
@@ -207,28 +287,53 @@
     "prod_ring1": "1.1.0",
     "prod_ring2": "1.1.0"
   },
-  "headscale": {
-    "at_ring1": "1.10.0",
-    "at_ring2": "1.10.0",
-    "tt_ring1": "1.10.0",
-    "tt_ring2": "1.10.0",
-    "prod_ring1": "1.10.0",
-    "prod_ring2": "1.10.0"
-  },
   "opencost": {
-    "at_ring1": "0.2.9",
-    "at_ring2": "0.2.9",
-    "tt_ring1": "0.2.9",
-    "tt_ring2": "0.2.9",
-    "prod_ring1": "0.2.9",
-    "prod_ring2": "0.2.9"
+    "at_ring1": "0.2.16",
+    "at_ring2": "0.2.16",
+    "tt_ring1": "0.2.16",
+    "tt_ring2": "0.2.16",
+    "prod_ring1": "0.2.16",
+    "prod_ring2": "0.2.16"
   },
   "tailscale-subnet-router": {
-    "at_ring1": "1.2.0",
-    "at_ring2": "1.2.0",
-    "tt_ring1": "1.2.0",
-    "tt_ring2": "1.2.0",
-    "prod_ring1": "1.2.0",
-    "prod_ring2": "1.2.0"
+    "at_ring1": "2.0.3",
+    "at_ring2": "2.0.3",
+    "tt_ring1": "2.0.3",
+    "tt_ring2": "2.0.3",
+    "prod_ring1": "2.0.3",
+    "prod_ring2": "2.0.3"
+  },
+  "dis-cache": {
+    "at_ring1": "0.2.6",
+    "at_ring2": "0.2.6",
+    "tt_ring1": "0.2.4"
+  },
+  "workload-identity-serviceaccount": {
+    "at_ring1": "1.0.0",
+    "at_ring2": "1.0.0",
+    "tt_ring1": "1.0.0",
+    "tt_ring2": "1.0.0",
+    "prod_ring1": "1.0.0",
+    "prod_ring2": "1.0.0"
+  },
+  "dis-core-proxies": {
+    "at_ring1": "0.1.1",
+    "at_ring2": "0.1.1",
+    "tt_ring1": "0.1.1",
+    "tt_ring2": "0.1.1",
+    "prod_ring1": "0.1.1",
+    "prod_ring2": "0.1.1"
+  },
+  "flux-webhook-receiver": {
+    "at_ring1": "2.0.0",
+    "at_ring2": "2.0.0",
+    "tt_ring1": "2.0.0",
+    "tt_ring2": "2.0.0",
+    "prod_ring1": "2.0.0",
+    "prod_ring2": "2.0.0"
+  },
+  "dis-messaging": {
+    "at_ring1": "0.1.0",
+    "at_ring2": "0.1.0"
   }
 }

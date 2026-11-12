@@ -28,6 +28,10 @@
       "release-type": "simple",
       "component": "oci-container-runtime-aks-config"
     },
+    "oci/derper": {
+      "release-type": "simple",
+      "component": "oci-derper"
+    },
     "oci/dis-identity": {
       "release-type": "simple",
       "component": "oci-dis-identity"
@@ -35,6 +39,21 @@
     "oci/dis-apim": {
       "release-type": "simple",
       "component": "oci-dis-apim"
+    },
+    "oci/dis-cache": {
+      "release-type": "simple",
+      "component": "oci-dis-cache",
+      "initial-version": "0.1.0"
+    },
+    "oci/dis-core-proxies": {
+      "release-type": "simple",
+      "component": "oci-dis-core-proxies",
+      "initial-version": "0.1.0"
+    },
+    "oci/dis-messaging": {
+      "release-type": "simple",
+      "component": "oci-dis-messaging",
+      "initial-version": "0.1.0"
     },
     "oci/dis-pgsql": {
       "release-type": "simple",
@@ -48,13 +67,41 @@
       "release-type": "simple",
       "component": "oci-dis-tls-cert"
     },
+    "oci/edge-route-guard": {
+      "release-type": "simple",
+      "component": "oci-edge-route-guard"
+    },
+    "oci/envoy-gateway": {
+      "release-type": "simple",
+      "component": "oci-envoy-gateway"
+    },
+    "oci/envoy-gateway-crds": {
+      "release-type": "simple",
+      "component": "oci-envoy-gateway-crds"
+    },
     "oci/external-secrets-operator": {
       "release-type": "simple",
       "component": "oci-external-secrets-operator"
     },
+    "oci/flux-webhook-receiver": {
+      "release-type": "simple",
+      "component": "oci-flux-webhook-receiver"
+    },
+    "oci/gateway-api": {
+      "release-type": "simple",
+      "component": "oci-gateway-api"
+    },
+    "oci/grafana-dashboards": {
+      "release-type": "simple",
+      "component": "oci-grafana-dashboards"
+    },
     "oci/grafana-operator": {
       "release-type": "simple",
       "component": "oci-grafana-operator"
+    },
+    "oci/grafana-public": {
+      "release-type": "simple",
+      "component": "oci-grafana-public"
     },
     "oci/headplane": {
       "release-type": "simple",
@@ -63,6 +110,10 @@
     "oci/headscale": {
       "release-type": "simple",
       "component": "oci-headscale"
+    },
+    "oci/http-redirect": {
+      "release-type": "simple",
+      "component": "oci-http-redirect"
     },
     "oci/kro": {
       "release-type": "simple",
@@ -112,9 +163,18 @@
       "release-type": "simple",
       "component": "oci-traefik"
     },
+    "oci/valkey-operator": {
+      "release-type": "simple",
+      "component": "oci-valkey-operator"
+    },
     "oci/whoami": {
       "release-type": "simple",
       "component": "oci-whoami"
+    },
+    "oci/workload-identity-serviceaccount": {
+      "release-type": "simple",
+      "component": "oci-workload-identity-serviceaccount",
+      "initial-version": "1.0.0"
     }
   },
   "separate-pull-requests": true,

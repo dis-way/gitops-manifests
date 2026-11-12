@@ -1,5 +1,124 @@
 # Changelog
 
+## [2.25.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.24.0...oci-dis-tls-cert-v2.25.0) (2026-10-20)
+
+
+### Features
+
+* **dis-tls-cert:** add *.&lt;env&gt;.dis.altinn.cloud wildcard certificates ([#2143](https://github.com/dis-way/gitops-manifests/issues/2143)) ([8f78ab9](https://github.com/dis-way/gitops-manifests/commit/8f78ab90fd6dbeb27b5a34092721e82ce631cf68))
+
+## [2.24.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.23.0...oci-dis-tls-cert-v2.24.0) (2026-10-16)
+
+
+### Features
+
+* **dis-tls-cert:** add studio.platform certificates for at23, yt01, tt02 and prod ([#2106](https://github.com/dis-way/gitops-manifests/issues/2106)) ([1859f1e](https://github.com/dis-way/gitops-manifests/commit/1859f1eec1d63100d5064fecc8e01b3933308de6))
+
+## [2.23.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.22.0...oci-dis-tls-cert-v2.23.0) (2026-10-15)
+
+
+### Features
+
+* add studio platform at22 configuration and push secret ([#2058](https://github.com/dis-way/gitops-manifests/issues/2058)) ([f6b5cd9](https://github.com/dis-way/gitops-manifests/commit/f6b5cd9cbdafd8a2922aa4b3659d013df5ab20fe))
+
+## [2.22.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.21.0...oci-dis-tls-cert-v2.22.0) (2026-10-14)
+
+
+### Features
+
+* add am-ui certificates for at22, at23, at24, yt01 and tt02 ([#2036](https://github.com/dis-way/gitops-manifests/issues/2036)) ([2b06344](https://github.com/dis-way/gitops-manifests/commit/2b06344ad2a710e40d427723976bcd14c25420eb))
+
+## [2.21.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.20.1...oci-dis-tls-cert-v2.21.0) (2026-10-14)
+
+
+### Features
+
+* add am-ui-altinn-no certificate and push secret configurations ([#2032](https://github.com/dis-way/gitops-manifests/issues/2032)) ([b7942ac](https://github.com/dis-way/gitops-manifests/commit/b7942ac36d464a71233953559eb2b40a5a309bb1))
+
+## [2.20.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.20.0...oci-dis-tls-cert-v2.20.1) (2026-10-06)
+
+
+### Dependency Updates
+
+* update mcr.microsoft.com/azure-cli docker tag to v2.91.0 ([#1826](https://github.com/dis-way/gitops-manifests/issues/1826)) ([fd23d0f](https://github.com/dis-way/gitops-manifests/commit/fd23d0f2da9af61db6218e9b1efa29bcecedc68d))
+
+## [2.20.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.19.1...oci-dis-tls-cert-v2.20.0) (2026-09-16)
+
+
+### Features
+
+* **dis-tls-cert:** add TLS certificate for af.altinn.no ([#1606](https://github.com/dis-way/gitops-manifests/issues/1606)) ([a83570f](https://github.com/dis-way/gitops-manifests/commit/a83570f74f3770d3eb96af6d8559bbc72b775083))
+
+## [2.19.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.19.0...oci-dis-tls-cert-v2.19.1) (2026-09-12)
+
+
+### Dependency Updates
+
+* update mcr.microsoft.com/azure-cli docker tag to v2.90.0 ([#1539](https://github.com/dis-way/gitops-manifests/issues/1539)) ([12f7c3f](https://github.com/dis-way/gitops-manifests/commit/12f7c3f50a4d70a711653820743280b6d89b1bdd))
+
+## [2.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.18.0...oci-dis-tls-cert-v2.19.0) (2026-09-10)
+
+
+### Features
+
+* **dis-tls-cert:** add TLS certificate for platform.altinn.no ([#1501](https://github.com/dis-way/gitops-manifests/issues/1501)) ([3f41029](https://github.com/dis-way/gitops-manifests/commit/3f410296ddbaa50316d7b5b8d266a6ad6a592e8b))
+
+## [2.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.17.0...oci-dis-tls-cert-v2.18.0) (2026-08-26)
+
+
+### Features
+
+* **dis-tls-cert:** Add TLS certificate for ddlabs.apps.tt02.altinn.no ([#1430](https://github.com/dis-way/gitops-manifests/issues/1430)) ([6771f42](https://github.com/dis-way/gitops-manifests/commit/6771f4238d4bc0edadd4576aa047acb06a7cbdd6))
+
+## [2.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.16.0...oci-dis-tls-cert-v2.17.0) (2026-08-21)
+
+
+### Features
+
+* **dis-tls-cert:** add weekly certificate expiry report to Slack ([#1384](https://github.com/dis-way/gitops-manifests/issues/1384)) ([2d8b805](https://github.com/dis-way/gitops-manifests/commit/2d8b805b35b272eceeae660e616b0fe041624d1f))
+
+## [2.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.15.0...oci-dis-tls-cert-v2.16.0) (2026-08-19)
+
+
+### Features
+
+* **dis-tls-cert:** Add wildcard certificate for *.altinn.cloud ([#1369](https://github.com/dis-way/gitops-manifests/issues/1369)) ([672ce0d](https://github.com/dis-way/gitops-manifests/commit/672ce0d60b5ebd2f4fceebaff87ea0631a8c0003))
+
+## [2.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.14.0...oci-dis-tls-cert-v2.15.0) (2026-08-18)
+
+
+### Features
+
+* **dis-tls-cert:** Add TLS certificates for platform and wildcard ([#1354](https://github.com/dis-way/gitops-manifests/issues/1354)) ([2d0aebe](https://github.com/dis-way/gitops-manifests/commit/2d0aebec386d9615d075254d6d4804becf19c5f5))
+
+## [2.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.13.0...oci-dis-tls-cert-v2.14.0) (2026-07-10)
+
+
+### Features
+
+* **dis-tls-cert:** Bump dis-tls-cert ([#1291](https://github.com/dis-way/gitops-manifests/issues/1291)) ([cd0215f](https://github.com/dis-way/gitops-manifests/commit/cd0215f0cad251b67c7dbbc2e2143bec3a9893f1))
+
+## [2.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.12.0...oci-dis-tls-cert-v2.13.0) (2026-07-10)
+
+
+### Features
+
+* Support wildcard domains in dis-tls-cert add-cert script ([#1287](https://github.com/dis-way/gitops-manifests/issues/1287)) ([75886d3](https://github.com/dis-way/gitops-manifests/commit/75886d3bf3a1507088a7138663432f36158cfb5d))
+
+## [2.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.11.0...oci-dis-tls-cert-v2.12.0) (2026-07-09)
+
+
+### Features
+
+* **dis-tls-cert:** Add certificate and push secret for ([#1284](https://github.com/dis-way/gitops-manifests/issues/1284)) ([08c5445](https://github.com/dis-way/gitops-manifests/commit/08c54452dfbe6d4a7a0afa5eb5be8857f27ed0cc))
+
+## [2.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.10.1...oci-dis-tls-cert-v2.11.0) (2026-07-01)
+
+
+### Features
+
+* **dis-tls-cert:** Add data.altinn.no certificate and PushSecret ([#1253](https://github.com/dis-way/gitops-manifests/issues/1253)) ([81d9a41](https://github.com/dis-way/gitops-manifests/commit/81d9a416c18e8f17e2648bead092765c5b000c5b))
+
 ## [2.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.10.0...oci-dis-tls-cert-v2.10.1) (2026-06-11)
 
 

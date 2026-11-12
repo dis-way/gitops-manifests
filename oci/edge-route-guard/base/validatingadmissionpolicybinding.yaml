@@ -1,0 +1,14 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: edge-httproute-allowlist
+spec:
+  policyName: edge-httproute-allowlist
+  validationActions: ["Deny"]
+  # Platform-owned namespaces are exempt; RBAC already limits who writes there.
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values: ["envoy-gateway-system"]

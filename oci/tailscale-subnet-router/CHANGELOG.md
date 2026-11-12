@@ -1,5 +1,86 @@
 # Changelog
 
+## [2.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v2.0.2...oci-tailscale-subnet-router-v2.0.3) (2026-10-30)
+
+
+### Dependency Updates
+
+* update tailscale/tailscale docker tag to v1.104.4 ([#2354](https://github.com/dis-way/gitops-manifests/issues/2354)) ([2bfb505](https://github.com/dis-way/gitops-manifests/commit/2bfb505758fe516e86d63a6b25b4cd889ecce68b))
+
+## [2.0.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v2.0.1...oci-tailscale-subnet-router-v2.0.2) (2026-10-29)
+
+
+### Dependency Updates
+
+* update tailscale/tailscale docker tag to v1.104.2 ([#2340](https://github.com/dis-way/gitops-manifests/issues/2340)) ([d0655dd](https://github.com/dis-way/gitops-manifests/commit/d0655ddc24236f112cf85011dfd0dd724834905e))
+
+## [2.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v2.0.0...oci-tailscale-subnet-router-v2.0.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow STUN to headscale and derper in the same cluster ([#2158](https://github.com/dis-way/gitops-manifests/issues/2158)) ([bb1744b](https://github.com/dis-way/gitops-manifests/commit/bb1744b74a49e9f6f52bf25a8e8778856dcbb0c9))
+
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.2...oci-tailscale-subnet-router-v2.0.0) (2026-10-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tailscale-subnet-router:** TS_ADVERTISE_ROUTES is now required and has no default. A subnet router without advertised routes has no purpose.
+
+### Features
+
+* **tailscale-subnet-router:** add secrets layer for input variables ([#2100](https://github.com/dis-way/gitops-manifests/issues/2100)) ([3a56643](https://github.com/dis-way/gitops-manifests/commit/3a56643746577062972a2db01e228bdbc338e046))
+
+## [1.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.1...oci-tailscale-subnet-router-v1.3.2) (2026-10-14)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow egress to internal Traefik entrypoint ([#2040](https://github.com/dis-way/gitops-manifests/issues/2040)) ([000fbc7](https://github.com/dis-way/gitops-manifests/commit/000fbc7858c71e6c4743f5f3625e4297e7540486))
+
+## [1.3.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.3.0...oci-tailscale-subnet-router-v1.3.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow egress to in-cluster Traefik ([#1927](https://github.com/dis-way/gitops-manifests/issues/1927)) ([523be48](https://github.com/dis-way/gitops-manifests/commit/523be484da1181a456f12d4a63c9fa842680d859))
+
+## [1.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.4...oci-tailscale-subnet-router-v1.3.0) (2026-10-07)
+
+
+### Features
+
+* **tailscale-subnet-router:** add network policies and harden pod ([#1878](https://github.com/dis-way/gitops-manifests/issues/1878)) ([15e064e](https://github.com/dis-way/gitops-manifests/commit/15e064e4df7e72ee556bc2616e8a9e9cf3099c25))
+
+## [1.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.3...oci-tailscale-subnet-router-v1.2.4) (2026-09-29)
+
+
+### Dependency Updates
+
+* update tailscale/tailscale docker tag to v1.102.5 ([#1708](https://github.com/dis-way/gitops-manifests/issues/1708)) ([1e60faa](https://github.com/dis-way/gitops-manifests/commit/1e60faa871beef4fbb8d2158070cc08da79352dd))
+
+## [1.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.2...oci-tailscale-subnet-router-v1.2.3) (2026-09-01)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** add missing get verb to events RBAC rule ([#1440](https://github.com/dis-way/gitops-manifests/issues/1440)) ([3e451c0](https://github.com/dis-way/gitops-manifests/commit/3e451c0d0a48ab3aa423e1574e96ad32d39f4452))
+
+## [1.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.1...oci-tailscale-subnet-router-v1.2.2) (2026-08-26)
+
+
+### Dependency Updates
+
+* update tailscale/tailscale docker tag to v1.102.3 ([#1427](https://github.com/dis-way/gitops-manifests/issues/1427)) ([08712ff](https://github.com/dis-way/gitops-manifests/commit/08712ff821094ef5bf2fc5fadbbb25cb8acbdc18))
+
+## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.2.0...oci-tailscale-subnet-router-v1.2.1) (2026-08-21)
+
+
+### Dependency Updates
+
+* update tailscale/tailscale docker tag to v1.102.2 ([#1405](https://github.com/dis-way/gitops-manifests/issues/1405)) ([c5a080f](https://github.com/dis-way/gitops-manifests/commit/c5a080fe6a4206d5b49a04b639dfe15a18ff2296))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-tailscale-subnet-router-v1.1.0...oci-tailscale-subnet-router-v1.2.0) (2026-04-10)
 
 

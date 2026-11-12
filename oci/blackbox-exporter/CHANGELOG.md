@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.2...oci-blackbox-exporter-v0.11.0) (2026-10-28)
+
+
+### Features
+
+* **altinn-uptime:** probe whoami endpoints with dedicated blackbox modules ([#2113](https://github.com/dis-way/gitops-manifests/issues/2113)) ([50c7f3d](https://github.com/dis-way/gitops-manifests/commit/50c7f3dbff32d4ae61bf79443d9b8043668a6f1b))
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.20.2 ([#2001](https://github.com/dis-way/gitops-manifests/issues/2001)) ([e74fb9f](https://github.com/dis-way/gitops-manifests/commit/e74fb9f80d6b49ca078c44e397c0de229bb6791c))
+
+## [0.10.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.1...oci-blackbox-exporter-v0.10.2) (2026-10-13)
+
+
+### Bug Fixes
+
+* **blackbox-exporter:** match health check status case-insensitively ([#2028](https://github.com/dis-way/gitops-manifests/issues/2028)) ([295cd7c](https://github.com/dis-way/gitops-manifests/commit/295cd7c83953980dd82be97930519ed927771128))
+
+## [0.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.0...oci-blackbox-exporter-v0.10.1) (2026-10-05)
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.19.1 ([#1491](https://github.com/dis-way/gitops-manifests/issues/1491)) ([49a1149](https://github.com/dis-way/gitops-manifests/commit/49a11495f3e9b2caff6c81d395953ade785aeb84))
+
+## [0.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.9.1...oci-blackbox-exporter-v0.10.0) (2026-09-17)
+
+
+### Features
+
+* **blackbox-exporter:** add platform-aks layer ([#1625](https://github.com/dis-way/gitops-manifests/issues/1625)) ([17965da](https://github.com/dis-way/gitops-manifests/commit/17965da19639022879ca9b7ca61d16d02503cfd6))
+
+## [0.9.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.9.0...oci-blackbox-exporter-v0.9.1) (2026-09-06)
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.17.2 ([#1364](https://github.com/dis-way/gitops-manifests/issues/1364)) ([08c420f](https://github.com/dis-way/gitops-manifests/commit/08c420fffed1989d7e231154a0d1a9622191aabb))
+
+## [0.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.8.1...oci-blackbox-exporter-v0.9.0) (2026-07-21)
+
+
+### Features
+
+* **altinn-uptime:** add health check probes for dialogporten and info.at22 ([#1258](https://github.com/dis-way/gitops-manifests/issues/1258)) ([583d1b4](https://github.com/dis-way/gitops-manifests/commit/583d1b4f0c4a17c7659ea2f9173c22887de0df49))
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.15.1 ([#1172](https://github.com/dis-way/gitops-manifests/issues/1172)) ([0f87c12](https://github.com/dis-way/gitops-manifests/commit/0f87c12dc61781fa13880ff2cfc488b557bf6b9e))
+
+## [0.8.2](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.8.1...oci-blackbox-exporter-v0.8.2) (2026-07-11)
+
+
+### Dependency Updates
+
+* update helm release prometheus-blackbox-exporter to v11.15.1 ([#1172](https://github.com/dis-way/gitops-manifests/issues/1172)) ([0f87c12](https://github.com/dis-way/gitops-manifests/commit/0f87c12dc61781fa13880ff2cfc488b557bf6b9e))
+
 ## [0.8.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.8.0...oci-blackbox-exporter-v0.8.1) (2026-05-13)
 
 

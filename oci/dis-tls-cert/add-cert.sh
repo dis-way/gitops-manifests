@@ -9,11 +9,23 @@ fi
 
 DOMAIN="$1"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NAME="${DOMAIN//./-}"
+
+# Convert a wildcard prefix to "star" for naming and filenames, e.g.
+# *.apps.tt02.altinn.no -> star.apps.tt02.altinn.no
+# The cert's dnsNames keeps the real wildcard domain.
+SAFE_DOMAIN="${DOMAIN/#\*./star.}"
+NAME="${SAFE_DOMAIN//./-}"
+
+# Wildcard dnsNames must be quoted; a bare YAML scalar starting with * is an alias.
+if [[ "$DOMAIN" == \** ]]; then
+  DNS_NAME="\"${DOMAIN}\""
+else
+  DNS_NAME="${DOMAIN}"
+fi
 
 CERTS_DIR="${SCRIPT_DIR}/certs"
-CERT_FILE="${CERTS_DIR}/${DOMAIN}.yaml"
-PUSH_FILE="${CERTS_DIR}/${DOMAIN}-push.yaml"
+CERT_FILE="${CERTS_DIR}/${SAFE_DOMAIN}.yaml"
+PUSH_FILE="${CERTS_DIR}/${SAFE_DOMAIN}-push.yaml"
 KUSTOMIZATION_FILE="${CERTS_DIR}/kustomization.yaml"
 
 # Available ClusterIssuers
@@ -60,7 +72,7 @@ spec:
     name: ${ISSUER}
     kind: ClusterIssuer
   dnsNames:
-    - ${DOMAIN}
+    - ${DNS_NAME}
 EOF
 
 echo "Created ${CERT_FILE}"
@@ -116,20 +128,20 @@ sedi() {
 }
 
 # Add to kustomization.yaml
-if grep -q "^  - ${DOMAIN}.yaml$" "$KUSTOMIZATION_FILE"; then
-  echo "Already in kustomization.yaml: ${DOMAIN}.yaml"
+if grep -q "^  - ${SAFE_DOMAIN}.yaml$" "$KUSTOMIZATION_FILE"; then
+  echo "Already in kustomization.yaml: ${SAFE_DOMAIN}.yaml"
 else
   sedi "/^resources:$/a\\
-  - ${DOMAIN}.yaml" "$KUSTOMIZATION_FILE"
-  echo "Added ${DOMAIN}.yaml to kustomization.yaml"
+  - ${SAFE_DOMAIN}.yaml" "$KUSTOMIZATION_FILE"
+  echo "Added ${SAFE_DOMAIN}.yaml to kustomization.yaml"
 fi
 
-if grep -q "^  - ${DOMAIN}-push.yaml$" "$KUSTOMIZATION_FILE"; then
-  echo "Already in kustomization.yaml: ${DOMAIN}-push.yaml"
+if grep -q "^  - ${SAFE_DOMAIN}-push.yaml$" "$KUSTOMIZATION_FILE"; then
+  echo "Already in kustomization.yaml: ${SAFE_DOMAIN}-push.yaml"
 else
-  sedi "/^  - ${DOMAIN}.yaml$/a\\
-  - ${DOMAIN}-push.yaml" "$KUSTOMIZATION_FILE"
-  echo "Added ${DOMAIN}-push.yaml to kustomization.yaml"
+  sedi "/^  - ${SAFE_DOMAIN}.yaml$/a\\
+  - ${SAFE_DOMAIN}-push.yaml" "$KUSTOMIZATION_FILE"
+  echo "Added ${SAFE_DOMAIN}-push.yaml to kustomization.yaml"
 fi
 
 echo "Done! Certificate for ${DOMAIN} using ${ISSUER} is ready."

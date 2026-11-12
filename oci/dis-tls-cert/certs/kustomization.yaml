@@ -1,6 +1,64 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - star.prod.dis.altinn.cloud.yaml
+  - star.prod.dis.altinn.cloud-push.yaml
+  - star.tt02.dis.altinn.cloud.yaml
+  - star.tt02.dis.altinn.cloud-push.yaml
+  - star.yt01.dis.altinn.cloud.yaml
+  - star.yt01.dis.altinn.cloud-push.yaml
+  - star.at23.dis.altinn.cloud.yaml
+  - star.at23.dis.altinn.cloud-push.yaml
+  - star.at22.dis.altinn.cloud.yaml
+  - star.at22.dis.altinn.cloud-push.yaml
+  - studio.platform.prod.altinn.cloud.yaml
+  - studio.platform.prod.altinn.cloud-push.yaml
+  - studio.platform.yt01.altinn.cloud.yaml
+  - studio.platform.yt01.altinn.cloud-push.yaml
+  - studio.platform.tt02.altinn.cloud.yaml
+  - studio.platform.tt02.altinn.cloud-push.yaml
+  - studio.platform.at23.altinn.cloud.yaml
+  - studio.platform.at23.altinn.cloud-push.yaml
+  - studio.platform.at22.altinn.cloud.yaml
+  - studio.platform.at22.altinn.cloud-push.yaml
+  - am.ui.tt02.altinn.no.yaml
+  - am.ui.tt02.altinn.no-push.yaml
+  - am.ui.yt01.altinn.cloud.yaml
+  - am.ui.yt01.altinn.cloud-push.yaml
+  - am.ui.at24.altinn.cloud.yaml
+  - am.ui.at24.altinn.cloud-push.yaml
+  - am.ui.at23.altinn.cloud.yaml
+  - am.ui.at23.altinn.cloud-push.yaml
+  - am.ui.at22.altinn.cloud.yaml
+  - am.ui.at22.altinn.cloud-push.yaml
+  - am.ui.altinn.no.yaml
+  - am.ui.altinn.no-push.yaml
+  - af.altinn.no.yaml
+  - af.altinn.no-push.yaml
+  - platform.altinn.no.yaml
+  - platform.altinn.no-push.yaml
+  - ddlabs.apps.tt02.altinn.no.yaml
+  - ddlabs.apps.tt02.altinn.no-push.yaml
+  - star.altinn.cloud.yaml
+  - star.altinn.cloud-push.yaml
+  - platform.yt01.altinn.cloud.yaml
+  - platform.yt01.altinn.cloud-push.yaml
+  - platform.at24.altinn.cloud.yaml
+  - platform.at24.altinn.cloud-push.yaml
+  - platform.at23.altinn.cloud.yaml
+  - platform.at23.altinn.cloud-push.yaml
+  - platform.at22.altinn.cloud.yaml
+  - platform.at22.altinn.cloud-push.yaml
+  - platform.tt02.altinn.no.yaml
+  - platform.tt02.altinn.no-push.yaml
+  - star.apps.altinn.no.yaml
+  - star.apps.altinn.no-push.yaml
+  - star.apps.tt02.altinn.no.yaml
+  - star.apps.tt02.altinn.no-push.yaml
+  - skd.apps.yt01.altinn.cloud.yaml
+  - skd.apps.yt01.altinn.cloud-push.yaml
+  - data.altinn.no.yaml
+  - data.altinn.no-push.yaml
   - altinn.studio.yaml
   - altinn.studio-push.yaml
   - ttd.apps.yt01.altinn.cloud.yaml

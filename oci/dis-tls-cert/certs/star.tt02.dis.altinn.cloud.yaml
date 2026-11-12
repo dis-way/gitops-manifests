@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: star-tt02-dis-altinn-cloud
+  namespace: dis-tls-cert
+spec:
+  secretName: star-tt02-dis-altinn-cloud
+  issuerRef:
+    name: digicert-dis-tls-cert
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.tt02.dis.altinn.cloud"

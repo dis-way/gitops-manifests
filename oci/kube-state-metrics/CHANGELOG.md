@@ -1,5 +1,61 @@
 # Changelog
 
+## [1.2.8](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.7...oci-kube-state-metrics-v1.2.8) (2026-10-30)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v8.7.1 ([#2348](https://github.com/dis-way/gitops-manifests/issues/2348)) ([b0a3476](https://github.com/dis-way/gitops-manifests/commit/b0a34765d810b58c67c7b3855901a44bfc7da894))
+
+## [1.2.7](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.6...oci-kube-state-metrics-v1.2.7) (2026-09-29)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v8.6.0 ([#1709](https://github.com/dis-way/gitops-manifests/issues/1709)) ([318bf31](https://github.com/dis-way/gitops-manifests/commit/318bf3191632b07c5d4a2be45091dd9a4a82bf59))
+
+## [1.2.6](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.5...oci-kube-state-metrics-v1.2.6) (2026-09-12)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v8.4.2 ([#1426](https://github.com/dis-way/gitops-manifests/issues/1426)) ([332e97c](https://github.com/dis-way/gitops-manifests/commit/332e97c5be9414058e99eb2632ffc2cad8d005b2))
+
+## [1.2.5](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.4...oci-kube-state-metrics-v1.2.5) (2026-08-21)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v8.3.1 ([#1389](https://github.com/dis-way/gitops-manifests/issues/1389)) ([8bff45f](https://github.com/dis-way/gitops-manifests/commit/8bff45f8a5a95cbd6b8bd94301053a17210f414b))
+
+## [1.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.3...oci-kube-state-metrics-v1.2.4) (2026-08-20)
+
+
+### Bug Fixes
+
+* **kube-state-metrics:** raise memory limit to 256Mi ([#1386](https://github.com/dis-way/gitops-manifests/issues/1386)) ([fd3a4e5](https://github.com/dis-way/gitops-manifests/commit/fd3a4e5e3945638decd634e0a2e011c500c05a68))
+
+## [1.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.2...oci-kube-state-metrics-v1.2.3) (2026-08-19)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v8 ([#1367](https://github.com/dis-way/gitops-manifests/issues/1367)) ([f3fe88d](https://github.com/dis-way/gitops-manifests/commit/f3fe88dacbbe05b5d76627c2375f05aa529a5f0e))
+
+## [1.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.1...oci-kube-state-metrics-v1.2.2) (2026-08-18)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v7.8.1 ([#1328](https://github.com/dis-way/gitops-manifests/issues/1328)) ([0b1a4f3](https://github.com/dis-way/gitops-manifests/commit/0b1a4f3cb5b4e3a0144ff9188d245e0726ee1a6b))
+
+## [1.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.2.0...oci-kube-state-metrics-v1.2.1) (2026-07-10)
+
+
+### Dependency Updates
+
+* update helm release kube-state-metrics to v7.5.1 ([#1224](https://github.com/dis-way/gitops-manifests/issues/1224)) ([99dfe13](https://github.com/dis-way/gitops-manifests/commit/99dfe13a25d1340afe72cdd28199e2b5c71b0790))
+
 ## [1.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-kube-state-metrics-v1.1.1...oci-kube-state-metrics-v1.2.0) (2026-06-02)
 
 

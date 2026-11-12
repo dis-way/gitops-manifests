@@ -16,13 +16,14 @@ spec:
       DISPG_AKS_VNET_NAME: ${DISPG_AKS_VNET_NAME}
       DISPG_AKS_RESOURCE_GROUP: ${DISPG_AKS_RESOURCE_GROUP}
       DISPG_WORKLOAD_IDENTITY_CLIENT_ID: ${DISPG_WORKLOAD_IDENTITY_CLIENT_ID}
+      DISPG_CLUSTER_ID: ${DISPG_CLUSTER_ID}
   prune: false
   retryInterval: 5m0s
   images:
     - name: controller
       newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/dis-pgsql-operator
       # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-pgsql-operator versioning=semver
-      newTag: v0.10.0
+      newTag: v0.15.0
   sourceRef:
     kind: OCIRepository
     name: dis-pgsql-operator

@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.15.1...oci-linkerd-v2.16.0) (2026-10-26)
+
+
+### Features
+
+* **linkerd:** update linkerd core charts to 2026.8.4 ([#2199](https://github.com/dis-way/gitops-manifests/issues/2199)) ([6cc1164](https://github.com/dis-way/gitops-manifests/commit/6cc116498ffcefadd09e96a78229303840784ad1))
+
+## [2.15.1](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.15.0...oci-linkerd-v2.15.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* **linkerd:** restart only meshed workloads with an outdated proxy ([#1669](https://github.com/dis-way/gitops-manifests/issues/1669)) ([2823630](https://github.com/dis-way/gitops-manifests/commit/28236306d05f2e21b5cf152796874f18d6701626))
+
+## [2.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.14.0...oci-linkerd-v2.15.0) (2026-09-10)
+
+
+### Features
+
+* **linkerd:** update linkerd core charts to 2026.7.2 ([#1478](https://github.com/dis-way/gitops-manifests/issues/1478)) ([45fc8c7](https://github.com/dis-way/gitops-manifests/commit/45fc8c79e03631d566be92ced582599722ee266c))
+
 ## [2.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-linkerd-v2.13.0...oci-linkerd-v2.14.0) (2026-06-12)
 
 

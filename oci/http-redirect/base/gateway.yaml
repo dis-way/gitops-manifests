@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ${REDIRECT_NAME}
+  namespace: ${REDIRECT_NAMESPACE:=traefik}
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: https
+      port: ${REDIRECT_GATEWAY_PORT:=8443}
+      protocol: HTTPS
+      hostname: "${REDIRECT_FROM_FQDN}"
+      tls:
+        certificateRefs:
+          # Defaults to the post-deploy Certificate. Point at an existing
+          # secret (e.g. the cluster wildcard ssl-cert) to skip post-deploy;
+          # another namespace also needs the reference-grant layer.
+          - kind: Secret
+            name: ${REDIRECT_TLS_SECRET_NAME:=${REDIRECT_NAME}-tls}
+            namespace: ${REDIRECT_TLS_SECRET_NAMESPACE:=${REDIRECT_NAMESPACE:=traefik}}
+      allowedRoutes:
+        namespaces:
+          from: Same

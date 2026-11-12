@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.2.16](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.15...oci-opencost-v0.2.16) (2026-10-27)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.33 ([#2245](https://github.com/dis-way/gitops-manifests/issues/2245)) ([5d2f888](https://github.com/dis-way/gitops-manifests/commit/5d2f888ddc91c1a1e23abf1b4fbc31fa0e0d793c))
+
+## [0.2.15](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.14...oci-opencost-v0.2.15) (2026-09-29)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.32 ([#1707](https://github.com/dis-way/gitops-manifests/issues/1707)) ([41bfacb](https://github.com/dis-way/gitops-manifests/commit/41bfacb2bff4764fc016b9ddb78b77ba2357dd88))
+
+## [0.2.14](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.13...oci-opencost-v0.2.14) (2026-09-16)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.31 ([#1576](https://github.com/dis-way/gitops-manifests/issues/1576)) ([cab584a](https://github.com/dis-way/gitops-manifests/commit/cab584a99b5dd94495270877fe0383f7b1bbfaad))
+
+## [0.2.13](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.12...oci-opencost-v0.2.13) (2026-09-12)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.30 ([#1439](https://github.com/dis-way/gitops-manifests/issues/1439)) ([cdd4824](https://github.com/dis-way/gitops-manifests/commit/cdd4824d7a0699439eedee7a4ae4dcf1291b2863))
+
+## [0.2.12](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.11...oci-opencost-v0.2.12) (2026-08-18)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.29 ([#1329](https://github.com/dis-way/gitops-manifests/issues/1329)) ([53d5b84](https://github.com/dis-way/gitops-manifests/commit/53d5b84a75150f3be921ca0aeb60c52be94fc838))
+
+## [0.2.11](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.10...oci-opencost-v0.2.11) (2026-07-10)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.26 ([#1200](https://github.com/dis-way/gitops-manifests/issues/1200)) ([041aeb7](https://github.com/dis-way/gitops-manifests/commit/041aeb7b63ce27b881263088251b915e342e3d60))
+
+## [0.2.10](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.9...oci-opencost-v0.2.10) (2026-06-26)
+
+
+### Dependency Updates
+
+* update helm release opencost to v2.5.22 ([#1135](https://github.com/dis-way/gitops-manifests/issues/1135)) ([541cc05](https://github.com/dis-way/gitops-manifests/commit/541cc05c6444ea45cd69f1bbd4ea8c89055ee0bc))
+
 ## [0.2.9](https://github.com/dis-way/gitops-manifests/compare/oci-opencost-v0.2.8...oci-opencost-v0.2.9) (2026-05-27)
 
 

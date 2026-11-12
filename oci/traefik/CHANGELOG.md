@@ -1,5 +1,117 @@
 # Changelog
 
+## [3.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.3...oci-traefik-v3.18.0) (2026-10-21)
+
+
+### Features
+
+* **traefik:** add the multitenancy-flux-webhook layer ([#2138](https://github.com/dis-way/gitops-manifests/issues/2138)) ([4f64722](https://github.com/dis-way/gitops-manifests/commit/4f64722373fea183463cb666857b6b2574762b18))
+
+## [3.17.3](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.2...oci-traefik-v3.17.3) (2026-10-13)
+
+
+### Bug Fixes
+
+* **traefik:** remove extraObjects in platform-aks and eformidling-aks ([#2023](https://github.com/dis-way/gitops-manifests/issues/2023)) ([7bddb52](https://github.com/dis-way/gitops-manifests/commit/7bddb5237f6c6dc0b5de3c783526cc0886469548))
+
+## [3.17.2](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.1...oci-traefik-v3.17.2) (2026-10-13)
+
+
+### Bug Fixes
+
+* **traefik:** remove extraObjects in apps and adminservices ([#2016](https://github.com/dis-way/gitops-manifests/issues/2016)) ([3fc3037](https://github.com/dis-way/gitops-manifests/commit/3fc3037af5b36f382a171694d2cf2b8563bca56c))
+
+## [3.17.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.0...oci-traefik-v3.17.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* **traefik:** set keep on post-deploy objects before removing extraObjects ([#2010](https://github.com/dis-way/gitops-manifests/issues/2010)) ([13ab67e](https://github.com/dis-way/gitops-manifests/commit/13ab67ea5d29745f7ec7ca6184b67b934eb6171f))
+
+## [3.17.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.16.1...oci-traefik-v3.17.0) (2026-10-12)
+
+
+### Features
+
+* **traefik:** enable the Gateway API provider with http/https listeners in base ([#2006](https://github.com/dis-way/gitops-manifests/issues/2006)) ([a3d3375](https://github.com/dis-way/gitops-manifests/commit/a3d33754de8d06aa2e6c2ba67cae6094c6168bf6))
+
+## [3.16.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.16.0...oci-traefik-v3.16.1) (2026-10-06)
+
+
+### Dependency Updates
+
+* update helm release traefik to v41.6.1 ([#1803](https://github.com/dis-way/gitops-manifests/issues/1803)) ([60b2e1a](https://github.com/dis-way/gitops-manifests/commit/60b2e1a5779f32896e59ff54b761738e894c27c6))
+
+## [3.16.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.15.0...oci-traefik-v3.16.0) (2026-10-05)
+
+
+### Features
+
+* **traefik:** add private https-internal entrypoint for adminservices ([#1677](https://github.com/dis-way/gitops-manifests/issues/1677)) ([4259deb](https://github.com/dis-way/gitops-manifests/commit/4259debbe88fa077712e681cd8524615e0920853))
+
+## [3.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.14.0...oci-traefik-v3.15.0) (2026-09-29)
+
+
+### Features
+
+* **traefik:** prepare for externalTrafficPolicy Local ([#1740](https://github.com/dis-way/gitops-manifests/issues/1740)) ([6cec6fa](https://github.com/dis-way/gitops-manifests/commit/6cec6fa61e16663781220a5fadd1d0fa66bdf7e2))
+
+## [3.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.1...oci-traefik-v3.14.0) (2026-09-29)
+
+
+### Features
+
+* **traefik:** improve availability of the ingress pods ([#1720](https://github.com/dis-way/gitops-manifests/issues/1720)) ([46e1662](https://github.com/dis-way/gitops-manifests/commit/46e16628e63cef388677c05a1f0400a0a5d0e12f))
+
+## [3.13.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.13.0...oci-traefik-v3.13.1) (2026-09-29)
+
+
+### Dependency Updates
+
+* update helm release traefik to v41.6.0 ([#1711](https://github.com/dis-way/gitops-manifests/issues/1711)) ([7b674e4](https://github.com/dis-way/gitops-manifests/commit/7b674e42a906be19eadcde82ed2642bed13dedd1))
+
+## [3.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.12.0...oci-traefik-v3.13.0) (2026-09-28)
+
+
+### Features
+
+* **traefik:** enable Gateway API provider in the apps overlay ([#1692](https://github.com/dis-way/gitops-manifests/issues/1692)) ([9e666d1](https://github.com/dis-way/gitops-manifests/commit/9e666d16379c218a488105bb41ee0e60da10559d))
+
+## [3.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.11.0...oci-traefik-v3.12.0) (2026-09-22)
+
+
+### Features
+
+* update load balancer source ranges and trusted IPs for DIS core and edge clusters ([#1656](https://github.com/dis-way/gitops-manifests/issues/1656)) ([4b4ee84](https://github.com/dis-way/gitops-manifests/commit/4b4ee84ded27c5cd4b4dbe3031a0cd2d448140ae))
+
+## [3.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.1...oci-traefik-v3.11.0) (2026-09-10)
+
+
+### Features
+
+* **traefik:** update traefik chart to 41.5.0 ([#1488](https://github.com/dis-way/gitops-manifests/issues/1488)) ([1abe155](https://github.com/dis-way/gitops-manifests/commit/1abe1551e1723a8ce5e660466626048c21ccc265))
+
+## [3.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.10.0...oci-traefik-v3.10.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **traefik:** remove completed ssl-cert type migration ([#1481](https://github.com/dis-way/gitops-manifests/issues/1481)) ([70192fa](https://github.com/dis-way/gitops-manifests/commit/70192fa685f3de96e1072e3c38cee90e94a82222))
+
+## [3.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.9.0...oci-traefik-v3.10.0) (2026-06-26)
+
+
+### Features
+
+* **traefik:** Add migration job to convert legacy ssl-cert secret type ([#1235](https://github.com/dis-way/gitops-manifests/issues/1235)) ([63652ae](https://github.com/dis-way/gitops-manifests/commit/63652aebaa44e6d599b60b811f57ed66f543f144))
+
+## [3.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.8.0...oci-traefik-v3.9.0) (2026-06-26)
+
+
+### Features
+
+* **traefik:** Add ExternalSecret for TLS cert/key from Azure Key Vault ([#1229](https://github.com/dis-way/gitops-manifests/issues/1229)) ([bde06a5](https://github.com/dis-way/gitops-manifests/commit/bde06a500bfac982b0881135774773825ebe5f3d))
+
 ## [3.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.7.0...oci-traefik-v3.8.0) (2026-05-12)
 
 

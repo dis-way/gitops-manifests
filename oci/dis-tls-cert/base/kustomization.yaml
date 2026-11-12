@@ -7,3 +7,7 @@ resources:
   - digicert-ssl-eabsecret.yaml
   - zero-ssl-eabsecret.yaml
   - clusterissuer.yaml
+  # Weekly Slack report on Key Vault certificates nearing expiry. Included here so
+  # it lands with the ServiceAccount and SecretStore it depends on. Only works on
+  # clusters that have a federated credential for dis-tls-cert-kv-uami.
+  - ../expiry-notify

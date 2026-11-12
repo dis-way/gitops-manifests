@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - oci-repository.yaml
+  - flux-kustomize.yaml
+configMapGenerator:
+  # The proxy Deployment lives in the legacy-proxies OCI artifact and mounts this
+  # ConfigMap by name, so the name-suffix hash must stay off.
+  - name: legacy-upstream
+    namespace: default
+    files:
+      - upstream.conf
+    options:
+      disableNameSuffixHash: true
+      labels:
+        app.kubernetes.io/name: dis-core-proxies

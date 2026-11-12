@@ -1,5 +1,110 @@
 # Changelog
 
+## [1.15.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.14.0...oci-external-secrets-operator-v1.15.0) (2026-11-09)
+
+
+### Features
+
+* **external-secrets-operator:** add repository-scoped GitHub tokens for Flux dispatch ([#2424](https://github.com/dis-way/gitops-manifests/issues/2424)) ([94dbe4a](https://github.com/dis-way/gitops-manifests/commit/94dbe4a2a4c3e290339f1ca4884a6f970d93e222))
+
+## [1.14.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.13.1...oci-external-secrets-operator-v1.14.0) (2026-11-05)
+
+
+### Features
+
+* **external-secrets-operator:** allow central-accesstoken-store in product- namespaces  ([#2425](https://github.com/dis-way/gitops-manifests/issues/2425)) ([288c6c0](https://github.com/dis-way/gitops-manifests/commit/288c6c065b5b1407d53ad8142eeb20be7b2453e3))
+
+## [1.13.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.13.0...oci-external-secrets-operator-v1.13.1) (2026-11-03)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.14.0 ([#2328](https://github.com/dis-way/gitops-manifests/issues/2328)) ([4e6962a](https://github.com/dis-way/gitops-manifests/commit/4e6962a243a573dfdacb3b69304b663da4c368a0))
+
+## [1.13.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.12.0...oci-external-secrets-operator-v1.13.0) (2026-11-03)
+
+
+### Features
+
+* add central access token ClusterSecretStore for multitenancy ([#2362](https://github.com/dis-way/gitops-manifests/issues/2362)) ([175509d](https://github.com/dis-way/gitops-manifests/commit/175509d5bd7716889301605db0f029257ec2013a))
+
+## [1.12.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.11.0...oci-external-secrets-operator-v1.12.0) (2026-10-30)
+
+
+### Features
+
+* add kustomization for external-secrets-operator with HelmRepository and HelmRelease patches ([#2342](https://github.com/dis-way/gitops-manifests/issues/2342)) ([c3c7ec9](https://github.com/dis-way/gitops-manifests/commit/c3c7ec978e223fe554b8d659f729ddad267ba798))
+
+## [1.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.10.1...oci-external-secrets-operator-v1.11.0) (2026-10-30)
+
+
+### Features
+
+* **external-secrets-operator:** add dis-system-store to multitenancy ([#2343](https://github.com/dis-way/gitops-manifests/issues/2343)) ([f371298](https://github.com/dis-way/gitops-manifests/commit/f371298317c542f0536cb706758f334cd6463842))
+
+## [1.10.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.10.0...oci-external-secrets-operator-v1.10.1) (2026-10-26)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.13.0 ([#1888](https://github.com/dis-way/gitops-manifests/issues/1888)) ([2aaa349](https://github.com/dis-way/gitops-manifests/commit/2aaa349db6d2d1afbd9132ce9628b9c6c4e14d48))
+
+## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.9.1...oci-external-secrets-operator-v1.10.0) (2026-10-15)
+
+
+### Features
+
+* **external-secrets-operator:** dis-system-store on apps clusters, protect stores from pruning ([#2004](https://github.com/dis-way/gitops-manifests/issues/2004)) ([ad60077](https://github.com/dis-way/gitops-manifests/commit/ad60077e782b2e448b552d81d21376616bbd4ffb))
+
+## [1.9.1](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.9.0...oci-external-secrets-operator-v1.9.1) (2026-10-05)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.11.0 ([#1490](https://github.com/dis-way/gitops-manifests/issues/1490)) ([fa32173](https://github.com/dis-way/gitops-manifests/commit/fa32173c26e6d041f776849b91cd1d8b7fa48375))
+
+## [1.9.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.8.0...oci-external-secrets-operator-v1.9.0) (2026-09-30)
+
+
+### Features
+
+* **external-secrets-operator:** add adminservices overlay with dis-system SecretStore ([#1747](https://github.com/dis-way/gitops-manifests/issues/1747)) ([25abcb4](https://github.com/dis-way/gitops-manifests/commit/25abcb4358eb587b315ae08e2755cccddb7828d6))
+
+## [1.8.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.7.0...oci-external-secrets-operator-v1.8.0) (2026-09-16)
+
+
+### Features
+
+* **external-secrets-operator:** add platform-aks layer ([#1598](https://github.com/dis-way/gitops-manifests/issues/1598)) ([de6d486](https://github.com/dis-way/gitops-manifests/commit/de6d486b4b2147193428a61a84c42ff8b215fe8b))
+
+## [1.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.10...oci-external-secrets-operator-v1.7.0) (2026-09-14)
+
+
+### Features
+
+* **oci/external-secrets-operator:** add Key Vault ClusterSecretStores ([#1555](https://github.com/dis-way/gitops-manifests/issues/1555)) ([4c7bd5a](https://github.com/dis-way/gitops-manifests/commit/4c7bd5ac7193860a23a6e6424674b455768c6f32))
+
+## [1.6.10](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.9...oci-external-secrets-operator-v1.6.10) (2026-09-09)
+
+
+### Bug Fixes
+
+* external secret operator was unmeshed so no linker policies needed ([#1465](https://github.com/dis-way/gitops-manifests/issues/1465)) ([283bed9](https://github.com/dis-way/gitops-manifests/commit/283bed9e526df2ba4f49dd3714a0ce76e1f47cbb))
+
+## [1.6.9](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.8...oci-external-secrets-operator-v1.6.9) (2026-08-18)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.9.0 ([#1357](https://github.com/dis-way/gitops-manifests/issues/1357)) ([12b36f5](https://github.com/dis-way/gitops-manifests/commit/12b36f5bb657292a24842d4ed2c80c1c5cd52227))
+
+## [1.6.8](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.7...oci-external-secrets-operator-v1.6.8) (2026-07-10)
+
+
+### Dependency Updates
+
+* update helm release external-secrets to v2.7.0 ([#1177](https://github.com/dis-way/gitops-manifests/issues/1177)) ([51517af](https://github.com/dis-way/gitops-manifests/commit/51517af106e874bab5cbc7688760f53738f4c8b1))
+
 ## [1.6.7](https://github.com/dis-way/gitops-manifests/compare/oci-external-secrets-operator-v1.6.6...oci-external-secrets-operator-v1.6.7) (2026-05-22)
 
 

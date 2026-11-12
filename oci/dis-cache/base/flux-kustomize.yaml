@@ -1,0 +1,29 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: dis-cache-operator
+  namespace: flux-system
+spec:
+  force: false
+  interval: 5m0s
+  path: ./default
+  postBuild:
+    substitute:
+      # renovate: datasource=docker depName=valkey/valkey
+      DISCACHE_VALKEY_IMAGE: altinncr.azurecr.io/docker.io/valkey/valkey:9.0.0
+      # renovate: datasource=docker depName=oliver006/redis_exporter
+      DISCACHE_EXPORTER_IMAGE: altinncr.azurecr.io/docker.io/oliver006/redis_exporter:v1.80.0
+  prune: false
+  retryInterval: 5m0s
+  images:
+    - name: controller
+      newName: altinncr.azurecr.io/ghcr.io/altinn/altinn-platform/dis-cache-operator
+      # renovate: datasource=docker depName=ghcr.io/altinn/altinn-platform/dis-cache-operator versioning=semver
+      newTag: v0.5.0
+  sourceRef:
+    kind: OCIRepository
+    name: dis-cache-operator
+    namespace: flux-system
+  targetNamespace: dis-cache-operator-system
+  timeout: 5m0s
+  wait: true

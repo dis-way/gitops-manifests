@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  # aks01/aks02 run a self hosted kube-prometheus-stack, not Azure Managed
+  # Prometheus, so the ServiceMonitors must stay on monitoring.coreos.com/v1.
+  - target:
+      kind: HelmRelease
+      name: prometheus-blackbox-exporter
+    patch: |-
+      - op: remove
+        path: /spec/postRenderers
+  - path: helmrelease-patch.yaml
+    target:
+      kind: HelmRelease
+      name: prometheus-blackbox-exporter

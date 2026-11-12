@@ -1,5 +1,94 @@
 # Changelog
 
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.2.1...oci-otel-collector-v2.3.0) (2026-11-09)
+
+
+### Features
+
+* **otel-collector:** forward Traefik traces to Altinn Studio in apps clusters ([#2444](https://github.com/dis-way/gitops-manifests/issues/2444)) ([e5a2900](https://github.com/dis-way/gitops-manifests/commit/e5a2900cfc777b39b350041e373358294fc39343))
+
+## [2.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.2.0...oci-otel-collector-v2.2.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* **otel-collector:** read the flux-system connection string via a ClusterSecretStore ([#2421](https://github.com/dis-way/gitops-manifests/issues/2421)) ([839ea72](https://github.com/dis-way/gitops-manifests/commit/839ea7283ba92b759d623051f581bfb46af7dc94))
+
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.3...oci-otel-collector-v2.2.0) (2026-11-05)
+
+
+### Features
+
+* **otel-collector:** lower default trace sampling ([#2416](https://github.com/dis-way/gitops-manifests/issues/2416)) ([94ef7ab](https://github.com/dis-way/gitops-manifests/commit/94ef7ab787832718406a76afae097848eea20d45))
+* **otel-collector:** sync the App Insights connection string into flux-system ([#2417](https://github.com/dis-way/gitops-manifests/issues/2417)) ([83c5efc](https://github.com/dis-way/gitops-manifests/commit/83c5efca35de72d874d23abc3f842c5c2dc3b1a5))
+
+## [2.1.3](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.2...oci-otel-collector-v2.1.3) (2026-10-26)
+
+
+### Dependency Updates
+
+* update ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib docker tag to v0.163.2 ([#1890](https://github.com/dis-way/gitops-manifests/issues/1890)) ([9e13218](https://github.com/dis-way/gitops-manifests/commit/9e1321890d267565525963cc9086ba6d0464c287))
+
+## [2.1.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.1...oci-otel-collector-v2.1.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* **otel-collector:** sample envoy 4xx traces and drop duplicate span attributes ([#2171](https://github.com/dis-way/gitops-manifests/issues/2171)) ([71b9419](https://github.com/dis-way/gitops-manifests/commit/71b94194880c2b2b2f25c1cbbebc487534cd035e))
+
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.1.0...oci-otel-collector-v2.1.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **otel-collector:** stop dropping traces under load ([#2053](https://github.com/dis-way/gitops-manifests/issues/2053)) ([9469706](https://github.com/dis-way/gitops-manifests/commit/94697068b77133c69a1579c7224b6e1328dcfe28))
+
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v2.0.0...oci-otel-collector-v2.1.0) (2026-10-07)
+
+
+### Features
+
+* **otel-collector:** scrape the Valkey pods of every Cache ([#1914](https://github.com/dis-way/gitops-manifests/issues/1914)) ([548558a](https://github.com/dis-way/gitops-manifests/commit/548558a2868e9649501e24732b11fd355211da1c))
+
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.5.1...oci-otel-collector-v2.0.0) (2026-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* OTel SDK auto-instrumentation via operator annotations ([#1664](https://github.com/dis-way/gitops-manifests/issues/1664))
+
+### Features
+
+* OTel SDK auto-instrumentation via operator annotations ([#1664](https://github.com/dis-way/gitops-manifests/issues/1664)) ([d99bfa4](https://github.com/dis-way/gitops-manifests/commit/d99bfa42b69fc6f84ba840bbeb93b6647cfbb484))
+
+
+### Bug Fixes
+
+* **otel-collector:** give log records a message so App Insights keeps them ([#1896](https://github.com/dis-way/gitops-manifests/issues/1896)) ([3fe24bf](https://github.com/dis-way/gitops-manifests/commit/3fe24bfad9a688d3e1ce016cebac6aba51c231da))
+* **otel-collector:** stop key-not-found warnings when splitting envoy URLs ([#1893](https://github.com/dis-way/gitops-manifests/issues/1893)) ([f2b47be](https://github.com/dis-way/gitops-manifests/commit/f2b47be06f8a5e6815ad8336bf866d5cb0b8f4f7))
+
+## [1.5.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.5.0...oci-otel-collector-v1.5.1) (2026-10-06)
+
+
+### Dependency Updates
+
+* update opentelemetry-collector-contrib docker tag to v0.161.0 ([#1886](https://github.com/dis-way/gitops-manifests/issues/1886)) ([291fffd](https://github.com/dis-way/gitops-manifests/commit/291fffd159a500e13135d5fe8235f0de8a4e503a))
+
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.2...oci-otel-collector-v1.5.0) (2026-10-06)
+
+
+### Features
+
+* **otel-collector:** route envoy access logs through their own pipeline ([#1871](https://github.com/dis-way/gitops-manifests/issues/1871)) ([50b3736](https://github.com/dis-way/gitops-manifests/commit/50b373673809075f131b3d4c81380f16d4af6cc3))
+* **otel-collector:** scrape pods that opt in with the dis.otel/scrape label ([#1797](https://github.com/dis-way/gitops-manifests/issues/1797)) ([273c79c](https://github.com/dis-way/gitops-manifests/commit/273c79c1b29a67e1a4ea0939e6b3b9eaec965b1b))
+
+## [1.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.1...oci-otel-collector-v1.4.2) (2026-09-15)
+
+
+### Bug Fixes
+
+* **otel-collector:** transform envoy traces to make them display correctly in azure ([#1582](https://github.com/dis-way/gitops-manifests/issues/1582)) ([e7455e4](https://github.com/dis-way/gitops-manifests/commit/e7455e4559ed163bd5fa10f1fb6512d86dfdaeac))
+
 ## [1.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-otel-collector-v1.4.0...oci-otel-collector-v1.4.1) (2026-03-18)
 
 

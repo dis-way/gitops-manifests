@@ -1,5 +1,143 @@
 # Changelog
 
+## [2.7.6](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.5...oci-headscale-v2.7.6) (2026-11-10)
+
+
+### Dependency Updates
+
+* update chainguard/kubectl:latest-dev docker digest to 945cf7b ([#2398](https://github.com/dis-way/gitops-manifests/issues/2398)) ([131e9fd](https://github.com/dis-way/gitops-manifests/commit/131e9fd5926a7d04445ba0ce343ff9fb76aaf5b2))
+
+## [2.7.5](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.4...oci-headscale-v2.7.5) (2026-11-09)
+
+
+### Dependency Updates
+
+* update juanfont/headscale docker tag to v0.29.7 ([#2376](https://github.com/dis-way/gitops-manifests/issues/2376)) ([7f87edb](https://github.com/dis-way/gitops-manifests/commit/7f87edbd80cf5a78a3803180754ace0920961ff8))
+
+## [2.7.4](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.3...oci-headscale-v2.7.4) (2026-10-30)
+
+
+### Dependency Updates
+
+* update chainguard/kubectl:latest-dev docker digest to ee760c8 ([#2319](https://github.com/dis-way/gitops-manifests/issues/2319)) ([a028dc1](https://github.com/dis-way/gitops-manifests/commit/a028dc19cedf92799933f1b012b4012d542af50b))
+
+## [2.7.3](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.2...oci-headscale-v2.7.3) (2026-10-29)
+
+
+### Dependency Updates
+
+* update juanfont/headscale docker tag to v0.29.6 ([#2248](https://github.com/dis-way/gitops-manifests/issues/2248)) ([6e85b63](https://github.com/dis-way/gitops-manifests/commit/6e85b631d027c40babdf95afea7af233f7c21684))
+
+## [2.7.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.1...oci-headscale-v2.7.2) (2026-10-29)
+
+
+### Dependency Updates
+
+* update chainguard/kubectl:latest-dev docker digest to 04b4f42 ([#2203](https://github.com/dis-way/gitops-manifests/issues/2203)) ([46624f8](https://github.com/dis-way/gitops-manifests/commit/46624f8fcdc9035f280c72458c7e9c727b87410a))
+* update chainguard/kubectl:latest-dev docker digest to 0ab6094 ([#2266](https://github.com/dis-way/gitops-manifests/issues/2266)) ([c9a9a31](https://github.com/dis-way/gitops-manifests/commit/c9a9a31eed5434bcea6b27cde4336f127b0049f2))
+
+## [2.7.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.7.0...oci-headscale-v2.7.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **tailscale-subnet-router:** allow STUN to headscale and derper in the same cluster ([#2158](https://github.com/dis-way/gitops-manifests/issues/2158)) ([bb1744b](https://github.com/dis-way/gitops-manifests/commit/bb1744b74a49e9f6f52bf25a8e8778856dcbb0c9))
+
+## [2.7.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.6.1...oci-headscale-v2.7.0) (2026-10-20)
+
+
+### Features
+
+* **headscale:** add acl-sync layer that applies the ACL policy from Git ([#2128](https://github.com/dis-way/gitops-manifests/issues/2128)) ([dae3abd](https://github.com/dis-way/gitops-manifests/commit/dae3abd039cb11bf6cb61e67aededf84b870be3d))
+
+## [2.6.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.6.0...oci-headscale-v2.6.1) (2026-10-17)
+
+
+### Dependency Updates
+
+* update juanfont/headscale docker tag to v0.29.5 ([#2046](https://github.com/dis-way/gitops-manifests/issues/2046)) ([c2fe330](https://github.com/dis-way/gitops-manifests/commit/c2fe330a891026ab36e97f3168331e603243e9f8))
+
+## [2.6.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.5.0...oci-headscale-v2.6.0) (2026-10-06)
+
+
+### Features
+
+* **headscale:** stop using the public Tailscale DERP servers ([#1876](https://github.com/dis-way/gitops-manifests/issues/1876)) ([16200b1](https://github.com/dis-way/gitops-manifests/commit/16200b1ea81395aa802ebc1379d6c50fb7d1a345))
+
+## [2.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.2...oci-headscale-v2.5.0) (2026-10-06)
+
+
+### Features
+
+* **headscale:** add DERP region 901 (ttd-prod-aks) ([#1694](https://github.com/dis-way/gitops-manifests/issues/1694)) ([3fa44a9](https://github.com/dis-way/gitops-manifests/commit/3fa44a97fd9f7c28df59ad1f08b4b408da93db03))
+
+## [2.4.2](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.1...oci-headscale-v2.4.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* **headscale:** harden the pod and bind the gRPC admin API to loopback ([#1830](https://github.com/dis-way/gitops-manifests/issues/1830)) ([ecc3cdf](https://github.com/dis-way/gitops-manifests/commit/ecc3cdfd38291527eda011e23a0abd2418d7fd82))
+
+## [2.4.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.4.0...oci-headscale-v2.4.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **headscale:** allow the meshed otel collector to scrape metrics ([#1785](https://github.com/dis-way/gitops-manifests/issues/1785)) ([c56887b](https://github.com/dis-way/gitops-manifests/commit/c56887b7d6f589b93c20ba39540a84d6d0d1c932))
+
+## [2.4.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.3.0...oci-headscale-v2.4.0) (2026-10-05)
+
+
+### Features
+
+* **headscale:** add default-deny network policies layer ([#1777](https://github.com/dis-way/gitops-manifests/issues/1777)) ([aa8954d](https://github.com/dis-way/gitops-manifests/commit/aa8954d7bff5f2df6a8f262b6b66a583febafde2))
+
+## [2.3.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.2.0...oci-headscale-v2.3.0) (2026-09-28)
+
+
+### Features
+
+* **headscale:** stop publishing the swagger UI ([#1679](https://github.com/dis-way/gitops-manifests/issues/1679)) ([527bf49](https://github.com/dis-way/gitops-manifests/commit/527bf493c9ffb4ab1f052f062e70f48d8a3e4a96))
+
+## [2.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.1...oci-headscale-v2.2.0) (2026-09-28)
+
+
+### Features
+
+* **headscale:** add admin-test-aks DERP region ([#1673](https://github.com/dis-way/gitops-manifests/issues/1673)) ([3827b62](https://github.com/dis-way/gitops-manifests/commit/3827b629c606b311aa353491e5398eb2b66c3516))
+
+## [2.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.1.0...oci-headscale-v2.1.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* **headscale:** upgrade to headscale 0.29.4 ([#1665](https://github.com/dis-way/gitops-manifests/issues/1665)) ([7b255af](https://github.com/dis-way/gitops-manifests/commit/7b255afc519278f9fa6d5e133935db8ce9d39469))
+
+## [2.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.1...oci-headscale-v2.1.0) (2026-08-21)
+
+
+### Features
+
+* **headscale:** trust pod CIDRs for forwarded client IP headers ([#1418](https://github.com/dis-way/gitops-manifests/issues/1418)) ([7282af2](https://github.com/dis-way/gitops-manifests/commit/7282af244c1b3bf6062fd3177a25d2478c56c406))
+
+## [2.0.1](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v2.0.0...oci-headscale-v2.0.1) (2026-08-21)
+
+
+### Bug Fixes
+
+* **headscale:** migrate config keys removed in 0.29 ([#1414](https://github.com/dis-way/gitops-manifests/issues/1414)) ([694b15c](https://github.com/dis-way/gitops-manifests/commit/694b15c56b1b06294874450810fda64a78c00299))
+
+## [2.0.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.10.0...oci-headscale-v2.0.0) (2026-08-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **headscale:** headscale 0.29 migrates the sqlite database and blocks downgrades to 0.28, so a rollback requires restoring the PVC rather than reverting the image tag. The ACL policy is in database mode and must be reviewed before rollout: `*` now resolves to the CGNAT and ULA ranges instead of all IPs, tags/hosts/IPs are rejected as sources for `autogroup:self` destinations, and `proto:icmp` covers only ICMPv4. MagicDNS names change for any node whose label used the old random-suffix form. Minimum Tailscale client version is 1.80.0.
+
+### Features
+
+* **headscale:** upgrade to headscale 0.29.3 ([#1403](https://github.com/dis-way/gitops-manifests/issues/1403)) ([dfc44f5](https://github.com/dis-way/gitops-manifests/commit/dfc44f52af9ade8bc37379ccba631b5bbe784da9))
+
 ## [1.10.0](https://github.com/dis-way/gitops-manifests/compare/oci-headscale-v1.9.0...oci-headscale-v1.10.0) (2026-05-08)
 
 

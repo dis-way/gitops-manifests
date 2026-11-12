@@ -1,0 +1,60 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system
+spec:
+  chart:
+    spec:
+      chart: gateway-helm
+      sourceRef:
+        kind: HelmRepository
+        name: envoy-gateway
+        namespace: envoy-gateway-system
+      # renovate: datasource=docker depName=docker.io/envoyproxy/gateway-helm versioning=semver
+      version: 1.9.3
+  interval: 1h
+  timeout: 5m
+  install:
+    crds: Skip
+  upgrade:
+    crds: Skip
+  values:
+    config:
+      envoyGateway:
+        extensionApis:
+          enableBackend: true
+        # Control plane metrics (xds_nack_total, watchable_*, status_update_*,
+        # resource_apply_*), pushed to the same collector as the data plane.
+        # The Prometheus endpoint stays on for port-forward debugging. Envoy
+        # Gateway reads this config only at startup - see the README note on
+        # restarting the controller after config.envoyGateway changes.
+        telemetry:
+          metrics:
+            sinks:
+              - type: OpenTelemetry
+                openTelemetry:
+                  host: otel-collector.monitoring.svc.cluster.local
+                  port: 4317
+                  protocol: grpc
+    crds:
+      enabled: false
+    deployment:
+      pod:
+        annotations:
+          cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+    global:
+      imageRegistry: altinncr.azurecr.io/docker.io
+      images:
+        # TEMPORARY PIN - remove the tag on the next gateway-helm bump. Chart
+        # v1.9.3 ships Envoy 1.39.5, whose distroless image still carries the
+        # unpatched ca-certificates bundle (eMudhra intermediate CA compromise);
+        # 1.39.6 rebuilds the base with the fix and changes nothing else.
+        # Normally this is untagged so the chart's eg.envoyProxy.image helper fills
+        # in the Envoy version matching the chart. Left pinned, the proxy would
+        # stay on 1.39.6 while the chart moves on.
+        # The chart writes this into Envoy Gateway's default EnvoyProxy spec; it
+        # reaches the data plane only because the `eg` EnvoyProxy sets
+        # mergeType: StrategicMerge.
+        envoyProxy:
+          image: docker.io/envoyproxy/envoy:distroless-v1.39.6

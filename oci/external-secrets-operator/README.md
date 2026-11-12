@@ -6,16 +6,169 @@ Deploys the External Secrets Operator for syncing secrets from external provider
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `AKS_POD_IPV4_CIDR` | `10.240.0.0/16` | No | Pod network IPv4 CIDR (for policies) |
-| `AKS_POD_IPV6_CIDR` | `fd10:59f0:8c79:240::/64` | No | Pod network IPv6 CIDR (for policies) |
-| `AKS_VNET_IPV4_CIDR` | - | Yes | AKS VNET IPv4 CIDR (for policies) |
-| `AKS_VNET_IPV6_CIDR` | - | Yes | AKS VNET IPv6 CIDR (for policies) |
+| `ALTINN_KV_ESO_CLIENT_ID` | — | apps + platform-aks post-deploy | Client ID of the user-assigned identity ESO uses against the Altinn Key Vault |
+| `ALTINN_KV_URL` | — | apps + platform-aks post-deploy | Vault URI of the Altinn Key Vault, e.g. `https://<name>.vault.azure.net/` |
+| `CENTRAL_ACCESSTOKEN_KV_URL` | — | multitenancy central-accesstoken | Vault URI of the Key Vault holding the central access token. Read from the `multitenancy/secrets` layer |
+| `DIS_SYSTEM_KV_ESO_CLIENT_ID` | — | adminservices + multitenancy post-deploy | Client ID of the dis-system Key Vault reader identity (`dis_system_kv_reader_client_id` output of the `dis_system_kv` module) |
+| `DIS_SYSTEM_KV_URL` | — | adminservices + multitenancy post-deploy | Vault URI of the dis-system Key Vault (`dis_system_kv_uri` output of the `dis_system_kv` module) |
+| `FLUX_DISPATCH_NAME` | — | multitenancy flux-dispatch-token + its secrets layer | Name of one token mapping. Names its objects and prefixes its Key Vault secrets. Set through `postBuild.substitute` on both Kustomizations |
+| `GITHUB_REPOSITORY_NAME` | — | multitenancy flux-dispatch-token | Repository the token is for, without the owner, e.g. `dialogporten`. Read from the `flux-dispatch-token/secrets` layer |
+| `SO_KV_ESO_CLIENT_ID` | — | apps post-deploy | Client ID of the user-assigned identity ESO uses against the serviceowner Key Vault |
+| `SO_KV_URL` | — | apps post-deploy | Vault URI of the serviceowner Key Vault |
+| `TENANT_ID` | — | apps, platform-aks, adminservices + multitenancy post-deploy | Azure tenant ID for the workload identities |
+| `TOKEN_NAMESPACE` | — | multitenancy flux-dispatch-token | Product namespace that receives the token. Read from the `flux-dispatch-token/secrets` layer |
+| `TOKEN_SECRET_NAME` | — | multitenancy flux-dispatch-token | Secret in `TOKEN_NAMESPACE` that the product's Flux Provider reads. Read from the `flux-dispatch-token/secrets` layer |
+
+`base`, `apps`, `platform-aks`, `adminservices`, and `multitenancy` use no variables. Substitution applies to the
+`post-deploy` layers, `multitenancy/central-accesstoken`, and `multitenancy/flux-dispatch-token` with its `secrets`
+layer.
+
+`multitenancy/central-accesstoken` reads its variables from the `multitenancy/secrets` layer, through
+`postBuild.substituteFrom` on the `external-secrets-operator-vars` Secret. The ExternalSecret and the Secret are in
+`platform-system`, next to `dis-system-store` and the Flux Kustomizations on DIS core clusters. Every Key Vault secret
+below must exist in the vault behind `dis-system-store`, or the ExternalSecret fails to sync.
+
+| Key Vault secret | Variable |
+|------------------|----------|
+| `external-secrets-operator-central-accesstoken-kv-url` | `CENTRAL_ACCESSTOKEN_KV_URL` |
+
+`multitenancy/flux-dispatch-token` reads its variables the same way from its own `secrets` layer, through the
+`flux-dispatch-<FLUX_DISPATCH_NAME>-vars` Secret. `FLUX_DISPATCH_NAME` names that Secret, so it cannot come from it.
+`multitenancy/flux-dispatch-app` reads the shared GitHub App into the `flux-dispatch-github-app` Secret.
+
+| Key Vault secret | Variable or key |
+|------------------|-----------------|
+| `flux-dispatch-github-app-id` | App ID (`flux-dispatch-app`) |
+| `flux-dispatch-github-app-installation-id` | Installation ID (`flux-dispatch-app`) |
+| `flux-dispatch-github-app-private-key` | App private key (`flux-dispatch-app`) |
+| `flux-dispatch-<FLUX_DISPATCH_NAME>-github-repository-name` | `GITHUB_REPOSITORY_NAME` |
+| `flux-dispatch-<FLUX_DISPATCH_NAME>-token-namespace` | `TOKEN_NAMESPACE` |
+| `flux-dispatch-<FLUX_DISPATCH_NAME>-token-secret-name` | `TOKEN_SECRET_NAME` |
+
+The other `post-deploy` layers keep `postBuild.substitute`: `apps` and `adminservices` create `dis-system-store`
+themselves, so they cannot read their own variables through it.
 
 ## Layers
 
 | Path | Description |
 |------|-------------|
 | `base` | HelmRelease, HelmRepository, and namespace |
-| `apps` | Additional application resources |
-| `multitenancy` | Multi-tenant configuration |
-| `policies` | Linkerd authorization policies for default-deny inbound |
+| `apps` | Standard variant; `base` unchanged |
+| `apps/post-deploy` | Workload identity ServiceAccount + `ClusterSecretStore` for the Altinn and serviceowner Key Vaults, plus the namespaced `dis-system-store` `SecretStore` in `flux-system` over the Altinn Key Vault, applied after the operator has reconciled |
+| `platform-aks` | Platform cluster variant; `base` unchanged |
+| `platform-aks/post-deploy` | Altinn Key Vault `ClusterSecretStore` only — platform clusters have no serviceowner vault and no `dis-system-store` |
+| `adminservices` | Admin cluster variant; `base` unchanged |
+| `adminservices/post-deploy` | Workload identity ServiceAccount + namespaced `SecretStore` in `flux-system` for the dis-system Key Vault |
+| `multitenancy` | Runs the HelmRelease from `platform-system` targeting the `external-secrets` namespace |
+| `multitenancy/post-deploy` | Workload identity ServiceAccount + namespaced `dis-system-store` `SecretStore` in `platform-system` for the dis-system Key Vault |
+| `multitenancy/central-accesstoken` | `ApplicationIdentity` + `central-accesstoken-store` `ClusterSecretStore` for the central access token, limited to namespaces prefixed `product-`. Depends on `multitenancy/secrets` |
+| `multitenancy/secrets` | `ExternalSecret` in `platform-system` that writes the `external-secrets-operator-vars` Secret for `multitenancy/central-accesstoken` from `dis-system-store`. Depends on `multitenancy/post-deploy` |
+| `multitenancy/flux-dispatch-app` | `ExternalSecret` in `platform-system` that writes the `flux-dispatch-github-app` Secret from `dis-system-store`. Applied once per cluster. Depends on `multitenancy/post-deploy` |
+| `multitenancy/flux-dispatch-token` | One GitHub token mapping: generator, renewal `ExternalSecret`, Kubernetes `SecretStore` and `PushSecret` in `platform-system`, plus the destination Secret, a `Role` and a `RoleBinding` in `TOKEN_NAMESPACE`. Applied once per mapping. Depends on `multitenancy/flux-dispatch-app` and `multitenancy/flux-dispatch-token/secrets` |
+| `multitenancy/flux-dispatch-token/secrets` | `ExternalSecret` in `platform-system` that writes the `flux-dispatch-<FLUX_DISPATCH_NAME>-vars` Secret from `dis-system-store`. Depends on `multitenancy/post-deploy` |
+
+## Key Vault access
+
+The operator runs with `serviceAccount.create: false` and no Azure identity of its own. Each `ClusterSecretStore`
+points at its own ServiceAccount through `serviceAccountRef`, and ESO exchanges that ServiceAccount's token for an
+Azure token using the `azure.workload.identity/client-id` and `azure.workload.identity/tenant-id` annotations.
+
+| Key Vault | ServiceAccount | ClusterSecretStore | Layer |
+|-----------|----------------|--------------------|-------|
+| Altinn | `altinn-kv-eso` | `altinn-keyvault-store` | `apps`, `platform-aks` |
+| Serviceowner | `so-kv-eso` | `serviceowner-keyvault-store` | `apps` |
+| dis-system | `flux-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `flux-system`) | `adminservices` |
+| dis-system | `platform-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `platform-system`) | `multitenancy` |
+| Altinn | `flux-system/dis-secret-sync-sa` | `dis-system-store` (namespaced `SecretStore` in `flux-system`) | `apps` |
+| Central access token | `platform-system/central-accesstoken-eso` | `central-accesstoken-store` | `multitenancy` |
+
+These live in `post-deploy` because both the `external-secrets` namespace and the `ClusterSecretStore` CRD are created
+by the operator layer — applying them in the same Kustomization would fail until the chart has installed its CRDs.
+
+`dis-system-store` and its `dis-secret-sync-sa` ServiceAccount carry `kustomize.toolkit.fluxcd.io/prune: disabled`.
+Packages read their input variables through them, so Flux must never delete them, even when a Kustomization is
+renamed, its path changes, or `prune` is turned on. Removing one from the manifests leaves it orphaned in the
+cluster, so deleting one means doing it by hand. The `ClusterSecretStore`s (`altinn-keyvault-store`,
+`serviceowner-keyvault-store`) and their ServiceAccounts are to be replaced by `dis-system-store`, so they stay
+prunable and go away with the manifests.
+
+Every ServiceAccount except the dis-system one is in the `external-secrets` namespace, so each identity needs a federated credential on the
+cluster's OIDC issuer with subject `system:serviceaccount:external-secrets:<serviceaccount-name>`, plus read access
+to the vault it reads — a `Key Vault Secrets User` role assignment on RBAC vaults, or a get/list access policy on
+vaults still using the access-policy model. Without the federated credential the stores report `NotReady` and every
+`ExternalSecret` using them fails to sync. The dis-system ServiceAccount and its `SecretStore` are in
+`flux-system` instead: admin clusters run every Flux Kustomization there, and `postBuild.substituteFrom` only reads
+Secrets from the Kustomization's own namespace. Its federated credential subject is therefore
+`system:serviceaccount:flux-system:dis-secret-sync-sa` (`dis_system_kv_namespace = "flux-system"` on the
+`dis_system_kv` module), and only `ExternalSecret`s in `flux-system` can use the store. DIS core (multitenancy)
+clusters run their Flux Kustomizations in `platform-system`, so there the ServiceAccount and store are in
+`platform-system` and the federated credential subject is
+`system:serviceaccount:platform-system:dis-secret-sync-sa`. A package's `secrets` layer must then create its
+`ExternalSecret` in `platform-system`; the existing layers hardcode `flux-system` and need a multitenancy overlay.
+
+`dis-system-store` is the store name every package's `secrets` layer references, so the same manifests work on every
+cluster. On apps clusters it reads the existing Altinn Key Vault rather than a separate dis-system vault: the
+`flux-system/dis-secret-sync-sa` ServiceAccount carries the `ALTINN_KV_ESO_CLIENT_ID` identity, which needs a second
+federated credential with subject `system:serviceaccount:flux-system:dis-secret-sync-sa`.
+
+### Central access token
+
+Some products sign their requests with a central access token. `central-accesstoken-store` serves it to every
+namespace whose name starts with `product-`. Other namespaces cannot use the store. A product team that needs the
+token deploys an `ExternalSecret` that references the store; teams that do not need it get no Secret.
+
+The store does not create its own ServiceAccount. `multitenancy/central-accesstoken` creates the
+`platform-system/central-accesstoken-eso` `ApplicationIdentity`, and dis-identity-operator creates the managed identity,
+its federated credential, and a ServiceAccount with the same name that carries the client and tenant IDs. No identity
+ID passes through Flux. On the first deploy the store reports `NotReady`: the managed identity exists only after the
+operator has reconciled, and it then needs read access to the vault. Grant it that access outside the cluster, and the
+store becomes ready on its next refresh.
+
+The vault is shared, and the `^product-` namespace regex is the only limit in the cluster: a matching namespace can
+read every secret the identity can read. Grant the identity `Key Vault Secrets User` on the access token secret alone, not on the
+vault. Vaults that still use access policies cannot limit access to one secret.
+
+On DIS core clusters the Flux Kustomizations depend on each other in this order: `multitenancy` →
+`multitenancy/post-deploy` (`dis-system-store`) → `multitenancy/secrets` → `multitenancy/central-accesstoken`, which
+also depends on the dis-identity Kustomization for the `ApplicationIdentity` CRD.
+
+The `ApplicationIdentity` and `central-accesstoken-store` carry `kustomize.toolkit.fluxcd.io/prune: disabled`. Product
+`ExternalSecret`s depend on the store. A recreated identity is a new principal and has no vault access.
+
+Consumers reference a store by name, and because these are cluster-scoped they work from any namespace:
+
+```yaml
+secretStoreRef:
+  kind: ClusterSecretStore
+  name: altinn-keyvault-store
+```
+
+### Flux dispatch tokens
+
+Flux sends deployment results to a product's GitHub repository with a token for that repository only ([RFC
+0019](https://github.com/Altinn/altinn-platform/blob/main/rfcs/0019-flux-workflow-notifications.md)). The tokens come
+from one shared GitHub App. Its private key stays in `platform-system`; products only get the token.
+
+Each `multitenancy/flux-dispatch-token` mapping generates a token for `GITHUB_REPOSITORY_NAME` with `contents: write`
+every 30 minutes, and copies it to `TOKEN_SECRET_NAME` in `TOKEN_NAMESPACE` every minute. GitHub tokens expire after an
+hour. A failed renewal keeps the last token, and a failed copy leaves the destination Secret unchanged.
+
+Products cannot change a mapping: everything except the destination Secret and its `Role` and `RoleBinding` is in
+`platform-system`. The push identity can only read and update the destination Secret. Flux creates that Secret once,
+empty (`kustomize.toolkit.fluxcd.io/ssa: IfNotPresent`), so the identity needs no `create` right, which Kubernetes
+cannot limit to one name.
+
+Install the App only on approved repositories. A token covers only its mapping's repository, but the private key can
+reach every repository in the installation.
+
+On DIS core clusters the Flux Kustomizations depend on each other in this order: `multitenancy/post-deploy`
+(`dis-system-store`) → `multitenancy/flux-dispatch-app` and `multitenancy/flux-dispatch-token/secrets` →
+`multitenancy/flux-dispatch-token`. Apply `flux-dispatch-token` with `wait = false`, because its `ExternalSecret` is not
+ready until the private key is in the vault. Apply it with `prune` on, so that removing a mapping stops distribution
+and deletes the destination Secret. To offboard a repository, also remove it from the App installation.
+
+Give each mapping its own destination Secret: two mappings that write the same Secret overwrite each other's token
+every minute. Do not change a mapping's repository and namespace at the same time. The copy moves to the new namespace
+within a minute, but the token is renewed for the new repository only at the next refresh, up to 30 minutes later, so
+until then the new namespace gets a token for the old repository. Add a mapping with a new name instead, then remove the
+old one.

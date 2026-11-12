@@ -2,8 +2,8 @@ name: Update Cloudflare IP Ranges
 
 on:
   schedule:
-    - cron: '0 6 * * 1'  # Mondays at 06:00 UTC
-    - cron: '0 6 * * 4'  # Thursdays at 06:00 UTC
+    - cron: '19 6 * * 1'  # Mondays at 06:19 UTC (off the hour — GitHub delays runs scheduled on the hour)
+    - cron: '19 6 * * 4'  # Thursdays at 06:19 UTC
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Fetch and update Cloudflare IP ranges
         id: update
@@ -32,10 +32,10 @@ jobs:
           with open(path) as f:
               content = f.read()
 
-          items = ''.join(f'        - {ip}\n' for ip in new_ips)
+          items = ''.join(f'          - {ip}\n' for ip in new_ips)
 
           new_content = re.sub(
-              r'(        # BEGIN CLOUDFLARE\n)(?:        - .+\n)+(        # END CLOUDFLARE\n)',
+              r'(          # BEGIN CLOUDFLARE\n)(?:          - .+\n)+(          # END CLOUDFLARE\n)',
               r'\g<1>' + items + r'\g<2>',
               content,
           )
@@ -53,13 +53,28 @@ jobs:
       - name: Open pull request
         if: steps.update.outputs.changed == 'true'
         run: |
-          BRANCH="chore/update-cloudflare-ips-$(date +%Y%m%d)"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-          git add oci/traefik/multitenancy/lb-source-ranges-configmap.yaml
-          git commit -m "chore(traefik): update Cloudflare IP ranges"
-          git push --force origin "$BRANCH"
+          FILE="oci/traefik/multitenancy/lb-source-ranges-configmap.yaml"
+          BRANCH="chore/update-cloudflare-ips"
+
+          # Blob SHA of the file on the current branch — required by the Contents API
+          FILE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/contents/$FILE" --jq '.sha')
+
+          # Create or force-reset the branch to the current HEAD (main)
+          HEAD_SHA=$(git rev-parse HEAD)
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f ref="refs/heads/$BRANCH" -f sha="$HEAD_SHA" 2>/dev/null || \
+          gh api "repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH" \
+            -X PATCH -f sha="$HEAD_SHA" -F force=true
+
+          # Commit via the Contents API — GitHub signs these commits automatically
+          CONTENT_B64=$(base64 -w0 < "$FILE")
+          gh api "repos/$GITHUB_REPOSITORY/contents/$FILE" \
+            -X PUT \
+            -f message="chore(traefik): update Cloudflare IP ranges" \
+            -f content="$CONTENT_B64" \
+            -f branch="$BRANCH" \
+            -f sha="$FILE_SHA"
+
           gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q . || \
           gh pr create \
             --title "chore(traefik): update Cloudflare IP ranges" \

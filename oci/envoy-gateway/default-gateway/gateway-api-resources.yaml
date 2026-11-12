@@ -1,0 +1,59 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  # Cluster-scoped - a GatewayClass takes no namespace. The EnvoyProxy it
+  # points at is namespaced, which is why parametersRef carries one of its own.
+  name: eg
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: eg
+    namespace: envoy-gateway-system
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: eg
+  namespace: envoy-gateway-system
+spec:
+  gatewayClassName: eg
+  # Teams attach their own listeners - hostname, port and TLS certificate - by
+  # creating a ListenerSet in their own namespace whose parentRef points here.
+  # A Gateway denies ListenerSets by default; this field is the opt-in, and it
+  # is independent of allowedRoutes below.
+  #
+  # Listeners are distinct on the tuple (port, protocol, hostname), evaluated
+  # across this Gateway's own listeners and every attached ListenerSet at once.
+  # Port 443 is therefore free for every team, as long as each brings its own
+  # hostname. A collision is rejected rather than silently merged, so hostname
+  # allocation stays a platform concern even though listeners are self-service.
+  #
+  # "All" matches the allowedRoutes posture below. Narrow to a Selector if
+  # listener creation should be restricted to blessed tenant namespaces.
+  allowedListeners:
+    namespaces:
+      from: All
+  # The platform's own listeners. Teams do not edit these; they add their own
+  # via ListenerSet, and their routes use the ListenerSet as parentRef.
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: '${BASE_HOSTNAME}'
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+        - kind: Secret
+          name: tls-cert
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: '${BASE_HOSTNAME}'
+      allowedRoutes:
+        namespaces:
+          from: All

@@ -7,13 +7,64 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^oci\\/(dis-apim|dis-identity|dis-pgsql|dis-vault|lakmus)\\/(base\\/)?(flux-kustomize|oci-repository)\\.yaml$/"
+        "/^oci\\/(dis-apim|dis-cache|dis-identity|dis-messaging|dis-pgsql|dis-vault|gateway-api|lakmus)\\/(base\\/)?(flux-kustomize|git-repository|oci-repository)\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*newTag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*tag:\\s*(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
       ]
+    },
+    {
+      "customType": "regex",
+      "description": "Container images annotated with a renovate comment, including those pulled through the altinncr.azurecr.io mirror",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*value:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*version:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)",
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)(?: registryUrl=(?<registryUrl>\\S+))?(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*DISCACHE_[A-Z_]+_IMAGE:\\s*\\S+?:(?<currentValue>v?\\d+\\.\\d+\\.\\d+)"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Container images on a floating tag pinned by digest, such as chainguard/kubectl:latest-dev, including those pulled through the altinncr.azurecr.io mirror",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+?)\\s*\\n\\s*image:\\s*\\S+?:(?<currentValue>[a-z][a-z-]*)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "OCI Helm chart versions in HelmReleases, tracked through the docker datasource. The shared preset only matches datasource=helm, and the image manager above expects a repo:tag value",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>\\S+?)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*version:\\s*['\"]?(?<currentValue>v?\\d+\\.\\d+\\.\\d+)['\"]?\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Grafana plugins installed with plugins.preinstall_sync (<id>@<version>), tracked through their GitHub releases. Release tags carry a v prefix the pinned version does not, so it is stripped here rather than in the image manager above, where v-prefixed tags must be kept",
+      "managerFilePatterns": [
+        "/^oci\\/.+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s*\\n\\s*preinstall_sync:\\s*\\S+?@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "semver"
     }
+  ],
+  "gitIgnoredAuthors": [
+    "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "packageRules": [
     {
@@ -102,6 +153,33 @@
         "docker"
       ],
       "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/dis-messaging-operator"
+      ],
+      "versioning": "semver",
+      "allowedVersions": "/^v?\\d+\\.\\d+\\.\\d+$/",
+      "pinDigests": false,
+      "groupName": "dis messaging image tags",
+      "groupSlug": "dis-messaging-tags"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/altinn/altinn-platform/dis-messaging-operator"
+      ],
+      "matchUpdateTypes": [
+        "pin",
+        "pinDigest",
+        "digest"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
         "ghcr.io/altinn/altinn-platform/dis-vault-operator"
       ],
       "versioning": "semver",
@@ -153,23 +231,29 @@
     },
     {
       "matchDatasources": [
-        "helm"
+        "docker"
       ],
       "matchPackageNames": [
-        "linkerd-crds",
-        "linkerd-control-plane"
+        "ghcr.io/valkey-io/valkey-helm/valkey-operator"
       ],
-      "groupName": "linkerd core charts",
-      "groupSlug": "linkerd-core",
+      "groupName": "valkey-operator chart",
+      "groupSlug": "valkey-operator",
       "dependencyDashboardApproval": true,
       "prCreation": "not-pending",
-      "minimumReleaseAge": "14 days",
+      "minimumReleaseAge": "3 days",
       "prBodyNotes": [
-        "⚠️ **Please verify the release status before merging:**",
-        "1. Check https://github.com/linkerd/linkerd2/releases/ release notes",
-        "2. Only deploy releases marked as **RECOMMENDED**",
-        "3. Review the changelog for breaking changes or known issues"
+        "⚠️ **Upstream is alpha — verify before merging:**",
+        "1. Read https://github.com/valkey-io/valkey-operator/releases release notes",
+        "2. Check for schema changes to the `valkey.io/v1alpha1` CRDs (ValkeyCluster, ValkeyNode)",
+        "3. dis-cache-operator pins these API types — coordinate the Go dependency bump"
       ]
+    },
+    {
+      "description": "Hands off the whole linkerd package: Renovate cannot read the RECOMMENDED / NOT_RECOMMENDED badge in the linkerd2 release notes and keeps proposing releases the project has not blessed. The .github/workflows/update-linkerd-edge.yml workflow opens these PRs instead.",
+      "matchFileNames": [
+        "oci/linkerd/**"
+      ],
+      "enabled": false
     },
     {
       "matchManagers": [
@@ -184,6 +268,29 @@
       ],
       "groupName": "kyverno helm charts",
       "groupSlug": "kyverno-helm"
+    },
+    {
+      "description": "Headscale enforces a strict upgrade path and cannot skip minor versions",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "juanfont/headscale",
+        "ghcr.io/juanfont/headscale"
+      ],
+      "prBodyNotes": [
+        "⚠️ **Headscale blocks skipping minor versions** (e.g. 0.28 → 0.30) and blocks downgrades. Upgrade one minor version at a time.",
+        "Review the BREAKING section of https://github.com/juanfont/headscale/releases for `config.yaml` keys and ACL policy changes before merging."
+      ]
+    },
+    {
+      "description": "Envoy Gateway control plane and CRDs must move together - the vendored CRDs in oci/envoy-gateway-crds must match the chart version in oci/envoy-gateway",
+      "matchPackageNames": [
+        "docker.io/envoyproxy/gateway-helm",
+        "envoyproxy/gateway"
+      ],
+      "groupName": "envoy gateway",
+      "groupSlug": "envoy-gateway"
     }
   ]
 }

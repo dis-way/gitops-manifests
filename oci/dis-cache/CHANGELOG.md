@@ -1,0 +1,57 @@
+# Changelog
+
+## [0.2.6](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.5...oci-dis-cache-v0.2.6) (2026-10-22)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-cache-operator docker tag to v0.5.0 ([#2192](https://github.com/dis-way/gitops-manifests/issues/2192)) ([aa1a016](https://github.com/dis-way/gitops-manifests/commit/aa1a01612e5c9398823226a26341e662b2276611))
+
+## [0.2.5](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.4...oci-dis-cache-v0.2.5) (2026-10-15)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-cache-operator docker tag to v0.4.0 ([#2072](https://github.com/dis-way/gitops-manifests/issues/2072)) ([825161c](https://github.com/dis-way/gitops-manifests/commit/825161c121b16663cabaad2520f13d7a78d43e6e))
+
+## [0.2.4](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.3...oci-dis-cache-v0.2.4) (2026-10-07)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-cache-operator docker tag to v0.3.0 ([#1909](https://github.com/dis-way/gitops-manifests/issues/1909)) ([ad429a1](https://github.com/dis-way/gitops-manifests/commit/ad429a1641ebb86c684942cb24add080fc229fa0))
+
+## [0.2.3](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.2...oci-dis-cache-v0.2.3) (2026-10-02)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-cache-operator docker tag to v0.2.0 ([#1758](https://github.com/dis-way/gitops-manifests/issues/1758)) ([58dbc37](https://github.com/dis-way/gitops-manifests/commit/58dbc37f9697871d3bd080743376e9d1cf83ff0c))
+
+## [0.2.2](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.1...oci-dis-cache-v0.2.2) (2026-09-18)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-cache-operator docker tag to v0.1.1 ([#1640](https://github.com/dis-way/gitops-manifests/issues/1640)) ([05d3579](https://github.com/dis-way/gitops-manifests/commit/05d35796dff206e3ebfbc88374abb89e51d8edf2))
+
+## [0.2.1](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.2.0...oci-dis-cache-v0.2.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **dis-cache:** set the cache images through Flux substitution ([#1633](https://github.com/dis-way/gitops-manifests/issues/1633)) ([2efc39d](https://github.com/dis-way/gitops-manifests/commit/2efc39de57604a12dacf30491e52e0f1c61de92e))
+
+## [0.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-cache-v0.1.0...oci-dis-cache-v0.2.0) (2026-09-16)
+
+
+### Features
+
+* **dis-cache:** set the cache images in the package and let Renovate track them ([#1605](https://github.com/dis-way/gitops-manifests/issues/1605)) ([43ac965](https://github.com/dis-way/gitops-manifests/commit/43ac965895135e5a95321f99ec3b3e4b511f73cb))
+
+## 0.1.0 (2026-09-16)
+
+
+### Features
+
+* add the dis-cache OCI package ([#1573](https://github.com/dis-way/gitops-manifests/issues/1573)) ([f15dbf9](https://github.com/dis-way/gitops-manifests/commit/f15dbf9acf0707a668dd28bf4daf29f5d324be09))

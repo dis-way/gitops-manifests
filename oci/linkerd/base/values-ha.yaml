@@ -57,9 +57,6 @@ data:
         limit: 250Mi
         request: 25Mi
 
-    # heartbeat configuration
-    heartbeatResources: *controller_resources
-
     # proxy injector configuration
     proxyInjectorResources: *controller_resources
     webhookFailurePolicy: Fail

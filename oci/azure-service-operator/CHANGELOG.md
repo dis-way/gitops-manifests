@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.5.0](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.5...oci-azure-service-operator-v1.5.0) (2026-11-06)
+
+
+### Features
+
+* **azure-service-operator:** restrict ASO writes in product namespaces to the platform operators ([#2414](https://github.com/dis-way/gitops-manifests/issues/2414)) ([6a989fa](https://github.com/dis-way/gitops-manifests/commit/6a989fa3cfb00f02c4fc81e0e2ddd1d054ec117c))
+
+## [1.4.5](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.4...oci-azure-service-operator-v1.4.5) (2026-10-05)
+
+
+### Dependency Updates
+
+* update helm release azure-service-operator to v2.21.1 ([#1441](https://github.com/dis-way/gitops-manifests/issues/1441)) ([1eea2cb](https://github.com/dis-way/gitops-manifests/commit/1eea2cb30600bc67ee39e9b9a148888048f744f2))
+
+## [1.4.4](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.3...oci-azure-service-operator-v1.4.4) (2026-08-19)
+
+
+### Dependency Updates
+
+* update helm release azure-service-operator to v2.20.0 ([#1307](https://github.com/dis-way/gitops-manifests/issues/1307)) ([83632ed](https://github.com/dis-way/gitops-manifests/commit/83632edb0e27bffc33872d9cdee89a3554fb26d8))
+
 ## [1.4.3](https://github.com/dis-way/gitops-manifests/compare/oci-azure-service-operator-v1.4.2...oci-azure-service-operator-v1.4.3) (2026-05-22)
 
 

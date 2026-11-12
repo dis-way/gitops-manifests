@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: headscale-acl-apply
+  namespace: headscale
+---
+# kubectl exec deploy/headscale resolves the Deployment to a pod. pods/exec on
+# headscale is full control of the tailnet, the same as the API key Headplane uses.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: headscale-acl-apply
+  namespace: headscale
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    resourceNames: ["headscale"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: headscale-acl-apply
+  namespace: headscale
+subjects:
+  - kind: ServiceAccount
+    name: headscale-acl-apply
+    namespace: headscale
+roleRef:
+  kind: Role
+  name: headscale-acl-apply
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: headscale-acl-read
+  namespace: flux-system
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["headscale-acl"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: headscale-acl-read
+  namespace: flux-system
+subjects:
+  - kind: ServiceAccount
+    name: headscale-acl-apply
+    namespace: headscale
+roleRef:
+  kind: Role
+  name: headscale-acl-read
+  apiGroup: rbac.authorization.k8s.io
