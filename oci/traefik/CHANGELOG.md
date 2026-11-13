@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.18.0...oci-traefik-v3.19.0) (2026-11-13)
+
+
+### Features
+
+* **traefik:** admit the legacy-platform ranges on the multitenancy shared Service ([#2466](https://github.com/dis-way/gitops-manifests/issues/2466)) ([e243f11](https://github.com/dis-way/gitops-manifests/commit/e243f11f7e07b4ec9373c4539dd02c07267526ec))
+
 ## [3.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.3...oci-traefik-v3.18.0) (2026-10-21)
 
 
