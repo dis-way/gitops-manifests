@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.11.0...oci-blackbox-exporter-v0.11.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** switch app cluster checks to runtime health endpoint ([4489399](https://github.com/dis-way/gitops-manifests/commit/4489399d6586d957c33aeefc4f0ee029aec91377))
+
 ## [0.11.0](https://github.com/dis-way/gitops-manifests/compare/oci-blackbox-exporter-v0.10.2...oci-blackbox-exporter-v0.11.0) (2026-10-28)
 
 
