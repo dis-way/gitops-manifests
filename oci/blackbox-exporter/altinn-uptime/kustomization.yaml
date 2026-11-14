@@ -146,6 +146,38 @@ patches:
                   ip_protocol_fallback: false
                   fail_if_body_not_matches_regexp:
                     - '^Hostname: whoami-'
+              # A DERP relay (headscale's embedded one or tailscale's derper) answers a plain
+              # GET /derp, without the Upgrade header, with 426 and this body. Matching both
+              # proves TLS and routing reach the DERP handler itself, not just the host.
+              # STUN (UDP 3478) is not covered: blackbox has no STUN prober.
+              http_derp_ipv4:
+                prober: http
+                timeout: 10s
+                http:
+                  valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+                  valid_status_codes: [426]
+                  method: GET
+                  follow_redirects: false
+                  preferred_ip_protocol: ip4
+                  ip_protocol_fallback: false
+                  fail_if_body_not_matches_regexp:
+                    - '^DERP requires connection upgrade'
+                  tls_config:
+                    insecure_skip_verify: false
+              http_derp_ipv6:
+                prober: http
+                timeout: 10s
+                http:
+                  valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+                  valid_status_codes: [426]
+                  method: GET
+                  follow_redirects: false
+                  preferred_ip_protocol: ip6
+                  ip_protocol_fallback: false
+                  fail_if_body_not_matches_regexp:
+                    - '^DERP requires connection upgrade'
+                  tls_config:
+                    insecure_skip_verify: false
               http_alive_tls_ipv4:
                 prober: http
                 timeout: 10s
