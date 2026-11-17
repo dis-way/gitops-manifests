@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.26.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.25.0...oci-dis-tls-cert-v2.26.0) (2026-11-17)
+
+
+### Features
+
+* add wildcard certificate for altinnusercontent.studio ([#2477](https://github.com/dis-way/gitops-manifests/issues/2477)) ([b24ed2e](https://github.com/dis-way/gitops-manifests/commit/b24ed2ea6373177f71d5cb3363da9aa372953114))
+
 ## [2.25.0](https://github.com/dis-way/gitops-manifests/compare/oci-dis-tls-cert-v2.24.0...oci-dis-tls-cert-v2.25.0) (2026-10-20)
 
 
