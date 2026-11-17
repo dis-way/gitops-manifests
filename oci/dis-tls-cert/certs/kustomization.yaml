@@ -41,6 +41,8 @@ resources:
   - ddlabs.apps.tt02.altinn.no-push.yaml
   - star.altinn.cloud.yaml
   - star.altinn.cloud-push.yaml
+  - star.altinnusercontent.studio.yaml
+  - star.altinnusercontent.studio-push.yaml
   - platform.yt01.altinn.cloud.yaml
   - platform.yt01.altinn.cloud-push.yaml
   - platform.at24.altinn.cloud.yaml
