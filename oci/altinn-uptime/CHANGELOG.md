@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.1](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.24.0...oci-altinn-uptime-v1.24.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **altinn-uptime:** switch app cluster checks to runtime health endpoint ([4489399](https://github.com/dis-way/gitops-manifests/commit/4489399d6586d957c33aeefc4f0ee029aec91377))
+
 ## [1.24.0](https://github.com/dis-way/gitops-manifests/compare/oci-altinn-uptime-v1.23.1...oci-altinn-uptime-v1.24.0) (2026-10-22)
 
 
