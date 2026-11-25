@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.3.2...oci-dis-pgsql-v0.3.3) (2026-11-25)
+
+
+### Dependency Updates
+
+* update ghcr.io/altinn/altinn-platform/dis-pgsql-operator docker tag to v0.15.1 ([#2484](https://github.com/dis-way/gitops-manifests/issues/2484)) ([41ccb16](https://github.com/dis-way/gitops-manifests/commit/41ccb1612a34d1d87780288a9c9fd3fe29f96379))
+
 ## [0.3.2](https://github.com/dis-way/gitops-manifests/compare/oci-dis-pgsql-v0.3.1...oci-dis-pgsql-v0.3.2) (2026-11-11)
 
 
