@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.19.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.18.0...oci-traefik-v3.19.0) (2026-11-26)
+
+
+### Features
+
+* **traefik:** admit the legacy-platform ranges on the multitenancy shared Service ([#2466](https://github.com/dis-way/gitops-manifests/issues/2466)) ([e243f11](https://github.com/dis-way/gitops-manifests/commit/e243f11f7e07b4ec9373c4539dd02c07267526ec))
+
+
+### Dependency Updates
+
+* update helm release traefik to v41.7.1 ([#2002](https://github.com/dis-way/gitops-manifests/issues/2002)) ([05c8632](https://github.com/dis-way/gitops-manifests/commit/05c8632ff8dc2cb3860b41cc840d6eaf660c2633))
+
 ## [3.18.0](https://github.com/dis-way/gitops-manifests/compare/oci-traefik-v3.17.3...oci-traefik-v3.18.0) (2026-10-21)
 
 
