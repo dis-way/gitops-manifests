@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.6...oci-envoy-gateway-v4.1.0) (2026-11-26)
+
+
+### Features
+
+* **envoy-gateway:** upgrade Envoy Gateway to v1.10.0 ([#2495](https://github.com/dis-way/gitops-manifests/issues/2495)) ([54fb917](https://github.com/dis-way/gitops-manifests/commit/54fb91714cb3273ac630f12a579e1003830952ea))
+
 ## [4.0.6](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.5...oci-envoy-gateway-v4.0.6) (2026-11-26)
 
 
