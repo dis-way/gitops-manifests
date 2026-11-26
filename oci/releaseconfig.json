@@ -112,9 +112,9 @@
     "prod_ring2": "1.0.1"
   },
   "envoy-gateway": {
-    "at_ring1": "4.1.1",
-    "at_ring2": "4.1.1",
-    "tt_ring1": "4.1.1",
+    "at_ring1": "4.2.0",
+    "at_ring2": "4.2.0",
+    "tt_ring1": "4.2.0",
     "tt_ring2": "4.0.5",
     "prod_ring1": "4.0.5",
     "prod_ring2": "4.0.5"
