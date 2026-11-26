@@ -480,6 +480,38 @@ spec:
           value: dropped_headers_with_underscores
         - type: Suffix
           value: requests_rejected_with_underscores_in_headers
+
+        # Baselines for the planned ClientTrafficPolicy hardening. Each group
+        # shows who would break before the matching setting is tightened.
+        #
+        # TLS: negotiated cipher, version and curve per downstream handshake.
+        # Gate for an explicit cipher list: legacy suites must be at zero.
+        - type: RegularExpression
+          value: 'listener\..*\.ssl\.(ciphers|versions|curves)\..*'
+        # HTTP/2 limits: protocol mix, streams refused or reset by Envoy, flood
+        # protection closing connections, and reads paused by flow control.
+        - type: Suffix
+          value: downstream_cx_http1_active
+        - type: Suffix
+          value: downstream_cx_http2_active
+        - type: Suffix
+          value: http2.tx_reset
+        - type: Suffix
+          value: _flood
+        - type: Suffix
+          value: downstream_flow_control_paused_reading_total
+        # Connection recycling by maxConnectionDuration and
+        # maxRequestsPerConnection, to see the effect of adding jitter.
+        - type: Suffix
+          value: downstream_cx_max_duration_reached
+        - type: Suffix
+          value: downstream_cx_max_requests_reached
+        # Path normalization: requests redirected or rejected today, before the
+        # path settings are written out explicitly.
+        - type: Suffix
+          value: downstream_rq_redirected_with_normalized_path
+        - type: Suffix
+          value: downstream_rq_failed_path_normalization
       sinks:
         - type: OpenTelemetry
           openTelemetry:
