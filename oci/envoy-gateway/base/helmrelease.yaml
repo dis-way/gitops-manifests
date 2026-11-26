@@ -12,7 +12,7 @@ spec:
         name: envoy-gateway
         namespace: envoy-gateway-system
       # renovate: datasource=docker depName=docker.io/envoyproxy/gateway-helm versioning=semver
-      version: 1.9.3
+      version: 1.10.0
   interval: 1h
   timeout: 5m
   install:
@@ -45,16 +45,3 @@ spec:
           cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     global:
       imageRegistry: altinncr.azurecr.io/docker.io
-      images:
-        # TEMPORARY PIN - remove the tag on the next gateway-helm bump. Chart
-        # v1.9.3 ships Envoy 1.39.5, whose distroless image still carries the
-        # unpatched ca-certificates bundle (eMudhra intermediate CA compromise);
-        # 1.39.6 rebuilds the base with the fix and changes nothing else.
-        # Normally this is untagged so the chart's eg.envoyProxy.image helper fills
-        # in the Envoy version matching the chart. Left pinned, the proxy would
-        # stay on 1.39.6 while the chart moves on.
-        # The chart writes this into Envoy Gateway's default EnvoyProxy spec; it
-        # reaches the data plane only because the `eg` EnvoyProxy sets
-        # mergeType: StrategicMerge.
-        envoyProxy:
-          image: docker.io/envoyproxy/envoy:distroless-v1.39.6
