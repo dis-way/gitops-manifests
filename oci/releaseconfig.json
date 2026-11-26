@@ -288,10 +288,10 @@
     "prod_ring2": "1.1.0"
   },
   "opencost": {
-    "at_ring1": "0.2.16",
-    "at_ring2": "0.2.16",
-    "tt_ring1": "0.2.16",
-    "tt_ring2": "0.2.16",
+    "at_ring1": "0.2.17",
+    "at_ring2": "0.2.17",
+    "tt_ring1": "0.2.17",
+    "tt_ring2": "0.2.17",
     "prod_ring1": "0.2.16",
     "prod_ring2": "0.2.16"
   },
