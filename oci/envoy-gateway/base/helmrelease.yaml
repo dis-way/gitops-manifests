@@ -45,3 +45,9 @@ spec:
           cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     global:
       imageRegistry: altinncr.azurecr.io/docker.io
+      images:
+        # Untagged on purpose: the chart's eg.envoyProxy.image helper fills in the
+        # Envoy version matching the chart and applies imageRegistry. Without this
+        # Envoy Gateway uses its built-in image straight from docker.io.
+        envoyProxy:
+          image: docker.io/envoyproxy/envoy
