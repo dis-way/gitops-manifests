@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.6](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.5...oci-envoy-gateway-v4.0.6) (2026-11-26)
+
+
+### Dependency Updates
+
+* update helm release valkey to v0.12.1 ([#2377](https://github.com/dis-way/gitops-manifests/issues/2377)) ([08e63c8](https://github.com/dis-way/gitops-manifests/commit/08e63c85a9a0cddd70cc7d970bd8b15999142360))
+
 ## [4.0.5](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.4...oci-envoy-gateway-v4.0.5) (2026-11-03)
 
 
