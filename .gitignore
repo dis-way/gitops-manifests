@@ -4,8 +4,9 @@
 # Codex configuration
 .codex
 
-# Claude configuration
-.claude
+# Claude configuration, except shared skills
+.claude/*
+!.claude/skills/
 
 # Cursor configuration
 .cursor
