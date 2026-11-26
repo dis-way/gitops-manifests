@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.1.0...oci-envoy-gateway-v4.1.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* **envoy-gateway:** pull the Envoy proxy image through the ACR cache again ([#2508](https://github.com/dis-way/gitops-manifests/issues/2508)) ([0e160ab](https://github.com/dis-way/gitops-manifests/commit/0e160ab96fbca6116736c89bf5c281859aeeee5a))
+
 ## [4.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.0.6...oci-envoy-gateway-v4.1.0) (2026-11-26)
 
 
