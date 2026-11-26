@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-crds-v1.0.3...oci-envoy-gateway-crds-v1.1.0) (2026-11-26)
+
+
+### Features
+
+* **envoy-gateway-crds:** update Envoy Gateway CRDs to v1.10.0 ([#2494](https://github.com/dis-way/gitops-manifests/issues/2494)) ([b89ab8e](https://github.com/dis-way/gitops-manifests/commit/b89ab8ef41cb0253def4dde0911d328ec2156ae1))
+
 ## [1.0.3](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-crds-v1.0.2...oci-envoy-gateway-crds-v1.0.3) (2026-10-28)
 
 
