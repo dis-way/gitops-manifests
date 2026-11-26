@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.1.1...oci-envoy-gateway-v4.2.0) (2026-11-26)
+
+
+### Features
+
+* **envoy-gateway:** export baseline metrics for TLS and HTTP/2 hardening ([#2516](https://github.com/dis-way/gitops-manifests/issues/2516)) ([8311825](https://github.com/dis-way/gitops-manifests/commit/83118253d056d9d9221006aaf8f939ca08eb4fdd))
+
 ## [4.1.1](https://github.com/dis-way/gitops-manifests/compare/oci-envoy-gateway-v4.1.0...oci-envoy-gateway-v4.1.1) (2026-11-26)
 
 
